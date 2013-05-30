@@ -1,47 +1,43 @@
+/*******************************************************************************
+Ray4 is Copyright (C) Steve Hollasch, 1991-1996
 
-/***********************************************************************
-//
-//  "ray4" is Copyright (c) 1991 by Steve R. Hollasch.
-//
-//  All rights reserved.  This software may be freely copied, modified
-//  and redistributed, provided that this copyright notice is preserved
-//  in all copies.  This software is provided "as is", without express
-//  or implied warranty.  You may not include this software in a program
-//  or other software product without also supplying the source, or
-//  without informing the end-user that the source is available for no
-//  extra charge.  If you modify this software, please include a notice
-//  detailing the author, date and purpose of the modification.
-//
-***********************************************************************/
+All rights reserved.  This software may be freely copied, modified and
+redistributed, provided that this copyright notice is preserved in all copies.
+This software is provided "as is", without express or implied warranty.  You
+may not include this software in a program or other software product without
+also supplying the source, except by express agreement with the author (Steve
+Hollasch).  If you modify this software, please include a notice detailing the
+author, date and purpose of the modification.
+*******************************************************************************/
 
-/****************************************************************************
-//
-//  File:  ray4.h
-//
-//      This file contains the global variables and structures for the ray4
-//      four-dimensional raytracer.  If the macro `DEFINE_GLOBALS' is
-//      defined, then the global variables will be declared for file that
-//      includes this header.  If the macro `DEFINE_GLOBALS' is not defined,
-//      then the global variables will be declared as external references.
-//
-//  Revisions:
-//
-//    1.00  25-Jan-92  Hollasch
-//          Released to the public domain.
-//
-//    0.00  04-Mar-91  Steve Hollasch
-//          Initial version; yanked from original ray4.h.
-//
-****************************************************************************/
+/*******************************************************************************
+
+File:  ray4.h
+
+    This file contains the global variables and structures for the ray4 four-
+dimensional raytracer.  If the macro `DEFINE_GLOBALS' is defined, then the
+global variables will be declared for file that includes this header.  If the
+macro `DEFINE_GLOBALS' is not defined, then the global variables will be
+declared as external references.
+
+Revisions:
+
+25-Jan-92  Hollasch
+    Released to the public domain.
+
+04-Mar-91  Steve Hollasch
+    Initial version; yanked from original ray4.h.
+
+*******************************************************************************/
 
 #ifndef R4_GLOBALS_H
 #define R4_GLOBALS_H
 
-#  ifdef  DEFINE_GLOBALS
-#     define Global(decl,init)    decl = init
-#  else
-#     define Global(decl,init)    extern decl
-#  endif
+#ifdef  DEFINE_GLOBALS
+#   define Global(decl,init)    decl = init
+#else
+#   define Global(decl,init)    extern decl
+#endif
 
 
 Global (Attributes *attrlist,        nil  );  /* Attributes List */

@@ -13,10 +13,6 @@
 #include <math.h>
 
 
-#ifndef Real
-#   define Real  double
-#endif
-
    /****************************/
    /***  Vector Definitions  ***/
    /****************************/
@@ -159,9 +155,9 @@ if (1) \
    /***  Function Declarations  ***/
    /*******************************/
 
-void   V3_Cross		(/* Vector3, Vector3, Vector3 */);
-void   V4_Cross		(/* Vector4, Vector4, Vector4, Vector4 */);
-short  V3_Normalize	(/* Vector3 */);
-short  V4_Normalize	(/* Vector4 */);
+void  V3_Cross     (Vector3, Vector3, Vector3);
+void  V4_Cross     (Vector4, Vector4, Vector4, Vector4);
+short V3_Normalize (Vector3);
+short V4_Normalize (Vector4);
 
 #endif

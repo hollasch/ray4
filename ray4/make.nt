@@ -1,0 +1,40 @@
+
+## Makefile for Ray4, a 4D Raytracer.  This makefile is targeted to NT build
+## environments, using 'nmake'.
+
+CDEBUG   = -Zi -Yd    # Debugging Compiler Flags
+CRELEASE = -Ox -G5    # Optimizing Compiler Flags
+
+COPTS = -WX -W3 $(CRELEASE)
+
+.c.obj:
+	cl -c $*.c $(COPTS)
+
+all:  ray4
+
+ray4:	r4_main.obj
+ray4:	r4_hit.obj
+ray4:	r4_io.obj
+ray4:	r4_parse.obj
+ray4:	r4_trace.obj
+ray4:	r4_vec.obj
+
+ray4:
+	cl -FeRay4.exe r4_main.obj r4_hit.obj r4_io.obj r4_parse.obj \
+	    r4_trace.obj r4_vec.obj
+
+r4tosgi:  r4tosgi.c  r4_image.h
+	cc -o r4tosgi r4tosgi.c $(CCOPTS) $(GLLIB) -lm
+
+r4_main.obj:	r4_main.c  ray4.h vector.h r4_image.h
+r4_hit.obj:	r4_hit.c   ray4.h vector.h
+r4_io.obj:	r4_io.c    ray4.h
+r4_parse.obj:	r4_parse.c ray4.h vector.h
+r4_trace.obj:	r4_trace.c ray4.h vector.h
+r4_vec.obj:	r4_vec.c   ray4.h vector.h
+
+clean:
+	-del /q *.obj
+
+clobber: clean
+	-del /q ray4.exe
