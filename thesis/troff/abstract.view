@@ -1,0 +1,131 @@
+
+
+
+
+
+
+
+
+
+
+
+
+                                         ABSTRACT
+
+9                   In the field of scientific visualization, the term
+
+               ``four dimensional visualization'' usually refers to the
+
+               process of rendering a three dimensional field of scalar
+
+               values.  While this paradigm applies to many different data
+
+               sets, there are also uses for visualizing data that
+
+               correspond to actual four-dimensional structure.  Four di-
+
+               mensional structures have typically been visualized via
+
+               wireframe methods, but this process alone is usually insuf-
+
+               ficient for an intuitive understanding; all but the most
+
+               simple datasets easily overwhelm the viewer.  This research
+
+               covers the visualization of four dimensional objects through
+
+               wireframe methods with extended visualization cues, and
+
+               through raytracing methods.  Both the wireframe and raytrac-
+
+               ing methods employ true four-space viewing parameters and
+
+               geometry.  The raytracing approach easily solves the hidden
+
+               surface and shadowing problems of 4D objects, and yields an
+
+               image in the form of a three-dimensional field of RGB
+
+               values, which can be rendered with a variety of existing
+
+               methods.  The 4D raytracer also supports true four-
+
+               dimensional lighting, reflections and refractions.
+
+
+
+
+
+
+                                           iii
+
+
+
+
+
+9
+
+
+
+
+
+
+
+
+
+
+
+                                     ACKNOWLEDGEMENTS
+
+9                   In appreciation of the time, effort and patience extend-
+
+               ed to me in the pursuit of this thesis, I would like to
+
+               thank my committee chairman, Dr. Thomas Foley.  In addition
+
+               to his guidance in the topic of this research, he has also
+
+               been unfailing in helping me get the resources and informa-
+
+               tion I needed to complete both this research and this paper.
+
+               I would also like to acknowledge and thank Dr. Gregory Niel-
+
+               son and Dr.  Gerald Farin for being on my thesis committee
+
+               and offering their observations and suggestions.
+
+                   Thanks are also due to Kevin Price for letting me use
+
+               his Amiga and helping me produce animations of the raytrace
+
+               data that aided my understanding of the process and nature
+
+               of four-dimensional raytracing.
+
+                   Finally, I would like to thank my family for their pati-
+
+               ence, confidence, enthusiasm and financial support.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                            iv
+
+
+
+
+
+9

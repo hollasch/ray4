@@ -1,0 +1,60 @@
+.CH 1 "Introduction" 1
+.SE 2 "Background" 1 1 
+.SE 3 "Previous Work" 1 2 
+.SE 4 "Overview of This Research" 1 3 
+.SE 6 "Contents of This Paper" 1 4 
+.CH 7 "Four Dimensional Geometry" 2
+.SE 7 "Vector Operations and Points in Four-Dimensional Space" 2 1 
+.SE 12 "Rotations in Four Dimensions" 2 2 
+.CH 14 "Overview of Visualization in Three and Four Space" 3
+.SE 14 "Viewing in Three-Space" 3 1 
+.FG 16 "The 3D Viewing Vectors and From, To Points" 3.1
+.FG 16 "The Resulting View From Figure 3.1" 3.2
+.FG 18 "The 3D Viewing Vectors and Viewing Frustum" 3.3
+.SE 19 "Viewing in Four-Space" 3 2 
+.FG 20 "The 4D Viewing Vectors and Viewing Frustum" 3.4
+.CH 21 "Wireframe Display of Four Dimensional Objects" 4
+.SE 21 "High-Level Overview of 4D to 2D Projection" 4 1 
+.SE 22 "Description of 3D to 2D Projection" 4 2 
+.FG 23 "3D Eye Coordinates" 4.1
+.FG 27 "3D Perspective Projection in Eye Coordinates" 4.2
+.SE 29 "Description of 4D to 3D Projection" 4 3 
+.FG 31 "4D Eye Coordinates" 4.3
+.FG 35 "4D Perspective Projection in Eye Coordinates" 4.4
+.SE 38 "Rotations of 4D Wireframes" 4 4 
+.SE 39 "User Interaction and Visualization Aids" 4 5 
+.SE 40 "Example 4D Wireframe Images" 4 6 
+.FG 42 "The 4-Cube with Various 4D and 3D Projections" 4.5
+.FG 46 "Another View of The 4-Cube with Various 4D and 3D Projections" 4.6
+.FG 50 "4D Rotation of the 4-Cube" 4.7
+.FG 52 "The 4-Cube With All Edges Rendered in One Color" 4.8
+.FG 52 "The Dual of The 4-Cube With All Edges Rendered in One Color" 4.9
+.FG 53 "The 4-Cube Rendered With Multiple Edge Colors" 4.10
+.FG 53 "The Dual of The 4-Cube Rendered With Multiple Edge Colors" 4.11
+.FG 54 "The 4-Cube Rendered With Depth-Cueing" 4.12
+.FG 54 "The Dual of The 4-Cube Rendered With Depth-Cueing" 4.13
+.FG 55 "A 4D Curve on a 4-Sphere" 4.14
+.FG 55 "A 4D Curve on a 4-Sphere with Poor Parameterization" 4.15
+.CH 56 "Raytracing in Four Dimensions" 5
+.SE 56 "General Description of the Raytracing Algorithm" 5 1 
+.FG 58 "A 2x2x2 4D Raytrace Grid" 5.1
+.SE 59 "Generating the Four-Dimensional Ray Grid" 5 2 
+.SE 62 "The General Raytrace Algorithm" 5 3 
+.SE 63 "Reflection and Refraction Rays" 5 4 
+.FG 64 "Ray-Object Reflection" 5.2
+.SE 66 "Illumination Calculations" 5 5 
+.FG 67 "Components of Illumination" 5.3
+.SE 69 "Intersection Algorithms" 5 6 
+.SE 69 "Ray - Hypersphere Intersection" 5 6 1
+.SE 72 "Ray - Tetrahedron Intersection" 5 6 2
+.SE 77 "Ray - Parallelepiped Intersection" 5 6 3
+.SE 78 "Display of 4D Raytrace Data" 5 7 
+.SE 79 "Example Ray4 Images" 5 8 
+.FG 81 "Sliced 4D Image Cube of Random 4-Sphere Distribution" 5.4
+.FG 82 "Sliced Image of 16 4-Spheres Placed at 4-Cube Vertices" 5.5
+.FG 82 "Sliced Image of 16 4-Tetrahedrons Placed at 4-Cube Vertices" 5.6
+.CH 83 "Conclusion" 6
+.SE 83 "Research Conclusions" 6 1 
+.SE 84 "Future Research Areas" 6 2 
+.CH 86 "References"
+.AP 88 A "Implementation Notes"

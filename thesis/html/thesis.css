@@ -1,0 +1,40 @@
+body
+{   margin-left: 10%;
+    margin-right: 10%;
+}
+
+H1
+{   margin-top: 3em;
+    margin-bottom: 2em; 
+    text-align: center;
+}
+
+H2
+{   margin-top: 2em;
+    margin-bottom: 1.5em;
+}
+
+P.normal
+{
+}
+
+P
+{   text-align: justify;
+    text-indent: 2em;
+    margin-top: 0em;
+}
+
+DT
+{
+    margin-top: 1em;
+}
+
+div.figure
+{
+    margin-top: 3em;
+    margin-bottom: 3em;
+}
+
+.noindent
+{   text-indent: 0;
+}

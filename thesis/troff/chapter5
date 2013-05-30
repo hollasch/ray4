@@ -1,0 +1,989 @@
+.CH "Raytracing in Four Dimensions" 5
+.SE "General Description of the Raytracing Algorithm" 1
+.PP
+Wireframe rendering has several advantages over other rendering
+methods, including simplicity of representation, speed of display,
+and ease of implementation.  However, it cannot render solid objects,
+or objects that obscure one another.  In addition, it cannot model
+other aspects of light propagation, such as shadows and reflections,
+which aid the user in understanding a given scene.
+.PP
+Other rendering techniques exist that solve the hidden
+surface problem and shadows by representing the objects with
+a tessellated mesh of polygons.  These algorithms map the
+polygons to the viewport in a particular order to solve for
+hidden surfaces.  These algorithms must also handle the
+cases of partially obscured polygons.  However, these
+techniques are not easily extended to four-dimensional
+rendering.  Instead of dealing only with planar polygons,
+the four-dimensional counterpart would have to deal with
+tessellating solids; thus, it would also have to properly
+handle intersecting solids with hidden volumes and solids
+that partially obscure one another.  This is at best a
+difficult task in three-space; the four-space extension
+would be even more complex.
+.PP
+For these reasons, the raytracing algorithm was chosen
+to ``realistically'' render four-space scenes.  Raytracing
+solves several rendering problems in a straight-forward
+manner, including hidden surfaces, shadows, reflection, and
+refraction.  In addition, raytracing is not restricted to
+rendering polygonal meshes; it can handle any object that
+can be \fIinterrogated\fR to find the intersection point of a
+given ray with the surface of the object.  This property is
+especially nice for rendering four-dimensional objects,
+since many N-dimensional objects can be easily described
+with implicit equations.
+.PP
+Other benefits of raytracing extend quite easily to 4D.
+As in the 3D case, 4D raytracing handles simple shadows
+merely by checking to see which objects obscure each light
+source.  Reflections and refractions are also easily
+generalized, particularly since the algorithms used to
+determine refracted and reflected rays use equivalent vector
+arithmetic.
+.PP
+The main loop in the raytracing algorithm shoots rays
+from the viewpoint through a grid into the scene space.  The
+grid is constructed so that each grid element represents a
+voxel of the resulting image (see figure \n(CN.1 for an
+illustration of a #2 times 2 times 2# ray grid).  As a ray is ``fired''
+from the viewpoint through the grid, it gathers light
+information by back-propagation.  In this way raytracing
+approximates the light rays that scatter throughout the
+scene and enter the eye by tracing the rays back from the
+viewpoint to the light sources.
+.FG 1 1 6i "A 2x2x2 4D Raytrace Grid"
+.bp
+.PP
+The recursive nature of raytracing, coupled with the
+fact that every voxel is sampled, makes raytracing very time
+consuming.  Fortunately, extending the raytracing algorithm
+to four dimensions does not necessarily incur an exponential
+increase in rendering time.  However, finding some
+ray-object intersections does entail a significant increase in
+computation.  For example, determining the intersection of a
+four-space ray with a four-space tetrahedron is much more
+expensive than computing the intersection of a three-space
+ray with a three-space triangle.  This increase of
+complexity does not necessarily occur with all higher-order
+object intersections, though.  The hypersphere, for example,
+can be intersected with essentially the same algorithm as
+for the three-sphere (although vector and point operations
+must handle an extra coordinate).
+.SE "Generating the Four-Dimensional Ray Grid" 2
+.PP
+The ray grid must be constructed so that each point on
+the grid corresponds to each pixel for 3D raytracing or
+voxel (volume element) for 4D raytracing.  In
+four-dimensional raytracing, the grid is a three-dimensional
+parallelepiped spanned by three orthogonal vectors.  Note
+that although in figure \n(CN.1 it seems that a scene ray
+would pass through other voxels as it intersects each voxel
+center, scene rays do not lie in the same three-space
+(or hyperplane) as the ray grid.  As a result, each scene
+ray intersects the ray grid only at the voxel centers.
+.PP
+The ray grid is constructed from the viewing parameters
+presented in section 3.2.  These viewing parameters are
+the same as the viewing parameters used for the 4D wireframe
+viewer.
+.PP
+The viewpoint is the point of origin for the scene rays,
+so it must be outside of the ray grid.  Since the to-point
+is the point of interest, it should be centered in the 4D
+ray grid.
+.PP
+Now that we have the center of the ray grid, we need to
+establish the basis vectors of this grid.  Once we do that,
+we can index a particular voxel in the grid for the
+generation of scene rays.
+.PP
+The up-vector and over-vector are used to form two of
+the grid basis vectors (after proper scaling).  Since the
+line of sight must be perpendicular to the ray grid, we can
+generate the third basis vector by forming the four-dimensional
+cross product of the line of sight with the up-vector and
+over-vector.  Note that in four-space, a ray can pass through
+any point within the cube without intersecting any other point.
+.PP
+The grid basis vectors are computed as follows:
+.sp .5v
+.in 5c
+.EQ
+~~ S vec mark     ~=~ { bold From ~-~ bold To }
+    over { norm ^ bold From ~-~ bold To ^ norm } ~,
+.EN
+.sp .5v
+.EQ
+B vec sub z lineup ~=~ { cross4 ( Over vec ,^ Up vec ,^ S vec ) }
+    over { norm^ cross4 ( Over vec ,^ Up vec ,^ S vec ) ^norm } ~,
+.EN
+.sp .5v
+.EQ
+B vec sub y lineup ~=~ { cross4 ( {B sub z} vec ,^ S vec ,^ Over vec ) }
+    over { norm^cross4 ( {B sub z} vec ,^ S vec ,^ Over vec ) ^norm } ~,~ and
+.EN
+.sp .5v
+.EQ
+B vec sub x lineup ~=~ { cross4 ( {B sub y} vec ,^ {B sub z} vec ,^ S vec ) }
+~.
+.EN
+.in 0
+.sp .5v
+.PP
+At this point, #S vec# is the unit line-of-sight vector, and
+#B vec sub x#, #B vec sub y# & #B vec sub z# are the unit basis vectors for
+the ray grid.  What we need to do now is to to scale these
+vectors.  There are two additional sets of parameters that govern the
+construction of the ray grid.  These are the the number of
+voxels along each axis of the grid (the resolution of the
+ray grid), and the shape of each voxel (the aspect ratios).
+In addition, we need to incorporate the viewing angle.
+.PP
+The resolution of the grid cube is given by the parameters
+#R sub x#, #R sub y# and #R sub z#, which specify the number
+of voxels along the width, height and depth of the cube,
+respectively. The aspect ratio of each voxel is given by the
+parameters #A sub x#, #A sub y# and #A sub z#.  These
+parameters specify the width, height and depth of each voxel
+in arbitrary units (these numbers are used only in the ratio).
+For example, an aspect ratio of #1:4:9# specifies a voxel
+that is four times as high as it is wide, and that is #4/9#ths
+as high as it is deep.
+.PP
+The ray grid is centered at the to-point; we use the
+viewing angle to determine the ray-grid size.  As mentioned
+earlier, the viewing angle corresponds to the #X# axis.  The
+other axes are sized according to the resolution and aspect
+ratios.  Determining the proper scale of the grid #X# axis is
+easily done from the viewing angle
+.sp .5v
+.ce
+.EQ
+L sub x ~=~^ 2 ~ norm^ bold From ^-^ bold To ^norm
+            ~ tan ^ ( {theta sub 4} ^/^ 2 ) ~,
+.EN
+.sp .5v
+where #theta sub 4# is the 4D viewing angle, and #L sub x# is the width of
+the ray grid.  The other dimensions of the ray grid are
+determined by #L sub x#, the aspect ratios, and the resolutions:
+.sp .5v
+.ce
+.EQ
+L sub y ~=~ L sub x {R sub y} over {R sub x} {A sub y} over {A sub x}
+~~~~and~~~~
+L sub z ~=~ L sub x {R sub z} over {R sub x} {A sub z} over {A sub x} ~.
+.EN
+.sp .5v
+.PP
+Thus, #L sub x#, #L sub y# and #L sub z# are the lengths of each edge of the
+ray grid, and the grid basis vectors are scaled with these lengths to yield
+.sp .5v
+.ce
+.EQ
+{G sub x} vec ~=~ (L sub x ) {B sub x} vec ~,~~~~
+{G sub y} vec ~=~ (L sub y ) {B sub y} vec ~,~and~~~~
+{G sub z} vec ~=~ (L sub z ) {B sub z} vec ~.
+.EN
+.sp .5v
+.PP
+The main ray loop will start at a corner of the ray grid and scan in
+#X#, #Y# and #Z# order, respectively.  The origin of the grid (each basis
+vector zero) is given by
+.sp .5v
+.ce
+.EQ
+bold O~=~bold To ~-~ left [ {G sub x ~+~ G sub y ~+~ G sub z} over 2 right ]
+~.
+.EN
+.sp .5v
+.PP
+The incremental grid vectors are used to move from one grid voxel to another.
+They are computed by dividing the grid-length vectors by the respective
+resolution:
+.sp .5v
+.ce
+.EQ
+{D sub x} vec ~=~ {G sub x} vec over {R sub x} ~,~~~~~
+{D sub y} vec ~=~ {G sub y} vec over {R sub y} ~,~~~~~
+{D sub z} vec ~=~ {G sub z} vec over {R sub z} ~.
+.EN
+.sp .5v
+.PP
+Finally, the grid origin is offset by half a voxel, in order that the voxel
+centers are sampled.
+.sp .5v
+.ce
+.EQ
+bold O ~=~ bold O ~+~ left [ {{D sub x} vec ~+~ {D sub y} vec
+                           ~+~ {D sub z} vec} over 2 right ]
+.EN
+.sp .5v
+.PP
+The main raytracing procedure looks like this:
+.in 1c
+.ne 21
+.SC
+Dx,Dy,Dz: \fBVector4\fR	\fIGrid-Traversal Vectors\fR
+From4: \fBPoint4\fR		\fI4D Viewpoint\fR
+O: \fBPoint4\fR			\fIGrid Origin Corner\fR
+Rx,Ry,Rz: \fBInteger\fR	\fIGrid Resolutions\fR
+
+\fBprocedure\fR  FireRays
+i,j,k: \fBInteger\fR	\fIGrid Traversal Indices\fR
+T: \fBVector4\fR	\fIScratch Vector\fR
+ray: \fBRay4\fR		\fI4D View Ray\fR
+\fBbegin\fR
+	\fBfor\fR i \(<- 1 \fBto\fR Rx
+		\fBfor\fR j \(<- 1 \fBto\fR Ry
+			\fBfor\fR k \(<- 1 \fBto\fR Rz
+				T \(<- O #+# i*Dx #+# j*Dy #+# k*Dz
+				ray.origin \(<- From
+				ray.direction \(<- T #-# ray.origin
+				\fIRecursively fire sample rays into the scene.\fR
+				Raytrace (ray)
+			\fBendloop\fR
+		\fBendloop\fR
+	\fBendloop\fR
+\fBendproc\fR FireRays
+.SE "The General Raytrace Algorithm" 3
+.PP
+Each ray is propagated throughout the scene in the
+following manner:
+.LP (1)
+For each point in the ray grid, fire a ray from the viewpoint through
+the grid point.
+.LP (2)
+Find the intersection of the ray with all objects in the scene.
+If the ray intersects no objects in the scene, assign the
+background color to it.
+.LP (3)
+The intersection point closest to the ``launch point'' (starting
+with the viewpoint) is chosen, and the current color is
+determined by the ambient color of the intersected object.
+.LP (4)
+The intersection point is the new launch-point.  Rays are fired
+from the launch point to each of the light sources.  If the ray
+does not intersect any other object first, the current point is
+then further illuminated by that light source to yield the
+diffuse and specular components of the object.  This occurs for
+all light sources.
+.LP (5)
+If the object has a reflective surface, then a ray is recursively
+reflected from the current point and gathers color information by
+going back to step two above.
+.LP (6)
+If the object has a refractive surface, then a ray is recursively
+refracted from the current point and gathers color information
+by going back to step two above.
+.LP (7)
+The color obtained by steps three through six is assigned
+to the voxel that corresponds to the current grid point.
+.SE "Reflection and Refraction Rays" 4
+.PP
+The reflection and refraction rays mentioned in the previous section
+are generated in the same way as they are for 3D raytracing, with the
+exception that the vector arithmetic is of four dimensions rather than
+three.  Since reflection and refraction rays are confined to the plane
+containing the normal vector and the view vector, reflection and
+refraction rays are given by the following equations for raytracing in
+any dimension higher than one.
+.PP
+Refer to figure \n(CN.2 for a diagram of the reflection ray.
+.FG 2 1 6i "Ray-Object Reflection"
+.bp
+.PP
+The equation of the reflection ray is given by
+is
+.sp .5v
+.ce
+.EQ
+R vec ~=~ D vec ~-~ 2 ^ ( N vec vdot D vec ) ^ N vec
+.EN
+.sp .5v
+where #R vec# is the resulting reflection ray, #D vec# is the unit
+direction of the light ray towards the surface, and #N vec# is the
+unit vector normal to the surface.  Refer to [Foley 87] for a derivation
+of the reflection equation.
+.PP
+The refraction ray #T vec# is given by
+.sp .5v
+.EQ
+						T vec mark
+                ~=~ delta C vec ~+~ (1^-^delta )(- N vec )
+.EN
+.br
+.EQ
+C vec lineup ~=~ D vec over { norm~ N vec ^vdot^ D vec ~norm }
+.EN
+.br
+.EQ
+delta lineup ~=~ 1 over
+    {   sqrt
+        {    ( rho sub 1 ^/^ rho sub 2 ) sup 2
+             ^norm~ C vec ~norm^ sup 2 ~-~ norm~ C vec ^+^ N vec ~norm^ sup 2
+        }
+    }
+.EN
+.sp .5v
+where #T vec# is the refraction ray, #D vec# is the unit direction
+of the light ray towards the surface, #N vec# is the unit normal
+vector to the surface, #rho sub 1# is the index of refraction of
+the medium containing the light ray, and #rho sub 2# is the index
+of refraction of the object.  Note that this equation \fIdoes not\fR
+yield a unit vector for #T vec#; #T vec# must be normalized after
+this equation.  Refer to [Hill 90] for a derivation of this formula.
+.bp
+.SE "Illumination Calculations" 5
+.PP
+The illumination equations for four-dimensional raytracing are the same
+as those for raytracing in three dimensions, although the underlying
+geometry is changed.  A simple extended illumination equation is as
+follows:
+.sp .5v
+.ce
+.EQ
+I ~=~ I sub a ^ K sub a
+  ~+~ sum from { lambda = 1 } to { N sub L }
+      { I sub lambda ^ left [ ^
+        K sub d ^ cos theta ~+~ K sub s ^ cos sup n alpha ^ right ]
+      }
+  ~+~ K sub s ^ I sub r
+  ~+~ K sub t ^ I sub t ~.
+.EN
+
+.PP
+The values used in this equation are
+.in 1c
+.nf
+.ta 3c
+#I sub a# [RGB]:	Global ambient light.
+#I sub lambda# [RGB]:	Light contributed by light #lambda#.
+#I sub r# [RGB]:	Light contributed by reflection.
+#I sub t# [RGB]:	Light contributed by transmission (refraction).
+#K sub a# [RGB]:	Object ambient color.
+#K sub d# [RGB]:	Object diffuse color.
+#K sub s# [RGB]:	Object reflection color.
+#K sub t# [RGB]:	Object transparent color.
+#n# [Real]:	Phong specular factor.
+#N sub L# [Integer]:	Number of light sources.
+.in 0
+.FG 3 1 6i "Components of Illumination"
+.bp
+.PP
+Refer to figure \n(CN.4 for a diagram of the illumination vectors and
+components.  The angle #theta# between the surface normal vector and
+the light direction vector determines the amount of diffuse illumination
+at the surface point.  The angle #alpha# is the angle between the
+reflected light vector and the viewing vector, and determines the
+the amount of specular illumination at the surface point.  These angles
+are given by the following formulas.
+.sp .5v
+.ce
+.EQ
+cos theta ~=~ N vec vdot L vec sub lambda
+.EN
+.sp .5v
+.ce
+.EQ
+cos alpha ~=~ R vec vdot L vec sub lambda
+.EN
+
+.PP
+If #cos theta# is negative, then there is no diffuse or specular
+illumination at the surface point.  If #cos theta# is non-negative and
+#cos alpha# is negative, then the surface point has diffuse illumination
+but no specular illumination.
+.PP
+In the summation loop, a ray is fired from the surface point to each
+light source in the scene.  If this \fIshadow\fR ray intersects any other
+object before the light source, then the contribution from that light
+source is zero; #I sub lambda# for light source #lambda# is set to zero.
+If no object blocks the light source, then #I sub lambda# is used
+according to the type of light source.
+.PP
+The raytracer developed for this research implements both point and
+directional light sources.  For directional light sources, the vector
+#L sub lambda# is constant for all points in the scene.  For point
+light sources, #L sub lambda# is calculated by subtracting the point
+light source location from the surface point.  Both of these light
+sources are assigned a color value (#I sub lambda#).
+.SE "Intersection Algorithms" 6
+.PP
+The fundamental objects implemented in the 4D raytracer
+include hyperspheres, tetrahedra and parallelepipeds.  The
+intersection algorithms for each of these objects takes a
+pointer to the object to be tested plus the origin and
+unit direction of the ray.  If the ray does not intersect
+the object, the function returns false.  If the ray hits
+the object, the function returns the intersection point and
+the surface normal at the intersection point.
+.PP
+Some objects, such as hyperspheres, can have zero, one or two intersection
+points.  More complex objects may well have many more intersection points.
+The intersection functions must return the intersection point closest to the
+ray origin (since other intersection points would be obscured by the nearest
+one.)
+.SE "Ray - Hypersphere Intersection" 6 1
+.PP
+The hypersphere is one of the simplest four-dimensional
+objects, just as the three-sphere is among the simplest
+objects in 3D raytracers.  Like the three-sphere, the
+four-sphere is specified by a center point and a radius.
+.PP
+The implicit equation of the four-sphere is
+.sp .5v
+.ce
+.EQ
+    (S sub x ^-~ C sub x ) sup 2 ~+~ (S sub y ^-~ C sub y ) sup 2
+~+~ (S sub z ^-~ C sub z ) sup 2 ~+~ (S sub w ^-~ C sub w ) sup 2
+~-~ r sup 2 ~=~ 0 ^,
+.EN
+.sp .5v
+where #r# is the radius of the four-sphere, #bold C# is the center
+of the sphere, and #bold S# is a point on the surface of the sphere.
+.PP
+Obtaining the normal vector from the intersection point
+is a trivial matter, since the surface normal of a sphere
+always passes through the center.  Hence, for an
+intersection point #bold I#, the surface normal at #bold I# is given by
+#N vec ~=~ bold I ~-~ bold C#.
+.PP
+Calculating the intersection of a ray with the sphere is also fairly
+straight-forward.  Given a ray defined by the equation
+#r vec ~=~ bold P ~+~ t D vec#, where #bold P# is the ray origin,
+#D vec# is the unit ray direction vector, and #t# is a parametric
+variable, we can find the intersection of the ray with a given
+hypersphere in the following manner:
+.in 1c
+.sp .5v
+.EQ
+    (C sub x ^-~ S sub x ) sup 2 ~+~ (C sub y ^-~ S sub y ) sup 2
+~+~ (C sub z ^-~ S sub z ) sup 2 ~+~ (C sub w ^-~ S sub w ) sup 2
+~-~ r sup 2 ~=~ 0
+.EN
+
+.EQ
+norm~ bold C ^-^ bold S ~norm^sup 2 ~-~ r sup 2 ~=~ 0
+.EN
+
+Substitute the ray equation into the surface value to get
+
+.EQ
+norm~ bold C ~-~ ( bold P ^+^ t D vec ) ~norm^sup 2 ~-~ r sup 2 ~=~ 0
+.EN
+
+.EQ
+norm~ ( bold C ^-^ bold P ) ~-~ t D vec ~norm^sup 2 ~-~ r sup 2 ~=~ 0
+.EN
+
+.EQ
+norm~V vec ~-~ t D vec ~norm^sup 2 ~-~ r sup 2 ~=~ 0
+~~~~~~~~~~ "(where " V vec ~=~ bold C ^-^ bold P ")"
+.EN
+
+.EQ
+   (V sub x ^-~ tD sub x ) sup 2 ~+~ (V sub y ^-~ tD sub y ) sup 2
+~+~(V sub z ^-~ tD sub z ) sup 2 ~+~ (V sub w ^-~ tD sub w ) sup 2
+~-~ r sup 2 ~=~ 0
+.EN
+
+.EQ
+t sup 2 (D sub x sup 2~+~D sub y sup 2~+~D sub z sup 2~+~D sub w sup 2 )
+.EN
+.br
+.EQ
+~~~~~~~~-~ 2t(V sub x D sub x ~+~ V sub y D sub y ~+~ V sub z D sub z
+              ~+~ V sub w D sub w )
+.EN
+.br
+.EQ
+~~~~~~~~+~(V sub x sup 2~+~V sub y sup 2~+~V sub z sup 2~+~V sub w sup 2 )
+       ~-~ r sup 2 ~=~ 0
+.EN
+
+This simplifies to
+.EQ
+t sup 2 ( D vec vdot D vec ) ~-~ 2t ( V vec vdot D vec )
+~+~ ( V vec vdot V vec ^-^ r sup 2 ) ~=~ 0 ~.
+.EN
+
+Since #D vec# is a unit vector, this equation further simplifies to
+
+.EQ
+t sup 2 ~-~ 2t ( V vec vdot D vec )~+~( V vec vdot V vec ^-^ r sup 2 ) ~=~0
+~.
+.EN
+
+The quadratic formula # x sup 2 ~-~ 2bx ~+~ c ~=~ 0 # has roots  
+# b ~+-~ sqrt { b sup 2 ~-~ c } #.
+
+So, solving for #t#, we get
+.sp .5v
+.ce 1
+.EQ
+t ~=~ ( V vec vdot D vec ) ~+-
+~sqrt { ( V vec vdot D vec ) sup 2 ~-~ ( V vec vdot V vec ^-^ r sup 2 ) } ~.
+.EN
+.sp 1v
+.PP
+The intersection point is given by plugging the smallest
+non-negative solution for #t# into the ray equation.  If there is no
+solution to this equation (\fIe.g.\fR, the quantity under the square
+root is negative), then the ray does not intersect the hypersphere.
+.br
+.ne 18v
+.PP
+The pseudo-code for the ray-hypersphere intersection algorithm follows.
+.in 1c
+.SC
+\fBfunction\fR  HitSphere: \fBBoolean\fR  (ray: \fBRay4\fR, \
+sphere: \fBSphere4\fR, intersect: \fBPoint4\fR, normal: \fBVector4\fR)
+bb:	\fBReal\fR		\fIQuadratic Equation Value\fR
+V:	\fBVector4\fR	\fIVector from Ray Origin to Sphere Center\fR
+rad:	\fBReal\fR		\fIRadical Value\fR
+t1,t2:	\fBReal\fR		\fIRay Parameter Values for Intersection\fR
+\fBbegin\fR
+	V \(<- sphere.center #-# ray.origin
+	bb \(<- Dot4(V,ray.direction)
+	rad \(<- (bb #*# bb) #-# Dot4(V,V) #+# sphere.radius_squared
+
+	\fBif\fR rad #<# 0	\fIIf the radical is negative, then no intersection.\fR
+		\fBreturn\fR false
+
+	rad \(<- SquareRoot(rad)
+	t2  \(<- bb #-# rad
+	t1  \(<- bb #+# rad
+
+	\fIEnsure that t1 is the smallest non-negative value (nearest point).\fR
+
+	\fBif\fR t1 < 0 \fBor\fR (t2 > 0 \fBand\fR t2 < t1)
+		t1 \(<- t2
+
+	\fBif\fR t1 #<# 0		\fIIf sphere is behind the ray, then no intersection.\fR
+		\fBreturn\fR false
+
+	intersect \(<- ray.origin #+# (t1 #*# ray.direction)
+	normal  \(<- (intersect #-# sphere.center) #/# sphere.radius
+
+	\fBreturn\fR true
+
+\fBendfunc\fR HitSphere
+
+.SE "Ray - Tetrahedron Intersection" 6 2
+.PP
+The tetrahedron is to the 4D raytracer what the triangle
+is to the 3D raytracer.  Just as all 3D objects can be
+approximated by an appropriate mesh of tessellating
+triangles, 4D objects can be approximated with an
+appropriate mesh of tetrahedra.  Of course, the tessellation
+of 4D objects is more difficult (\fIe.g.\fR how do you tessellate
+a hypersphere?), but it does allow for the approximation of
+a wide variety of objects.
+.PP
+In the fourth dimension, the tetrahedron is ``flat'', \fIi.e.\fR it has a
+constant normal vector across its volume.  Any vector embedded in the
+tetrahedron is perpendicular to the tetrahedron normal vector.
+.PP
+The tetrahedron is specified by four completely-connected vertices in
+four-space.  A tetrahedron in which the four vertices are coplanar is
+a degenerate tetrahedron; it is analogous to a triangle in three-space
+with colinear vertices.  The 4D raytracer should ignore degenerate
+tetrahedra as invisibly thin.
+.PP
+Since the tetrahedron normal is constant, pre-compute
+this vector and store it in the tetrahedron description before
+raytracing the scene.  The normal is computed by finding three
+independent vectors on the tetrahedron and crossing them to
+compute the orthogonal normal vector.
+.sp .5v
+.in 5c
+.EQ
+{B sub 1} vec ~=~ bold V1 ~-~ bold V0 ~,
+.EN
+
+.EQ
+{B sub 2} vec ~=~ bold V2 ~-~ bold V0 ~,
+.EN
+
+.EQ
+{B sub 3} vec ~=~ bold V3 ~-~ bold V0 ~,~and
+.EN
+
+.EQ
+N vec ~=~ { cross4 ( {B sub 1} vec ,~ {B sub 2} vec ,~ {B sub 3} vec ) } over
+{ norm ^ cross4 ( {B sub 1} vec ,~ {B sub 2} vec ,~ {B sub 3} vec ) ^ norm }
+~,
+.EN
+.in 0
+.sp .5v
+where #bold V0#, #bold V1#, #bold V2#, and #bold V3# are the
+tetrahedron vertices and #N vec# is the unit normal vector.
+.PP
+Finding the intersection point of a ray and tetrahedron is much
+more difficult than for the hypersphere case.  This is primarily
+because it requires the solution of a system of three equations
+and three unknowns to find the barycentric coordinates of the
+intersection point.
+.PP
+Once the barycentric coordinates of the intersection point are
+known, they can be used to determine if the point lies inside
+the tetrahedron, and also to interpolate vertex color or vertex
+normal vectors across the hyperface of the tetrahedron (Gouraud
+or Phong shading, respectively).  For further reference on
+barycentric coordinates, refer to [Farin 88] and [Barnhill 84]
+(particularly the section on simplices and barycentric coordinates).
+.PP
+The method used to find the barycentric coordinates of the
+ray-hyperplane intersection with respect to the tetrahedron is
+an extension of the algorithm for computing barycentric coordinates
+of the ray-plane intersection with respect to the triangle,
+presented in [Glassner 90].
+.PP
+Again, the ray is specified by the equation #bold P ~+~ t D vec#,
+where #bold P# is the ray origin, #D vec# is the unit direction
+vector, and #t# is the ray parameter.  For each point #bold Q# on
+the tetrahedron, #bold Q ^vdot^ N vec# is constant.  Let
+#d ~=~ - bold V0 ^vdot^ N vec#.  Thus, the hyperplane is defined
+by #N vec vdot bold Q ~+~ d ~=~ 0#, where the tetrahedron is
+embedded in this hyperplane.
+.PP
+First compute the ray-hyperplane intersection with 
+# t ~=~ -~ { d ~+~ N vec vdot bold P } over { N vec vdot D vec } #.
+If #N vec vdot D vec# is zero, then the ray is parallel to the
+embedding hyperplane; it does not intersect the tetrahedron.
+If #t ~<~ 0#, then the embedding hyperplane is behind the
+ray, so the ray does not intersect the tetrahedron.
+.PP
+.ne 8v
+Now compute the ray-hyperplane intersection with relation to
+the tetrahedron.  The barycentric coordinates of the intersection
+point #bold Q# is given by the equation
+.sp .5v
+.ce
+.EQ
+bold {V0^Q} bar ~=~ alpha ^ bold {V0^V1} bar
+                ~+~ beta  ^ bold {V0^V2} bar
+                ~+~ gamma ^ bold {V0^V3} bar ~.
+.EN
+.ta 6iR
+	[5.5.2a]
+.sp 1v
+.PP
+The ray-hyperplane intersection point #bold Q# is inside the
+tetrahedron if #alpha ~>=~ 0#, #beta ~>=~ 0#, #gamma ~>=~ 0#,
+and #alpha^+^beta^+^gamma ~<=~ 1#.
+.PP
+Equation 5.5.2a can be rewritten as
+.sp .5v
+.ce
+.EQ
+left [~matrix { ccol {       {Q sub x ^-^ V0 sub x}
+                       above {Q sub y ^-^ V0 sub y}
+                       above {Q sub z ^-^ V0 sub z}
+                       above {Q sub w ^-^ V0 sub w} } } ~ right ]
+~=~alpha^left [~matrix { ccol {       {V1 sub x ^-^ V0 sub x}
+                                above {V1 sub y ^-^ V0 sub y}
+                                above {V1 sub z ^-^ V0 sub z}
+                                above {V1 sub w ^-^ V0 sub w} } } ~right ]
+~+~beta ^left [~matrix { ccol {       {V2 sub x ^-^ V0 sub x}
+                                above {V2 sub y ^-^ V0 sub y}
+                                above {V2 sub z ^-^ V0 sub z}
+                                above {V2 sub w ^-^ V0 sub w} } } ~right ]
+~+~gamma^left [~matrix { ccol {       {V3 sub x ^-^ V0 sub x}
+                                above {V3 sub y ^-^ V0 sub y}
+                                above {V3 sub z ^-^ V0 sub z}
+                                above {V3 sub w ^-^ V0 sub w} } } ~right ] ~.
+.EN
+.br
+.ta 6iR
+	[5.5.2b]
+.sp 1v
+.PP
+To simplify the solution for these coordinates, we project
+the tetrahedron to one of the four primary hyperplanes
+(#XYZ#, #XYW#, #XZW# or #YZW#).  To make this projection as
+``large'' as possible (to ensure that we don't ``flatten''
+the tetrahedron by projecting it to a perpendicular hyperplane),
+find the dominant axis of the normal vector and use the
+hyperplane perpendicular to the dominant axis.  In other words
+the normal to the major hyperplane is formed by replacing the
+normal coordinate that has the largest absolute value with zero.
+For example, given a normal vector of #<3,~1,~7,~5>#, the dominant
+axis is the third coordinate, and the hyperplane perpendicular to
+#<3,~1,~0,~5># will yield the largest projection of the tetrahedron.
+Once again, since the normal vector is constant, the three
+non-dominant coordinates (X, Y, and W for the above example)
+should be stored for future reference.  Refer to the intersection
+algorithm for an illustration of this.
+.PP
+The hyperplane equation is then reduced to three coordinates,
+#i#, #j#, and #k# (X, Y & W for the previous example), so equation
+[5.5.2b] is reduced to
+.sp .5v
+.ce
+.EQ
+left [~matrix { ccol {       {Q sub i ^-^ V0 sub i}
+                       above {Q sub j ^-^ V0 sub j}
+                       above {Q sub k ^-^ V0 sub k} } } ~right ]
+~=~alpha^left [~matrix { ccol {       {V1 sub i ^-^ V0 sub i}
+                                above {V1 sub j ^-^ V0 sub j}
+                                above {V1 sub k ^-^ V0 sub k} } } ~right ]
+~+~beta ^left [~matrix { ccol {       {V2 sub i ^-^ V0 sub i}
+                                above {V2 sub j ^-^ V0 sub j}
+                                above {V2 sub k ^-^ V0 sub k} } } ~right ]
+~+~gamma^left [~matrix { ccol {       {V3 sub i ^-^ V0 sub i}
+                                above {V3 sub j ^-^ V0 sub j}
+                                above {V3 sub k ^-^ V0 sub k} } } ~right ]
+.EN
+.br
+.ta 6iR
+	[5.5.2c]
+.sp 1v
+.PP
+Now find #alpha#, #beta#, and #gamma# by solving the system
+of three equations and three unknowns; these are the barycentric
+coordinates of the intersection point Q relative to the tetrahedron.
+The fourth barycentric coordinate is given by #(1^-^alpha^-^beta^-^gamma )#.
+.PP
+In order for the tetrahedron to contain the ray-hyperplane intersection
+point, the following equations must be met:
+.ne 4v
+.sp .5v
+.ce
+.EQ
+alpha ~>=~ 0,~~~~ beta  ~>=~ 0,~~~~ gamma ~>=~ 0
+.EN
+.ce
+and
+.ce
+.EQ
+alpha ~+~ beta ~+~ gamma ~<=~ 1
+.EN
+.sp 1v
+If any of the barycentric coordinates are less than zero, or if the
+barycentric coordinates sum to greater than one, then the ray does
+not intersect the tetrahedron.
+.PP
+Once #alpha#, #beta# and #gamma# are known for the point of
+intersection, the ray-hyperplane intersection point #bold Q# can be
+found by the following equation:
+.sp .5v
+.ce
+.EQ
+bold Q ~=~ (1^-^alpha^-^beta^-^gamma )^bold {V sub 0}
+       ~+~ alpha^bold {V sub 1}
+       ~+~ beta ^bold {V sub 2}
+       ~+~ gamma^bold {V sub 3}
+.EN
+.PP
+.ne 10v
+The following pseudo-code implements the ray-tetrahedron intersection
+algorithm.
+.in 1c
+.SC
+\fBfunction\fR  HitTet: \fBBoolean\fR  (ray: \fBRay4\fR, \
+tet: \fBTetrahedron\fR, intersect: \fBPoint4\fR, normal: \fBVector4\fR)
+A11,A12,A13: \fBReal\fR		\fIEquation System Matrix Values\fR
+A21,A22,A23: \fBReal\fR
+A31,A32,A33: \fBReal\fR
+b1, b2, b3 : \fBReal\fR		\fIEquation System Results\fR
+rayt:  \fBReal\fR				\fIRay Parameter Value for Intersection\fR
+x1, x2, x3 : \fBReal\fR		\fIEquation System Solution\fR
+\fBbegin\fR
+	\fICompute the intersection of the ray with the hyperplane containing
+	the tetrahedron.\fR
+
+	rayt \(<- Dot4 (tet.normal,ray.direction)
+	\fBif\fR rayt #<# 0
+		\fBreturn\fR false
+
+	rayt \(<- #-# (tet.HPlaneConst #+# Dot4 (tet->normal,ray.origin)) #/# rayt
+	\fBif\fR rayt #<# 0
+		\fBreturn\fR false
+
+	\fICalculate the intersection point of the ray and embedding hyperplane.\fR
+
+	intersect \(<- ray.origin #+# (rayt #*# ray.direction)
+
+	\fICalculate the equation result values.  Note that the dominant axes are
+	precomputed and stored in \fRtet.axis1\fI, \fRtet.axis2\fI, and \fRtet.axis3\fI.\fR
+
+	b1  \(<- intersect[tet.axis1] #-# tet.V0[tet.axis1]
+	b2  \(<- intersect[tet.axis2] #-# tet.V0[tet.axis2]
+	b3  \(<- intersect[tet.axis3] #-# tet.V0[tet.axis3]
+
+	\fICalculate the matrix of the system of equations.  Note that the vectors
+	corresponding to V1-V0, V2-V0, and V3-V0 have been precomputed, and are
+	stored in the fields \fRtet.vec1\fI, \fRtet.vec2\fI, and \fRtet.vec3\fI.\fR
+
+	A11 \(<- tet.vec1[tet.axis1]
+	A12 \(<- tet.vec1[tet.axis2]
+	A13 \(<- tet.vec1[tet.axis3]
+
+	A21 \(<- tet.vec2[tet.axis1]
+	A22 \(<- tet.vec2[tet.axis2]
+	A23 \(<- tet.vec2[tet.axis3]
+
+	A31 \(<- tet.vec3[tet.axis1]
+	A32 \(<- tet.vec3[tet.axis2]
+	A33 \(<- tet.vec3[tet.axis3]
+
+	\fISolve the system of three equations and three unknowns.\fR
+
+	SolveSys3 (A11,A12,A13, A21,A22,A23,  A31,A32,A33, b1,b2,b3, x1,x2,x3)
+
+	\fBif\fR x1 #<# 0 \fBor\fR x2 #<# 0 \fBor\fR x3 #<# 0 \fBor\fR (x1#+#x2#+#x3) #># 1
+		\fBreturn\fR false
+
+	tet.bc1 \(<- x1		\fISet the intersection barycentric coordinates.\fR
+	tet.bc2 \(<- x2
+	tet.bc3 \(<- x3
+
+	normal \(<- tet.normal	\fIThe tetrahedron normal is precomputed.\fR
+	\fBreturn\fR true
+
+\fBendfunc\fR HitTet
+.sp 2v
+.PP
+The tetrahedron can be rendered with Flat, Gouraud or Phong
+shading, since the barycentric coordinates of the intersection points
+are known.  For Gouraud shading with vertex colors
+#C sub 0#, #C sub 1#, #C sub 2# and #C sub 3# corresponding to
+#bold V0#, #bold V1#, #bold V2# and #bold V3#, respectively, the
+color #C sub intersect# of the intersection point is given by
+.sp .5v
+.ce
+.EQ
+C sub intersect ~=~~ (1^-^alpha^-^beta^-^gamma )^C sub 0
+  ~~+~~alpha^C sub 1
+  ~~+~~beta^ C sub 2
+  ~~+~~gamma^C sub 3 ~.
+.EN
+.sp .5v
+.PP
+Phong shading can be used to interpolate the normals #N sub 0#,
+#N sub 1#, #N sub 2# and #N sub 3# to find the interpolated normal
+#N vec sub intersect# of the intersection point with this equation:
+.sp .5v
+.ce
+.EQ
+N vec sub intersect ~=~~ (1^-^alpha^-^beta^-^gamma )^{N sub 0} vec
+      ~~+~~ alpha^{N sub 1} vec
+      ~~+~~ beta ^{N sub 2} vec
+      ~~+~~ gamma^{N sub 3} vec ~.
+.EN
+.SE "Ray - Parallelepiped Intersection" 6 3
+.PP
+The parallelepiped was included in the 4D raytracer
+because of the similarities between the parallelepiped and
+the tetrahedron.  Like the tetrahedron, the parallelepiped is
+specified with four vertices.  The intersection algorithm
+for the parallelepiped differs from the algorithm for the
+tetrahedron in a single comparison; hence its inclusion in
+the set of fundamental objects is relatively free if the
+tetrahedron is already provided.
+.PP
+Like the tetrahedron, the normal vector for the
+parallelepiped is constant and is given by the 4D cross product
+of the three vectors #bold {V1 V0} bar#, #bold {V2 V0} bar#,
+and #bold {V3 V0} bar#.  
+.PP
+The intersection point is computed in the same manner as
+for the tetrahedron, with the exception that the barycentric
+coordinates #alpha#, #beta# and #gamma# must meet slightly
+different criteria:
+.sp .5v
+.ce
+.EQ
+alpha ~>=~ 0,~~~~ beta  ~>=~ 0,~~~~ gamma ~>=~ 0
+.EN
+.ce
+and
+.ce
+.EQ
+alpha ~<=~ 1,~~~~ beta  ~<=~ 1,~~~~ gamma ~<=~ 1
+.EN
+.sp 1v
+.PP
+If the tetrahedron and parallelepiped data structures are defined
+properly, the intersection routine for the tetrahedron can also
+solve for ray-parallelepiped intersections.  The only difference
+is that for the parallelepiped, the barycentric coordinates #alpha#,
+#beta#, and #gamma# can sum to greater than one, whereas the tetrahedron
+requires that their sum does not exceed one.
+.SE "Display of 4D Raytrace Data" 7
+.PP
+The output of the 4D raytracer is a 3D grid of voxels,
+where each voxel is assigned an RGB triple.  This data can
+be thought of as set of scanplanes, or as a 3D scalar field
+of RGB data.
+.PP
+One way to display this data is to present it in slices,
+either individually, or as a tiled display of scanplanes.
+Producing an animation of the data a scanplane at a time
+is also a good method for displaying the image cube,
+although it would be best displayed this way under user
+interaction (e.g. by slicing the voxel field under mouse
+control).
+.PP
+[Drebin 88] also suggests a method of visualization that
+would be very appropriate for this sort of data, where the
+voxel field is presented as a field of colored transparent
+values.  Although the algorithm as presented takes
+real-valued voxels, rather than RGB voxels, the RGB output data
+can be converted to greyscale (one common equation is
+#Intensity ~=~ 0.299 ~ Red ~+~ 0.587 ~ Green ~+~ 0.114 ~ Blue#,
+as given in [Hall 89]).  The resulting single-valued scalar field
+can then be visualized with a variety of algorithms, including
+also [Chen 85], [Kajiya 84], and [Sabella 88].
+.PP
+It's also possible to produce single scanplanes from the
+4D raytracer, and use two of these as the left and right eye
+images for stereo display, although the presence of an extra
+degree of parallax makes this method less helpful than might
+initially be thought.
+.SE "Example Ray4 Images" 8
+.PP
+Several 4D raytraced images are included in this section.
+Figure \n(CN.4 is the ray-traced image of a random distribution of
+four-spheres.  All of the four-spheres have the same illumination
+properties; only the colors and positions are different.  Notice
+that the Phong specular illumination manifests itself at different
+slices of the image cube.
+.PP
+One way to explain this phenomena is that just as the 3D to 2D
+projection of a shiny sphere yields a 2D phong spot embedded
+somewhere in the 2D projection of the sphere, a shiny four-sphere
+is projected to 3D with a 3D phong region embedded somewhere in
+the 3D projection of the four-sphere.
+.PP
+Figure \n(CN.5 is the sliced image cube of sixteen four-spheres
+of radius 0.5 positioned at the vertices of a four-cube at
+locations #< +- 1.25,~+- 1.25,~+- 1.25,~+- 1.25>#.
+.PP
+Figure \n(CN.6 is similar to figure \n(CN.5, except that
+four-tetrahedrons are placed at the vertices rather than four-spheres.
+The four-tetrahedrons are oriented so that the normal of each
+four-tetrahedron is aimed at the center of the four-cube, and the
+four-tetrahedron vertices lie on the four-cube edges.
+.br
+.bp
+.ls 1
+.lt 6i
+.in 0.5i
+.tm .FG \n% "Sliced 4D Image Cube of Random 4-Sphere Distribution" \n(CN.4
+.sp 3.1i
+
+.tl ''(a)  Resulting Image Cube Slices''
+
+.sp 3.7i
+.tl ''(b)  Single Slice From Figure \n(CN.4a''
+.sp 2v
+.tl ''Figure \n(CN.4''
+
+.tl ''Sliced 4D Image Cube of Random 4-Sphere Distribution''
+.FG 5  1 3.2i "Sliced Image of 16 4-Spheres Placed at 4-Cube Vertices"
+.FG 6  0 4.0i "Sliced Image of 16 4-Tetrahedrons Placed at 4-Cube Vertices"
+.br

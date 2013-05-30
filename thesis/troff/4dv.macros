@@ -1,0 +1,10 @@
+.\" TROFF Macros for the Four Dimensional Visualization Thesis
+.\" Steve Hollasch
+.\" ----------------------------------------------------------
+.EQ
+delim  ##
+gsize  12
+define cross4 'bold X sub 4'
+define norm   '\(br^\(br'
+define vdot   'fat cdot'
+.EN

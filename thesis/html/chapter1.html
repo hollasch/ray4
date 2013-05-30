@@ -1,0 +1,204 @@
+<!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html>
+<head>
+    <title>Four-Space Visualization of 4D Objects - Chapter 1</title>
+    <link rel="stylesheet" href="./thesis.css" type="text/css">
+</head>
+
+<body>
+
+<h1>Chapter 1<br>Introduction</h1>
+
+<p class="noindent">
+The display of four-dimensional data is usually accomplished by assigning
+three dimensions to location in three-space, and the remaining dimension to
+some scalar property at each three-dimensional location.  This assignment is
+quite apt for a variety of four-dimensional data, such as tissue density in a
+region of a human body, pressure values in a volume of air, or temperature
+distribution throughout a mechanical object.
+
+<p>While there exist a number of methods to approach the visualization of
+three-dimensional scalar fields (<a href="ref.html#Chen85">[Chen 85]</a>,
+<a href="ref.html#Drebin88">[Drebin 88]</a>,
+<a href="ref.html#Kajiya84">[Kajiya 84]</a>,
+<a href="ref.html#Lorensen87">[Lorensen 87]</a>, and
+<a href="ref.html#Sabella88">[Sabella 88]</a>
+are good examples), there are few methods that are effective on true
+four-dimensional data, where the data do not represent a three-dimensional
+scalar field.
+
+<p>This paper approaches the problem of displaying 4D objects as physical
+models through two main approaches:  wireframe methods and raytracing.  Both
+of these methods employ true four-dimensional viewpoints and viewing
+parameters, and light (or depthcue) the rendered objects from four-space.
+
+<h2 id="s1.1">1.1  Background</h2>
+
+<p class="noindent">
+The tremendous difficulty of visualizing true four-space data lies in the
+fact that there are no solid paradigms for three-space creatures such as
+ourselves.  This difficulty is best understood in imagining the plights of
+two-space creatures who try to comprehend our three-space world (see
+<a href="ref.html#Abbott52">[Abbott 52]</a> or
+<a href="ref.html#Dewdney84">[Dewdney 84]</a>
+for explorations of this idea).
+
+<p>The method we use to comprehend three-dimensional scenes is quite complex,
+since each eye is presented with only the two-dimensional projection of the
+three-dimensional scene.  There are several methods we employ to convert these
+2D projections to an imaginary 3D model.  These methods include focusing (of
+limited help but useful when viewing with a single eye), parallax (deriving
+depth through binocular vision), application of object knowledge to understand
+different views, and motion to derive depth information.
+
+<p>These methods of visualizing 3D objects are very strong, and are usually
+quite accurate.  When dealing with a single rendered 2D projection, however,
+the image becomes a bit more difficult to comprehend, because the viewer can
+no longer use focusing or parallax to extract information from the scene.
+
+<p>Usually, however, rendered 2D projections are quite intelligible because
+these projections involve objects or structures familiar to the viewer, and
+because shadows and highlights also help the viewer to extract depth
+information.  The main thing that aids our understanding of a scene when given
+only 2D projections is our experience and intuitive understanding of the 3D
+world.  This additional understanding helps us to intuitively reconstruct the
+original 3D scene, and to accurately guess the portions for which we have no
+visual information.
+
+<p>If we are deprived of this intuition and experience, then reconstructing
+the original scene from a projection is very difficult.  This is what makes
+visualizing 4D data such a complex task.  In fact, when rendering a 4D scene,
+not one but two dimensions of the original data are lost; one can think of a
+screen image of 4D data as a projection of the projection of the scene.  This
+further loss of information, coupled with our lack of intuitive understanding,
+demands that the 4D visualization methods provide additional information,
+usually in the form of motion, multiple views or other visual cues.  These
+techniques will be presented in more detail later in this paper.
+
+<h2 id="s1.2">1.2  Previous Work</h2>
+
+<p class="noindent">
+The idea of understanding four-dimensional space is at least as old as the
+nineteenth century, and has been studied mathematically at least as early as
+the 1920's.  Understanding four-space has also been explored in texts that
+attempt to model two-dimensional creatures and their perceptions of
+three-space (see
+<a href="ref.html#Abbott52">[Abbott 52]</a> and
+<a href="ref.html#Dewdney84">[Dewdney 84]</a>).
+Studying the difficulties of
+two-space creatures who attempt to understand three-space often yields insight
+into the problem of understanding four-space from our three-dimensional
+world.
+
+<p>The task of viewing four-space structure has been explored as early as
+<a href="ref.html#Noll67">[Noll 67]</a>,
+who rendered four-dimensional wireframes with 4D perspective
+projection.  Noll was limited in his exploration of four-dimensional
+structures by the technology of that time; his method consisted of generating
+pictures via plotter and then transferring each drawing onto film.  The movies
+he produced yielded a great amount of insight into the structure of various
+four-dimensional objects.  However, the lack of interaction was certainly a
+significant hindrance.
+
+<p>In 1978, David Brisson
+(<a href="ref.html#Brisson78">[Brisson 78]</a>) presented
+hyperstereograms of 4D wireframes.  These hyperstereograms are unconventional
+in the sense that the viewer must rotate the hyperstereograms in order to
+resolve the second degree of parallax of the 4D view.  These hyperstereograms
+are very difficult to view, but do provide another method of understanding the
+four-dimensional structures.
+
+<p>In the early 1980's, Thomas Banchoff (who is heavily involved in the
+visualization of four-space) rendered hypersphere ``peels''
+(<a href="ref.html#Dewdney86">[Dewdney 86]</a> and
+<a href="ref.html#Banchoff90">[Banchoff 90]</a>)
+which resulted in some beautiful images of their rotation in
+four-space.
+
+<p>Several people have rendered four-dimensional objects by producing the
+three-dimensional slices of the object; this is presented in
+<a href="ref.html#Banchoff90">[Banchoff 90]</a>.
+
+<p>Rendering solid four-dimension objects yields a three-dimensional
+``image'', rather than the two-dimensional image of a three-dimensional
+object.
+<a href="ref.html#Steiner87">[Steiner 87]</a> and
+<a href="ref.html#Carery87">[Carey 87]</a>
+use scanplane conversion to render
+four-dimensional objects into three-dimensional voxel fields.  Both approaches
+also tackle the difficult problem of hidden volume removal in four-dimensional
+views.  The resulting fields are then displayed with semi-transparent voxels
+in order to view the internal structure of the three-dimensional
+projections.
+
+<h2 id="s1.3">1.3  Overview of This Research</h2>
+
+<p class="noindent">
+This research builds on the existing wireframe display techniques and
+tackles the visualization of solid four-dimensional objects via raytracing
+techniques.
+
+<p>The wireframe viewer takes as input a list of four-space vertices and a
+list of edges between pairs of these vertices.  It produces a single image
+which is the 2D projection of the 4D scene, and which may be interactively
+rotated, depthcued, and parallel- or perspective-projected.
+
+<p>The limitations of the 4D wireframe viewer are pretty much the same as
+those for a 3D wireframe viewer:  the lack of surface information, the
+multiple ambiguities of a wireframe view, and the fact that all objects must
+be decomposed to vertices and edges.
+
+<p>The significant advantage of the wireframe viewer is that image display is
+quite fast, especially when compared to raytracing methods.  This speed of
+display allows for interactive rotation of the 4D object, which greatly aids
+in an understanding of the object and its relationship to the rest of the
+scene.  Another advantage is that the wireframe viewer is able to display
+curves in four-space.
+
+<p>The 4D raytracer solves the hidden volume and lighting problem in a very
+straight-forward manner (as for 3D).  It takes an input file of 4D object
+information and probes the scene that contains these objects.  The implemented
+4D raytracer handles three primitives:  hyperspheres, tetrahedra, and
+parallelepipeds, although the methods presented in this paper apply to a much
+broader class of objects.
+
+<p>The output of the 4D raytracer is a gridded 3D volume of RGB triples,
+analogous to the gridded 2D volume of RGB data produced by a 3D raytracer.
+The disadvantages of the raytracer include the increased rendering time and
+the resultant 3D volume, which must be further rendered with other
+methods.
+
+<p>The main advantages of the raytracer include the fact that the rendered
+image has hidden volumes, shadows, highlights, reflections and other artifacts
+that aid the understanding of the scene.
+
+<h2 id="s1.4">1.4  Contents of This Paper</h2>
+
+<p class="noindent">
+Chapter 2 covers the four-dimensional geometry that is used in this
+research, and focuses on vector operations and 4D rotations.  The 3D and 4D
+viewing models are presented on a functional level in Chapter 3 and
+implemented in detail in Chapters 4 and 5.  Chapter 4 covers the rendering of
+4D data via wireframe methods.  It describes the method of projecting the
+image from four-space to three-space, and then from three-space to the 2D
+viewport.  It also covers the implementation of 4D object rotation and other
+wireframe visual aids.  The four-dimensional raytracing method is presented in
+Chapter 5; this includes the generation of the ray target grid, the
+intersection algorithms used for the fundamental 4D objects, and the methods
+of visualizing the resulting 3D ``image'' of RGB data.  Finally, Chapter 6
+provides a conclusion to this research.  It includes notes on the research in
+general, suggestions for further research and exploration, and provides a few
+comments on the implementation of the programs discussed in this paper.
+
+<p><br>
+<hr>
+<center>
+<table border=2 cellpadding=4>
+<tr>
+<td><a href="default.htm">Table of Contents</a>
+<td><a href="chapter2.html">Next Chapter</a>
+</table>
+</center>
+
+</body>
+</html>

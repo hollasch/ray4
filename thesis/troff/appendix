@@ -1,0 +1,125 @@
+.AP A "Implementation Notes"
+.in 0
+The programs written for this research are:
+.in 1c
+.ta 2.5c
+\fIwire4\fR	4D Wireframe Display Program
+.br
+\fIray4\fR	4D Raytracer
+.br
+\fIr4toiff\fR	Ray4 to Amiga Interchange File Format
+.br
+\fIr4tosgi\fR	Ray4 to Silicon Graphics Iris Display
+.sp 3v
+.ne 6v
+.in 0
+.ft B
+The wire4 Program
+
+.PP
+The wire4 program runs on the Silicon Graphics Iris 3130 workstation and
+uses the Silicon Graphics GL display language.  The input file specifies
+the following data:
+.in 4m
+3D Viewing Parameters:  From, To, Up, View-Angle
+.br
+4D Viewing Parameters:  From, To, Up, Over, View-Angle
+.br
+Vertex List
+.br
+Edge List
+.br
+Edge Color Palette
+.br
+Depthcue Parameters:  Minimum & Maximum Distance
+.br
+Depthcue Parameters:  Near & Far Colors, Depthcue Levels
+.sp 1v
+.PP
+\fIwire4\fR reads the input file and displays the wireframe with the initial
+viewing parameters.  Since only the viewpoints are rotated, the 4D and 3D
+distances from the from-point to the to-point are constant.  The user has
+interactive control over the following:
+.in 4m
+Rotation in 3D \(em 3 Planes
+.br
+Rotation in 4D \(em 6 Planes
+.br
+4D Projection Type \(em Parallel or Perspective
+.br
+3D Projection Type \(em Parallel or Perspective
+.br
+Depthcue On/Off
+.br
+3D Projection Cube Display On/Off
+.sp 3v
+.ne 6v
+.in 0
+.ft B
+The ray4 Program
+
+.PP
+\fIray4\fR runs on both the Commodore Amiga and most Unix platforms.  Since
+the output is sent to a file, this program is device independent.
+.PP
+The input file contains the following information:
+.sp .5v
+.in 2c
+.nf
+.ls 1
+Global Ambient Light
+
+Background Color
+
+Maximum Raytrace Depth
+
+4D Viewing Parameters:
+.in +1c
+    From Point,
+    To Point,
+    Up Vector,
+    Over Vector,
+    Viewing-Angle
+.in -1c
+
+Light Sources:
+.in +1c
+    Point,
+    Directional
+.in -1c
+
+Attribute Descriptions
+.in +1c
+    Ambient Color,
+    Diffuse Color,
+    Specular Color,
+    Transparent Color,
+    Phong Specular Exponent,
+    Index of Refraction,
+    Reflection
+.in -1c
+
+Object Definitions
+.in +1c
+    Hyperspheres,
+    Tetrahedrons,
+    Parallelepipeds
+
+
+
+.PP
+In addition to the scene description, \fIray4\fR takes the following
+command-line arguments which govern the resolution of the output image:
+.in 2c
+.nf
+.ls 1
+Aspect Ratios (X:Y:Z)
+
+Image Resolution (X:Y:Z)
+
+Scan Range (Xmin-Xmax:Ymin-Ymax:Zmin-Zmax)
+
+Scene Description Filename
+
+Output Image Filename
+.in 0

@@ -1,0 +1,126 @@
+.\" ------------------------------------------------------------------------
+.\" TROFF Macros for the Table of Contents
+.\" Steve Hollasch
+.\" ------------------------------------------------------------------------
+.\"
+.\" ========================
+.\" ===  Initialization  ===
+.\" ========================
+.\"
+.na		\" Don't justify the right margin.
+.ll 6i		\" Line length is six inches.
+.po 1.5i	\" Left margin is 1.5 inches.
+.nr PS 12	\" Set the point size to 12.
+.nr AF 1	\" Appendix Flag
+.ls 1		\" Single-spaced.
+.nf
+.\"
+.\" ===  Start the first page.
+.\"
+.wh -1.05i Gi	\" Set bottom page-numbering trap.
+.nr % 5		\" The table of contents begins on page five.
+.af % i		\" Use roman numerals for the page numbering.
+.ps \n(PS
+.sp 1.2i	\" Space down 1.2 inches from the top.
+.ce 1		\" Center the "table of contents" title.
+.ft R
+\s+2TABLE OF CONTENTS\s0
+.sp 1v		\" Space down a vertical line.
+\h'|5.96i-\w'Page'u'Page
+.sp 1v
+.ta 5.5i
+.tc .
+\s+2LIST OF FIGURES\s0 	\h'|5.96i-\w'viii'u'viii
+.br
+.wh 0 TH
+.\"
+.\" ==========================================
+.\" ===  Page Numbering and Header Macros  ===
+.\" ==========================================
+.\"
+.de Gi
+.lt 6i		\" Print the centered page number.
+.tl ''%''
+'bp		\" Begin a new page.
+..
+.de TH
+.sp 1.2i	\" Space down 1.2 inches.
+\h'|5.96i-\w'Page'u'Page
+.sp 		\" Space down a single line.
+..
+.\"
+.\" ======================================================================
+.\" ===  Macro CH:  Chapter Entry
+.\" ===  Usage:  .CH <Page#> <title> [number]
+.\" ======================================================================
+.\"
+.de CH
+.sp 1v
+.ne 8v
+.ta 5.5i
+.tc .
+.ie ''\\$3' \{
+\s+2\\$2\s0 	\h'|5.96i-\w'\\$1'u'\\$1
+.\}
+.el \{
+\s+2Chapter \\$3:  \\$2\s0 	\h'|5.96i-\w'\\$1'u'\\$1
+.\}
+..
+.\" ======================================================================
+.\" ===  Macro SE:  Section Entry 
+.\" ===  Usage:  .SE <Page#> <title> <chapter> <subsection> [subsubsection]
+.\" ======================================================================
+.\"
+.de SE
+.sp 1v
+.ne 4v
+.ie ''\\$5' \{
+.in 0.95i
+.ti -0.47i
+.fi
+.nr NL \\n(nl
+\\$3.\\$4\\0\\0\\$2
+.ie '\\n(NL'\\n(nl' .ta (4.97i-\\n(.ku)
+.el .ta (4.59i-\\n(.ku)
+.tc .
+\& 	
+\h'|0.35i-\w'\\$1'u'\\$1
+.\}
+.el \{
+.in 1.50i
+.ti -0.63i
+.ll 6.5i
+.fi
+.nr NL \\n(nl
+\\$3.\\$4.\\$5\\0\\$2
+.ie '\\n(NL'\\n(nl' .ta (4.59i-\\n(.ku)
+.el .ta (3.99i-\\n(.ku)
+.tc .
+\& 	
+\h'|0.35i-\w'\\$1'u'\\$1
+.ll 6i
+.\}
+.in 0
+..
+.\"
+.\" ======================================================================
+.\" ===  Macro AP:  Appendix
+.\" ===  Usage:  .AP <page#> <letter> <title>
+.\" ======================================================================
+.\"
+.de AP
+.sp 1v
+.if \n(AF \{\
+.in 0
+.ne 8v
+.sp 1v
+\s+2Appendix\s0
+.sp 1v
+.nr AF 0
+.\}
+.ne 4v
+.in 0.5i
+.ta 5.0i
+.tc .
+\\$2.\0\0\0\\$3 	\h'|5.45i-\w'\\$1'u'\\$1
+..

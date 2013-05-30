@@ -1,0 +1,223 @@
+.\" TROFF Macros for Thesis Papers
+.\" Steve Hollasch
+.\" ----------------------------------------------------------
+.\"
+.\" ====================
+.\" ===  Parameters  ===
+.\" ====================
+.\"
+.nr PS 12	\" Text size   (12 points)
+.lt 5.9i	\" Title Length (6 inches)
+.po 1.5i	\" Left margin (1-1/2 inches)
+.\"
+.\" ========================
+.\" ===  Initialization  ===
+.\" ========================
+.\"
+.na		\" Don't align the right margin.
+.ps \n(PS	\" Set the page size.
+.ll 6i		\" Line length (6 inches)
+.pn 1		\" First page is page number one.
+.\"
+.\" =====================================================================
+.\" ===  Macro G1:  New Page  (numbered arabic, upper right)
+.\" ===  Usage:  .G1
+.\" =====================================================================
+.de G1
+.ev 1			\" Save the environment!  =.)
+.ft R			\" Select roman
+.ps \n(PS		\"   standard-sized text.
+'bp			\" Begin a new page
+'sp 1.2i		\"   and space down 1 inch from the top.
+.af % 1			\" Set the page number to arabic number format.
+.lt 6i			\" Title Length (6 inches)
+.tl '''%'      		\" Print the page number on the right.
+'sp 1v			\" Space down one line.
+.ev			\" Restore the previous environment.
+..
+.wh -1i G1		\" Set this macro to go off whenever we sweep
+.                       \"   past the bottom 1" of the page.
+.\"
+.\" =====================================================================
+.\" ===  Macro Gi:  New Page  (numbered roman, lower center)
+.\" ===  Usage:  .Gi
+.\" =====================================================================
+.\"
+.de Gi
+.ev 1			\" Save the environment!
+.ft R			\" Select the standard-sized roman font.
+.ps \n(PS
+.af % i			\" Set the page number to roman numeral format.
+.lt 6i			\" Title Length (6 inches)
+.tl ''%''		\" Print the centered roman-numeral page number.
+'bp			\" Begin a new page
+.ev			\"   and restore the environment.
+..
+.\"
+.\" =====================================================================
+.\" ===  Macro CH:  New Chapter
+.\" ===  Usage:  .CH <title> [number]
+.\" =====================================================================
+.\"
+.de CH			\" Define the chapter macro.
+.br			\" Break output 
+.ch G1			\" Disable the standard page-numbering macro trap,
+.bp			\"   begin a new page,
+.wh -1i G1		\"   and re-enable page numbering.
+.if '\\$2'1' .nr % 1	\" Kludge to start on page 1 for chapter 1.
+.ft I			\" Start a new page in 14-point italic.
+.ps \n(PS+2		\" Select large text, double-spaced.
+.ls 2
+.in 0
+.sp 3i
+.ie !^\\$2^^ \{\
+.nr CN \\$2		\" Store the chapter number in CN.
+.lt 6i			\" If the second argument is non-null, then print
+.			\"     the centered chapter number.
+.tl ''Chapter \\n(CN''
+.sp 1v
+.\}
+.el \{\
+.nr CN 0		\" If the second argument is null, set CN to 0.
+.\}
+.tl ''\\$1''		\" Print the chapter description.
+.tm .CH \\n% "\\$1" \\$2
+.sp 1.5i		\" Space down to the start of text, and set up for
+.ft R			\" standard-point roman text.
+.ps \n(PS
+..
+.\"
+.\" =====================================================================
+.\" ===  Macro SE:  New Section
+.\" ===  Usage:  .SE <title> <n> [m]
+.\" =====================================================================
+.\"
+.de SE
+.sp 3v			\" Space down three lines.
+.ne 6v			\" Need space for at least 6 lines.
+.in 0			\" Reset indentation level.
+.ps \n(PS		\" Select slightly larger, bold text.
+.ft B
+.			\" Print out the numbered section header.
+.tm .SE \\n% "\\$1" \\n(CN \\$2 \\$3
+.ie !'\\$3'' \{\
+\\n(CN.\\$2.\\$3  \\$1
+.\}
+.el \{\
+\\n(CN.\\$2  \\$1
+.\}
+.sp 1v			\" Space down a line after the header.
+..
+.\"
+.\" =====================================================================
+.\" ===  Macro PP:  New Paragraph
+.\" ===  Usage:  .PP
+.\" =====================================================================
+.\"
+.de PP
+.na		\" Don't align the right margin.
+.fi		\" Fill text lines.
+.ps \n(PS	\" Select standard-point roman text.
+.ft R
+.in 0		\" Reset indentation to zero and line spacing to 2.
+.ls 2
+.ne 2v		\" We need room for at least two lines.
+.ti +1c		\" Temporarily indent first line. 
+..
+.\"
+.\" =====================================================================
+.\" ===  Macro LP:  Labeled Paragraph
+.\" ===  Usage:  .LP <label>
+.\" =====================================================================
+.\"
+.de LP
+.sp 1v		\" Space down one line.
+.fi		\" Enable fill mode.
+.ps \n(PS	\" Select standard-point
+.ft R		\"   roman text,
+.ls 1		\"   single-spaced.
+.in 3c		\" Indent to 3 levels.
+.ti -1c		\" Temporarily indent first line backwards.
+.ne 1+\\n(.Vu	\" Need a single line "and a bit more".
+\\$1\ \ \c	\" First line contains label
+..
+.\"
+.\" =====================================================================
+.\" ===  Macro RP:  Reverse-Indented Paragraph
+.\" ===  Usage:  .RP
+.\" =====================================================================
+.\"
+.de RP
+.fi		\" Filled,
+.ls 1		\"   single-spaced paragraph.
+.ne 2v		\" We need room for at least two lines.
+.in 1c		\" Indent all but the first line.
+.ti -1c		\" Temporarily reverse indent first line. 
+..
+.\"
+.\" =====================================================================
+.\" ===  Macro SC:  Source Code
+.\" ===  Usage:  .SC
+.\" =====================================================================
+.\"
+.de SC
+.na		\" Don't align the right margin.
+.nf		\" Don't fill text lines.
+.ps \n(PS-2	\" Select smaller roman text.
+.ft R
+.ta .8c +.8c +.8c +.8c +.8c +.8c +.8c +.8c	\" Set tab stops.
+.ls 1		\" Single space the source code.
+.ne 2v       	\" We need room for at least two lines.
+..
+.\"
+.\" =====================================================================
+.\" ===  Macro FG:  Figure
+.\" ===  Usage:  .FG <Number> <NewPage=1> <Vertical Space Needed> <title>
+.\" =====================================================================
+.\"
+.de FG
+.br
+.ie \\$2 .bp
+.el .sp 1v
+.sp \\$3
+.ls 1
+.ll 5i
+.in .5i
+.lt 6i
+.tm .FG \\n% "\\$4" \\n(CN.\\$1
+.tl ''Figure \\n(CN.\\$1''
+
+.ie (5i-\w'\\$4') .tl ''\\$4''
+.el \{\
+\\$4
+.\}
+.ll 6i
+.in 0
+.ls 2
+..
+.\"
+.\" =====================================================================
+.\" ===  Macro AP:  Appendix
+.\" ===  Usage:  .AP <Letter> <Title>
+.\" =====================================================================
+.\"
+.de AP
+.br			\" Break output 
+.ch G1			\" Disable the standard page-numbering macro trap,
+.bp			\"   begin a new page,
+.wh -1i G1		\"   and re-enable page numbering.
+.tm .AP \\n% \\$1 "\\$2"
+.ft R
+.ps \n(PS+2		\" Select large text, double-spaced.
+.ls 2
+.sp 3i
+.in 0
+.lt 6i			\" If the second argument is non-null, then print
+.			\"     the centered chapter number.
+.tl ''Appendix \\$1''
+.sp 1v
+.tl ''\\$2''		\" Print the centered chapter description.
+.bp
+.sp 1i			\" Space down to the start of text.
+.ps \n(PS
+..

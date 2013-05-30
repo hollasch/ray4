@@ -1,0 +1,334 @@
+.CH "Four Dimensional Geometry" 2
+.PP
+Many of the underlying mathematical operations used in the 3D rendering
+process extend effortlessly to four dimensions.  The rotation and
+cross-product operations, however, do not extend easily or
+intuitively; these are presented here before continuing with the rest
+of this paper.
+.SE "Vector Operations and Points in Four-Dimensional Space" 1
+.PP
+For the most part, vector operations in four space are simple extensions of
+their three-space counterparts.  For example, computing the addition of two
+four-vectors is a matter of forming a resultant vector whose components are
+the sum of the pairwise coordinates of the two operand vectors.  In the same
+fashion, subtraction, scaling, and dot-products are all simple extensions of
+their more common three-vector counterparts.
+.PP
+In addition, operations between four-space points and vectors are also simple
+extensions of the more common three-space points and vectors.  For example,
+computing the four-vector difference of four-space points is a simple matter
+of subtracting pairwise coordinates of the two points to yield the four
+coordinates of the resulting four-vector.
+.PP
+For completeness, the equations of the more common four-space vector
+operations follow.  In these equations,
+#U^=~<U sub 0 ,~ U sub 1 ,~ U sub 2 ,~ U sub 3 ># and
+#V^=~<V sub 0 ,~ V sub 1 ,~ V sub 2 ,~ V sub 3 ># are two source
+four-vectors and k is a scalar value.
+.sp .5v
+.in 3c
+.EQ
+U vec~+~V vec mark ~=~ <U sub 0^+^V sub 0 ,~ U sub 1^+^V sub 1 ,
+                       ~U sub 2^+^V sub 2 ,~ U sub 3^+^V sub 3 >
+.EN
+.EQ
+U vec~-~V vec lineup ~=~ <U sub 0^-^V sub 0 ,~ U sub 1^-^V sub 1 ,
+                         ~U sub 2^-^V sub 2 ,~ U sub 3^-^V sub 3 >
+.EN
+.EQ
+k V vec lineup ~=~ <kU sub 0 ,~ kU sub 1 ,~ kU sub 2 ,~ kU sub 3 >
+.EN
+.EQ
+U vec vdot V vec lineup ~=~ U sub 0 V sub 0 ~+~ U sub 1 V sub 1
+                        ~+~ U sub 2 V sub 2 ~+~ U sub 3 V sub 3
+.EN
+.in 0
+.sp .5v
+.PP
+The main vector operation that does not extend trivially to four-space is the
+cross product.  A three-dimensional space is spanned by three basis
+vectors, so the cross-product in three-space computes an orthogonal
+three-vector from two linearly independent three-vectors.  Hence, the
+three-space cross product is a binary operation.
+.PP
+In N-space, the resulting vector must be orthogonal to the
+remaining N-1 basis vectors.  Since a four-dimensional space
+requires four basis vectors, the four-space cross product
+requires three linearly independent four-vectors to determine
+the remaining orthogonal vector.  Hence, the four-space cross
+product is a trinary operation; it requires three operand
+vectors and yields a single resultant vector.  In the remainder
+of this paper, the four-dimensional cross product will be
+represented in the form
+# cross4 ( U vec ,^ V vec ,^ W vec )#.
+.PP
+To find the equation of the four-dimensional cross product, we must first
+establish criteria of the cross product.  These are as follows:
+.sp .5v
+.LP (1)
+If the operand vectors are not linearly independent, the cross product
+must be the zero vector.
+.sp .5v
+.LP (2)
+If the operand vectors are linearly independent, then the resultant
+vector must be orthogonal to each of the operand vectors.
+.sp .5v
+.LP (3)
+The four-space cross product preserves scaling, i.e. for any scalar #k#:
+.sp .5v
+.EQ
+  k cross4 ( U vec ,^ V vec ,^ W vec )
+~=~ cross4 ( k U vec ,^ V vec ,^ W vec )
+~=~ cross4 ( U vec ,^ k V vec ,^ W vec )
+~=~ cross4 ( U vec ,^ V vec ,^ k W vec )
+.EN
+.sp .5v
+.LP (4)
+Changing the order of two of the operands results only in a sign change
+of the resultant vector.
+.sp 1v
+.PP
+It turns out that a somewhat simple-minded approach to
+computing the four-dimensional cross product is the correct
+one.  To motivate this idea, we first consider the
+three-dimensional cross product.  The 3D cross product can be
+thought of as the determinant of a 3x3 matrix whose entries
+are as follows:
+.sp .5v
+.ce
+.EQ
+bold X sub 3 ( U vec ,^ V vec ) ~=~ left |
+       ~~pile { i above U sub 0 above V sub 0 }
+       ~~pile { j above U sub 1 above V sub 1 }
+       ~~pile { k above U sub 2 above V sub 2 } ~ right | ~,
+.EN
+.sp .5v
+where #U vec# and #V vec# are the operand vectors, and #i#, #j#
+& #k# represent the unit components of the resultant vector.  The
+determinant of this matrix is
+.sp .5v
+.ce
+.EQ
+    i vec ^( U sub 1 V sub 2 ~-~ U sub 2 V sub 1 )
+~-~ j vec ^( U sub 0 V sub 2 ~-~ U sub 2 V sub 0 )
+~+~ k vec ^( U sub 0 V sub 1 ~-~ U sub 1 V sub 0 )
+.EN
+.sp .5v
+which is the three-dimensional cross product.  Using this idea, we'll form
+the analogous #4 times 4# matrix, and see if it meets the four cross product
+properties listed above:
+.sp .5v
+.ce
+.EQ
+cross4 ( U vec ,^ V vec ,^ W vec ) ~=~ left |
+       ~pile { i above U sub 0 above V sub 0 above W sub 0 }
+      ~~pile { j above U sub 1 above V sub 1 above W sub 1 }
+      ~~pile { k above U sub 2 above V sub 2 above W sub 2 }
+      ~~pile { l above U sub 3 above V sub 3 above W sub 3 } ~ right | ~.
+.EN
+.ta 6iR
+	[2.1a]
+.sp .5v
+.PP
+.ne 8v
+The determinant of this matrix is
+.sp .5v
+.ne 6v
+.ce
+.EQ
+    i ^ left | ~pile {U sub 1 above V sub 1 above W sub 1}
+               ~pile {U sub 2 above V sub 2 above W sub 2}
+               ~pile {U sub 3 above V sub 3 above W sub 3} ~right |
+~-~ j ^ left | ~pile {U sub 0 above V sub 0 above W sub 0}
+               ~pile {U sub 2 above V sub 2 above W sub 2}
+               ~pile {U sub 3 above V sub 3 above W sub 3} ~right |
+~+~ k ^ left | ~pile {U sub 0 above V sub 0 above W sub 0}
+               ~pile {U sub 1 above V sub 1 above W sub 1}
+               ~pile {U sub 3 above V sub 3 above W sub 3} ~right |
+~-~ l ^ left | ~pile {U sub 0 above V sub 0 above W sub 0}
+               ~pile {U sub 1 above V sub 1 above W sub 1}
+               ~pile {U sub 2 above V sub 2 above W sub 2} ~right | ~.
+.EN
+.ta 6iR
+	[2.1b]
+.sp 1v
+.PP
+If the operand vectors are linearly dependent, then the vector rows of the
+#4 times 4# matrix will be linearly dependent, and the determinant of this
+matrix will be zero.  This satisfies the first condition.  The third
+condition is also satisfied, since a scalar multiple of one of the vectors
+yields a scalar multiple of one of the rows of the 4x4 matrix.  This results
+in a determinant that is scaled by that factor, so condition three is also
+met.
+.PP
+The fourth condition falls out as a property of determinants,
+\fIi.e.\fR when two rows of a determinant matrix are interchanged,
+only the sign of the determinant changes.
+Hence, the fourth condition is also met.
+.PP
+The second condition is proven by calculating the dot product of the
+resultant vector with each of the operand vectors.  These dot products will
+be zero if and only if the resultant vector is orthogonal to each of the
+operand vectors.
+.PP
+The dot product of the resultant vector
+#cross4 ( U vec ,^ V vec ,^ W vec )# with the operand vector
+#U vec# is the following (refer to equation [2.1b]):
+.sp .5v
+.ce
+.EQ
+U vec vdot cross4 ( U vec , V vec , W vec ) ~=
+.EN
+.ce
+.EQ
+    U sub 0 ^ left | ~pile {U sub 1 above V sub 1 above W sub 1}
+                     ~pile {U sub 2 above V sub 2 above W sub 2}
+                     ~pile {U sub 3 above V sub 3 above W sub 3} ~right |
+~-~ U sub 1 ^ left | ~pile {U sub 0 above V sub 0 above W sub 0}
+                     ~pile {U sub 2 above V sub 2 above W sub 2}
+                     ~pile {U sub 3 above V sub 3 above W sub 3} ~right |
+~+~ U sub 2 ^ left | ~pile {U sub 0 above V sub 0 above W sub 0}
+                     ~pile {U sub 1 above V sub 1 above W sub 1}
+                     ~pile {U sub 3 above V sub 3 above W sub 3} ~right |
+~-~ U sub 3 ^ left | ~pile {U sub 0 above V sub 0 above W sub 0}
+                     ~pile {U sub 1 above V sub 1 above W sub 1}
+                     ~pile {U sub 2 above V sub 2 above W sub 2} ~right | ~.
+.EN
+.sp 1v
+.ne 9v
+This dot product can be rewritten as the determinant
+.ce
+.EQ
+left | ~pile { U sub 0 above U sub 0 above V sub 0 above W sub 0 }
+      ~~pile { U sub 1 above U sub 1 above V sub 1 above W sub 1 }
+      ~~pile { U sub 2 above U sub 2 above V sub 2 above W sub 2 }
+      ~~pile { U sub 3 above U sub 3 above V sub 3 above W sub 3 } ~right |~,
+.EN
+.sp .5v
+which is zero, since the first two rows are identical.  Hence, the resultant
+vector #cross4 ( U vec ,^ V vec ,^ W vec )# is orthogonal to the operand
+vector #U vec#.  In the same way, the dot products of
+#V vec ^vdot^ cross4 ( U vec ,^ V vec ,^ W vec )# and
+#W vec ^vdot^ cross4 ( U vec ,^ V vec ,^ W vec )# are given by the
+determinants
+.sp .5v
+.ce
+.EQ C
+left | ~pile { V sub 0 above U sub 0 above V sub 0 above W sub 0 }
+      ~~pile { V sub 1 above U sub 1 above V sub 1 above W sub 1 }
+      ~~pile { V sub 2 above U sub 2 above V sub 2 above W sub 2 }
+      ~~pile { V sub 3 above U sub 3 above V sub 3 above W sub 3 } ~right |
+"    and    "
+left | ~pile { W sub 0 above U sub 0 above V sub 0 above W sub 0 }
+      ~~pile { W sub 1 above U sub 1 above V sub 1 above W sub 1 }
+      ~~pile { W sub 2 above U sub 2 above V sub 2 above W sub 2 }
+      ~~pile { W sub 3 above U sub 3 above V sub 3 above W sub 3 } ~right |~,
+.EN
+.sp .5v
+which are each zero.
+.PP
+Therefore, the second condition is also met, and equation [2.1a] meets all
+four of the criteria for the four-dimensional cross product.
+.PP
+Since the calculation of the four-dimensional cross product involves
+#2 times 2# determinants that are used more than once, it is best to
+store these values rather than re-calculate them.  The following
+algorithm uses this idea.
+.in 1c
+.ne 22v
+.SC
+.fi
+.ft I
+Cross4 computes the four-dimensional cross product of the three vectors
+\fRU\fI, \fRV\fI and \fRW\fI, in that order.  It returns the resulting
+four-vector.
+.ft R
+.nf
+
+\fBfunction\fR  Cross4:\fBVector4\fR  (U, V, W: \fBVector4\fR)
+A,B,C,D,E,F: \fBReal\fR	\fIIntermediate Values\fR
+result: \fBVector4\fR		\fIResult Vector\fR
+\fBbegin\fR
+	\fICalculate intermediate values.\fR
+	A \(<- (V[0] #*# W[1]) #-# (V[1] #*# W[0])
+	B \(<- (V[0] #*# W[2]) #-# (V[2] #*# W[0])
+	C \(<- (V[0] #*# W[3]) #-# (V[3] #*# W[0])
+	D \(<- (V[1] #*# W[2]) #-# (V[2] #*# W[1])
+	E \(<- (V[1] #*# W[3]) #-# (V[3] #*# W[1])
+	F \(<- (V[2] #*# W[3]) #-# (V[3] #*# W[2])
+
+	\fICalculate the result-vector components.\fR
+	result[0] \(<-   (U[1] #*# F) #-# (U[2] #*# E) #+# (U[3] #*# D)
+	result[1] \(<- #-# (U[0] #*# F) #+# (U[2] #*# C) #-# (U[3] #*# B)
+	result[2] \(<-   (U[0] #*# E) #-# (U[1] #*# C) #+# (U[3] #*# A)
+	result[3] \(<- #-# (U[0] #*# D) #+# (U[1] #*# B) #-# (U[2] #*# A)
+
+	\fBreturn\fR result
+\fBendfunc\fR Cross4
+.SE "Rotations in Four Dimensions" 2
+.PP
+Rotation in four space is initially difficult to conceive because the first
+impulse is to try to rotate about an axis in four space.  Rotation about an
+axis is an idea fostered by our experience in three space, but it is
+only coincidence that any rotation in three-space can be determined by an
+axis in three-space.
+.PP
+For example, consider the idea of rotation in two space.  The axis that we
+rotate ``about'' is perpendicular to this space; it isn't even contained in
+the two space.  In addition, given an origin of rotation and a destination
+point in three space, the set of all rotated points for a given rotation
+matrix lie in a single plane, just like the case for two space.
+.PP
+Rotations in three-space are more properly thought of not as rotations
+about an axis, but as rotations parallel to a 2D plane.  This way of
+thinking about rotations is consistent with both two space (where there
+is only one such plane) and three space (where each rotation ``axis''
+defines the rotation plane by coinciding with the normal vector to that
+plane).
+.PP
+Once this idea is established, it is easy to construct the basis 4D rotation
+matrices, since only two coordinates will change for a given rotation.
+There are six 4D basis rotation matrices, corresponding to the #XY#, #YZ#,
+#ZX#, #XW#, #YW# and #ZW# planes.  These are given by:
+
+.ce
+.EQ
+pile { { left [~pile { { cos theta } above { - sin theta } above 0 above 0 }
+              ~~pile { { sin theta } above {   cos theta } above 0 above 0 }
+              ~~pile {      0        above        0        above 1 above 0 }
+              ~~pile {      0        above        0        above 0 above 1 }
+               ~right ] } above " " above "XY Plane" }
+~~~~~~~~
+pile { { left [~pile { 1 above      0        above        0        above 0 }
+              ~~pile { 0 above { cos theta } above { - sin theta } above 0 }
+              ~~pile { 0 above { sin theta } above {   cos theta } above 0 }
+              ~~pile { 0 above      0        above        0        above 1 }
+               ~right ] } above " " above "YZ Plane" }
+~~~~~~~~
+pile { { left [~pile { {   cos theta } above 0 above { sin theta } above 0 }
+              ~~pile {        0        above 1 above      0        above 0 }
+              ~~pile { { - sin theta } above 0 above { cos theta } above 0 }
+              ~~pile {        0        above 0 above      0        above 1 }
+               ~right ] } above " " above "ZX Plane" }
+.EN
+.sp 2v
+.ce
+.EQ
+pile { { left [~pile { { cos theta } above 0 above 0 above { - sin theta } }
+              ~~pile {      0        above 1 above 0 above        0        }
+              ~~pile {      0        above 0 above 1 above        0        }
+              ~~pile { { sin theta } above 0 above 0 above {   cos theta } }
+               ~right ] } above " " above "XW Plane" }
+~~~~~~~~
+pile { { left [~pile { 1 above        0        above 0 above      0        }
+              ~~pile { 0 above {   cos theta } above 0 above { sin theta } }
+              ~~pile { 0 above        0        above 1 above      0        }
+              ~~pile { 0 above { - sin theta } above 0 above { cos theta } }
+               ~right ] } above " " above "YW Plane" }
+~~~~~~~~
+pile { { left [~pile { 1 above 0 above        0        above      0        }
+              ~~pile { 0 above 1 above        0        above      0        }
+              ~~pile { 0 above 0 above {   cos theta } above { sin theta } }
+              ~~pile { 0 above 0 above { - sin theta } above { cos theta } }
+               ~right ] } above " " above "ZW Plane" }
+.EN

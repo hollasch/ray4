@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html>
+<head>
+    <title>Four-Space Visualization of 4D Objects - Appendix A</title>
+    <link rel="stylesheet" href="./thesis.css" type="text/css">
+</head>
+
+<body>
+
+<h1>Appendix A
+    <br>Implementation Notes
+</h1>
+
+The programs written for this research are:
+
+<blockquote>
+
+<table border=1 cellpadding=8>
+
+<tr><td><b>wire4</b>
+    <td>4D Wireframe Display Program
+    <td><a href="wire4-101.tar.gz">wire4-101.tar.gz</a>
+        <br><a href="wire4-101.zip">wire4-101.zip</a>
+        <br><a href="wire4data.tar.gz">wire4data.tar.gz</a>
+        <br><a href="wire4data.zip">wire4data.zip</a>
+
+<tr><td><b>ray4</b>
+    <td>4D Raytracer
+    <td><a href="ray4-131.tar.gz">ray4-131.tar.gz</a>
+        <br><a href="ray4-131.zip">ray4-131.zip</a>
+
+<tr><td><b>r4toiff</b>
+    <td>Ray4 to Interchange File Format (IFF) Image
+    <td><i>Included in Ray4 Package</i>
+
+<tr><td><b>r4tosgi</b>
+    <td>Ray4 to SGI Display
+    <td><i>Included in Ray4 Package</i>
+
+</table></blockquote>
+
+<h2>The <i>wire4</i> Program</h2>
+
+<p>
+The <cite>wire4</cite> program runs on the Silicon Graphics Iris 3130
+workstation and uses the Silicon Graphics GL display language.  The input file
+specifies the following data:
+
+<P>
+<ul style="margin-left: 4em;">
+    <li>3D Viewing Parameters:  From, To, Up, View-Angle
+    <li>4D Viewing Parameters:  From, To, Up, Over, View-Angle
+    <li>Vertex List
+    <li>Edge List
+    <li>Edge Color Palette
+    <li>Depthcue Parameters:  Minimum & Maximum Distance
+    <li>Depthcue Parameters:  Near & Far Colors, Depthcue Levels
+</ul>
+
+<p>
+<cite>wire4</cite> reads the input file and displays the wireframe with the
+initial viewing parameters.  Since only the viewpoints are rotated, the 4D and
+3D distances from the from-point to the to-point are constant.  The user has
+interactive control over the following:
+
+<p>
+<ul style="margin-left: 4em;">
+    <li>Rotation in 3D (3 Planes)
+    <li>Rotation in 4D (6 Planes)
+    <li>4D Projection Type (Parallel or Perspective)
+    <li>3D Projection Type (Parallel or Perspective)
+    <li>Depthcue On/Off
+    <li>3D Projection Cube Display On/Off
+</ul>
+
+<h2>The <cite>ray4</cite> Program</h2>
+
+<p>
+<cite>ray4</cite> runs on both the Commodore Amiga and most Unix platforms.
+Since the output is sent to a file, this program is device independent.
+
+<p>
+The input file contains the following information:
+
+<p>
+<ul style="margin-left: 4em;">
+    <li>Global Ambient Light
+    <li>Background Color
+    <li>Maximum Raytrace Depth
+    <li>4D Viewing Parameters:
+	<ul>
+	<li>From Point,
+	<li>To Point,
+	<li>Up Vector,
+	<li>Over Vector,
+	<li>Viewing-Angle
+	</ul>
+    <li>Light Sources:
+	<ul>
+	<li>Point,
+	<li>Directional
+	</ul>
+    <li>Attribute Descriptions
+	<ul>
+	<li>Ambient Color,
+	<li>Diffuse Color,
+	<li>Specular Color,
+	<li>Transparent Color,
+	<li>Phong Specular Exponent,
+	<li>Index of Refraction,
+	<li>Reflection
+	</ul>
+    <li>Object Definitions
+	<ul>
+	<li>Hyperspheres,
+	<li>Tetrahedrons,
+	<li>Parallelepipeds
+	</ul>
+</ul>
+</blockquote>
+
+<p>
+In addition to the scene description, <cite>ray4</cite> takes the following
+command-line arguments which govern the resolution of the output image:
+
+<p>
+<ul style="margin-left: 4em;">
+    <li>Aspect Ratios (X:Y:Z)
+    <li>Image Resolution (X:Y:Z)
+    <li>Scan Range (Xmin-Xmax:Ymin-Ymax:Zmin-Zmax)
+    <li>Scene Description Filename
+    <li>Output Image Filename
+</ul>
+
+<p><hr>
+<p><center>
+<table border=2 cellpadding=4>
+<tr><td><a href="default.htm">Table of Contents</a>
+</table>
+</center>
+
+</body>
+</html>

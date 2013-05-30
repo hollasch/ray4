@@ -1,0 +1,286 @@
+<!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html>
+<head>
+    <title>Four-Space Visualization of 4D Objects - Chapter 2</title>
+    <link rel="stylesheet" href="./thesis.css" type="text/css">
+</head>
+
+<body>
+
+<h1>Chapter 2<br>Four Dimensional Geometry</h1>
+
+<p class="noindent">
+Many of the underlying mathematical operations used in the 3D rendering
+process extend effortlessly to four dimensions.  The rotation and
+cross-product operations, however, do not extend easily or intuitively; these
+are presented here before continuing with the rest of this paper.
+
+<h2 id="s2.1">2.1  Vector Operations and Points in Four-Dimensional Space</h2>
+
+<p class="noindent">
+For the most part, vector operations in four space are simple extensions of
+their three-space counterparts.  For example, computing the addition of two
+four-vectors is a matter of forming a resultant vector whose components are
+the sum of the pairwise coordinates of the two operand vectors.  In the same
+fashion, subtraction, scaling, and dot-products are all simple extensions of
+their more common three-vector counterparts.
+
+<p>In addition, operations between four-space points and vectors are also
+simple extensions of the more common three-space points and vectors.  For
+example, computing the four-vector difference of four-space points is a simple
+matter of subtracting pairwise coordinates of the two points to yield the four
+coordinates of the resulting four-vector.
+
+<p>For completeness, the equations of the more common four-space vector
+operations follow.  In these equations,
+U = &lt;U<sub>0</sub>, U<sub>1</sub>, U<sub>2</sub>, U<sub>3</sub>&gt;
+and V = &lt;V<sub>0</sub>, V<sub>1</sub>, V<sub>2</sub>, V<sub>3</sub>&gt;
+are two source four-vectors and k is a scalar value:
+
+<p>
+<pre>
+        U + V = &lt;U<sub>0</sub> + V<sub>0</sub>, U<sub>1</sub> + V<sub>1</sub>, U<sub>2</sub> + V<sub>2</sub>, U<sub>3</sub> + V<sub>3</sub>&gt;
+        U - V = &lt;U<sub>0</sub> - V<sub>0</sub>, U<sub>1</sub> - V<sub>1</sub>, U<sub>2</sub> - V<sub>2</sub>, U<sub>3</sub> - V<sub>3</sub>&gt;
+           kV = &lt;kU<sub>0</sub>, kU<sub>1</sub>, kU<sub>2</sub>, kU<sub>3</sub>&gt;
+          U&#183;V = U<sub>0</sub>V<sub>0</sub> + U<sub>1</sub>V<sub>1</sub> + U<sub>2</sub>V<sub>2</sub> + U<sub>3</sub>V<sub>3</sub>
+</pre>
+
+<p>
+The main vector operation that does not extend trivially to four-space is
+the cross product.  A three-dimensional space is spanned by three basis
+vectors, so the cross-product in three-space computes an orthogonal
+three-vector from two linearly independent three-vectors.  Hence, the
+three-space cross product is a binary operation.
+
+<p>In N-space, the resulting vector must be orthogonal to the remaining N-1
+basis vectors.  Since a four-dimensional space requires four basis vectors,
+the four-space cross product requires three linearly independent four-vectors
+to determine the remaining orthogonal vector.  Hence, the four-space cross
+product is a trinary operation; it requires three operand vectors and yields a
+single resultant vector.  In the remainder of this paper, the four-dimensional
+cross product will be represented in the form
+<b>X</b><sub>4</sub>(<b>U</b>,<b>V</b>,<b>W</b>).
+
+<p>To find the equation of the four-dimensional cross product, we must first
+establish criteria of the cross product.  These are as follows:
+
+<p>
+<ol>
+<li>If the operand vectors are not linearly independent, the cross product
+must be the zero vector.</li>
+<p>
+<li>If the operand vectors are linearly independent, then the resultant
+vector must be orthogonal to each of the operand vectors.</li>
+<p>
+<li>The four-space cross product preserves scaling, <i>i.e.</i> for any
+scalar k:
+k<b>X</b><sub>4</sub>(<b>U</b>,<b>V</b>,<b>W</b>)
+= <b>X</b><sub>4</sub>(k<b>U</b>,<b>V</b>,<b>W</b>)
+= <b>X</b><sub>4</sub>(<b>U</b>,k<b>V</b>,<b>W</b>)
+= <b>X</b><sub>4</sub>(<b>U</b>,<b>V</b>,k<b>W</b>)</li>
+<p>
+<li>Changing the order of two of the operands results only in a sign change
+of the resultant vector.</li></ol>
+
+<p>
+It turns out that a somewhat simple-minded approach to computing the
+four-dimensional cross product is the correct one.  To motivate this idea, we
+first consider the three-dimensional cross product.  The 3D cross product can
+be thought of as the determinant of a 3x3 matrix whose entries are as
+follows:
+
+<pre>
+                  +-        -+
+                  | i  j  k  |
+        X<sub>3</sub>(U,V) = | U0 U1 U2 |
+                  | V0 V1 V2 |
+                  +-        -+
+</pre>
+
+<p class="noindent">
+where <b>U</b> and <b>V</b> are the operand vectors, and <i>i</i>, <i>j</i>
+& <i>k</i> represent the unit components of the resultant vector.  The
+determinant of this matrix is
+
+<pre>
+    i (U<sub>1</sub>V<sub>2</sub> - U<sub>2</sub>V<sub>1</sub>) - j (U<sub>0</sub>V<sub>2</sub> - U<sub>2</sub>V<sub>0</sub>) + k (U<sub>0</sub>V<sub>1</sub> - U<sub>1</sub>V<sub>0</sub>)
+</pre>
+
+<p class="noindent">
+which is the three-dimensional cross product.  Using this idea, we'll form
+the analogous 4x4 matrix, and see if it meets the four cross product
+properties listed above:
+
+<pre>
+<a name="2.1a">[2.1a]</a>
+
+                    +-           -+
+                    | i  j  k  l  |
+        X<sub>4</sub>(U,V,W) = | U0 U1 U2 U3 |
+                    | V0 V1 V2 V3 |
+                    | W0 W1 W2 W3 |
+                    +-           -+
+</pre>
+
+<p>
+The determinant of this matrix is
+
+<pre>
+<a name="2.1b">[2.1b]</a>
+
+         |U<sub>1</sub> U<sub>2</sub> U<sub>3</sub>|    |U<sub>0</sub> U<sub>2</sub> U<sub>3</sub>|    |U<sub>0</sub> U<sub>1</sub> U<sub>3</sub>|    |U<sub>0</sub> U<sub>1</sub> U<sub>2</sub>|
+        i|V<sub>1</sub> V<sub>2</sub> V<sub>3</sub>| - j|V<sub>0</sub> V<sub>2</sub> V<sub>3</sub>| + k|V<sub>0</sub> V<sub>1</sub> V<sub>3</sub>| - l|V<sub>0</sub> V<sub>1</sub> V<sub>2</sub>|
+         |W<sub>1</sub> W<sub>2</sub> W<sub>3</sub>|    |W<sub>0</sub> W<sub>2</sub> W<sub>3</sub>|    |W<sub>0</sub> W<sub>1</sub> W<sub>3</sub>|    |W<sub>0</sub> W<sub>1</sub> W<sub>2</sub>|
+</pre>
+
+<p>
+If the operand vectors are linearly dependent, then the vector rows of the
+4x4 matrix will be linearly dependent, and the determinant of this
+matrix will be zero.  This satisfies the first condition.  The third
+condition is also satisfied, since a scalar multiple of one of the vectors
+yields a scalar multiple of one of the rows of the 4x4 matrix.  This results
+in a determinant that is scaled by that factor, so condition three is also
+met.
+
+<p>The fourth condition falls out as a property of determinants, <i>i.e.</i>
+when two rows of a determinant matrix are interchanged, only the sign of the
+determinant changes.  Hence, the fourth condition is also met.
+
+<p>The second condition is proven by calculating the dot product of the
+resultant vector with each of the operand vectors.  These dot products will
+be zero if and only if the resultant vector is orthogonal to each of the
+operand vectors.
+
+<p>The dot product of the resultant vector X4(U,V,W) with the operand
+vector U is the following (refer to equation
+<a href="#2.1b">[2.1b]</a>):
+<pre>
+                           U&#183;X<sub>4</sub>(U,V,W) =
+
+      |U<sub>1</sub> U<sub>2</sub> U<sub>3</sub>|     |U<sub>0</sub> U<sub>2</sub> U<sub>3</sub>|     |U<sub>0</sub> U<sub>1</sub> U<sub>3</sub>|     |U<sub>0</sub> U<sub>1</sub> U<sub>2</sub>|
+    U<sub>0</sub>|V<sub>1</sub> V<sub>2</sub> V<sub>3</sub>| - U<sub>1</sub>|V<sub>0</sub> V<sub>2</sub> V<sub>3</sub>| + U<sub>2</sub>|V<sub>0</sub> V<sub>1</sub> V<sub>3</sub>| - U<sub>3</sub>|V<sub>0</sub> V<sub>1</sub> V<sub>2</sub>|
+      |W<sub>1</sub> W<sub>2</sub> W<sub>3</sub>|     |W<sub>0</sub> W<sub>2</sub> W<sub>3</sub>|     |W<sub>0</sub> W<sub>1</sub> W<sub>3</sub>|     |W<sub>0</sub> W<sub>1</sub> W<sub>2</sub>|
+</pre>
+
+<p class="noindent">
+This dot product can be rewritten as the determinant
+
+<pre>
+        | U<sub>0</sub> U<sub>1</sub> U<sub>2</sub> U<sub>3</sub> |
+        | U<sub>0</sub> U<sub>1</sub> U<sub>2</sub> U<sub>3</sub> |
+        | V<sub>0</sub> V<sub>1</sub> V<sub>2</sub> V<sub>3</sub> |
+        | W<sub>0</sub> W<sub>1</sub> W<sub>2</sub> W<sub>3</sub> |,
+</pre>
+
+<p class="noindent">
+which is zero, since the first two rows are identical.  Hence, the resultant
+vector X<sub>4</sub>(U,V,W) is orthogonal to the operand vector U.  In the same way, the
+dot products of V&#183;X<sub>4</sub>(U,V,W) and W&#183;X<sub>4</sub>(U,V,W)
+are given by the determinants
+
+<pre>
+        | V<sub>0</sub> V<sub>1</sub> V<sub>2</sub> V<sub>3</sub> |           | W<sub>0</sub> W<sub>1</sub> W<sub>2</sub> W<sub>3</sub> |
+        | U<sub>0</sub> U<sub>1</sub> U<sub>2</sub> U<sub>3</sub> |           | U<sub>0</sub> U<sub>1</sub> U<sub>2</sub> U<sub>3</sub> |
+        | V<sub>0</sub> V<sub>1</sub> V<sub>2</sub> V<sub>3</sub> |    and    | V<sub>0</sub> V<sub>1</sub> V<sub>2</sub> V<sub>3</sub> |
+        | W<sub>0</sub> W<sub>1</sub> W<sub>2</sub> W<sub>3</sub> |           | W<sub>0</sub> W<sub>1</sub> W<sub>2</sub> W<sub>3</sub> |,
+</pre>
+
+<p class="noindent">
+which are each zero.
+
+<p>Therefore, the second condition is also met, and equation
+<a href="#2.1a">[2.1a]</a> meets all four of the criteria for the
+four-dimensional cross product.
+
+<p>Since the calculation of the four-dimensional cross product involves
+2x2 determinants that are used more than once, it is best to store these
+values rather than re-calculate them.  The following algorithm uses this
+idea.
+
+<pre>
+// Cross4 computes the four-dimensional cross product of the three vectors
+// U, V and W, in that order.  It returns the resulting four-vector.
+
+Vector4 *Cross4 (Vector4 *U, Vector4 *V, Vector4 *W)
+{
+    double  A, B, C, D, E, F;       // Intermediate Values
+    Vector4 result;                 // Result Vector
+
+    // Calculate intermediate values.
+
+    A = (V[0] * W[1]) - (V[1] * W[0]);
+    B = (V[0] * W[2]) - (V[2] * W[0]);
+    C = (V[0] * W[3]) - (V[3] * W[0]);
+    D = (V[1] * W[2]) - (V[2] * W[1]);
+    E = (V[1] * W[3]) - (V[3] * W[1]);
+    F = (V[2] * W[3]) - (V[3] * W[2]);
+
+    // Calculate the result-vector components.
+
+    result[0] =   (U[1] * F) - (U[2] * E) + (U[3] * D);
+    result[1] = - (U[0] * F) + (U[2] * C) - (U[3] * B);
+    result[2] =   (U[0] * E) - (U[1] * C) + (U[3] * A);
+    result[3] = - (U[0] * D) + (U[1] * B) - (U[2] * A);
+
+    return &result;
+}
+</pre>
+
+<h2 id="s2.2">2.2 Rotations in Four Dimensions</h2>
+
+<p class="noindent">
+Rotation in four space is initially difficult to conceive because the first
+impulse is to try to rotate about an axis in four space.  Rotation about an
+axis is an idea fostered by our experience in three space, but it is
+only coincidence that any rotation in three-space can be determined by an
+axis in three-space.
+
+<p>For example, consider the idea of rotation in two space.  The axis that we
+rotate ``about'' is perpendicular to this space; it isn't even contained in
+the two space.  In addition, given an origin of rotation and a destination
+point in three space, the set of all rotated points for a given rotation
+matrix lie in a single plane, just like the case for two space.
+
+<p>Rotations in three-space are more properly thought of not as rotations
+about an axis, but as rotations parallel to a 2D plane.  This way of
+thinking about rotations is consistent with both two space (where there
+is only one such plane) and three space (where each rotation ``axis''
+defines the rotation plane by coinciding with the normal vector to that
+plane).
+
+<p><a name="rotmats">Once</a> this idea is established, it is easy to
+construct the basis 4D rotation
+matrices, since only two coordinates will change for a given rotation.
+There are six 4D basis rotation matrices, corresponding to the XY, YZ,
+ZX, XW, YW and ZW planes.  These are given by (using angle T):
+<pre>
+     +-             -+     +-              -+     +-              -+
+     | cosT sinT 0 0 |     | 1   0    0   0 |     | cosT 0 -sinT 0 |
+     |-sinT cosT 0 0 |     | 0  cosT sinT 0 |     |  0   1   0   0 |
+     |  0    0   1 0 |     | 0 -sinT cosT 0 |     | sinT 0  cosT 0 |
+     |  0    0   0 1 |     | 0   0    0   1 |     |  0   0   0   1 |
+     +-             -+     +-              -+     +-              -+
+         XY Plane               YZ Plane                ZX Plane
+
+
+     +-             -+     +-              -+     +-              -+
+     | cosT 0 0 sinT |     | 1  0   0   0   |     | 1 0  0     0   |
+     |  0   1 0  0   |     | 0 cosT 0 -sinT |     | 0 1  0     0   |
+     |  0   0 1  0   |     | 0  0   1   0   |     | 0 0 cosT -sinT |
+     |-sinT 0 0 cosT |     | 0 sinT 0  cosT |     | 0 0 sinT  cosT |
+     +-             -+     +-              -+     +-              -+
+         XW Plane               YW Plane                ZW Plane
+</pre>
+
+<p><hr>
+<p><center>
+<table border=2 cellpadding=4>
+<tr>
+<td><a href="chapter1.html">Previous Chapter</a>
+<td><a href="default.htm">Table of Contents</a>
+<td><a href="chapter3.html">Next Chapter</a>
+</table>
+</center>
+
+</body>
+</html>

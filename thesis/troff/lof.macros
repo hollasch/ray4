@@ -1,0 +1,75 @@
+.\" ------------------------------------------------------------------------
+.\" TROFF Macros for the List of Figures
+.\" Steve Hollasch
+.\" ------------------------------------------------------------------------
+.\"
+.\" ========================
+.\" ===  Initialization  ===
+.\" ========================
+.\"
+.na		\" Don't justify the right margin.
+.ll 6i		\" Line length is six inches.
+.po 1.5i	\" Left margin is 1.5 inches.
+.nr PS 12	\" Set the point size to 12.
+.ls 1		\" Single-spaced.
+.nf
+.\"
+.\" ===  Start the first page.
+.\"
+.bp		\" Begin new page.
+.wh -1.05i Gi	\" Set bottom page-numbering trap.
+.nr % 8		\" The table of contents begins on page five.
+.af % i		\" Use roman numerals for the page numbering.
+.sp 1.2i	\" Space down 1.2 inches from the top.
+.ce 1		\" Center the "table of contents" title.
+.ps \n(PS+2	\" Big point size.
+LIST OF FIGURES
+.ps \n(PS	\" Normal point size.
+.sp 1v		\" Space down a vertical line.
+.ta 5.95iR	\" Set the tabs to align with the right margin and set the
+.tc		\"   tab repeat character to space.
+Figure	Page
+.sp 1v
+.wh 0 LH	\" Set the trap for the table-of-contents header.
+.\"
+.\" ==========================================
+.\" ===  Page Numbering and Header Macros  ===
+.\" ==========================================
+.\"
+.de Gi		\" Page numbering macro.
+.lt 6i
+.tl ''%''	\" Print the centered page number.
+'bp		\" Begin a new page.
+..
+.de LH		\" Page header macro.
+.sp 1.2i	\" Space down 1.2 inches.
+.ta 6iR		\" Align the tab stop with the right margin and clear the
+.tc		\"   tab repeat character.
+Figure	Page
+.sp 1v		\" Space down a single line.
+..
+.de CH		\" Ignore chapter entries.
+..
+.de SE		\" Ignore Section entries.
+..
+.\" ======================================================================
+.\" ===  Macro FG:  Figure Entry
+.\" ===  Usage:  FG <Page#> <number> <title>
+.\" ======================================================================
+.\"
+.de FG
+.sp 1v
+.ne 5v
+.in .4i
+.ti -.4i
+.fi
+.nr NL \\n(nl
+\\$3\\ \\ \\ \\$2
+.ie '\\n(NL'\\n(nl' .ta (5.35i-\\n(.ku)R
+.el .ta (4.95i-\\n(.ku)R
+.tc .
+\&	
+\h'|0.35i-\w'\\$1'u'\\$1
+.br
+.in 0
+..

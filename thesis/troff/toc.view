@@ -1,0 +1,196 @@
+
+
+
+
+
+
+
+                                    TABLE OF CONTENTS
+
+                                                                       Page
+
+               LIST OF FIGURES ....................................... viii
+
+
+               Chapter 1:  Introduction ..............................    1
+
+
+                   1.1  Background  ..................................    2
+
+
+                   1.2  Previous Work  ...............................    4
+
+
+                   1.3  Overview of This Research  ...................    5
+
+
+                   1.4  Contents of This Paper  ......................    7
+
+
+               Chapter 2:  Four Dimensional Geometry .................    9
+
+
+                   2.1  Vector Operations and Points in Four-Dimensional
+                        Space  ........................................
+                          9
+
+
+                   2.2  Rotations in Four Dimensions  ................   15
+
+
+               Chapter 3:  Overview of Visualization in Three and Four
+               Space17
+
+
+                   3.1  Viewing in Three-Space  ......................   17
+
+
+                   3.2  Viewing in Four-Space  .......................   24
+
+
+               Chapter 4:  Wireframe Display of Four Dimensional Objects 27
+
+
+                   4.1  High-Level Overview of 4D to 2D Projection  ..   27
+
+
+                   4.2  Description of 3D to 2D Projection  ..........   28
+
+
+9                                            v
+
+
+
+
+
+9
+
+
+
+
+
+
+                                                                       Page
+
+                   4.3  Description of 4D to 3D Projection  ..........   37
+
+
+                   4.4  Rotations of 4D Wireframes  ..................   46
+
+
+                   4.5  User Interaction and Visualization Aids  .....   47
+
+
+                   4.6  Example 4D Wireframe Images  .................   49
+
+
+               Chapter 5:  Raytracing in Four Dimensions .............   69
+
+
+                   5.1  General Description of the Raytracing Algorithm
+                         69
+
+
+                   5.2  Generating the Four-Dimensional Ray Grid  ....   73
+
+
+                   5.3  The General Raytrace Algorithm  ..............   77
+
+
+                   5.4  Reflection and Refraction Rays  ..............   78
+
+
+                   5.5  Illumination Calculations  ...................   81
+
+
+                   5.6  Intersection Algorithms  .....................   84
+
+
+                        5.6.1 Ray - Hypersphere Intersection  .........   84
+
+
+                        5.6.2 Ray - Tetrahedron Intersection  .........   87
+
+
+                        5.6.3 Ray - Parallelepiped Intersection  ......   94
+
+
+                   5.7  Display of 4D Raytrace Data  .................   95
+
+
+                   5.8  Example Ray4 Images  .........................   96
+
+
+
+9                                            0
+
+
+
+
+
+9
+
+
+
+
+
+
+                                                                       Page
+
+               Chapter 6:  Conclusion ................................  101
+
+
+                   6.1  Research Conclusions  ........................  102
+
+
+                   6.2  Future Research Areas  .......................  103
+
+
+               References ............................................  105
+
+
+               Appendix
+
+                    A.   Implementation Notes ........................ 107
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+9                                            0
+
+
+
+
+
+9

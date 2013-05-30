@@ -1,0 +1,813 @@
+.CH "Wireframe Display of Four Dimensional Objects" 4
+.SE "High-Level Overview of 4D to 2D Projection" 1
+.PP
+Projection from four-space to a two-space region involves an additional
+projection compared to the usual display of three-dimensional wireframe
+data.  Both the 3D projection and the additional 4D projection can be
+governed by independent sets of viewing parameters.
+.PP
+The first step of the 4D wireframe display process is to project the 4D
+vertices from four-space to an intermediate three-dimensional region.  This
+projection uses the four dimensional viewing parameters discussed in section
+3.2, and can be either a perspective projection or a parallel projection.
+.PP
+The next step is to take the projected vertices (now in three-space) and
+project them once more to the 2D viewport rectangle.  This projection is
+determined by the three dimensional viewing parameters presented in section
+3.1, and can also be either parallel or perspective.  Once the vertices
+have been projected to screen coordinates, each edge of the wireframe is
+displayed.
+.SE "Description of 3D to 2D Projection" 2
+.PP
+There are several methods of projecting three-space points to a
+two-dimensional viewport.  The method used and extended for this
+research is found in [Foley 87], and involves a vector subtraction
+and a multiplication between a 3-vector and a #3 times 3# matrix for
+each projected point.
+.PP
+The first step in projecting a 3D point is to convert its absolute
+``world'' coordinates to viewer-relative ``eye'' coordinates.  In the
+left-handed eye coordinate system, the eye-point is at the origin,
+the line-of-sight corresponds to the #Z# axis, the up-vector
+corresponds to the #Y# axis, and the #X# axis is orthogonal to the
+resulting #Y# and #Z# axes.  Refer to figure \n(CN.1 for a diagram
+of the eye-coordinate system.
+.FG 1 1 5.6i "3D Eye Coordinates"
+.bp
+.PP
+To convert a 3D point to 3D eye coordinates, one must first establish the
+vector from the eye-coordinate origin to the point by subtracting the
+from-point from the 3D vertex.  Then the vector difference is rotated
+so that the to-point lies on the #Z# axis of the eye-coordinate system, and
+the up-vector lies on the #Y# axis.  This is accomplished by multiplying
+the vector difference by the transformation matrix.
+The #3 times 3# transformation matrix has column vectors #A vec#,
+#B vec# and #C vec#, where #A vec#, #B vec# and #C vec# correspond to
+the #X#, #Y#, and #Z# axes in eye coordinates, respectively.
+The equations for these vectors are
+.sp .5v
+.in 6c
+.EQ
+C vec mark ~=~ { bold To ~-~ bold From } over
+               { norm ^ bold To ~-~ bold From ^ norm } ~,
+.EN
+.sp .5v
+.EQ
+A vec lineup ~=~ { Up vec ~times~ C vec } over
+                 { norm ^ Up vec ~times~ C vec ^ norm } ~, ~~~and
+.EN
+.sp .5v
+.EQ
+B vec lineup ~=~ C vec ~times~ A vec ~,
+.EN
+.in 0
+.sp .5v
+where #bold To# is the to-point, #bold From# is the from-point, #Up vec# is
+the up-vector, and the original world coordinates are supplied in the
+left-handed coordinate system.  For the right-handed coordinate system,
+the cross product order for column vectors #A vec# and #B vec# would be
+reversed.
+.PP
+The procedure for computing the transformation matrix is given in the
+following algorithm.  Note that \fINorm3 (V)\fR returns the vector norm
+of the 3-vector parameter \fIV\fR, and \fICross3 (U,V)\fR returns the
+3-vector cross product of the parameter vectors \fIU\fR and \fIV\fR.
+.in 1c
+.SC
+.ne 24
+.fi
+.ft I
+The parameters \fRVa\fI, \fRVb\fI and \fRVc\fI are the resulting
+transformation matrix column vectors.
+.ft R
+.nf
+
+From3, To3: \fBPoint3\fR	\fI3D From and To Points\fR
+Up3: \fBVector3\fR		\fI3D Up Vector\fR
+
+\fBprocedure\fR  Calc3Matrix  (Va, Vb, Vc: \fBVector3\fR)
+norm: \fBReal\fR	\fIVector Norm\fR 
+\fBbegin\fR
+	\fIGet the normalized Vc column-vector.\fR
+	Vc \(<- To3 #-# From3
+	norm \(<- Norm3 (Vc)
+	\fBif\fR norm #=# 0
+		\fBError\fR (To3 point and From3 point are the same.)
+	Vc \(<- Vc #/# norm
+
+	\fICalculate the normalized Va column-vector.\fR
+	Va \(<- Cross3 (Vc, Up3)
+	norm \(<- Norm3 (Va)
+	\fBif\fR norm #=# 0
+		\fBError\fR (Up3 is parallel to the line of sight.)
+	Va \(<- Va #/# norm
+
+	\fICalculate the Vb column-vector.\fR
+	Vb \(<- Cross3 (Va, Vc)
+\fBendfunc\fR Calc3Matrix
+
+
+.PP
+Once the #A vec#, #B vec# and #C vec# vectors (corresponding to Va, Vb
+and Vc in the pseudo-code above) are calculated, all 3D points can be
+transformed from 3D world coordinates to 3D eye coordinates as follows:
+.sp .5v
+.ce
+.EQ
+P' ~=~ [(P sub x~-~F sub x )~~(P sub y~-~F sub y )~~(P sub z~-~F sub z )]
+      ~~left [ pile {~A sub x~above~A sub y~above~A sub z~}
+               pile {~B sub x~above~B sub y~above~B sub z~}
+               pile {~C sub x~above~C sub y~above~C sub z~}
+                     right ]
+.EN
+.sp .5v
+where #F sub x#, #F sub y# and #F sub z# are the #X#, #Y# and #Z#
+coordinates of the from-point, #P# is the original data point in 3D world
+coordinates, and #P'# is the transformed data point in eye coordinates.
+.PP
+We can now use the resulting 3D eye coordinates to project the 3D points to a
+two-dimensional rectangle.  What we want is a projection that maps 3D points
+that lie in the 3D viewing frustum to the #[-1,+1]~times~[-1,+1]# rectangle.
+This rectangle will later be mapped to the viewport on the display device.
+.PP
+The projection from three-space to the 2D rectangle can be either a
+parallel projection or a perspective projection.
+.PP
+Parallel projection maps objects to the viewport in such a way that
+distant objects appear the same size as near objects.  This is the
+effect that you'd get if the eye-point was infinitely far away from
+the object to be viewed.  In the simple case where the projection
+plane is parallel to the #XY# plane, parallel projection can be
+achieved by dropping the #Z# coordinate (this is the case for eye
+coordinates).  Scaling the projection to fit the
+#[-1,+1]~times~[-1,+1]# rectangle makes it easy to project the
+image to the viewport.
+.PP
+Perspective projection is the more natural of the two projections.  With
+perspective projection, objects that are far away appear smaller than
+objects that are near.  In the simple case, perspective projection is
+achieved by dividing by the #Z# coordinate.  Perspective projection should
+map all data points that lie in the viewing frustum to the
+#[-1,+1]~times~[-1,+1]# rectangle.
+.PP
+When using parallel projection, the equation of the data point's normalized
+screen coordinates (from eye coordinates) is given by the following pair
+of equations:
+.sp .5v
+.ce
+.EQ C [4.2a]
+T sub x ~=~ {P' sub x} over {R sub 3} "      and      "
+T sub y ~=~ {P' sub y} over {R sub 3} ~,
+.EN
+.ta 6iR
+	[4.2a]
+
+where #P'# is the 3D point in eye coordinates, #R sub 3# is the radius of the
+set of 3D points centered at the 3D to-point, and #T# is the 2D parallel
+projection of #P'# to the #[-1,+1]~times~[-1,+1]# rectangle.  Dividing by
+#R sub 3# ensures that the parallel projection fills the viewport as much as
+possible without extending past the viewport boundaries.
+.PP
+For the perspective projection of point #P'#, consider figure \n(CN.2.
+.FG 2 1 5.75i "3D Perspective Projection in Eye Coordinates"
+.bp
+.PP
+To calculate the perspective projection of point #P'#, we need to project
+the point to the viewplane and then to normalize the values so that points
+on the #Z# axis are projected to #X# (or #Y#) = 0, and so that the values
+of #X# (or #Y#) range from #-1# to #+1#.  The #X# axis value from figure
+\n(CN.2 is calculated by noting that
+.EQ
+{P prime sub x}over{P prime sub z} ~=~ {T prime sub x}over{T prime sub z}
+.EN
+\&.  We can let #T prime sub z ~=~ 1# if the viewing angle is still
+preserved.  Thus,
+.EQ
+{T prime sub x} ~=~ {P prime sub x}over{P prime sub z}
+.EN
+\&.  To normalize #T prime sub x#, note that the maximum possible value of
+#T prime sub x# on the viewing plane occurs at
+#{T prime sub x}over{T prime sub z} ~=~ tan ( {theta sub 3} / 2 )#, or
+#{T prime sub x} ~=~ tan ( {theta sub 3} / 2 )#.  Thus, the equations for
+the normalized perspective projection #T# are given by
+.sp .5v
+.ce
+.EQ C [4.2b]
+T sub x ~=~ {P' sub x} over {P' sub z
+~tan ^( {theta sub 3} ^/^ 2 ) } "      and      "
+T sub y ~=~ {P' sub y} over {P' sub z
+~tan ^( {theta sub 3} ^/^ 2 ) } ~,
+.EN
+.ta 6iR
+	[4.2b]
+
+where #theta sub 3# is the 3D viewing angle and #T# is the normalized
+perspective projection of #P'# to the #[-1,+1]~times~[-1,+1]# rectangle.
+Note that in the equations presented in this chapter, the viewport is
+assumed to be square, so the viewing angle for the horizontal plane and
+the viewing angle for the vertical plane are the same.  This assumption
+will also be held and extended for the 4D to 3D projection covered later.
+.PP
+Now that we have the points in the #[-1,+1]~times~[-1,+1]# rectangle, we'll
+need to map them to the viewport on the display device.  This viewport is
+specified by the parameters
+.br
+.RP
+.in 2c
+.ti -1c
+#C sub x#, #C sub y# (the viewport center, in screen coordinates), and
+.br
+.RP
+.in 2c
+.ti -1c
+#L sub x#, #L sub y# (the horizontal & vertical length of the viewport,
+in screen coordinates)
+.br
+.in 0
+
+.PP
+Given these viewport parameters, the mapping of the point #T# in the
+#[-1,+1]~times~[-1,+1]# rectangle to the display device viewport is given
+by the following equations:
+.sp .5v
+.ce
+.EQ C [4.2c]
+S sub x ~=~ C sub x ^+~ {{L sub x} over 2} T sub x "     and     "
+S sub y ~=~ C sub y ^+~ {{L sub y} over 2} T sub x
+.EN
+.ta 6iR
+	[4.2c]
+
+.ne 25
+.PP
+Putting this all together, we get the following algorithm.  Note that
+the function \fIDot3 (U,V)\fR returns the dot product of the two 3-vector
+parameters \fIU\fR and \fIV\fR.
+.in 1c
+.SC
+NumVerts: \fBInteger\fR		\fINumber of 3D Vertices\fR
+Radius3:  \fBReal\fR			\fIRadius of Vertices About the To3 Point\fR
+Va,Vb,Vc: \fBVector3\fR		\fIViewing-Transformation Column Vectors\fR
+Vangle3:  \fBRadians\fR		\fI3D Viewing Angle\fR
+VertList: \fBarray of Vertex\fR	\fIThe Set of 3D Vertices\fR
+
+\fBprocedure\fR  ProjectToScreen  (Cx, Cy, Lx, Ly: \fBReal\fR)
+S,T: \fBReal\fR		\fIDivisor Values\fR
+V:   \fBVector3\fR	\fIScratch Vector\fR
+\fBbegin\fR
+	\fBif\fR the 3D projection type is parallel
+		S \(<- 1 #/# Radius3
+	\fBelse\fR
+		T \(<- 1 #/# tan (Vangle3 #/# 2)
+
+	\fBfor\fR i \(<- 1 \fBto\fR NumVerts
+		V \(<- VertList[i].Position3 #-# From3
+
+		\fBif\fR the 3D projection type is perspective
+			S \(<- T #/# Dot3 (V, Vc)
+
+		VertList[i].Screen[x] \(<- Cx #+# (Lx #*# S #*# Dot3 (V, Va))
+		VertList[i].Screen[y] \(<- Cy #+# (Ly #*# S #*# Dot3 (V, Vb))
+	\fBendloop\fR
+\fBendproc\fR ProjectToScreen
+.ft I
+.SE "Description of 4D to 3D Projection" 3
+.PP
+In this section, we extend the ideas and equations presented in section 4.2
+to cover the projection of points from four-space to the intermediate 3D
+region.
+.PP
+It is possible to combine the 4D to 3D and 3D to 2D projections into a
+single step, but this approach lacks the flexibility of the following
+two-step approach.  The two-step approach allows the user to
+independently specify viewing parameters for each projection, and to
+view the 3D projection from different angles while maintaining a
+constant 4D view.
+.PP
+Since the 4D to 2D projection takes place in two discrete steps, we'll need
+to specify an intermediate 3D region for the projection to 3D coordinates.
+For this research, the unit cube (edge length two) centered at the origin,
+with vertices #< +- 1,^ +- 1,^ +- 1 ># was chosen as the intermediate region.
+.PP
+As in the 3D to 2D projections, the 4D data points can be projected to
+3D space with either a perspective projection or a parallel projection.
+Neither of these projections are more ``intuitive'' than the other,
+but a perspective projection will yield smaller 3D line segments for
+edges that are farther from the 4D viewpoint.  As an example of the
+differences between these projections, see section 4.6.
+.PP
+Changing the 3D projection type between perspective and parallel
+projection does not produce as dramatic (or puzzling) a change as for
+the 4D projection.  However, switching back and forth can also provide a
+bit more understanding of the 4D-projected object.
+.PP
+The projection from 4D to 3D needs to be clipped at a minimum against the
+#W=^0# eye-coordinate plane.  If both vertices have negative #W#
+eye-coordinate components, the edge should not be displayed.  If both
+vertices have non-negative #W# components, then the edge can be displayed
+normally.  If only one of the two vertices of a given edge has a negative
+#W# component, then the edge needs to be clipped to the #W# plane.  This
+can be done by finding the intersection of the edge with the #W# plane
+and setting the vertex with the negative #W# component to the intersection
+point.
+.PP
+Since the 4D edges are projected to an arbitrary 3D region, it is not
+critical that they be clipped against the 4D viewing frustum.  Edges that
+lie outside of the viewing frustum will lie outside the 3D region.
+.FG 3 1 5.5i "4D Eye Coordinates"
+.bp
+.PP
+The first step of the 4D to 3D projection is to transform the vertices from
+their 4D world coordinates to the 4D eye coordinates.
+Refer to figure \n(CN.3 for an illustration of the 4D eye coordinates.
+.PP
+As in the 3D to 2D projection, this transformation is accomplished
+with a transformation matrix.  The 4D viewing transformation matrix
+is composed of the column vectors #A vec#, #B vec#, #C vec# and
+#D vec#, which correspond to the #X#, #Y#, #Z# and #W# eye-coordinate
+axes, respectively.  The equations for these column vectors are
+.sp .5v
+.in 5c
+.EQ
+D vec mark ~=~ { bold To ~-~ bold From } over
+               { norm ^ bold To ~-~ bold From ^ norm } ~,
+.EN
+.sp .5v
+.EQ
+A vec lineup ~=~ { cross4 ( Up vec ,^ Over vec ,^ D vec ) } over
+                 { norm ^ cross4 ( Up vec ,^ Over vec ,^ D vec ) ^ norm } ~,
+.EN
+.sp .5v
+.EQ
+B vec lineup ~=~ { cross4 ( Over vec ,^ D vec ,^ A vec ) } over
+                 { norm ^ cross4 ( Over vec ,^ D vec ,^ A vec ) ^ norm }
+                 ~, ~and
+.EN
+.sp .5v
+.EQ
+C vec lineup ~=~ cross4 ( D vec ,^ A vec ,^ B vec ) ~,
+.EN
+.in 0
+.sp .5v
+where #bold To# is the to-point, #bold From# is the from-point, #Up vec#
+is the up-vector, and #Over vec# is the Over vector (all of which reside
+in four-space).
+.PP
+.ne 34
+The routine to calculate the four-dimensional transformation matrix
+follows.
+.in 1c
+.SC
+.fi
+.ft I
+Calc4Matrix calculates the four-dimensional viewing transformation matrix
+and places the resulting 4x4 matrix column vectors in
+\fRWa\fI, \fRWb\fI, \fRWc\fI and \fRWd\fI.
+.ft R
+.nf
+
+From4, To4: \fBPoint4\fR		\fI4D From and To Points\fR
+Up4, Over4: \fBVector4\fR		\fI4D Up and Over Vectors\fR
+
+\fBprocedure\fR  Calc4Matrix  (Wa, Wb, Wc, Wd: \fBVector4\fR)
+norm: \fBReal\fR	\fIVector Norm\fR 
+\fBbegin\fR
+	\fIGet the normalized Wd column-vector.\fR
+	Wd \(<- To4 #-# From4
+	norm \(<- Norm4 (Wd)
+	\fBif\fR norm #=# 0
+		\fBError\fR (To4 point and From4 point are the same.)
+	Wd \(<- Wd #/# norm
+
+	\fICalculate the normalized Wa column-vector.\fR
+	Wa \(<- Cross4 (Up4, Over4, Wd)
+	norm \(<- Norm4 (Wa)
+	\fBif\fR norm #=# 0
+		\fBError\fR (Invalid Up4 vector.)
+	Wa \(<- Wa #/# norm
+
+	\fICalculate the normalized Wb column-vector.\fR
+	Wb \(<- Cross4 (Over4, Wd, Wa)
+	norm \(<- Norm4 (Wb)
+	\fBif\fR norm #=# 0
+		\fBError\fR (Invalid Over4 vector.)
+	Wb \(<- Wb #/# norm
+
+	\fICalculate the Wc column-vector.\fR
+	Wc \(<- Cross4 (Wd, Wa, Wb)
+\fBendproc\fR Calc4Matrix
+.sp 2v
+.PP
+The #4 times 4# matrix composed of these column vectors transforms the 4D
+world coordinates to 4D eye coordinates.  The full transformation is given
+by the following product:
+.sp .5v
+.ce
+.EQ
+V' ~=~ [(V sub x ^-~ F sub x )  ~ (V sub y ^-~ F sub y )
+      ~ (V sub z ^-~ F sub z )  ~ (V sub w ^-~ F sub w )]
+      ~left [ matrix
+               { ccol { A sub x above A sub y above A sub z above A sub w }
+                 ccol { B sub x above B sub y above B sub z above B sub w }
+                 ccol { C sub x above C sub y above C sub z above C sub w }
+                 ccol { D sub x above D sub y above D sub z above D sub w }
+               } right ] ~,
+.EN
+.sp .5v
+where #F sub x#, #F sub y#, #F sub z# and #F sub w# are the coordinates of
+the from-point and #V sub x#, #V sub y#, #V sub z# and #V sub w# are the
+4D world coordinates of the vertex.  This equation yields the 4D
+eye-coordinates of the vertex:  #V'#.
+.PP
+Now that the vertices have been transformed from 4D world coordinates to 4D
+eye coordinates, we can project them to the normalized
+#[-1,+1]~times~[-1,+1]~times~[-1,+1]# region in three-space.  As for the 3D
+to 2D case, this projection can be either parallel or perspective.  The
+equations for these projections are extensions of equations
+[4.2a] and [4.2b].
+.PP
+The equations for parallel 4D to 3D projection are extended from equation
+4.2a by one coordinate:
+.sp .5v
+.ce
+.EQ C [4.3a]
+Q sub x ~=~ {V' sub x} over {R sub 4}  ~,~~~~
+Q sub y ~=~ {V' sub y} over {R sub 4}  ~,~and~~~
+Q sub z ~=~ {V' sub z} over {R sub 4}  ~,
+.EN
+.ta 6iR
+	[4.3a]
+
+where #R sub 4# is the radius of the set of 4D vertices about the to-point.
+Dividing by this radius ensures that the vertices are projected to fill the
+intermediate region as much as possible without extending past the
+boundaries.
+.FG 4 1 5.5i "4D Perspective Projection in Eye Coordinates"
+.bp
+.PP
+In equation 4.2b, the #X# and #Y# eye coordinates are divided by the #Z#
+eye coordinate to yield the perspective projection.  In the 4D to 3D
+perspective projection, this ``depth'' is similarly achieved by dividing by
+the #W# eye coordinate (which corresponds to the four-dimensional
+line-of-sight).  Figure \n(CN.4 contains a diagram of the 4D normalized
+perspective projection.  The derivation of the normalized 4D perspective
+projection follows the same reasoning as for the 3D normalized perspective
+projection.  The equations are
+.sp .5v
+.ce
+.EQ C [4.3b]
+Q sub x ~=~ {V' sub x} over {V' sub w
+           ~tan ^( {theta sub 4} ^/^ 2 ) } ~,~~~~
+Q sub y ~=~ {V' sub y} over {V' sub w
+           ~tan ^( {theta sub 4} ^/^ 2 ) } ~,~and~~~
+Q sub z ~=~ {V' sub z} over {V' sub w
+           ~tan ^( {theta sub 4} ^/^ 2 ) } ~,
+.EN
+.ta 6iR
+	[4.3b]
+
+where #theta sub 4# is the 4D viewing angle.  These equations yield values
+in the range of #[-1,^+1]# for vertices that lie in the 4D viewing
+frustum.
+.PP
+Mapping the projected points to a viewbox in three-space can be accomplished
+in the same manner that we mapped normalized 2D coordinates to the 2D
+viewport.  Given the viewbox parameters
+.in 3
+.br
+#B sub x ,~ B sub y ,~ B sub z# (the center of the viewbox region) and
+.br
+#D sub x ,~ D sub y ,~ D sub z# (the length of the viewbox sides) ,
+.br
+.in 0
+we can map the normalized 3D coordinates to the viewbox with the following
+equations:
+.sp .5v
+.ce
+.EQ
+P sub x ~=~ B sub x ~+~ {{D sub x} over 2} Q sub x ~,~~~~
+P sub y ~=~ B sub y ~+~ {{D sub y} over 2} Q sub y ~,~and~~~
+P sub z ~=~ B sub z ~+~ {{D sub z} over 2} Q sub z ~.
+.EN
+.ta 6iR
+	[4.3c]
+
+.PP
+As mentioned earlier, the intermediate 3D region used in this research is
+the cube with vertices #< +- 1,^ +- 1,^ +- 1>#, centered at the
+three-space origin.  For this particular region,
+#B sub x ~=~ B sub y ~=~ B sub z ~=~ 0#, and
+#L sub x ~=~ L sub y ~=~ L sub z ~=~ 2#, so the simplified equations are
+.sp .5v
+.ce
+.EQ
+P sub x ~=~ {V' sub x} over {R sub 4} ~,~~~~
+P sub y ~=~ {V' sub y} over {R sub 4} ~,~and~~~
+P sub z ~=~ {V' sub z} over {R sub 4}
+.EN
+.sp .5v
+for 4D to 3D parallel projection, and
+.sp .5v
+.ce
+.EQ
+P sub x ~=~ {V' sub x} over {V' sub w
+           ~tan ^( {theta sub 4} ^/^ 2 ) } ~,~~~
+P sub y ~=~ {V' sub y} over {V' sub w
+           ~tan ^( {theta sub 4} ^/^ 2 ) } ~,~and~~~
+P sub z ~=~ {V' sub z} over {V' sub w
+           ~tan ^( {theta sub 4} ^/^ 2 ) }
+.EN
+.sp .5v
+for 4D to 3D perspective projection.
+.br
+.ne 16v
+.PP
+The routine to project the four-dimensional vertices to the
+three-dimensional region is given by the following algorithm
+(the algorithm presented here does not perform any type of
+4D clipping):
+.in 1c
+.SC
+Radius4:	\fBReal\fR				\fIRadius of the 4D Vertices\fR
+NumVerts:	\fBInteger\fR			\fINumber of Vertices\fR
+Vangle4:	\fBRadians\fR			\fI4D Viewing Angle\fR
+VertList:	\fBarray of Vertex\fR	\fIVertex Array\fR
+Wa,Wb,Wc,Wd:	\fBVector4\fR		\fI4D Transformation Matrix Column Vectors\fR
+
+\fBprocedure\fR  ProjectTo3D
+S,T: \fBReal\fR		\fIDivisor Values\fR
+V:   \fBVector4\fR	\fIScratch Vector\fR
+\fBbegin\fR
+	\fBif\fR the 4D projection type is parallel
+		S \(<- 1 #/# Radius4
+	\fBelse\fR
+		T \(<- 1 #/# tan (Vangle4 #/# 2)
+
+	\fBfor\fR i \(<- 1 \fBto\fR NumVerts
+		V \(<- VertList[i].Position4 #-# From4
+
+		\fBif\fR the 4D projection type is perspective
+			S \(<- T / Dot4 (V, Wd)
+
+		VertList[i].Position4[x] \(<- S #*# Dot3 (V, Wa))
+		VertList[i].Position4[y] \(<- S #*# Dot3 (V, Wb))
+		VertList[i].Position4[z] \(<- S #*# Dot3 (V, Wc))
+	\fBendloop\fR
+\fBendproc\fR ProjectTo3D
+
+.SE "Rotations of 4D Wireframes" 4
+.PP
+Rotation of the 4D wireframe is a tremendous aid in understanding the
+fundamental structure of the displayed object.  This rotation is best done
+by tying the rotation input to mouse movement.  The wireframe program
+written for this research uses the horizontal movement of the mouse only.
+Restricting the rotation input to a single plane helps only somewhat for
+three-space rotation, but greatly helps with four-space rotations, where
+it's more difficult to figure out how to ``undo'' a particular pair of
+rotations of the four-space viewpoint.
+.PP
+Rotating the view of the object can be accomplished by rotating the
+viewpoint, rather than rotating each of the object vertices.  This way,
+it isn't necessary to rotate all of the wireframe vertices; you only
+have to rotate the viewpoint.  For rotation in three-space, use the
+regular 3D rotation matrices, and for rotating in four-space, use the
+rotation matrices presented in section 2.2.  Another way to describe
+this is to say that the 3D (or 4D) from-point is moved over a three-
+(or four-) sphere.
+.PP
+When rotating the three-space view, you don't need to recompute the
+4D to 3D projections; it's more efficient to save the projected 3D
+vertices and to recompute only the 3D to screen projections.
+The main steps for rotating the 3D viewpoint are:
+.in 3
+.ls 1
+1)  Rotate the 3D from-point about the 3D to-point in some plane.
+.br
+2)  Recalculate the 3D viewing transformation matrix.
+.br
+3)  Project all 3D points to viewport coordinates.
+.br
+4)  Display each wireframe edge.
+
+.in 0
+.PP
+When rotating the four-space viewpoint, you also need to recompute the 4D
+to 3D projection.  The main steps for rotating the 4D viewpoint are:
+.in 3
+.ls 1
+1)  Rotate the 4D viewpoint about the 4D to-point in some plane.
+.br
+2)  Recalculate the 4D viewing transformation matrix.
+.br
+3)  Project all 4D points to the 3D cube space.
+.br
+4)  Project all 3D points to viewport coordinates.
+.br
+5)  Display each wireframe edge.
+.in 0
+.ls 2
+
+.SE "User Interaction and Visualization Aids" 5
+.PP
+User interaction for the wireframe program should include several
+options to allow the user to experiment with the displayed
+object.  One of the most important of these options is the
+interactive rotation of the object mentioned above, but there
+are several other options that increase the understanding of the
+wireframe object.
+.PP
+The user should be able to switch between perspective and parallel projection
+of the wireframe for both the 4D to 3D projection and the 3D to viewport
+projection.  Switching from parallel projection to perspective projection
+sometimes gives the user a better idea of the object's perspective.
+.PP
+Another aid is the display of both the 3D and the 4D coordinate axes.  This
+display aids the user in orienting the object with the 3D or 4D world, and
+also helps the user to choose the desired object rotation; this is especially
+helpful when trying to choose four-space rotations.
+.PP
+Displaying the edges of the #< +- 1,^ +- 1,^ +- 1># cube (the intermediate
+three-dimensional projection space) along with the object helps the user to
+select the proper 3D and 4D viewing parameters in order to best fill the
+intermediate 3D cube and 2D viewport.  It also helps the user to identify
+rotations in four-space versus rotations in three-space without looking away
+from the object display.
+.PP
+Finally, a useful four-dimensional visual aid is the depthcueing
+of the wireframe according to the four-dimensional depth of each
+vertex.  In normal three-dimensional depthcueing, the #Z#
+eye-coordinate is used to assign an intensity to the vertex.
+Edges are then shaded by linearly interpolating the intensities
+of the two endpoint vertices.  Typically, vertices that are
+farther from the viewpoint are rendered with a lower intensity,
+and vertices closer to the viewpoint are rendered with greater
+intensity, so edges dim in intensity as they extend away from
+the viewer.
+.PP
+This analogy extends quite nicely to four-dimensional wireframes; the
+``depth'' of a vertex is simply the 4D #W# eye-coordinate.  As an example,
+when the four-cube is rendered with 4D depthcueing, the ``inner'' cube is
+shaded with a lower intensity than the ``outer'' cube, since it is farther
+away in four-dimensional space.
+.SE "Example 4D Wireframe Images" 6
+.PP
+In figures \n(CN.5a through \n(CN.5d, the hypercube with vertices of
+#< +- 1,^+- 1,^+- 1,^+- 1># is rendered with 4D parallel & perspective and
+3D parallel & perspective projections.  The four-cube is displayed with
+the following viewing parameters:
+#bold From sub 4 ~=  <4,~0,~0,~0>#, 
+#bold To   sub 4 ~=  <0,~0,~0,~0>#, 
+#Up        sub 4 ~=  <0,~1,~0,~0>#, 
+#Over      sub 4 ~=  <0,~0,~1,~0>#, 
+#theta     sub 4 ~=# 45 degrees, 
+#bold From sub 3 ~=  <3.00,~0.99,~1.82>#, 
+#bold To   sub 3 ~=  <0,~0,~0>#, 
+#Up        sub 3 ~=  <0,~1,~0>#, and 
+#theta     sub 3 ~=# 45 degrees.
+In figure \n(CN.5a, the ``inner'' cube is actually farther away in
+four-space than the ``outer'' cube, and hence appears smaller in the
+resulting projection.  You can think of the larger cube as the
+``front face'' of the four-cube, and the the smaller cube as the
+``rear face'' of the four-cube.  When rotating the four-cube in the
+proper plane, the rear face gradually swings to the front, and the
+front face gradually swings to the rear.  In doing this, the cube
+appears to turn itself inside out, so that the originally smaller
+cube engulfs the previously larger cube.
+.PP
+In figure \n(CN.5c, the four-cube is displayed with 4D parallel projection
+and 3D perspective projection.  Because of the parallel projection from
+4D, the ``rear face'' and ``front face'' are displayed as the same size, so
+the parallel projection from this point in four-space looks like two
+identically-sized three-cubes superimposed over each other.
+.PP
+Figures \n(CN.6a through \n(CN.6d are similar to figures \n(CN.5a through
+\n(CN.5d, except that the four-dimensional viewpoint has changed.  For
+these views, the four-dimensional viewing parameters are:
+#bold From sub 4 ~=  <2.83,~2.83,~0.01,~0.00>#, 
+#bold To   sub 4 ~=  <0,~0,~0,~0>#, 
+#Up        sub 4 ~=  <-0.71,~0.71,~0.00,~0.00>#, 
+#Over      sub 4 ~=  <0.00,~0.00,~1.00,~0.02>#, 
+#theta     sub 4 ~=# 45 degrees, 
+#bold From sub 3 ~=  <3.29,~0.68,~1.40>#, 
+#bold To   sub 3 ~=  <0,~0,~0>#, 
+#Up        sub 3 ~=  <0.08,~1.00,~0.04>#, and 
+#theta     sub 3 ~=# 45 degrees.
+This vantage point occurs one eighth of the way though a complete
+four-dimensional rotation.  See figure \n(CN.7a for an illustration
+of this rotation.
+.PP
+Figure \n(CN.7a shows the sequence of one fourth of a four-dimensional
+rotation of the hypercube (read the sequence from top to bottom, left to
+right) with 4D and 3D perspective projection.  Figure \n(CN.7b shows the
+same sequence  with 4D parallel and 3D perspective projection.
+.PP
+In figure \n(CN.9, the dual of the four-cube is rendered with all edges
+rendered the same color.  The dual of the four-cube is the wireframe of
+convex hull of the face centers of the four-cube.  In other words, the
+convex hull of the points #<^+- 1,^0,^0,^0^>#, #<^0,^+- 1,^0,^0^>#,
+#<^0,^0,^+- 1,^0^>#, and #<^0,^0,^0,^+- 1^>#.  One could also think of
+it as the four-dimensional analog of the three-dimensional octahedron.
+.PP
+Figures \n(CN.8 through \n(CN.13 illustrate the differences in single
+edge-color rendering, multiple edge-color rendering, and depth-cued edge
+rendering.  Even with interactive manipulation of the four-dimensional
+wireframe, single edge-color rendering yields an image that is difficult
+to interpret.  Assigning different colors to the edges greatly aids the
+user in identifying sub-structures of the four-dimensional wireframe, and
+serves as a structural reference when rotating the object.  Depth-cueing
+the edges gives a spatial sense of the object, but loses the structural
+cues.
+.PP
+Finally, figures \n(CN.14 and \n(CN.15 show generalized curves across
+the surface of a four-sphere.  The curve in figure \n(CN.15 is given
+with poor uniform parameterization which yields the two ``kinks'' that
+are visible in the 4D image.  For more information on these particular
+curves and the choices of parameterization, refer to [Chen 90].
+.br
+.bp
+.ls 1
+.ll 5i
+.in 0.5i
+.lt 6i
+.tm .FG \n% "The 4-Cube with Various 4D and 3D Projections" \n(CN.5
+.sp 6.8i
+.tl ''(a)  4D Perspective and 3D Perspective Projection''
+.sp 3v
+.tl ''Figure \n(CN.5''
+
+.tl ''The 4-Cube with Various 4D and 3D Projections''
+.bp
+.sp 6.8i
+.tl ''(b)  4D Perspective and 3D Parallel Projection''
+.sp 3v
+.tl ''Figure \n(CN.5''
+
+.tl ''continued''
+.bp
+.sp 6.8i
+.tl ''(c)  4D Parallel and 3D Perspective Projection''
+.sp 3v
+.tl ''Figure \n(CN.5''
+
+.tl ''continued''
+.bp
+.sp 6.8i
+.tl ''(d)  4D Parallel and 3D Parallel Projection''
+.sp 3v
+.tl ''Figure \n(CN.5''
+
+.tl ''continued''
+.bp
+.tm .FG \n% "Another View of The 4-Cube with Various 4D and 3D Projections" \n(CN.6
+.sp 6.8i
+.tl ''(a)  4D Perspective and 3D Perspective Projection''
+.sp 3v
+.tl ''Figure \n(CN.6''
+
+.tl ''Another View of The 4-Cube with Various 4D and 3D Projections''
+.bp
+.sp 6.8i
+.tl ''(b)  4D Perspective and 3D Parallel Projection''
+.sp 3v
+.tl ''Figure \n(CN.6''
+
+.tl ''continued''
+.bp
+.sp 6.8i
+.tl ''(c)  4D Parallel and 3D Perspective Projection''
+.sp 3v
+.tl ''Figure \n(CN.6''
+
+.tl ''continued''
+.bp
+.sp 6.8i
+.tl ''(d)  4D Parallel and 3D Parallel Projection''
+.sp 3v
+.tl ''Figure \n(CN.6''
+
+.tl ''continued''
+.bp
+.tm .FG \n% "4D Rotation of the 4-Cube" \n(CN.7
+.sp 5.75i
+.tl ''(a)  4D Perspective and 3D Perspective Projection''
+.sp 3v
+.tl ''Figure \n(CN.7''
+
+.tl ''4D Rotation of the 4-Cube''
+.bp
+.sp 5.75i
+.tl ''(b)  4D Parallel Projection and 3D Perspective Projection''
+.sp 3v
+.tl ''Figure \n(CN.7''
+
+.tl ''continued''
+.br
+.ll 6i
+.FG 8  1 3.2i "The 4-Cube With All Edges Rendered in One Color"
+.FG 9  0 4.0i "The Dual of The 4-Cube With All Edges Rendered in One Color"
+.FG 10 1 3.2i "The 4-Cube Rendered With Multiple Edge Colors"
+.FG 11 0 4.0i "The Dual of The 4-Cube Rendered With Multiple Edge Colors"
+.FG 12 1 3.2i "The 4-Cube Rendered With Depth-Cueing"
+.FG 13 0 4.0i "The Dual of The 4-Cube Rendered With Depth-Cueing"
+.FG 14 1 3.2i "A 4D Curve on a 4-Sphere"
+.FG 15 0 4.0i "A 4D Curve on a 4-Sphere with Poor Parameterization"

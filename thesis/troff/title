@@ -1,0 +1,65 @@
+.ll 6i		\" Line length (6 inches)
+.lt 6i		\" Title Length (6 inches)
+.po 1.5i	\" Left margin (1-1/2 inches)
+.na		\" Don't align the right margin.
+.sp 5c		\" Space down 5 cm.
+.ls 2		\" Select double line spacing.
+.ft R
+.ps 12
+.ce 1
+FOUR-SPACE VISUALIZATION OF 4D OBJECTS
+.ce 2
+by
+Steven Richard Hollasch
+.sp 7c
+.ls 1
+.ce 3
+A Thesis Presented in Partial Fulfillment
+of the Requirements for the Degree
+Master of Science
+.sp 7c
+.ls 2
+.ce 2
+ARIZONA STATE UNIVERSITY
+August 1991
+.bp
+.sp 5c
+.ls 2
+.ce 1
+FOUR-SPACE VISUALIZATION OF 4D OBJECTS
+.ce 2
+by
+Steven Richard Hollasch
+.sp 2v
+.ce 2
+has been approved
+August 1991
+.sp 2.5c
+APPROVED:
+.br
+.sp 2v
+.ta 6iR
+.tc \(ul
+\z_	\o',_'_\o'_C'\o'_h'\o'_a'\o'_i'\o'_r'\o'_p'\o'_e'\o'_r'\o'_s'\o'_o'\o'_n'
+
+\(ul	\(ul
+
+\(ul	\(ul
+.sp 1v
+.ft R
+.ce 1
+Supervisory Committee
+.sp 2.0c
+.ft R
+.in 3i
+.ls 1
+.nf
+ACCEPTED:
+.sp 3v
+.ta 3iR
+.tc \(ul
+\(ul	\(ul
+Department Chairperson
+.sp 2v
+\(ul	\(ul
+Dean, Graduate College

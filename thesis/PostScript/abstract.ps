@@ -1,0 +1,521 @@
+%!PS-Adobe-1.0
+%%Creator: enuxva.eas.asu.edu:vis91 (Visualization-91 Nielson,CSC Facualty)
+%%Title: stdin
+%%CreationDate: Wed Jun 26 20:34:38 1991
+%%DocumentFonts: Times-Roman Times-Italic Times-Bold Symbol Times-Roman DIThacks
+%%Pages: (atend)
+%%EndComments
+% Start of pscat.pro -- prolog for troff translator
+% Copyright (c) 1985,1987 Adobe Systems Incorporated. All Rights Reserved. 
+% GOVERNMENT END USERS: See Notice file in TranScript library directory
+% -- probably /usr/lib/ps/Notice
+% RCS: $Header: pscat.pro,v 2.2 87/11/17 16:40:32 byron Rel $
+save /pscatsave exch def
+/$pscat 50 dict def
+$pscat begin
+/fm [1 0 0 1 0 0] def
+/xo 0 def /yo 0 def
+/M /moveto load def
+/R /show load def
+/S {exch currentpoint exch pop moveto show}def
+/T {exch currentpoint pop exch moveto show}def
+/U {3 1 roll moveto show}def
+/siz 0 def
+/font 0 def
+/Z {/siz exch def SF}def
+/F {/font exch def SF}def
+/SF{font 0 ne
+    {catfonts font 1 sub get fm 0 siz put fm 3 siz neg put 
+     fm makefont setfont}if}def
+/BP{save/catsv exch def 0 792 translate 72 432 div dup neg scale 
+  xo yo translate 0 0 moveto}def
+/EP{catsv restore showpage}def
+
+% definitions for PPROC callback functions
+% each PPROC is called with the following number on the stack:
+% pointsize charcode railmag pswidth pschar x y wid
+/$pprocs 50 dict def
+/fractm [.65 0 0 .6 0 0] def
+% fractions
+/PS1{gsave $pprocs begin
+    /wid exch def pop pop pop pop pop /ch exch def /size exch def
+    /pair $pprocs ch get def /cf currentfont def
+    cf fractm makefont setfont
+    0 .3 size mul 6 mul 2 copy neg rmoveto pair 0 get show rmoveto
+    currentfont cf setfont (\244) show setfont
+    pair 1 get show grestore wid .06 div 0 rmoveto end}def
+$pprocs begin
+8#34 [(1)(4)] def
+8#36 [(1)(2)] def
+8#46 [(3)(4)] def
+end
+% DIThacks fonts for some special chars
+50 dict dup begin
+/FontType 3 def
+/FontName /DIThacks def
+/FontMatrix [.001 0.0 0.0 .001 0.0 0.0] def
+/FontBBox [-220 -280 900 900] def% a lie but ...
+/Encoding 256 array def
+0 1 255{Encoding exch /.notdef put}for
+Encoding
+ dup 8#040/space put %space
+ dup 8#110/rc put %right ceil
+ dup 8#111/lt put %left  top curl
+ dup 8#112/bv put %bold vert
+ dup 8#113/lk put %left  mid curl
+ dup 8#114/lb put %left  bot curl
+ dup 8#115/rt put %right top curl
+ dup 8#116/rk put %right mid curl
+ dup 8#117/rb put %right bot curl
+ dup 8#120/rf put %right floor
+ dup 8#121/lf put %left  floor
+ dup 8#122/lc put %left  ceil
+ dup 8#140/sq put %square
+ dup 8#141/bx put %box
+ dup 8#142/ci put %circle
+ dup 8#143/br put %box rule
+ dup 8#144/rn put %root extender
+ dup 8#145/vr put %vertical rule
+ dup 8#146/ob put %outline bullet
+ dup 8#147/bu put %bullet
+ dup 8#150/ru put %rule
+ dup 8#151/ul put %underline
+ pop
+/DITfd 100 dict def
+/BuildChar{0 begin
+ /cc exch def /fd exch def
+ /charname fd /Encoding get cc get def
+ /charwid fd /Metrics get charname get def
+ /charproc fd /CharProcs get charname get def
+ charwid 0 fd /FontBBox get aload pop setcachedevice
+ 40 setlinewidth
+ newpath 0 0 moveto gsave charproc grestore
+ end}def
+/BuildChar load 0 DITfd put
+%/UniqueID 5 def
+/CharProcs 50 dict def
+CharProcs begin
+/space{}def
+/.notdef{}def
+/ru{500 0 rls}def
+/rn{0 750 moveto 500 0 rls}def
+/vr{20 800 moveto 0 -770 rls}def
+/bv{20 800 moveto 0 -1000 rls}def
+/br{20 770 moveto 0 -1040 rls}def
+/ul{0 -250 moveto 500 0 rls}def
+/ob{200 250 rmoveto currentpoint newpath 200 0 360 arc closepath stroke}def
+/bu{200 250 rmoveto currentpoint newpath 200 0 360 arc closepath fill}def
+/sq{80 0 rmoveto currentpoint dround newpath moveto
+    640 0 rlineto 0 640 rlineto -640 0 rlineto closepath stroke}def
+/bx{80 0 rmoveto currentpoint dround newpath moveto
+    640 0 rlineto 0 640 rlineto -640 0 rlineto closepath fill}def
+/ci{355 333 rmoveto currentpoint newpath 333 0 360 arc
+    50 setlinewidth stroke}def
+
+/lt{20 -200 moveto 0 550 rlineto currx 800 2cx s4 add exch s4 a4p stroke}def
+/lb{20 800 moveto 0 -550 rlineto currx -200 2cx s4 add exch s4 a4p stroke}def
+/rt{20 -200 moveto 0 550 rlineto currx 800 2cx s4 sub exch s4 a4p stroke}def
+/rb{20 800 moveto 0 -500 rlineto currx -200 2cx s4 sub exch s4 a4p stroke}def
+/lk{20 800 moveto 20 300 -280 300 s4 arcto pop pop 1000 sub
+    currentpoint stroke moveto
+    20 300 4 2 roll s4 a4p 20 -200 lineto stroke}def
+/rk{20 800 moveto 20 300 320 300 s4 arcto pop pop 1000 sub
+    currentpoint stroke moveto
+    20 300 4 2 roll s4 a4p 20 -200 lineto stroke}def
+/lf{20 800 moveto 0 -1000 rlineto s4 0 rls}def
+/rf{20 800 moveto 0 -1000 rlineto s4 neg 0 rls}def
+/lc{20 -200 moveto 0 1000 rlineto s4 0 rls}def
+/rc{20 -200 moveto 0 1000 rlineto s4 neg 0 rls}def
+end
+
+/Metrics 50 dict def Metrics begin
+/.notdef 0 def
+/space 500 def
+/ru 500 def
+/br 0 def
+/lt 250 def
+/lb 250 def
+/rt 250 def
+/rb 250 def
+/lk 250 def
+/rk 250 def
+/rc 250 def
+/lc 250 def
+/rf 250 def
+/lf 250 def
+/bv 250 def
+/ob 350 def
+/bu 350 def
+/ci 750 def
+/bx 750 def
+/sq 750 def
+/rn 500 def
+/ul 500 def
+/vr 0 def
+end
+
+DITfd begin
+/s2 500 def /s4 250 def /s3 333 def
+/a4p{arcto pop pop pop pop}def
+/2cx{2 copy exch}def
+/rls{rlineto stroke}def
+/currx{currentpoint pop}def
+/dround{transform round exch round exch itransform} def
+end
+end
+/DIThacks exch definefont pop
+/catfonts [
+	/Times-Roman findfont
+	/Times-Italic findfont
+	/Times-Bold findfont
+	/Symbol findfont
+	/Times-Roman findfont
+	/DIThacks findfont
+	] def
+%%EndProlog
+%%Page: ? 1
+BP
+1 F
+84 Z
+1740 870(ABSTRACT)U
+72 Z
+3188 1065(')U
+664 1209(u)U
+834 1065(In)U
+918(the)S
+1030(\256eld)S
+1182(of)S
+1266(scienti\256c)S
+1550(visualization,)S
+1960(the)S
+2072(term)S
+2228(``four)S
+2420(dimensional)S
+2796(visualization')S
+700 1209(sually)U
+896(refers)S
+1084(to)S
+1164(the)S
+1276(process)S
+1516(of)S
+1600(rendering)S
+1900(a)S
+1956(three)S
+2124(dimensional)S
+2500(\256eld)S
+2652(of)S
+2736(scalar)S
+2928(values.)S
+3194 1353(-)U
+664 1497(i)U
+664 1353(While)U
+864(this)S
+992(paradigm)S
+1288(applies)S
+1516(to)S
+1596(many)S
+1780(different)S
+2052(data)S
+2196(sets,)S
+2346(there)S
+2514(are)S
+2626(also)S
+2766(uses)S
+2914(for)S
+3022(visual)S
+684 1497(zing)U
+832(data)S
+976(that)S
+1108(correspond)S
+1452(to)S
+1532(actual)S
+1728(four-dimensional)S
+2248(structure.)S
+2566(Four)S
+2726(dimensional)S
+3206 1641(e)U
+664 1785(i)U
+664 1641(structures)U
+968(have)S
+1128(typically)S
+1404(been)S
+1564(visualized)S
+1880(via)S
+1992(wireframe)S
+2312(methods,)S
+2598(but)S
+2714(this)S
+2842(process)S
+3082(alon)S
+684 1785(s)U
+736(usually)S
+968(insuf\256cient)S
+1316(for)S
+1424(an)S
+1516(intuitive)S
+1780(understanding;)S
+2232(all)S
+2328(but)S
+2444(the)S
+2556(most)S
+2720(simple)S
+2936(datasets)S
+664 2073(s)U
+664 1929(easily)U
+856(overwhelm)S
+1204(the)S
+1316(viewer.)S
+1578(This)S
+1730(research)S
+1994(covers)S
+2206(the)S
+2318(visualization)S
+2710(of)S
+2794(four)S
+2938(dimen-)S
+692 2073(ional)U
+860(objects)S
+1088(through)S
+1336(wireframe)S
+1656(methods)S
+1924(with)S
+2076(extended)S
+2360(visualization)S
+2752(cues,)S
+2922(and)S
+3166 2217(e)U
+664 2361(f)U
+664 2217(through)U
+912(raytracing)S
+1228(methods.)S
+1538(Both)S
+1702(the)S
+1814(wireframe)S
+2134(and)S
+2262(raytracing)S
+2578(methods)S
+2846(employ)S
+3086(tru)S
+688 2361(our-space)U
+992(viewing)S
+1248(parameters)S
+1588(and)S
+1716(geometry.)S
+2054(The)S
+2190(raytracing)S
+2506(approach)S
+2794(easily)S
+2986(solves)S
+3178 2505(e)U
+664 2649(f)U
+664 2505(the)U
+776(hidden)S
+996(surface)S
+1228(and)S
+1356(shadowing)S
+1692(problems)S
+1984(of)S
+2068(4D)S
+2180(objects,)S
+2426(and)S
+2554(yields)S
+2750(an)S
+2842(image)S
+3042(in)S
+3122(th)S
+688 2649(orm)U
+828(of)S
+912(a)S
+968(three-dimensional)S
+1512(\256eld)S
+1664(of)S
+1748(RGB)S
+1920(values,)S
+2146(which)S
+2346(can)S
+2470(be)S
+2562(rendered)S
+2838(with)S
+2990(a)S
+3046(variety)S
+664 2937(r)U
+664 2793(of)U
+748(existing)S
+1000(methods.)S
+1310(The)S
+1446(4D)S
+1558(raytracer)S
+1838(also)S
+1978(supports)S
+2246(true)S
+2382(four-dimensional)S
+2902(lighting,)S
+688 2937(e\257ections)U
+988(and)S
+1116(refractions.)S
+1930 4284(iii)U
+EP
+%%Page: ? 2
+BP
+1 F
+84 Z
+2382 870(S)U
+72 Z
+834 1065(I)U
+84 Z
+1490 870(ACKNOWLEDGEMENT)U
+72 Z
+858 1065(n)U
+918(appreciation)S
+1298(of)S
+1382(the)S
+1494(time,)S
+1664(effort)S
+1848(and)S
+1976(patience)S
+2240(extended)S
+2524(to)S
+2604(me)S
+2716(in)S
+2796(the)S
+2908(pursuit)S
+3132(of)S
+3212 1209(-)U
+664 1353(t)U
+664 1209(this)U
+792(thesis,)S
+998(I)S
+1046(would)S
+1250(like)S
+1382(to)S
+1462(thank)S
+1646(my)S
+1762(committee)S
+2090(chairman,)S
+2400(Dr.)S
+2518(Thomas)S
+2774(Foley.)S
+3004(In)S
+3088(addi)S
+684 1353(ion)U
+800(to)S
+880(his)S
+988(guidance)S
+1272(in)S
+1352(the)S
+1464(topic)S
+1632(of)S
+1716(this)S
+1844(research,)S
+2126(he)S
+2218(has)S
+2338(also)S
+2478(been)S
+2638(unfailing)S
+2922(in)S
+3002(helping)S
+664 1641(p)U
+664 1497(me)U
+776(get)S
+888(the)S
+1000(resources)S
+1296(and)S
+1424(information)S
+1788(I)S
+1836(needed)S
+2064(to)S
+2144(complete)S
+2432(both)S
+2584(this)S
+2712(research)S
+2976(and)S
+3104(this)S
+700 1641(aper.)U
+890(I)S
+938(would)S
+1142(also)S
+1282(like)S
+1414(to)S
+1494(acknowledge)S
+1898(and)S
+2026(thank)S
+2210(Dr.)S
+2328(Gregory)S
+2592(Nielson)S
+2840(and)S
+2968(Dr.)S
+3076 1785(d)U
+664 1929(s)U
+664 1785(Gerald)U
+884(Farin)S
+1060(for)S
+1168(being)S
+1352(on)S
+1448(my)S
+1564(thesis)S
+1752(committee)S
+2080(and)S
+2208(offering)S
+2464(their)S
+2620(observations)S
+3008(an)S
+692 1929(uggestions.)U
+834 2073(T)U
+(hanks)R
+1070(are)S
+1182(also)S
+1322(due)S
+1450(to)S
+1530(Kevin)S
+1730(Price)S
+1902(for)S
+2010(letting)S
+2218(me)S
+2330(use)S
+2450(his)S
+2558(Amiga)S
+2778(and)S
+2906(helping)S
+3146(me)S
+3220 2217(d)U
+664 2361(n)U
+664 2217(produce)U
+920(animations)S
+1260(of)S
+1344(the)S
+1456(raytrace)S
+1712(data)S
+1856(that)S
+1988(aided)S
+2168(my)S
+2284(understanding)S
+2716(of)S
+2800(the)S
+2912(process)S
+3152(an)S
+700 2361(ature)U
+868(of)S
+952(four-dimensional)S
+1472(raytracing.)S
+834 2505(F)U
+(inally,)R
+1080(I)S
+1128(would)S
+1332(like)S
+1464(to)S
+1544(thank)S
+1728(my)S
+1844(family)S
+2056(for)S
+2164(their)S
+2320(patience,)S
+2602(con\256dence,)S
+664 2649(enthusiasm)U
+1012(and)S
+1140(\256nancial)S
+1412(support.)S
+1932 4284(iv)U
+EP
+%%Trailer
+pscatsave end restore
+%%Pages: 2

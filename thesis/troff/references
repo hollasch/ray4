@@ -1,0 +1,144 @@
+.br
+.ch G1			\" Disable the standard page-numbering macro trap,
+.bp			\"   begin a new page,
+.wh -1i G1		\"   and re-enable page numbering.
+.sp 1.5i
+.ft I			\" Start a new page in 14-point italic.
+.ps \n(PS+2
+.ce 1
+REFERENCES
+.tm .CH \n% "References"
+.sp 1i			\" Space down to the start of text, and set up for
+.ft R			\" standard-point roman text.
+.ps \n(PS
+.RP
+.ne 3v
+[Abbott 52]  Edwin A. Abbott,
+\fIFlatland\fR, Dover Publications, Inc., New York NY, 1952.
+
+.RP
+.ne 4v
+[Banchoff 90]  Thomas F. Banchoff,
+\fIBeyond the Third Dimension\fR, Scientific American Library,
+New York NY, 1990.
+
+.RP
+.ne 4v
+[Barnhill 84]  R. E. Barnhill and F. F. Little,
+``Three- and Four-Dimensional Surfaces,''
+\fIThe Rocky Mountain Journal of Mathematics\fR 14(1),
+Winter 1984, pp 77-102.
+
+.RP
+.ne 4v
+[Brisson 78]  edited by David W. Brisson,
+``Visual Comprehension of \fIn\fR-Dimensions,''
+\fIHypergraphics:  Visualizing Complex Relationships in Art, Science &
+Technology\fR, Westview Press, Boulder CO, 1978, pp 109-146.
+
+.RP
+.ne 4v
+[Carey 87]  Scott A. Carey, Robert P. Burton, and Douglas M. Campbell,
+``Shades of a Higher Dimension,''
+\fIComputer Graphics World\fR, October 1987, pp 93-94.
+
+.RP
+.ne 4v
+[Chen 85]  L. Chen, G. Herman, R. Reynolds, J. Udupa,
+``Surface Shading in the Cuberille Environment,''
+\fIIEEE Computer Graphics and Applications\fR 5(12), December 1985, pp 33-43.
+
+.RP
+.ne 4v
+[Chen 90]  Chao-Chi Chen,
+``Interpolation of Orientation Matrices Using Sphere Splines in Computer
+Animation,''
+Master's Thesis, Computer Science Department, Arizona State University,
+December 1990.
+
+.RP
+.ne 4v
+[Dewdney 84]  A. K. Dewdney,
+\fIThe Planiverse:  Computer Contact with a Two-Dimensional World\fR,
+Poseidon Press, New York NY, 1984.
+
+.RP
+.ne 4v
+[Dewdney 86]  A. K. Dewdney,
+``Computer Recreations,'' \fIScientific American\fR, April 1986, pp 14-23.
+
+.RP
+.ne 4v
+[Drebin 88]  Robert Drebin, Loren Carpenter, Pat Hanrahan,
+``Volume Rendering,''
+\fIComputer Graphics\fR 22(4), August 1988, pp 65-74.
+
+.RP
+.ne 4v
+[Farin 88]  Gerald Farin,
+\fICurves and Surfaces for Computer Aided Geometric Design\fR,
+Academic Press, Inc., San Diego CA, 1988, pp 19,238.
+
+.RP
+.ne 4v
+[Foley 87]  Thomas A. Foley, Gregory M. Nielson,
+``Practical Techniques for Producing 3D Graphical Images,''
+\fIVMEbus Systems\fR,  November-December 1987, pp 65-73.
+
+.RP
+.ne 4v
+[Frieder 85]  G. Frieder, D. Gordon, R. Reynolds,
+``Back-to-Front Display of Voxel-Based Objects,''
+\fIIEEE Computer Graphics and Applications\fR 5(1), January 1985, pp 52-60.
+
+.RP
+.ne 4v
+[Glassner 90]  Andrew Glassner,
+\fIGraphics Gems\fR, Academic Press, Inc., San Diego CA, 1990, pp 390-393.
+
+.RP
+.ne 4v
+[Hall 89]  Roy Hall,
+\fIIllumination and Color in Complex Generated Imagery\fR,
+Springer-Verlag, New York NY, 1989, p 153.
+
+.RP
+.ne 4v
+[Hill 90]  Francis S. Hill, Jr.,
+\fIComputer Graphics\fR, Macmillan Publishing Co., New York NY, 1990.
+
+.RP
+.ne 4v
+[Kajiya 84]  James Kajiya, Brian Von Herzen,
+``Ray Tracing Volume Densities,''
+\fIComputer Graphics\fR 18(3), July 1984, pp 165-174.
+
+.RP
+.ne 4v
+[Lorensen 87]  William Lorensen, Harvey Cline,
+``Marching Cubes:  A High Resolution 3D Surface Construction Algorithm,''
+\fIComputer Graphics\fR 21(4), July 1987, pp 163-169.
+
+.RP
+.ne 4v
+[Noll 67]  Michael A. Noll,
+``A Computer Technique for Displaying n-Dimensional Hyperobjects,''
+\fICommunications of the ACM\fR 10(8), August 1967, pp 469-473.
+
+.RP
+.ne 4v
+[Sabella 88]  Paolo Sabella,
+``A Rendering Algorithm for Visualizing 3D Scalar Fields,''
+\fIComputer Graphics\fR 22(4), August 1988, pp 51-55.
+
+.RP
+.ne 4v
+[Steiner 87]  K. Victor Steiner and Robert P. Burton,
+``Hidden Volumes:  The 4th Dimension,''
+\fIComputer Graphics World\fR, February 1987, pp 71-74.
+
+.RP
+.ne 4v
+[Whitted 80]  Turner Whitted,
+``An Improved Illumination Model for Shaded Display,''
+\fICommunications of the ACM\fR 23(6), June 1980, pp 343-349.
