@@ -1,3 +1,19 @@
+
+/***********************************************************************
+//
+//  "ray4" is Copyright (c) 1991 by Steve R. Hollasch.
+//
+//  All rights reserved.  This software may be freely copied, modified
+//  and redistributed, provided that this copyright notice is preserved
+//  in all copies.  This software is provided "as is", without express
+//  or implied warranty.  You may not include this software in a program
+//  or other software product without also supplying the source, or
+//  without informing the end-user that the source is available for no
+//  extra charge.  If you modify this software, please include a notice
+//  detailing the author, date and purpose of the modification.
+//
+***********************************************************************/
+
 /****************************************************************************
 **
 **  File:  ray4.h                                 Author:  Steve Hollasch
@@ -13,23 +29,26 @@
 **
 **  Revisions:
 **
-**    1.??  11-Apr-91  Hollasch
+**    1.00  25-Jan-92  Hollasch
+**          Released to the public domain.
+**
+**    ----  11-Apr-91  Hollasch
 **          Created the Ray structure (currently unused).
 **
-**    1.20  01-Jan-91  Hollasch
+**    0.30  01-Jan-91  Hollasch
 **          Defined attribute structure and created linked attribute list
 **          structure.
 **
-**    1.10  17-Dec-90  Hollasch
+**    0.20  17-Dec-90  Hollasch
 **          Added Parallelepiped structure.  Removed
 **          tetrahedron/parallelepiped common fields to new `TetPar'
 **          structure.
 **
-**    1.01  20-Nov-90  Hollasch
+**    0.11  20-Nov-90  Hollasch
 **          Moved some variable computations from on-the-fly to precomputed
 **          fields in structures for both 2D triangles and tetrahedrons.
 **
-**    1.00  15-Nov-90  Hollasch
+**    0.10  15-Nov-90  Hollasch
 **          Added tetrahedron and triangle code.
 **
 **    0.00  30-Sep-90  Steve R. Hollasch
@@ -41,16 +60,12 @@
 #define RAY_H
 
 
-#ifndef STEVE_H
-#  include <steve.h>
-#endif
-
 #ifndef VECTOR_H
 #  include <vector.h>
 #endif
 
-#ifdef sgi					/* Grrrrrr... */
-#  define acos(x)	_lacos(x)
+#if defined (FLOAT_TRAN)
+#  define acos(x)	_lacos(x)	/* Needed for 3130 code */
 #  define asin(x)	_lasin(x)
 #  define atan(x)	_latan(x)
 #  define atof(s)	_latof(s)
@@ -78,6 +93,11 @@
 	/*  Constant Definitions  */
 	/*========================*/
 
+#define PI	3.14159265358979323846
+
+#define DegreeToRadian	(PI/180.0)
+#define RadianToDegree	(180.0/PI)
+
 #define  X  0
 #define  Y  1
 #define  Z  2
@@ -88,10 +108,27 @@
 #define  O_TRIANGLE       3
 #define  O_PARALLELEPIPED 4
 
+#define true	(boolean)(1)
+#define false	(boolean)(0)
+#define nil	0
+
 
 	/*=====================*/
 	/*  Macro Definitions  */
 	/*=====================*/
+
+#ifdef _STDC_
+#   define ARGS(arglist)	arglist
+#else
+#   define ARGS(arglist)	()
+#endif
+
+#define strsize(s)		(strlen(s)+1)
+#define strrel(s1,op,s2)	(strcmp(s1,s2) op 0)
+#define print(s)		fputs(s,stdout)
+#define ALIMIT(array)		(sizeof(array) / sizeof(array[0]))
+#define CLAMP(value,low,high)	\
+   (((value) < (low)) ? (low) : (((value) > (high)) ? (high) : (value)))
 
 #define  NEW(type,num)  (type *) MyAlloc((unsigned long)(num)*sizeof(type))
 #define  DELETE(addr)	MyFree ((char*)addr)
@@ -117,6 +154,23 @@
 )
 
 
+	/*====================*/
+	/*  Type Definitions  */
+	/*====================*/
+
+#ifndef ulong
+#  define uchar   unsigned char		/* Unsigned  8-bit Integer */
+#  define ushort  unsigned short	/* Unsigned 16-bit Integer */
+#  define ulong   unsigned long		/* Unsigned 32-bit Integer */
+#endif
+
+typedef short    boolean;	/* Boolean; `true'(1) or `false'(0) */
+
+#if !defined Real
+#  define Real  double
+#endif
+
+
 	/*=========================*/
 	/*  Structure Definitions  */
 	/*=========================*/
@@ -134,7 +188,7 @@ typedef struct S_TETPAR		TetPar;
 typedef struct S_TRIANGLE	Triangle;
 
 struct S_COLOR		/* Color Triple */
-{  Lfloat r, g, b;	/* Each color should be in [0,1]. */
+{  Real r, g, b;	/* Each color should be in [0,1]. */
 };
 
 struct S_RAY		/* Ray Definition */
@@ -175,8 +229,8 @@ struct S_ATTRIBUTES
    Color       Kd;		/* Diffuse Illumination Color */
    Color       Ks;		/* Specular Illumination Color */
    Color       Kt;		/* Transparent Illumination Color */
-   Lfloat      shine;		/* Phong Specular Reflection Factor */
-   Lfloat      indexref;	/* Index of Refraction */
+   Real        shine;		/* Phong Specular Reflection Factor */
+   Real        indexref;	/* Index of Refraction */
    uchar       flags;		/* Attribute Flags */
 };
 
@@ -192,14 +246,14 @@ struct S_OBJINFO
    uchar       type;		/* Object Type */
    uchar       flags;		/* Information Flags */
    boolean   (*intersect)	/* Intersection Function */
-		ARGS((ObjInfo*, Point4, Vector4, Lfloat*, Point4, Vector4));
+		ARGS((ObjInfo*, Point4, Vector4, Real*, Point4, Vector4));
 };
 
 struct S_SPHERE
 {  ObjInfo  info;	/* Common Object Fields; Must Be First Field */
    Point4   center;	/* Sphere Center */
-   Lfloat   radius;	/* Sphere Radius */
-   Lfloat   rsqrd;	/* Sphere Radius, Squared */
+   Real     radius;	/* Sphere Radius */
+   Real     rsqrd;	/* Sphere Radius, Squared */
 };
 
 struct S_TETPAR		   /* Tetrahedron/Parallelepiped Common Fields */
@@ -207,14 +261,14 @@ struct S_TETPAR		   /* Tetrahedron/Parallelepiped Common Fields */
    Vector4  vec1,vec2,vec3;/* Vectors from Vertex 0 to Vertices 1,2,3 */
    Vector4  normal;	   /* Hyperplane Normal Vector */
    uchar    ax1, ax2, ax3; /* Non-Dominant Normal Vector Axes */
-   Lfloat   planeConst;	   /* Hyperplane Constant */
-   Lfloat   CramerDiv;	   /* Cramer's-Rule Divisor for Barycentric Coords */
+   Real     planeConst;	   /* Hyperplane Constant */
+   Real     CramerDiv;	   /* Cramer's-Rule Divisor for Barycentric Coords */
 };
 
 struct S_TETRAHEDRON
 {  ObjInfo  info;		/* Common Obj Fields; Must Be First Field */
    TetPar   tp;			/* Tetrahedron/Parallelepiped Data */
-   Lfloat   Bc1, Bc2, Bc3;	/* Barycentric Coordinate Values */
+   Real     Bc1, Bc2, Bc3;	/* Barycentric Coordinate Values */
 };
 
 struct S_PARALLELEPIPED
@@ -226,7 +280,7 @@ struct S_TRIANGLE
 {  ObjInfo  info;	/* Common Object Fields; Must Be First Field */
    Point4   vert[3];	/* Triangle Vertices */
    Vector4  vec1, vec2;	/* vector from Vertex0 to Vertices 1,2. */
-   Lfloat   Bc1, Bc2;	/* Barycentric Coordinate Values */
+   Real     Bc1, Bc2;	/* Barycentric Coordinate Values */
 };
 
 
@@ -238,16 +292,16 @@ struct S_TRIANGLE
 void     CloseInput   ARGS((void));
 void     CloseOutput  ARGS((void));
 void     Halt         ARGS((char *));
-boolean  HitSphere    ARGS((ObjInfo*,Point4,Vector4,Lfloat*,Point4,Vector4));
-boolean  HitTetPar    ARGS((ObjInfo*,Point4,Vector4,Lfloat*,Point4,Vector4));
-boolean  HitTriangle  ARGS((ObjInfo*,Point4,Vector4,Lfloat*,Point4,Vector4));
+boolean  HitSphere    ARGS((ObjInfo*,Point4,Vector4,Real*,Point4,Vector4));
+boolean  HitTetPar    ARGS((ObjInfo*,Point4,Vector4,Real*,Point4,Vector4));
+boolean  HitTriangle  ARGS((ObjInfo*,Point4,Vector4,Real*,Point4,Vector4));
 char    *MyAlloc      ARGS((unsigned long));
 void     MyFree       ARGS((char *));
 void     OpenInput    ARGS((void));
 void     OpenOutput   ARGS((void));
 void     ParseInput   ARGS((void));
 void     RayTrace     ARGS((Point4, Vector4, Color*, ulong));
-short    ReadChar     ARGS((void));
+int      ReadChar     ARGS((void));
 void     WriteBlock   ARGS((char *, ulong));
 
 #endif

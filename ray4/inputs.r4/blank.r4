@@ -1,7 +1,7 @@
-> Blank space; used for setting tiling sizes.
+> Blank space; used for testing and setting tiling sizes.
 
 Ambient	    0.0 0.0 0.0		> Global Ambient Light
-Background  .60 .60 .60		> Define the Background Color
+Background  .75 .55 .25		> Define the Background Color
 MaxDepth    1			> Maximum Ray Trace Depth (0 is infinite)
 
 View

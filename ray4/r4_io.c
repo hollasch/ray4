@@ -1,3 +1,19 @@
+
+/***********************************************************************
+//
+//  "ray4" is Copyright (c) 1991 by Steve R. Hollasch.
+//
+//  All rights reserved.  This software may be freely copied, modified
+//  and redistributed, provided that this copyright notice is preserved
+//  in all copies.  This software is provided "as is", without express
+//  or implied warranty.  You may not include this software in a program
+//  or other software product without also supplying the source, or
+//  without informing the end-user that the source is available for no
+//  extra charge.  If you modify this software, please include a notice
+//  detailing the author, date and purpose of the modification.
+//
+***********************************************************************/
+
 /****************************************************************************
 //
 //  File:  r4_io.c
@@ -7,7 +23,11 @@
 //      This version of r4_io.c contains Unix-based I/O routines.
 //
 //  Revisions:
-//    1.00  30-Sep-90  Steve R. Hollasch
+//
+//    1.00  25-Jan-92  Hollasch
+//          Released to the public domain.
+//
+//    0.00  30-Sep-90  Steve R. Hollasch
 //          Initial version.
 //
 ****************************************************************************/
@@ -53,7 +73,7 @@ void  CloseOutput  ()
 //  end of file is reached, it returns -1.
 ****************************************************************************/
 
-short  ReadChar  ()
+int  ReadChar  ()
 {
    return getc (instream);
 }

@@ -1,3 +1,19 @@
+
+/***********************************************************************
+//
+//  "ray4" is Copyright (c) 1991 by Steve R. Hollasch.
+//
+//  All rights reserved.  This software may be freely copied, modified
+//  and redistributed, provided that this copyright notice is preserved
+//  in all copies.  This software is provided "as is", without express
+//  or implied warranty.  You may not include this software in a program
+//  or other software product without also supplying the source, or
+//  without informing the end-user that the source is available for no
+//  extra charge.  If you modify this software, please include a notice
+//  detailing the author, date and purpose of the modification.
+//
+***********************************************************************/
+
 /****************************************************************************
 //
 //  File:  ray4.h
@@ -10,7 +26,10 @@
 //
 //  Revisions:
 //
-//    1.00  04-Mar-91  Steve Hollasch
+//    1.00  25-Jan-92  Hollasch
+//          Released to the public domain.
+//
+//    0.00  04-Mar-91  Steve Hollasch
 //          Initial version; yanked from original ray4.h.
 //
 ****************************************************************************/
@@ -26,13 +45,13 @@
 
 
 Global (Attributes *attrlist,        nil  );  /* Attributes List */
-Global (Lfloat      global_indexref, 1.00 );  /* Global Index Refraction */
+Global (Real        global_indexref, 1.00 );  /* Global Index Refraction */
 Global (char       *infile,          nil  );  /* Input File Name */
 Global (Light      *lightlist,       nil  );  /* Light-Source List */
 Global (ushort      maxdepth,        0    );  /* Maximum Recursion Depth */
 Global (ObjInfo    *objlist,         nil  );  /* Object List */
 Global (char       *outfile,         nil  );  /* Output File Name */
-Global (Lfloat      Vangle,          45.0 );  /* Viewing Angle, X-Axis */
+Global (Real        Vangle,          45.0 );  /* Viewing Angle, X-Axis */
 
 #ifndef DEFINE_GLOBALS
    extern Color    ambient;	/* Ambient Light Factor */

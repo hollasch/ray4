@@ -1,28 +1,53 @@
+
+/***********************************************************************
+**
+**  "r4tosgi" is Copyright (c) 1991 by Steve R. Hollasch.
+**
+**  All rights reserved.  This software may be freely copied, modified
+**  and redistributed, provided that this copyright notice is preserved
+**  in all copies.  This software is provided "as is", without express
+**  or implied warranty.  You may not include this software in a program
+**  or other software product without also supplying the source, or
+**  without informing the end-user that the source is available for no
+**  extra charge.  If you modify this software, please include a notice
+**  detailing the author, date and purpose of the modification.
+**
+***********************************************************************/
+
 /***************************************************************************
-//
-//  File: r4tosgi.c
-//
-//    This program reads an output file from the Ray4 raytracer and displays
-//  it on a Silicon Graphics Iris workstation.
-//
-//  Assumptions:
-//    Images are no larger than 32767 x 32767 in size.
-//
-//  Revisions:
-//
-//    0.01  04-Mar-1991  Hollasch
-//          Source code mods (r4image.h --> r4_image.h), no steve.h.
-//
-//    0.00  26-Nov-1990  Steve R. Hollasch
-//          Preliminary version.
-//
+**
+**  File: r4tosgi.c
+**
+**    This program reads an output file from the Ray4 raytracer and displays
+**  it on a Silicon Graphics Iris workstation.
+**
+**  Assumptions:
+**    Images are no larger than 32767 x 32767 in size.
+**
+**  Revisions:
+**
+**    1.00  25-Jan-92  Hollasch
+**          Released to the public domain.
+**
+**    0.10  19-Nov-1991  Hollasch
+**          Initial release; Added default zplane as first available plane.
+**
+**    0.02  15-Jul-1991  Hollasch, Marty Ryan
+**          Removed inclusion of unix.h.  Also keyed typedefs of uchar,
+**          ushort and ulong off of _AIX.
+**
+**    0.01  04-Mar-1991  Hollasch
+**          Source code mods (r4image.h --> r4_image.h), no steve.h.
+**
+**    0.00  26-Nov-1990  Steve R. Hollasch
+**          Preliminary version.
+**
 ****************************************************************************/
 
 #include <gl.h>
 #include <device.h>
 #include <stdio.h>
 
-#include <unix.h>
 #include "r4_image.h"
 
 
@@ -41,7 +66,7 @@
 
 char notice[] = "\
 \n\
-r4tosgi  Version 0.00  26-Nov-1990  (C) 1990  Steven R. Hollasch\n\
+r4tosgi  Version 1.00  19-Nov-1991  (C) 1990,1991  Steven R. Hollasch\n\
 \n";
 
 char usage[] = "\
@@ -84,9 +109,11 @@ usage  :  r4tosgi [-t] [-z <Image Plane>] <Image Cube File>\n\
    /***  Type Definitions  ***/
    /**************************/
 
-typedef unsigned char   uchar;
-typedef unsigned short  ushort;
-typedef unsigned long   ulong;
+#ifndef _AIX
+   typedef unsigned char   uchar;
+   typedef unsigned short  ushort;
+   typedef unsigned long   ulong;
+#endif
 
 
    /*******************************/
@@ -326,7 +353,9 @@ void  ImagePrep  ()
 
    /* Ensure that the z-plane is in range of the file data. */
 
-   if ((zplane < image.first[2]) || (zplane > image.last[2]))
+   if (zplane == 0)
+      zplane = image.first[2];
+   else if ((zplane < image.first[2]) || (zplane > image.last[2]))
    {  printf("r4tosgi:  Z plane (%u) is out of range [%u,%u].\n",
       zplane, image.first[2], image.last[2]);
       Halt ("Aborting.", nil);

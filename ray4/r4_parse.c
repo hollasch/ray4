@@ -1,3 +1,19 @@
+
+/***********************************************************************
+//
+//  "ray4" is Copyright (c) 1991 by Steve R. Hollasch.
+//
+//  All rights reserved.  This software may be freely copied, modified
+//  and redistributed, provided that this copyright notice is preserved
+//  in all copies.  This software is provided "as is", without express
+//  or implied warranty.  You may not include this software in a program
+//  or other software product without also supplying the source, or
+//  without informing the end-user that the source is available for no
+//  extra charge.  If you modify this software, please include a notice
+//  detailing the author, date and purpose of the modification.
+//
+***********************************************************************/
+
 /****************************************************************************
 //
 //  File:  r4_parse.c
@@ -7,7 +23,10 @@
 //
 //  Revisions:
 //
-//    1.20  01-Jan-91  Hollasch
+//    1.00  25-Jan-92  Hollasch
+//          Released to the public domain.
+//
+//    0.30  01-Jan-91  Hollasch
 //          Changed source file format to use enclosing parentheses for
 //          directive fields, and added named and immediate attributes and
 //          the attribute name list.  I also changed the meaning of the
@@ -15,14 +34,14 @@
 //          vector in the source file now specifies the direction _towards_
 //          the directional light source.
 //
-//    1.10  19-Dec-90  Hollasch
+//    0.20  19-Dec-90  Hollasch
 //          Added parallelepiped objects.
 //
-//    1.03  13-Dec-90  Hollasch
+//    0.13  13-Dec-90  Hollasch
 //          Added code to enable object reflections and added internal
 //          verification code for debugging tetrahedra.
 //
-//    1.00  15-Nov-90  Hollasch
+//    0.10  15-Nov-90  Hollasch
 //          Added triangle parsing code.
 //
 //    0.00  30-Sep-90  Steve R. Hollasch
@@ -78,7 +97,7 @@ void        ParseInput       ARGS((void));
 void        Process_TetPar   ARGS((TetPar *));
 Attributes *ReadAttributes   ARGS((void));
 void        ReadColor        ARGS((char *, Color *));
-void        ReadReal         ARGS((char *, Lfloat *));
+void        ReadReal         ARGS((char *, Real *));
 void        ReadUint16       ARGS((char *, ushort *));
 void        Read4Vec         ARGS((char *, Vector4));
 
@@ -104,6 +123,8 @@ char chtype[256] =
    ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR,/* E */
    ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR /* F */
 };
+
+#define CTYPE(a)   chtype[(unsigned char)(a)]
 
 
 typedef enum { T_OTHER, T_VEC4, T_UINT16, T_REAL, T_COLOR } VarType;
@@ -234,7 +255,7 @@ void  ParseInput  ()
             break;
 
          case T_REAL:
-            ReadReal (token, (Lfloat*)(Globals[ii].address));
+            ReadReal (token, (Real*)(Globals[ii].address));
             break;
 
          case T_OTHER:
@@ -278,7 +299,7 @@ char *GetToken  (buff, eofok)
    register ushort  nn;		/* Length of Destination String */
    register char   *ptr;	/* Destination Buffer Pointer */
 
-   if (cc == -1)
+   if (cc == (char)(-1))
    {  eofflag = true;
       if (eofok)  return nil;
       Error ("Unexpected end-of-file.");
@@ -293,7 +314,7 @@ char *GetToken  (buff, eofok)
    {  
       if (cc == '>')
       {  while (cc=ReadChar(), (cc != '\n') && (cc != '\r'))
-         {  if (cc == -1)
+         {  if (cc == (char)(-1))
             {  eofflag = true;
                if (eofok)  return nil;
                Error ("Unexpected end-of-file.");
@@ -301,11 +322,11 @@ char *GetToken  (buff, eofok)
          }
       }
 
-      while (chtype[cc] == SPC)
+      while (CTYPE(cc) == SPC)
       {
          if (cc == '\n')  ++lcount;
 
-         if (-1 == (cc = ReadChar ()))
+         if ((char)(-1) == (cc = ReadChar ()))
          {  eofflag = true;
             if (eofok)  return nil;
             Error ("Unexpected end-of-file.");
@@ -319,7 +340,7 @@ char *GetToken  (buff, eofok)
    /* If the next character is a punctuation character, then just return
    // that character as a single token. */
 
-   if (chtype[(unsigned char)(cc)] == OTH)
+   if (CTYPE(cc) == OTH)
    {  *ptr++ = cc;
       *ptr   = 0;
       cc     = ReadChar ();
@@ -330,7 +351,7 @@ char *GetToken  (buff, eofok)
    // Words begin with an alphabetic character or an underbar, and may also
    // contain numbers, periods and dashes in the body. */
 
-   if (chtype[cc] == WRD)
+   if (CTYPE(cc) == WRD)
    {
       for (;;)
       {  if (++nn > MAXTLEN)
@@ -340,7 +361,7 @@ char *GetToken  (buff, eofok)
          *ptr++ = cc;
 
          cc = ReadChar ();
-         if ((cc == -1) || ((chtype[cc] != WRD) && (chtype[cc] != NUM)))
+         if ((cc == (char)(-1)) || ((CTYPE(cc) != WRD) && (CTYPE(cc) != NUM)))
             break;
       }
 
@@ -352,7 +373,7 @@ char *GetToken  (buff, eofok)
       Error ("Unexpected end-of-file.");
    }
 
-   if (chtype[cc] == NUM)
+   if (CTYPE(cc) == NUM)
    {
       static boolean  eflag;	/* True After 'e' Character Is Read */
       static boolean  dflag;	/* True After '.' Character Is Read */
@@ -368,7 +389,7 @@ char *GetToken  (buff, eofok)
          }
          *ptr++ = cc;
 
-         if (-1 == (cc = ReadChar ()))
+         if ((char)(-1) == (cc = ReadChar ()))
             break;
 
          if (cc == '.')
@@ -392,7 +413,7 @@ char *GetToken  (buff, eofok)
             continue;
          }
 
-         if (chtype[cc] != NUM)  break;
+         if (CTYPE(cc) != NUM)  break;
       }
 
       *ptr = 0;
@@ -404,10 +425,10 @@ char *GetToken  (buff, eofok)
       Error ("Unexpected end-of-file.");
    }
 
-   if ((cc < 0x20) || (cc > 0x7E))
-      Error ("Unexpected character in input stream (0x%02x).", cc & 0xFF);
-   else
-      Error ("Unexpected character in input stream ('%c').", cc & 0xFF);
+   /* Unexpected character.  Print out the hexadecimal value and halt. */
+
+   Error ("Unexpected character in input stream (0x%02x).", cc & 0xFF);
+   return nil;
 }
 
 
@@ -451,7 +472,7 @@ void  DoAttributes  ()
    /* Read in the attribute alias. */
 
    GetToken (token, false);
-   if ((chtype[token[0]] != WRD) && (chtype[token[0]] != NUM))
+   if ((CTYPE(token[0]) != WRD) && (CTYPE(token[0]) != NUM))
       Error ("Invalid attribute name (%s)\n", token);
 
    token[MAXATNAME] = 0;
@@ -790,7 +811,7 @@ void  Process_TetPar  (tp)
    tp->planeConst = - V4_Dot (tp->normal, tp->vert[0]);
 
 #  if (DB_TETPAR >= 1)
-   {  auto   Lfloat  NdotV;      /* Normal Dot Vertex */
+   {  auto   Real  NdotV;      /* Normal Dot Vertex */
 
       NdotV = V4_Dot (tp->normal, tp->vert[0]);
       if (EPSILON < fabs (NdotV + tp->planeConst))
@@ -826,7 +847,7 @@ void  Process_TetPar  (tp)
    // barycentric coordinates of intersection points.  */
 
    {
-      auto Lfloat  M11,M12,M13, M21,M22,M23, M31,M32,M33;
+      auto Real  M11,M12,M13, M21,M22,M23, M31,M32,M33;
 
       M11 = tp->vec1[tp->ax1];
       M12 = tp->vec1[tp->ax2];
@@ -857,15 +878,16 @@ void  Process_TetPar  (tp)
 Attributes  *FindAttributes  (name)
    char *name;			/* Attributes Name */
 {
-   register AttrName *anptr;	/* Attribute Name Node Traversal Pointer */
+   register AttrName   *anptr;	/* Attribute Name Node Traversal Pointer */
 
    name[MAXATNAME] = 0;
 
    for (anptr=attrnamelist;  anptr;  anptr=anptr->next)
       if (strrel (name, ==, anptr->name))
-         return anptr->attr;
+	 break;
 
-   Error ("Can't find attribute definition (%s).", name);
+   if (!anptr) Error ("Can't find attribute definition (%s).", name);
+   return anptr->attr;
 }
 
 
@@ -953,17 +975,17 @@ void  ReadColor  (token, color)
    auto   char  inbuff[MAXTLEN+1];      /* Input Value Buffer */
 
    GetToken (inbuff, false);
-   if (chtype[*inbuff] != NUM)
+   if (CTYPE(*inbuff) != NUM)
       Error ("Missing real number for red component of '%s'.", token);
    color->r = atof (inbuff);
 
    GetToken (inbuff, false);
-   if (chtype[*inbuff] != NUM)
+   if (CTYPE(*inbuff) != NUM)
       Error ("Missing real number for green component of '%s'.", token);
    color->g = atof (inbuff);
 
    GetToken (inbuff, false);
-   if (chtype[*inbuff] != NUM)
+   if (CTYPE(*inbuff) != NUM)
       Error ("Missing real number for blue component of '%s'.", token);
    color->b = atof (inbuff);
 }
@@ -976,13 +998,13 @@ void  ReadColor  (token, color)
 ****************************************************************************/
 
 void  ReadReal  (token, num)
-   char   *token;	/* Target Token */
-   Lfloat *num;		/* Destination Value */
+   char *token;		/* Target Token */
+   Real *num;		/* Destination Value */
 {
    auto   char  inbuff[MAXTLEN+1];      /* Input Value Buffer */
 
    GetToken (inbuff, false);
-   if (chtype[*inbuff] != NUM)
+   if (CTYPE(*inbuff) != NUM)
       Error ("Missing real number argument for '%s'.", token);
    *num = atof (inbuff);
 }
@@ -1001,7 +1023,7 @@ void  ReadUint16  (token, num)
    auto   char  inbuff[MAXTLEN+1];      /* Input Value Buffer */
 
    GetToken (inbuff, false);
-   if (chtype[*inbuff] != NUM)
+   if (CTYPE(*inbuff) != NUM)
       Error ("Missing integer argument for '%s'.", token);
    *num = atoi (inbuff);
 }
@@ -1020,22 +1042,22 @@ void  Read4Vec  (token, vec)
    auto   char  inbuff[MAXTLEN+1];      /* Input Value Buffer */
 
    GetToken (inbuff, false);
-   if (chtype[*inbuff] != NUM)
+   if (CTYPE(*inbuff) != NUM)
       Error ("Missing real number for X component of '%s'.", token);
    vec[0] = atof (inbuff);
 
    GetToken (inbuff, false);
-   if (chtype[*inbuff] != NUM)
+   if (CTYPE(*inbuff) != NUM)
       Error ("Missing real number for Y component of '%s'.", token);
    vec[1] = atof (inbuff);
 
    GetToken (inbuff, false);
-   if (chtype[*inbuff] != NUM)
+   if (CTYPE(*inbuff) != NUM)
       Error ("Missing real number for Z component of '%s'.", token);
    vec[2] = atof (inbuff);
 
    GetToken (inbuff, false);
-   if (chtype[*inbuff] != NUM)
+   if (CTYPE(*inbuff) != NUM)
       Error ("Missing real number for W component of '%s'.", token);
    vec[3] = atof (inbuff);
 }

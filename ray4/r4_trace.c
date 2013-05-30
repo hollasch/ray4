@@ -1,3 +1,19 @@
+
+/***********************************************************************
+//
+//  "ray4" is Copyright (c) 1991 by Steve R. Hollasch.
+//
+//  All rights reserved.  This software may be freely copied, modified
+//  and redistributed, provided that this copyright notice is preserved
+//  in all copies.  This software is provided "as is", without express
+//  or implied warranty.  You may not include this software in a program
+//  or other software product without also supplying the source, or
+//  without informing the end-user that the source is available for no
+//  extra charge.  If you modify this software, please include a notice
+//  detailing the author, date and purpose of the modification.
+//
+***********************************************************************/
+
 /****************************************************************************
 //
 //  File:  r4_trace.c
@@ -8,28 +24,31 @@
 //
 //  Revisions:
 //
-//    1.23  12-May-91  Hollasch
+//    1.00  25-Jan-92  Hollasch
+//          Released to the public domain.
+//
+//    0.33  12-May-91  Hollasch
 //          Fixed bug in shadow ray intersection routine call; `mindist' was
 //          incorrectly passed by value, rather than by reference.
 //
-//    1.22  04-Mar-91  Hollasch
+//    0.32  04-Mar-91  Hollasch
 //          Fixed error in light-source shadow code; prior code allowed
 //          objects behind point light sources to cast shadows.
 //
-//    1.20  05-Jan-91  Hollasch
+//    0.30  05-Jan-91  Hollasch
 //          Implemented new attribute list references.
 //
-//    1.11  20-Dec-90  Hollasch
+//    0.21  20-Dec-90  Hollasch
 //          Fixed illumination by flipping normal vector if sight vector
 //            approaches an object from `behind'.
 //          Implemented refracted rays.
 //          Added code to filter light through transparent objects for
 //            illumination calculations (ignoring refraction).
 //
-//    1.03  13-Dec-90  Hollasch
+//    0.13  13-Dec-90  Hollasch
 //          Implemented reflection rays.
 //
-//    1.00  15-Nov-90  Hollasch
+//    0.10  15-Nov-90  Hollasch
 //          Changed code to reflect new mindist parameter in intersection
 //          routines.
 //
@@ -62,14 +81,14 @@ void  RayTrace  (rayO, rayD, color, level)
    Color   *color;	/* Resulting Color */
    ulong    level;	/* Raytrace Level */
 {
-   static   Lfloat      ftemp;	    /* Scratch Float Value */
+   static   Real        ftemp;	    /* Scratch Real Value */
    auto     Point4      intr_out;   /* Intersection Outside The Surface */
    register Light      *lptr;	    /* Light Pointer */
    auto     Attributes *nearattr;   /* Nearest Object's Attributes */
    auto     ObjInfo    *nearobj;    /* Nearest Object */
    auto     Point4      nearintr;   /* Nearest Object Intersection */
    auto     Vector4     nearnormal; /* Nearest Object Normal */
-   auto     Lfloat      NdotD;      /* Normal dot rayD */
+   auto     Real        NdotD;      /* Normal dot rayD */
    register ObjInfo    *optr;	    /* Object Pointer */
 
    ++ stats.Ncast;
@@ -90,7 +109,7 @@ void  RayTrace  (rayO, rayD, color, level)
 
    /* Find the nearest object intersection. */
 
-   {  auto Lfloat  mindist;	/* Nearest Object Distance */
+   {  auto Real  mindist;	/* Nearest Object Distance */
 
       mindist = -1.0;
       nearobj = nil;
@@ -164,7 +183,7 @@ void  RayTrace  (rayO, rayD, color, level)
    {
       auto     Color    lcolor;		/* Light Color */
       auto     Vector4  ldir;		/* Light Direction */
-      auto     Lfloat   mindist;	/* Nearest Object Distance */
+      auto     Real     mindist;	/* Nearest Object Distance */
       register ObjInfo *optr;		/* Object List Traversal Pointer */
       auto     Vector4  Refl;		/* Reflection Vector */
 
@@ -173,7 +192,7 @@ void  RayTrace  (rayO, rayD, color, level)
 	 mindist = -1.0;
       }
       else
-      {  auto Lfloat  norm;	/* Vector Norm */
+      {  auto Real  norm;	/* Vector Norm */
 
 	 V4_3Vec (ldir, =, lptr->u.pos, -, intr_out);
 
@@ -197,7 +216,7 @@ void  RayTrace  (rayO, rayD, color, level)
 
       for (optr=objlist;  optr;  optr=optr->next)
       {
-	 auto Lfloat minsave=mindist;	/* Nearest Object Distance (saved) */
+	 auto Real minsave=mindist;	/* Nearest Object Distance (saved) */
 
 #	 if (DB_TRACE)
 	    print ("RayTrace:  Testing shadow ray intersection.\n");

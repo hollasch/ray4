@@ -1,0 +1,54 @@
+
+    This is release 1.00 of my 4D raytracer, which I wrote for my master's
+thesis entitled "Four-Space Visualization of 4D Objects", in May 1991.  The
+thesis is available via anonymous FTP in both PostScript and TROFF versions
+(try kpc.com).
+
+    This release should include the following files:
+
+    README                // This File
+    copyright             // Ray4 Release Copyright
+    ray4.doc              // Ray4 Documentation
+
+    makefile              // Program Make File
+    ray4.h                // Main Header File
+    r4_globals.h          // Ray4 Global Variables
+    r4_image.h            // Ray4 Image Cube File Format Structures
+    vector.h              // Vector Operation Macros
+    v4cross.c             // Vector Cross-Product Routine
+    v4normalize.c         // Vector Normalization Routine
+    r4_main.c             // Main Ray4 Functions
+    r4_io.c               // Ray4 Input/Output Functions (for portability)
+    r4_parse.c            // Ray4 Input File Parsing Routines
+    r4_trace.c            // Ray4 Raytracing Routines
+    r4_hit.c              // Ray4 Ray-Object Intersection Routines
+    r4tosgi.c             // Ray4 Output File to GL-Device Display Program
+
+    scube.r4              // Input Files
+    sphere.r4
+    tcube.r4
+    dots.r4
+    dots3.r4
+    dots4.r4
+    format.r4
+    blank.r4
+    wdots.r4
+
+    You will probably need to tweak the makefile to get it to run on
+your platform.  I've tried to make this as straightforward as possible,
+but let me know if you have problems.
+
+    Also available via anonymous FTP is my 4D wireframe program.
+wire4 runs on most GL platforms.
+
+    Finally, I'd like to acknowledge and thank the folks who volunteered
+to beta-test this software for me:
+
+        Greg Aharonian
+        Brian Carney
+        Mark Craig
+        Mark Ferneau
+        Marty Ryan
+                                             Steve Hollasch
+                                             hollasch@kpc.com
+                                             6-August-1992

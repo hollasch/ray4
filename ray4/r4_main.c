@@ -1,3 +1,19 @@
+
+/***********************************************************************
+//
+//  "ray4" is Copyright (c) 1991 by Steve R. Hollasch.
+//
+//  All rights reserved.  This software may be freely copied, modified
+//  and redistributed, provided that this copyright notice is preserved
+//  in all copies.  This software is provided "as is", without express
+//  or implied warranty.  You may not include this software in a program
+//  or other software product without also supplying the source, or
+//  without informing the end-user that the source is available for no
+//  extra charge.  If you modify this software, please include a notice
+//  detailing the author, date and purpose of the modification.
+//
+***********************************************************************/
+
 /****************************************************************************
 //
 //  File:  r4_main.c
@@ -15,53 +31,59 @@
 //        r4_parse.c  :  Routines for Parsing the Input File
 //        r4_trace.c  :  Ray Firing, Shading & Illumination Procedures
 //
+//     Note:  All source files in this package use 3-space indentation and
+//            8-space tabs.
+//
 //  Revisions:
 //
-//    1.25 27-May-91  Hollasch
+//    1.00 25-Jan-92  Hollasch
+//         Released to the public domain.
+//
+//    0.35 27-May-91  Hollasch
 //         Fixed bug in tetrahedron/parallelepiped normal and intersection
 //         assignment code; previous version did not ensure that the
 //         passed parameter pointers were non-nil.
 //
-//    1.24 15-May-91  Hollasch
+//    0.34 15-May-91  Hollasch
 //         Fixed logic flaw in HitSphere t1/t2 selection.
 //
-//    1.23 12-May-91  Hollasch
+//    0.33 12-May-91  Hollasch
 //         Fixed bug in shadow-ray intersection routine call; `mindist' was
 //         incorrectly passed by value, rather than by reference.
 //
-//    1.22 04-Mar-91  Hollasch
+//    0.32 04-Mar-91  Hollasch
 //         Moved global variables & declarations to r4_globals.h.
 //         Renamed r4image.h to r4_image.h.
 //         Fixed error in r4_trace.c where objects behind point light sources
 //           could still produce shadows.
 //
-//    1.21 02-Feb-91  Hollasch
+//    0.31 02-Feb-91  Hollasch
 //         Altered scanline buffer implementation to use a minimum sized
 //         buffer; moved buffer constants from ray4.h to r4_main.c
 //
-//    1.20 05-Jan-91  Hollasch
+//    0.30 05-Jan-91  Hollasch
 //         Implemented the attribute list.  Color-rendering attributes are
 //         no longer embedded in each object description.  Also reversed
 //         the meaning of the directional light source direction:  the
 //         given vector is the direction _towards_ the light source.
 //
-//    1.10 19-Dec-90  Hollasch
+//    0.20 19-Dec-90  Hollasch
 //         Added parallelepipeds; generalized tetrahedra code to accomodate
 //         parallelepipeds with a minimum of additional code.
 //
-//    1.03 13-Dec-90  Hollasch
+//    0.13 13-Dec-90  Hollasch
 //         Added internal verification code for tetrahedra for debugging
 //         purposes.  Added reflections.
 //
-//    1.02 05-Dec-90  Hollasch
+//    0.12 05-Dec-90  Hollasch
 //         Fixed problems with ray-grid basis-vector generation.
 //
-//    1.01 20-Nov-90  Hollasch
+//    0.11 20-Nov-90  Hollasch
 //         Fixed ray-triangle intersection; moved some variable computations
 //         from on-the-fly to precomputed fields in structures for both
 //         2D triangles and tetrahedrons.
 //
-//    1.00 15-Nov-90  Hollasch
+//    0.10 15-Nov-90  Hollasch
 //         Added tetrahedron and triangle code.
 //
 //    0.02 24-Oct-90  Hollasch
@@ -73,7 +95,6 @@
 ****************************************************************************/
 
 #include <stdio.h>
-#include <unix.h>
 
 #define  DEFINE_GLOBALS
 #include "ray4.h"
@@ -125,9 +146,12 @@ color bits per pixel (default is 24).\n\
 #define MIN_SLB_SIZE   (5<<10)	/* Minimum Scanline Buffer Size */
 
 
-   /*************************************/
-   /***  Local Function Declarations  ***/
-   /*************************************/
+   /*******************************/
+   /***  Function Declarations  ***/
+   /*******************************/
+
+extern char*  getenv  ARGS((char*));
+extern char*  malloc  ARGS((unsigned));
 
 void  ProcessArgs  ARGS((int, char**));
 char *GetField     ARGS((char*, value));
@@ -142,7 +166,7 @@ void  FireRays     ARGS((void));
    /*******************************/
 
 ImageHdr  iheader =		/* Output Image Header */
-   { 'Ray4', 1, 24, {1,1,1}, {0,0,0}, {0xFFFF,0xFFFF,0xFFFF} };
+   { 0x52617934, 1, 24, {1,1,1}, {0,0,0}, {0xFFFF,0xFFFF,0xFFFF} };
 
 Vector4   Gx,  Gy,  Gz;		/* Ray-Grid Basis Vectors */
 Point4    Gorigin;		/* Ray-Grid Origin Point  */
@@ -213,7 +237,7 @@ void  main  (argc, argv)
    StartTime = time (nil);
    FireRays ();      /* Raytrace the scene. */
 
-   Halt (nil, 0);      /* Clean up and exit. */
+   Halt (nil, 0);    /* Clean up and exit. */
 }
 
 
@@ -737,9 +761,9 @@ void  PrintScene  ()
 
 void  CalcRayGrid  ()
 {
-   auto   Lfloat   GNx, GNy, GNz;	/* Ray-Grid Vector Norms */
+   auto   Real     GNx, GNy, GNz;	/* Ray-Grid Vector Norms */
    auto   Vector4  Los;			/* Line-of-Sight Vector */
-   auto   Lfloat   losnorm;		/* Line-of-Sight-Vector Norm */
+   auto   Real     losnorm;		/* Line-of-Sight-Vector Norm */
 
    /* Get the normalized line-of-sight vector. */
 
@@ -764,15 +788,15 @@ void  CalcRayGrid  ()
 
    /* Now compute the proper scale of the grid unit vectors. */
 
-   GNx = 2.0 * losnorm * tan (DTOR*Vangle/2.0);
+   GNx = 2.0 * losnorm * tan (DegreeToRadian*Vangle/2.0);
 
    GNy = GNx
-       * ((Lfloat) res[Y] / (Lfloat) res[X])
-       * ((Lfloat)iheader.aspect[Y]/ (Lfloat)iheader.aspect[X]);
+       * ((Real) res[Y] / (Real) res[X])
+       * ((Real)iheader.aspect[Y]/ (Real)iheader.aspect[X]);
 
    GNz = GNx
-       * ((Lfloat) res[Z] / (Lfloat) res[X])
-       * ((Lfloat)iheader.aspect[Z]/ (Lfloat)iheader.aspect[X]);
+       * ((Real) res[Z] / (Real) res[X])
+       * ((Real)iheader.aspect[Z]/ (Real)iheader.aspect[X]);
 
    /* Scale each grid basis vector. */
 
@@ -848,7 +872,7 @@ void  FireRays  ()
 	    static Color    color;	/* Pixel Color */
 	    static Vector4  Dir;	/* Ray Direction Vector */
 	    static Point4   Gpoint;	/* Current Grid Point */
-	    static Lfloat   norm;	/* Vector Norm Value */
+	    static Real     norm;	/* Vector Norm Value */
 
 	    /* Calculate the unit ViewFrom-RayDirection vector. */
 

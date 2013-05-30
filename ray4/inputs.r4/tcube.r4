@@ -1,5 +1,5 @@
-> Sixteen 4-tetrahedrons placed at the vertices of a 4-cube.
-> -a4:4:27 -r200:190:20
+> Sixteen 3-tetrahedrons placed at the vertices of a 3-cube.
+> Use -a4:4:27 -r200:190:20
 
 Ambient	    .35 .35 .35		> Global Ambient Light
 Background  .25 .35 .67		> Define the Background Color

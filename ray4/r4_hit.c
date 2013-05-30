@@ -1,3 +1,19 @@
+
+/***********************************************************************
+//
+//  "ray4" is Copyright (c) 1991 by Steve R. Hollasch.
+//
+//  All rights reserved.  This software may be freely copied, modified
+//  and redistributed, provided that this copyright notice is preserved
+//  in all copies.  This software is provided "as is", without express
+//  or implied warranty.  You may not include this software in a program
+//  or other software product without also supplying the source, or
+//  without informing the end-user that the source is available for no
+//  extra charge.  If you modify this software, please include a notice
+//  detailing the author, date and purpose of the modification.
+//
+***********************************************************************/
+
 /****************************************************************************
 //
 //  File:  r4_hit.c
@@ -8,30 +24,33 @@
 //
 //  Revisions:
 //
-//    1.25  27-May-91  Hollasch
+//    1.00  25-Jan-92  Hollasch
+//          Released to the public domain.
+//
+//    0.35  27-May-91  Hollasch
 //          Fixed bug in tetrahedron/parallelepiped normal and intersection
 //          assignment code; previous version did not ensure that the
 //          passed parameter pointers were non-nil.
 //
-//    1.24  15-May-91  Hollasch
+//    0.34  15-May-91  Hollasch
 //          Fixed logic flaw in HitSphere t1/t2 selection.
 //
-//    1.23  12-May-91  Hollasch
+//    0.33  12-May-91  Hollasch
 //          Added hypersphere debug code.
 //
-//    1.10  19-Dec-90  Hollasch
+//    0.20  19-Dec-90  Hollasch
 //          Altered tetrahedron-intersection routine to accomodate both
 //          tetrahedra and parallelepipeds.
 //
-//    1.03  13-Dec-90  Hollasch
+//    0.13  13-Dec-90  Hollasch
 //          Added internal intersection verification code for tetrahedra.
 //
-//    1.01  20-Nov-90  Hollasch
+//    0.11  20-Nov-90  Hollasch
 //          Fixed ray-triangle intersection; moved some variable computations
 //          from on-the-fly to precomputed fields in structures for both
 //          2D triangles and tetrahedrons.
 //
-//    1.00  15-Nov-90  Hollasch
+//    0.10  15-Nov-90  Hollasch
 //          Added tetrahedron & triangle intersection code, and altered
 //          intersection routines to use the new mindist parameter.
 //
@@ -76,7 +95,7 @@
 //      objptr  (ObjInfo*):  Pointer to the Object Structure
 //      rayO    (Point4  ):  Ray Origin
 //      rayD    (Vector4 ):  Ray Direction (Must Be A Unit Vector)
-//      mindist (Lfloat* ):  Closest Intersection Distance So Far
+//      mindist (Real* ):    Closest Intersection Distance So Far
 //      intr    (Point4  ):  Intersection Point
 //      normal  (Vector4 ):  Surface Normal at Intersection Point
 //
@@ -118,16 +137,16 @@ boolean  HitSphere  (objptr, rayO, rayD, mindist, intr, normal)
    ObjInfo *objptr;	/* Sphere to Test */
    Point4   rayO;	/* Ray Origin */
    Vector4  rayD;	/* Ray Direction */
-   Lfloat  *mindist;	/* Previous Minimum Distance */
+   Real    *mindist;	/* Previous Minimum Distance */
    Point4   intr;	/* Intersection Point */
    Vector4  normal;	/* Surface Normal @ Intersection Point */
 {
 #  define SPHERE  ((Sphere*)(objptr))   /* Target Sphere */
 
-   auto  Lfloat   bb;		/* Quadratic Equation Parameter */
+   auto  Real     bb;		/* Quadratic Equation Parameter */
    auto  Vector4  cdir;		/* Direction from Sphere Center to Eye */
-   auto  Lfloat   rad;		/* Radical Value */
-   auto  Lfloat   t1,t2;	/* Intersection Ray Parameters */
+   auto  Real     rad;		/* Radical Value */
+   auto  Real     t1,t2;	/* Intersection Ray Parameters */
 
 #  if (DB_SPHERE > 1)
       printf ("HitSphere:  objptr=%08lx, mindist@%08lx=%lg\n", objptr,
@@ -201,13 +220,13 @@ boolean  HitTetPar  (objptr, rayO, rayD, mindist, intersect, normal)
    ObjInfo *objptr;	/* Sphere to Test */
    Point4   rayO;	/* Ray Origin */
    Vector4  rayD;	/* Ray Direction */
-   Lfloat  *mindist;	/* Previous Minimum Distance */
+   Real    *mindist;	/* Previous Minimum Distance */
    Point4   intersect;	/* Intersection Point */
    Vector4  normal;	/* Surface Normal @ Intersection Point */
 {
-   auto Lfloat  Bc1,Bc2,Bc3;	/* Intersection Barycentric Coordinates */
+   auto Real    Bc1,Bc2,Bc3;	/* Intersection Barycentric Coordinates */
    auto Point4  intr;		/* Intersection Point */
-   auto Lfloat  rayT;		/* Ray Equation Parameter */
+   auto Real    rayT;		/* Ray Equation Parameter */
    auto TetPar *tp;		/* Tetrahdron/Parallelepiped Data */
 
    if (objptr->type == O_TETRAHEDRON)
@@ -240,7 +259,7 @@ boolean  HitTetPar  (objptr, rayO, rayD, mindist, intersect, normal)
                V4_List(intr));
 #     endif
 
-      {  auto  Lfloat  NdotI;	/* Normal Dot Intersection */
+      {  auto  Real    NdotI;	/* Normal Dot Intersection */
          NdotI = V4_Dot (tp->normal, intr);
          if (1e-10 < fabs (NdotI + tp->planeConst))
          {  printf ("HitTetPar:  !! planeConst %10.8lf, N dot I %10.8lf.\n",
@@ -293,11 +312,11 @@ boolean  HitTetPar  (objptr, rayO, rayD, mindist, intersect, normal)
    // --------------------------------------------------------------------*/
 
    {
-      static Lfloat  M01,M02,M03, M11,M12,M13,	/* Matrix Values */
+      static Real    M01,M02,M03, M11,M12,M13,	/* Matrix Values */
 		     M21,M22,M23, M31,M32,M33;
 
 						/* Intermediate Values */
-      static Lfloat  M22M33_M23M32, M02M33_M03M32, M12M03_M13M02,
+      static Real    M22M33_M23M32, M02M33_M03M32, M12M03_M13M02,
 		     M12M33_M13M32, M12M23_M13M22, M02M23_M03M22;
 
       M01 = intr[tp->ax1] - tp->vert[0][tp->ax1];
@@ -455,17 +474,17 @@ boolean  HitTriangle  (objptr, rayO, rayD, mindist, intersect, normal)
    ObjInfo *objptr;	/* Sphere to Test */
    Point4   rayO;	/* Ray Origin */
    Vector4  rayD;	/* Ray Direction */
-   Lfloat  *mindist;	/* Previous Minimum Distance */
+   Real    *mindist;	/* Previous Minimum Distance */
    Point4   intersect;	/* Intersection Point */
    Vector4  normal;	/* Surface Normal @ Intersection Point */
 {
 #  define TRI  ((Triangle*)(objptr))
 
    auto int      ax1, ax2;		/* Dominant Axes, Tri. Projection */
-   auto Lfloat   div;			/* Intersection Equation Divisor */
+   auto Real     div;			/* Intersection Equation Divisor */
    auto Point4   intr;			/* Ray/Plane Intersection Point */
    auto Vector4  _normal;		/* Internal Normal Vector */
-   auto Lfloat   rayT;			/* Ray Equation Real Parameter */
+   auto Real     rayT;			/* Ray Equation Real Parameter */
    auto Vector4  vecTemp1, vecTemp2;	/* Temporary Vectors */
 
    /*------------------------------------------------------------------------
@@ -557,10 +576,10 @@ boolean  HitTriangle  (objptr, rayO, rayD, mindist, intersect, normal)
 
 #  if (DB_TRI >= 1)
    {
-      auto Lfloat  NdotV0;	/* Normal dot Vertex0 */
-      auto Lfloat  NdotV1;	/* Normal dot Vertex1 */
-      auto Lfloat  NdotV2;	/* Normal dot Vertex2 */
-      auto Lfloat  NdotI;	/* Normal dot Intersect */
+      auto Real  NdotV0;	/* Normal dot Vertex0 */
+      auto Real  NdotV1;	/* Normal dot Vertex1 */
+      auto Real  NdotV2;	/* Normal dot Vertex2 */
+      auto Real  NdotI;		/* Normal dot Intersect */
 
       NdotV0 = V4_Dot (_normal, TRI->vert[0]);
       NdotV1 = V4_Dot (_normal, TRI->vert[1]);
@@ -632,8 +651,8 @@ boolean  HitTriangle  (objptr, rayO, rayD, mindist, intersect, normal)
    // --------------------------------------------------------------------*/
 
 
-   {  auto Lfloat  div;		/* Cramer's Rule Divisor */
-      auto Lfloat  I1, I2;	/* Matrix Entries */
+   {  auto Real  div;		/* Cramer's Rule Divisor */
+      auto Real  I1, I2;	/* Matrix Entries */
 
       I1  = intr[ax1] - TRI->vert[0][ax1];
       I2  = intr[ax2] - TRI->vert[0][ax2];
@@ -663,7 +682,7 @@ boolean  HitTriangle  (objptr, rayO, rayD, mindist, intersect, normal)
    {
       auto Vector4  Bint;	/* Intersect Point from Barycentric Coords */
       auto Vector4  Diff;	/* Difference Vector, Bint and Intersect */
-      auto Lfloat   rtmp;	/* Real-Valued Temporary */
+      auto Real     rtmp;	/* Real-Valued Temporary */
 
       rtmp = (1.0 - TRI->Bc1 - TRI->Bc2);
       V4_2Vec (Bint,  =, rtmp * TRI->vert[0]);

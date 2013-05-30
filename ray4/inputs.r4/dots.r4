@@ -2,7 +2,7 @@
 
 Ambient     .350 .350 .350	> Global Ambient Light
 Background  .150 .220 .270	> Define the Background Color
-MaxDepth    1			> Maximum Ray Trace Depth (0 is infinite)
+MaxDepth    8			> Maximum Ray Trace Depth (0 is infinite)
 
 View
 (  From   0.0, 0.0, 0.0, 4.0
@@ -19,7 +19,6 @@ Light (position -1 -1  1 -1)
 
 Attributes A1
 (  ambient  [.100 .100 .100]
-   diffuse  [.000 .000 .000]
    specular [.800 .800 .800]
    transpar [.000 .000 .000]
    shine    10.0
@@ -36,7 +35,7 @@ Sphere
 (  center  -.3502 -.6900 -.9378 -.9680
    Attributes
    (  ambient  [.064 .117 .304]
-      >diffuse  [.064 .117 .304]
+      diffuse  [.064 .117 .304]
    )
 )
 
@@ -44,7 +43,7 @@ Sphere
 (  center  -.9136 -.3112 -.8940  .5432
    Attributes
    (  ambient  [.527 .192 .952]
-      >diffuse  [.527 .192 .952]
+      diffuse  [.527 .192 .952]
    )
 )
 
@@ -52,7 +51,7 @@ Sphere
 (  center  -.2578 -.2334  .6294 -.3294
    Attributes
    (  ambient  [.706 .127 .262]
-      >diffuse  [.706 .127 .262]
+      diffuse  [.706 .127 .262]
    )
 )
 
@@ -60,7 +59,7 @@ Sphere
 (  center  -.9476 -.7363  .2793  .3814
    Attributes
    (  ambient  [.397 .962 .814]
-      >diffuse  [.397 .962 .814]
+      diffuse  [.397 .962 .814]
    )
 )
 
@@ -68,7 +67,7 @@ Sphere
 (  center  -.9818  .8178 -.3705 -.6300
    Attributes
    (  ambient  [.935 .999 .368]
-      >diffuse  [.935 .999 .368]
+      diffuse  [.935 .999 .368]
    )
 )
 
@@ -76,7 +75,7 @@ Sphere
 (  center  -.5219  .3724 -.1051  .3870
    Attributes
    (  ambient  [.690 .963 .334]
-      >diffuse  [.690 .963 .334]
+      diffuse  [.690 .963 .334]
    )
 )
 
@@ -84,7 +83,7 @@ Sphere
 (  center  -.4961  .1821  .5073 -.1004
    Attributes
    (  ambient  [.823 .303 .356]
-      >diffuse  [.823 .303 .356]
+      diffuse  [.823 .303 .356]
    )
 )
 
@@ -92,7 +91,7 @@ Sphere
 (  center  -.8804  .6794  .6555  .0399
    Attributes
    (  ambient  [.156 .617 .479]
-      >diffuse  [.156 .617 .479]
+      diffuse  [.156 .617 .479]
    )
 )
 
@@ -100,7 +99,7 @@ Sphere
 (  center   .6617 -.5037 -.1474 -.6024
    Attributes
    (  ambient  [.752 .927 .757]
-      >diffuse  [.752 .927 .757]
+      diffuse  [.752 .927 .757]
    )
 )
 
@@ -108,7 +107,7 @@ Sphere
 (  center   .0828 -.8822 -.3367  .2670
    Attributes
    (  ambient  [.719 .094 .802]
-      >diffuse  [.719 .094 .802]
+      diffuse  [.719 .094 .802]
    )
 )
 
@@ -116,7 +115,7 @@ Sphere
 (  center   .2798 -.2926  .3967 -.2316
    Attributes
    (  ambient  [.473 .719 .203]
-      >diffuse  [.473 .719 .203]
+      diffuse  [.473 .719 .203]
    )
 )
 
@@ -124,7 +123,7 @@ Sphere
 (  center   .8529 -.0650  .3672  .8982
    Attributes
    (  ambient  [.996 .267 .017]
-      >diffuse  [.996 .267 .017]
+      diffuse  [.996 .267 .017]
    )
 )
 
@@ -132,7 +131,7 @@ Sphere
 (  center   .5981  .9906 -.3554 -.9019
    Attributes
    (  ambient  [.825 .095 .157]
-      >diffuse  [.825 .095 .157]
+      diffuse  [.825 .095 .157]
    )
 )
 
@@ -140,7 +139,7 @@ Sphere
 (  center   .4011  .9075 -.0986  .3428
    Attributes
    (  ambient  [.543 .295 .602]
-      >diffuse  [.543 .295 .602]
+      diffuse  [.543 .295 .602]
    )
 )
 
@@ -148,7 +147,7 @@ Sphere
 (  center   .1890  .0876  .6143 -.9918
    Attributes
    (  ambient  [.326 .574 .052]
-      >diffuse  [.326 .574 .052]
+      diffuse  [.326 .574 .052]
    )
 )
 
@@ -156,7 +155,7 @@ Sphere
 (  center   .4777  .7644  .0754  .3006
    Attributes
    (  ambient  [.815 .032 .351]
-      >diffuse  [.815 .032 .351]
+      diffuse  [.815 .032 .351]
    )
 )
 
@@ -164,7 +163,7 @@ Sphere
 (  center  -.4378 -.7287  .5745  .9133
    Attributes
    (  ambient  [.978 .154 .625]
-      >diffuse  [.978 .154 .625]
+      diffuse  [.978 .154 .625]
    )
 )
 
@@ -172,7 +171,7 @@ Sphere
 (  center   .0740 -.1890  .9983  .7700
    Attributes
    (  ambient  [.769 .986 .430]
-      >diffuse  [.769 .986 .430]
+      diffuse  [.769 .986 .430]
    )
 )
 
@@ -180,7 +179,7 @@ Sphere
 (  center   .2578 -.7460 -.9480  .9586
    Attributes
    (  ambient  [.768 .980 .041]
-      >diffuse  [.768 .980 .041]
+      diffuse  [.768 .980 .041]
    )
 )
 
@@ -188,6 +187,6 @@ Sphere
 (  center  -.6619  .4366 -.9342  .9139
    Attributes
    (  ambient  [.167 .907 .117]
-      >diffuse  [.167 .907 .117]
+      diffuse  [.167 .907 .117]
    )
 )
