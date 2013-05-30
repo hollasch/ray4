@@ -36,8 +36,7 @@ GL_LEVEL = -DGL_LEVEL=2
 #CCOPTS   = $(GL_LEVEL) $(TrFnType) -I$(MYINCL) -Zf	# For the SGI 3130.
  CCOPTS   = $(GL_LEVEL) $(TrFnType) -I$(MYINCL)		# For other machines.
 
-#GL_LIB   = -lgl_s		# For shared GL libraries.
- GL_LIB   = -lgl		# For IBM6000 or unshared GL libraries.
+LIBS = -lgl_s -lX11_s -lm
 
 .c.o:
 	cc -c -o $*.o $*.c $(CCOPTS)
@@ -50,7 +49,7 @@ psplot:  psplot.c
 wire4:	w4_main.o w4_parse.o w4_geometry.o w4_display.o strcmpic.o \
 		v3cross.o v4cross.o
 	cc -o wire4 w4_main.o w4_parse.o w4_geometry.o \
-		w4_display.o strcmpic.o v3cross.o v4cross.o $(GL_LIB) -lm
+		w4_display.o strcmpic.o v3cross.o v4cross.o $(LIBS)
 
 w4_main.o:	w4_main.c     wire4.h $(MYINCL)/vector.h
 w4_parse.o:	w4_parse.c    wire4.h $(MYINCL)/vector.h
