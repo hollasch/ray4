@@ -1,0 +1,105 @@
+> This file describes a scene with spheres at +1 and -1 of each axis.
+
+Ambient	    .150 .150 .150	> Global Ambient Light
+Background  .250 .190 .070	> Define the Background Color
+MaxDepth    8			> Maximum Ray Trace Depth (0 is infinite)
+
+View
+(  From    0.0, 3.0, 4.0, 6.0
+   To      0.0, 0.0, 0.0, 0.0
+   Up      0.0, 1.0, 0.0, 0.0
+   Over    1.0, 0.0, 0.0, 0.0
+   Angle   60.0
+)
+
+Light (position   3  3  3  3    color [.900 .900 .900])
+Light (position  -3 -3 -3  3)
+Light (position   3  3 -3 -3)
+Light (position  -3 -3  3 -3)
+Light (direction  0  0  4  6    color [.500 .500 .500])
+
+Attributes GenericSphere
+(  Reflect   1
+   Transpar  [.000 .000 .000]
+   Shine     50.0
+)
+
+Sphere
+(  attributes
+   (  ambient  [.400 .000 .000]
+      diffuse  [.400 .000 .000]
+      specular [.400 .000 .000]
+   )
+   radius  1.0
+   center  {-1.50  0.00  0.00  0.00}
+)
+
+Sphere
+(  attributes
+   (  ambient  [.800 .000 .000]
+      diffuse  [.800 .000 .000]
+      specular [.800 .000 .000]
+   )
+   radius  1.0
+   center  { 1.50  0.00  0.00  0.00}
+)
+
+Sphere
+(  attributes
+   (  ambient  [.000 .400 .000]
+      diffuse  [.000 .400 .000]
+      specular [.000 .400 .000]
+   )
+   radius  1.0
+   center  { 0.00 -1.50  0.00  0.00}
+)
+
+Sphere
+(  attributes
+   (  ambient  [.000 .800 .000]
+      diffuse  [.000 .800 .000]
+      specular [.000 .800 .000]
+   )
+   radius  1.0
+   center  { 0.00  1.50  0.00  0.00}
+)
+
+Sphere
+(  attributes
+   (  ambient  [.000 .000 .700]
+      diffuse  [.000 .000 .700]
+      specular [.000 .000 .700]
+   )
+   radius  1.0
+   center  { 0.00  0.00 -1.50  0.00}
+)
+
+Sphere
+(  attributes
+   (  ambient  [.000 .000 .900]
+      diffuse  [.000 .000 .900]
+      specular [.000 .000 .900]
+   )
+   radius  1.0
+   center  { 0.00  0.00  1.50  0.00}
+)
+
+Sphere
+(  attributes
+   (  ambient  [.400 .300 .000]
+      diffuse  [.400 .300 .000]
+      specular [.400 .300 .000]
+   )
+   radius  1.0
+   center  { 0.00  0.00  0.00 -1.50}
+)
+
+Sphere
+(  attributes
+   (  ambient  [.800 .600 .000]
+      diffuse  [.800 .600 .000]
+      specular [.800 .600 .000]
+   )
+   radius  1.0
+   center  { 0.00  0.00  0.00  1.50}
+)

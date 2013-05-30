@@ -1,0 +1,143 @@
+> Sixteen 4-spheres placed at the vertices of a 4-cube.
+
+Ambient	    .000 .000 .000	> Global Ambient Light
+Background  .250 .050 .170	> Define the Background Color
+MaxDepth    1			> Maximum Ray Trace Depth (0 is infinite)
+
+View
+(  From    4.3, 0.0, 0.0, 0.0
+   To      0.0, 0.0, 0.0, 0.0
+   Up      0.0, 1.0, 0.0, 0.0
+   Over    0.0, 0.0, 0.0, 1.0
+   Angle   60.0
+)
+
+Light
+(  direction  0 -1  0  0
+   color [.7 .7 .7]
+)
+
+Light
+(  position   0  0  0  0
+   color [.8 .8 .8]
+)
+
+Attributes GenericSphere
+(  Reflect   1
+   Transpar  [.000 .000 .000]
+   Shine     10.0
+   specular  [.500 .500 .500]
+)
+
+Sphere
+(
+   attributes (ambient [.40 .00 .00]
+               diffuse [.40 .00 .00])
+   center  { 1.25  1.25  1.25  1.25}
+   radius  0.5
+)
+
+Sphere
+(
+   attributes (ambient [.40 .00 .60]
+               diffuse [.40 .00 .60])
+   center  { 1.25  1.25  1.25 -1.25}
+)
+
+Sphere
+(
+   attributes (ambient [.00 .00 .60]
+               diffuse [.00 .00 .60])
+   center  { 1.25  1.25 -1.25  1.25}
+)
+
+Sphere
+(
+   attributes (ambient [.00 .40 .00]
+               diffuse [.00 .40 .00])
+   center  { 1.25  1.25 -1.25 -1.25}
+)
+
+Sphere
+(
+   attributes (ambient [.40 .40 .00]
+               diffuse [.40 .40 .00])
+   center  { 1.25 -1.25  1.25  1.25}
+)
+
+Sphere
+(
+   attributes (ambient [.40 .40 .60]
+               diffuse [.40 .40 .60])
+   center  { 1.25 -1.25  1.25 -1.25}
+)
+
+Sphere
+(
+   attributes (ambient [.20 .70 .00]
+               diffuse [.20 .70 .00])
+   center  { 1.25 -1.25 -1.25  1.25}
+)
+
+Sphere
+(
+   attributes (ambient [.10 .00 .90]
+               diffuse [.10 .00 .90])
+   center  { 1.25 -1.25 -1.25 -1.25}
+)
+
+Sphere
+(
+   attributes (ambient [.30 .20 .20]
+               diffuse [.30 .20 .20])
+   center  {-1.25  1.25  1.25  1.25}
+)
+
+Sphere
+(
+   attributes (ambient [.70 .00 .00]
+               diffuse [.70 .00 .00])
+   center  {-1.25  1.25  1.25 -1.25}
+)
+
+Sphere
+(
+   attributes (ambient [.10 .00 .50]
+               diffuse [.10 .00 .50])
+   center  {-1.25  1.25 -1.25  1.25}
+)
+
+Sphere
+(
+   attributes (ambient [.00 .60 .40]
+               diffuse [.00 .60 .40])
+   center  {-1.25  1.25 -1.25 -1.25}
+)
+
+Sphere
+(
+   attributes (ambient [.10 .10 .10]
+               diffuse [.10 .10 .10])
+   center  {-1.25 -1.25  1.25  1.25}
+)
+
+Sphere
+(
+   attributes (ambient [.00 .90 .00]
+               diffuse [.00 .90 .00])
+   center  {-1.25 -1.25  1.25 -1.25}
+)
+
+Sphere
+(
+   attributes (ambient [.10 .50 .90]
+               diffuse [.10 .50 .90])
+   center  {-1.25 -1.25 -1.25  1.25}
+)
+
+Sphere
+(
+   attributes (ambient [.80 .00 .80]
+               diffuse [.80 .00 .80])
+   center  {-1.25 -1.25 -1.25 -1.25}
+)
