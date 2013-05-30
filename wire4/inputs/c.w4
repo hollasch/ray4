@@ -1,0 +1,83 @@
+#  This file contains the 4D hypercube.  In the initial display, the inner
+#  cube, the outer cube, and the connections are all colored differently.
+
+DepthCueLevels   8
+ColorNear      255 105 255
+ColorFar        64  32  64
+
+ColorMap  0  127 127 127
+ColorMap  1  200 200 200
+ColorMap  2  170  20  40
+ColorMap  3   25  20 180
+ColorMap  4   20  20  50
+
+From4:     4.0, 0.0, 0.0, 0.0
+To4:       0.0, 0.0, 0.0, 0.0
+Up4:       0.0, 1.0, 0.0, 0.0
+Over4:     0.0, 0.0, 1.0, 0.0
+Vangle4:   45.0
+
+From3:     2.0, 0.5, 3.0
+To3:       0.0, 0.0, 0.0
+Up3:       0.0, 1.0, 0.0
+Vangle3:   45.0
+
+#  The hypercube spans the +-1 unit cube and is centered at the origin.
+
+VertexList  16:
+	-1,-1,-1,-1
+	 1,-1,-1,-1
+	 1, 1,-1,-1
+	-1, 1,-1,-1
+	-1,-1, 1,-1
+	 1,-1, 1,-1
+	 1, 1, 1,-1
+	-1, 1, 1,-1
+	-1,-1,-1, 1
+	 1,-1,-1, 1
+	 1, 1,-1, 1
+	-1, 1,-1, 1
+	-1,-1, 1, 1
+	 1,-1, 1, 1
+	 1, 1, 1, 1
+	-1, 1, 1, 1
+
+EdgeList  32:
+	 0, 1 / 3
+	 1, 2 / 2
+	 2, 3 / 3
+	 3, 0 / 4
+
+	 4, 5 / 3
+	 5, 6 / 2
+	 6, 7 / 3
+	 7, 4 / 4
+
+	 0, 4 / 4
+	 1, 5 / 2
+	 2, 6 / 2
+	 3, 7 / 4
+
+	 8, 9 / 3
+	 9,10 / 2
+	10,11 / 3
+	11, 8 / 4
+
+	12,13 / 3
+	13,14 / 2
+	14,15 / 3
+	15,12 / 4
+
+	 8,12 / 4
+	 9,13 / 2
+	10,14 / 2
+	11,15 / 4
+
+	 0, 8 / 4
+	 1, 9 / 2
+	 2,10 / 2
+	 3,11 / 4
+	 4,12 / 4
+	 5,13 / 2
+	 6,14 / 2
+	 7,15 / 4
