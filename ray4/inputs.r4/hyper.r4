@@ -1,0 +1,130 @@
+
+Ambient     .200 .200 .200	> Global Ambient Light
+Background  .200 .170 .170	> Define the Background Color
+MaxDepth    6			> Maximum Ray Trace Depth (0 is infinite)
+
+View
+(  From  0.0, 0.0, 0.0, 0.5
+   To    0.0, 0.0, 0.0, 0.0
+   Up    0.0, 1.0, 0.0, 0.0
+   Over  1.0, 0.0, 0.0, 0.0
+   Angle 60.0
+)
+
+Light (position  5  5  5  5	color [.900 .900 .900])
+Light (position -5 -5 -5  5)
+Light (position  5  5 -5 -5)
+Light (position -5 -5  5 -5)
+
+Attributes AA
+(  ambient  .100 .400 .100
+   diffuse  .100 .400 .100
+   specular .700 .700 .700
+   transpar .800 .800 .800
+   shine    100
+   reflect  1
+)
+
+Parallelpiped			> Outer Cube
+(  Attributes AA
+   Vertices
+      1  1  1  1
+      1  1 -1  1
+      1 -1  1  1
+     -1  1  1  1
+)
+
+Parallelpiped			> Inner Cube
+(  Attributes AA
+   Vertices
+      1  1  1 -1
+      1  1 -1 -1
+      1 -1  1 -1
+     -1  1  1 -1
+)
+
+Parallelpiped			> Face 1
+(  Attributes AA
+   Vertices
+     -1 -1 -1  1
+     -1  1 -1  1
+      1 -1 -1  1
+     -1 -1 -1 -1
+)
+
+Parallelpiped			> Face 2
+(  Attributes AA
+   Vertices
+      1 -1 -1  1
+      1  1 -1  1
+      1 -1  1  1
+      1 -1 -1 -1
+)
+
+Parallelpiped			> Face 3
+(  Attributes AA
+   Vertices
+     -1 -1  1  1
+     -1  1  1  1
+     -1 -1 -1  1
+     -1 -1  1 -1
+)
+
+Parallelpiped			> Face 4
+(  Attributes AA
+   Vertices
+      1 -1  1  1
+     -1 -1  1  1
+      1  1  1  1
+      1 -1  1 -1
+)
+
+Parallelpiped			> Face 5
+(  Attributes AA
+   Vertices
+      1  1  1  1
+     -1  1  1  1
+      1  1 -1  1
+      1  1  1 -1
+)
+
+Parallelpiped			> Face 6
+(  Attributes AA
+   Vertices
+     -1 -1 -1  1
+      1 -1 -1  1
+     -1 -1  1  1
+     -1 -1 -1 -1
+)
+
+Attributes BB
+(
+   ambient    [.600 .600 .600]
+   diffuse    [.600 .600 .600]
+   specular   [.600 .600 .600]
+   transpar   [.600 .100 .700]
+   shine      10.0
+   reflect    1
+)
+
+Sphere
+(  radius     1.00
+   center     [ 3  3  3  3]
+   attributes BB
+)
+
+Sphere (center [ 3  3  3 -3])
+Sphere (center [ 3  3 -3  3])
+Sphere (center [ 3  3 -3 -3])
+Sphere (center [ 3 -3  3  3])
+Sphere (center [ 3 -3  3 -3])
+Sphere (center [ 3 -3 -3  3])
+Sphere (center [ 3 -3 -3 -3])
+Sphere (center [-3  3  3  3])
+Sphere (center [-3  3  3 -3])
+Sphere (center [-3  3 -3  3])
+Sphere (center [-3  3 -3 -3])
+Sphere (center [-3 -3  3  3])
+Sphere (center [-3 -3  3 -3])
+Sphere (center [-3 -3 -3  3])
+Sphere (center [-3 -3 -3 -3])
