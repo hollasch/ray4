@@ -13,7 +13,7 @@
 #include <math.h>
 
 
-#if !defined (Real)
+#ifndef Real
 #   define Real  double
 #endif
 

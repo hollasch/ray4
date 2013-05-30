@@ -1,52 +1,52 @@
 
 /***********************************************************************
-//
-//  "ray4" is Copyright (c) 1991 by Steve R. Hollasch.
-//
-//  All rights reserved.  This software may be freely copied, modified
-//  and redistributed, provided that this copyright notice is preserved
-//  in all copies.  This software is provided "as is", without express
-//  or implied warranty.  You may not include this software in a program
-//  or other software product without also supplying the source, or
-//  without informing the end-user that the source is available for no
-//  extra charge.  If you modify this software, please include a notice
-//  detailing the author, date and purpose of the modification.
-//
+**
+**  "ray4" is Copyright (c) 1991,1992,1993 by Steve R. Hollasch.
+**
+**  All rights reserved.  This software may be freely copied, modified
+**  and redistributed, provided that this copyright notice is preserved
+**  in all copies.  This software is provided "as is", without express
+**  or implied warranty.  You may not include this software in a program
+**  or other software product without also supplying the source, or
+**  without informing the end-user that the source is available for no
+**  extra charge.  If you modify this software, please include a notice
+**  detailing the author, date and purpose of the modification.
+**
 ***********************************************************************/
 
 /****************************************************************************
-//
-//  File:  r4_parse.c
-//
-//      This file contains procedures that are used to parse the input file
-//    and build the scene for the raytrace.
-//
-//  Revisions:
-//
-//    1.00  25-Jan-92  Hollasch
-//          Released to the public domain.
-//
-//    0.30  01-Jan-91  Hollasch
-//          Changed source file format to use enclosing parentheses for
-//          directive fields, and added named and immediate attributes and
-//          the attribute name list.  I also changed the meaning of the
-//          direction vector given for directional light sources:  the
-//          vector in the source file now specifies the direction _towards_
-//          the directional light source.
-//
-//    0.20  19-Dec-90  Hollasch
-//          Added parallelepiped objects.
-//
-//    0.13  13-Dec-90  Hollasch
-//          Added code to enable object reflections and added internal
-//          verification code for debugging tetrahedra.
-//
-//    0.10  15-Nov-90  Hollasch
-//          Added triangle parsing code.
-//
-//    0.00  30-Sep-90  Steve R. Hollasch
-//          Initial version.
-//
+**
+**  File:  r4_parse.c
+**
+**      This file contains procedures that are used to parse the input file
+**    and build the scene for the raytrace.
+**
+**  Revisions:
+**
+**    1.00  25-Jan-92  Hollasch
+**          Released to the public domain.
+**
+**    0.30  01-Jan-91  Hollasch
+**          Changed source file format to use enclosing parentheses for
+**          directive fields, and added named and immediate attributes and
+**          the attribute name list.  I also changed the meaning of the
+**          direction vector given for directional light sources:  the
+**          vector in the source file now specifies the direction _towards_
+**          the directional light source.
+**
+**    0.20  19-Dec-90  Hollasch
+**          Added parallelepiped objects.
+**
+**    0.13  13-Dec-90  Hollasch
+**          Added code to enable object reflections and added internal
+**          verification code for debugging tetrahedra.
+**
+**    0.10  15-Nov-90  Hollasch
+**          Added triangle parsing code.
+**
+**    0.00  30-Sep-90  Steve R. Hollasch
+**          Initial version.
+**
 ****************************************************************************/
 
 #include <stdio.h>
@@ -54,11 +54,13 @@
 #include "ray4.h"
 #include "r4_globals.h"
 
+int EOFC= -1;
+
 	/***  Debug Switches  ***
 
 	/*  0: No debug
-	//  1: Quiet Consistency Checking Enabled
-	//  2: Debug Output Enabled
+	**  1: Quiet Consistency Checking Enabled
+	**  2: Debug Output Enabled
 	*/
 
 #define  DB_TETPAR   0	/* Debug Tetrahedron / Parallelepiped */
@@ -299,7 +301,7 @@ char *GetToken  (buff, eofok)
    register ushort  nn;		/* Length of Destination String */
    register char   *ptr;	/* Destination Buffer Pointer */
 
-   if (cc == (char)(-1))
+   if (cc == (char)(EOFC))
    {  eofflag = true;
       if (eofok)  return nil;
       Error ("Unexpected end-of-file.");
@@ -314,7 +316,7 @@ char *GetToken  (buff, eofok)
    {  
       if (cc == '>')
       {  while (cc=ReadChar(), (cc != '\n') && (cc != '\r'))
-         {  if (cc == (char)(-1))
+         {  if (cc == (char)(EOFC))
             {  eofflag = true;
                if (eofok)  return nil;
                Error ("Unexpected end-of-file.");
@@ -326,7 +328,7 @@ char *GetToken  (buff, eofok)
       {
          if (cc == '\n')  ++lcount;
 
-         if ((char)(-1) == (cc = ReadChar ()))
+         if ((char)(EOFC) == (cc = ReadChar ()))
          {  eofflag = true;
             if (eofok)  return nil;
             Error ("Unexpected end-of-file.");
@@ -338,7 +340,7 @@ char *GetToken  (buff, eofok)
    }
 
    /* If the next character is a punctuation character, then just return
-   // that character as a single token. */
+   ** that character as a single token. */
 
    if (CTYPE(cc) == OTH)
    {  *ptr++ = cc;
@@ -348,8 +350,8 @@ char *GetToken  (buff, eofok)
    }
 
    /* If the next character starts an alphanumeric word, then read the word.
-   // Words begin with an alphabetic character or an underbar, and may also
-   // contain numbers, periods and dashes in the body. */
+   ** Words begin with an alphabetic character or an underbar, and may also
+   ** contain numbers, periods and dashes in the body. */
 
    if (CTYPE(cc) == WRD)
    {
@@ -361,7 +363,7 @@ char *GetToken  (buff, eofok)
          *ptr++ = cc;
 
          cc = ReadChar ();
-         if ((cc == (char)(-1)) || ((CTYPE(cc) != WRD) && (CTYPE(cc) != NUM)))
+         if ((cc == (char)(EOFC)) || ((CTYPE(cc) != WRD) && (CTYPE(cc) != NUM)))
             break;
       }
 
@@ -389,7 +391,7 @@ char *GetToken  (buff, eofok)
          }
          *ptr++ = cc;
 
-         if ((char)(-1) == (cc = ReadChar ()))
+         if ((char)(EOFC) == (cc = ReadChar ()))
             break;
 
          if (cc == '.')
@@ -434,13 +436,13 @@ char *GetToken  (buff, eofok)
 
 
 /****************************************************************************
-//  This routine compares an input token with a keyword.  If the two strings
-//  match up to the significant length, this routine returns 1, otherwise it
-//  returns 0.  This routine assumes that the keyword is all lowercase
-//  letters and that the string is uppercase or lowercase letters only.  This
-//  will be true if GetToken() does its job correctly.  Furthermore if the
-//  string matches the key until the string ends, then this function will
-//  still return 1.  That is, keyeq("amb", "ambient") == 1.
+**  This routine compares an input token with a keyword.  If the two strings
+**  match up to the significant length, this routine returns 1, otherwise it
+**  returns 0.  This routine assumes that the keyword is all lowercase
+**  letters and that the string is uppercase or lowercase letters only.  This
+**  will be true if GetToken() does its job correctly.  Furthermore if the
+**  string matches the key until the string ends, then this function will
+**  still return 1.  That is, keyeq("amb", "ambient") == 1.
 ****************************************************************************/
 
 boolean  keyeq  (string, key)
@@ -459,9 +461,9 @@ boolean  keyeq  (string, key)
 
 
 /****************************************************************************
-//  This procedure processes attribute definitions.  Attribute definitions
-//  consist of the keyword `attributes', followed by an attribute alias,
-//  and then the attribute fields.
+**  This procedure processes attribute definitions.  Attribute definitions
+**  consist of the keyword `attributes', followed by an attribute alias,
+**  and then the attribute fields.
 ****************************************************************************/
 
 void  DoAttributes  ()
@@ -506,9 +508,9 @@ void  DoAttributes  ()
 
 
 /****************************************************************************
-//  This routine reads in a description of a light source from the input
-//  file.  At the calling point, the keyword "Light" has already been read.
-//  The new light will be added to the light list.
+**  This routine reads in a description of a light source from the input
+**  file.  At the calling point, the keyword "Light" has already been read.
+**  The new light will be added to the light list.
 ****************************************************************************/
 
 void  DoLight  ()
@@ -554,10 +556,10 @@ void  DoLight  ()
 
 
 /****************************************************************************
-//  This routine reads in a description of a hyperspherical object from the
-//  input stream and adds it to the object list.  The field defaults are
-//  defined by the DefSphere structure for the first sphere, and then by the
-//  previous sphere.
+**  This routine reads in a description of a hyperspherical object from the
+**  input stream and adds it to the object list.  The field defaults are
+**  defined by the DefSphere structure for the first sphere, and then by the
+**  previous sphere.
 ****************************************************************************/
 
 void  DoSphere  ()
@@ -602,8 +604,8 @@ void  DoSphere  ()
 
 
 /****************************************************************************
-//  This routine reads in a description of a 4D parallelepiped (defined by
-//  four vertices) and adds it to the object list.
+**  This routine reads in a description of a 4D parallelepiped (defined by
+**  four vertices) and adds it to the object list.
 ****************************************************************************/
 
 void  DoParallelepiped ()
@@ -649,8 +651,8 @@ void  DoParallelepiped ()
 
 
 /****************************************************************************
-//  This routine reads in a description of a 4D tetrahedron with four
-//  vertices and adds it to the object list.
+**  This routine reads in a description of a 4D tetrahedron with four
+**  vertices and adds it to the object list.
 ****************************************************************************/
 
 void  DoTetrahedron ()
@@ -742,7 +744,7 @@ void  DoTriangle  ()
 
 
 /****************************************************************************
-//  This routine reads in the viewing parameters for the scene.
+**  This routine reads in the viewing parameters for the scene.
 ****************************************************************************/
 
 void  DoView  ()
@@ -766,8 +768,8 @@ void  DoView  ()
 
 
 /****************************************************************************
-//  This routine initializes the physical data fields common to both the
-//  tetrahedron and parallelepiped structures.
+**  This routine initializes the physical data fields common to both the
+**  tetrahedron and parallelepiped structures.
 ****************************************************************************/
 
 void  Process_TetPar  (tp)
@@ -790,7 +792,7 @@ void  Process_TetPar  (tp)
          Error ("Degenerate parallelepiped/tetrahedron; not 3D.");
 
       /* Find the dominant axis of the normal vector and load up the
-      // ax1, ax2 and ax3 fields accordingly. */
+      ** ax1, ax2 and ax3 fields accordingly. */
 
       dominant1 = (fabs(tp->normal[X]) > fabs(tp->normal[Y])) ? X : Y;
       dominant2 = (fabs(tp->normal[Z]) > fabs(tp->normal[W])) ? Z : W;
@@ -844,7 +846,7 @@ void  Process_TetPar  (tp)
 #  endif
 
    /* Calculate the divisor for Cramer's Rule used to determine the
-   // barycentric coordinates of intersection points.  */
+   ** barycentric coordinates of intersection points.  */
 
    {
       auto Real  M11,M12,M13, M21,M22,M23, M31,M32,M33;
@@ -870,9 +872,9 @@ void  Process_TetPar  (tp)
 
 
 /****************************************************************************
-//  This function finds an attribute description with the given name and
-//  returns a pointer to the attributes node.  If the name is not found,
-//  this routine aborts after flagging the error.
+**  This function finds an attribute description with the given name and
+**  returns a pointer to the attributes node.  If the name is not found,
+**  this routine aborts after flagging the error.
 ****************************************************************************/
 
 Attributes  *FindAttributes  (name)
@@ -893,12 +895,12 @@ Attributes  *FindAttributes  (name)
 
 
 /****************************************************************************
-//  This routine reads in a description of object attributes, creates a new
-//  attributes node, links it into the attributes list, and returns a pointer
-//  to the new attributes node.
-//
-//  It is assumed that the opening parenthesis has already been consumed at
-//  the time this routine is called.
+**  This routine reads in a description of object attributes, creates a new
+**  attributes node, links it into the attributes list, and returns a pointer
+**  to the new attributes node.
+**
+**  It is assumed that the opening parenthesis has already been consumed at
+**  the time this routine is called.
 ****************************************************************************/
 
 Attributes  *ReadAttributes  ()
@@ -906,7 +908,7 @@ Attributes  *ReadAttributes  ()
    auto   Attributes *newattr;		/* New Attributes */
 
    /* Allocate the new attributes node, load it with the most recent named
-   // attributes node, and add it to the attributes list. */
+   ** attributes node, and add it to the attributes list. */
 
    newattr = NEW (Attributes, 1);
    *newattr = *prevattr;
@@ -964,8 +966,8 @@ Attributes  *ReadAttributes  ()
 
 
 /****************************************************************************
-//  This routine reads in a color vector from the input stream and stuffs it
-//  in the location given in the parameter list.
+**  This routine reads in a color vector from the input stream and stuffs it
+**  in the location given in the parameter list.
 ****************************************************************************/
 
 void  ReadColor  (token, color)

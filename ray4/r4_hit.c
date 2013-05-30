@@ -1,62 +1,62 @@
 
 /***********************************************************************
-//
-//  "ray4" is Copyright (c) 1991 by Steve R. Hollasch.
-//
-//  All rights reserved.  This software may be freely copied, modified
-//  and redistributed, provided that this copyright notice is preserved
-//  in all copies.  This software is provided "as is", without express
-//  or implied warranty.  You may not include this software in a program
-//  or other software product without also supplying the source, or
-//  without informing the end-user that the source is available for no
-//  extra charge.  If you modify this software, please include a notice
-//  detailing the author, date and purpose of the modification.
-//
+**
+**  "ray4" is Copyright (c) 1991,1992,1993 by Steve R. Hollasch.
+**
+**  All rights reserved.  This software may be freely copied, modified
+**  and redistributed, provided that this copyright notice is preserved
+**  in all copies.  This software is provided "as is", without express
+**  or implied warranty.  You may not include this software in a program
+**  or other software product without also supplying the source, or
+**  without informing the end-user that the source is available for no
+**  extra charge.  If you modify this software, please include a notice
+**  detailing the author, date and purpose of the modification.
+**
 ***********************************************************************/
 
 /****************************************************************************
-//
-//  File:  r4_hit.c
-//
-//        This file contains intersection routines for the geometric
-//    primitives in the Ray4 4D raytracer.  See the r4_main.c header for
-//    more information on Ray4.
-//
-//  Revisions:
-//
-//    1.00  25-Jan-92  Hollasch
-//          Released to the public domain.
-//
-//    0.35  27-May-91  Hollasch
-//          Fixed bug in tetrahedron/parallelepiped normal and intersection
-//          assignment code; previous version did not ensure that the
-//          passed parameter pointers were non-nil.
-//
-//    0.34  15-May-91  Hollasch
-//          Fixed logic flaw in HitSphere t1/t2 selection.
-//
-//    0.33  12-May-91  Hollasch
-//          Added hypersphere debug code.
-//
-//    0.20  19-Dec-90  Hollasch
-//          Altered tetrahedron-intersection routine to accomodate both
-//          tetrahedra and parallelepipeds.
-//
-//    0.13  13-Dec-90  Hollasch
-//          Added internal intersection verification code for tetrahedra.
-//
-//    0.11  20-Nov-90  Hollasch
-//          Fixed ray-triangle intersection; moved some variable computations
-//          from on-the-fly to precomputed fields in structures for both
-//          2D triangles and tetrahedrons.
-//
-//    0.10  15-Nov-90  Hollasch
-//          Added tetrahedron & triangle intersection code, and altered
-//          intersection routines to use the new mindist parameter.
-//
-//    0.00  30-Sep-90  Steve R. Hollasch
-//          Initial version.
-//
+**
+**  File:  r4_hit.c
+**
+**        This file contains intersection routines for the geometric
+**    primitives in the Ray4 4D raytracer.  See the r4_main.c header for
+**    more information on Ray4.
+**
+**  Revisions:
+**
+**    1.00  25-Jan-92  Hollasch
+**          Released to the public domain.
+**
+**    0.35  27-May-91  Hollasch
+**          Fixed bug in tetrahedron/parallelepiped normal and intersection
+**          assignment code; previous version did not ensure that the
+**          passed parameter pointers were non-nil.
+**
+**    0.34  15-May-91  Hollasch
+**          Fixed logic flaw in HitSphere t1/t2 selection.
+**
+**    0.33  12-May-91  Hollasch
+**          Added hypersphere debug code.
+**
+**    0.20  19-Dec-90  Hollasch
+**          Altered tetrahedron-intersection routine to accomodate both
+**          tetrahedra and parallelepipeds.
+**
+**    0.13  13-Dec-90  Hollasch
+**          Added internal intersection verification code for tetrahedra.
+**
+**    0.11  20-Nov-90  Hollasch
+**          Fixed ray-triangle intersection; moved some variable computations
+**          from on-the-fly to precomputed fields in structures for both
+**          2D triangles and tetrahedrons.
+**
+**    0.10  15-Nov-90  Hollasch
+**          Added tetrahedron & triangle intersection code, and altered
+**          intersection routines to use the new mindist parameter.
+**
+**    0.00  30-Sep-90  Steve R. Hollasch
+**          Initial version.
+**
 ****************************************************************************/
 
 #include <stdio.h>
@@ -68,8 +68,8 @@
 	/*** Debugging Flags ***/
 
 	/* 0: No debugging.
-	// 1: Internal Validation Checks
-	// 2: Output Debug Information */
+	** 1: Internal Validation Checks
+	** 2: Output Debug Information */
 
 #define  DB_TETPAR  0	/* Tetrahedra / Parallelepiped Debug Level */
 #define  DB_SPHERE  0	/* Hypersphere Debug */
@@ -78,59 +78,59 @@
 	/*** Defined Constants ***/
 
 #define  MINDIST    1e-7	/* Minimum Intersection Distance (for the
-				// elimination of surface acne. */
+				** elimination of surface acne. */
 
 
 
 
 /****************************************************************************
-//
-//  All intersection functions must behave in the same manner, since they are
-//  called as object-oriented functions that behave generically for different
-//  objects.  Each function takes the same parameters and returns a boolean
-//  value.  Operation of each function is as follows:
-//
-//  The functions take the following parameter list:
-//
-//      objptr  (ObjInfo*):  Pointer to the Object Structure
-//      rayO    (Point4  ):  Ray Origin
-//      rayD    (Vector4 ):  Ray Direction (Must Be A Unit Vector)
-//      mindist (Real* ):    Closest Intersection Distance So Far
-//      intr    (Point4  ):  Intersection Point
-//      normal  (Vector4 ):  Surface Normal at Intersection Point
-//
-//  If the ray does not intersect the object, the intersection function
-//  returns false and does not alter `mindist', `intr' or `normal'.
-//
-//  If the mindist parameter is nil, then it's assumed that the calling
-//  program is not interested in the specifics of the intersection; it's
-//  only interested in whether the ray intersects the object (as in shadow
-//  testing).  In this case, if the ray does intersect the object, the
-//  function immediately returns true, but does not alter the `mindist',
-//  `intr' or `normal' parameters.
-//
-//  If the ray intersects the object, the intersection function returns true
-//  and the `mindist', `intr' and `normal' parameters are all set according
-//  to the intersection point if the following are true:
-//
-//      1) The initial `mindist' value is -1, or
-//      2) The intersection point is a positive (albeit small) epsilon
-//         distance along the ray and is closer than the initial `mindist'
-//         value.
-//
-//  If these conditions are not met, then even if the ray intersects the
-//  object, the intersection function returns false.
-//
-//  Note that these routines still behave properly if either the `intr' or
-//  `normal' parameters are nil.
-//
+**
+**  All intersection functions must behave in the same manner, since they are
+**  called as object-oriented functions that behave generically for different
+**  objects.  Each function takes the same parameters and returns a boolean
+**  value.  Operation of each function is as follows:
+**
+**  The functions take the following parameter list:
+**
+**      objptr  (ObjInfo*):  Pointer to the Object Structure
+**      rayO    (Point4  ):  Ray Origin
+**      rayD    (Vector4 ):  Ray Direction (Must Be A Unit Vector)
+**      mindist (Real* ):    Closest Intersection Distance So Far
+**      intr    (Point4  ):  Intersection Point
+**      normal  (Vector4 ):  Surface Normal at Intersection Point
+**
+**  If the ray does not intersect the object, the intersection function
+**  returns false and does not alter `mindist', `intr' or `normal'.
+**
+**  If the mindist parameter is nil, then it's assumed that the calling
+**  program is not interested in the specifics of the intersection; it's
+**  only interested in whether the ray intersects the object (as in shadow
+**  testing).  In this case, if the ray does intersect the object, the
+**  function immediately returns true, but does not alter the `mindist',
+**  `intr' or `normal' parameters.
+**
+**  If the ray intersects the object, the intersection function returns true
+**  and the `mindist', `intr' and `normal' parameters are all set according
+**  to the intersection point if the following are true:
+**
+**      1) The initial `mindist' value is -1, or
+**      2) The intersection point is a positive (albeit small) epsilon
+**         distance along the ray and is closer than the initial `mindist'
+**         value.
+**
+**  If these conditions are not met, then even if the ray intersects the
+**  object, the intersection function returns false.
+**
+**  Note that these routines still behave properly if either the `intr' or
+**  `normal' parameters are nil.
+**
 ****************************************************************************/
 
 
 
 
 /****************************************************************************
-//  This is the intersection function for hyperspheres.
+**  This is the intersection function for hyperspheres.
 ****************************************************************************/
 
 boolean  HitSphere  (objptr, rayO, rayD, mindist, intr, normal)
@@ -185,8 +185,8 @@ boolean  HitSphere  (objptr, rayO, rayD, mindist, intr, normal)
       return true;
 
    /* Note that the t1 variable is now the length of the vector from the
-   // ray origin to the intersection point, since the direction vector is
-   // a unit vector.  */
+   ** ray origin to the intersection point, since the direction vector is
+   ** a unit vector.  */
 
    if ((*mindist > 0) && ((t1 < MINDIST) || (t1 > *mindist)))
       return false;      /* Not closer than previous intersection. */
@@ -209,11 +209,11 @@ boolean  HitSphere  (objptr, rayO, rayD, mindist, intr, normal)
 
 
 /****************************************************************************
-//  This is the intersection function for 4D tetrahedrons and
-//  parallelepipeds.  Note that if the object is a tetrahedron and the
-//  conditions are met to set the intersection values, then the barycentric
-//  coordinates of the tetrahedron will also be set.  These values may be
-//  used later for Phong or Gouraud shading.
+**  This is the intersection function for 4D tetrahedrons and
+**  parallelepipeds.  Note that if the object is a tetrahedron and the
+**  conditions are met to set the intersection values, then the barycentric
+**  coordinates of the tetrahedron will also be set.  These values may be
+**  used later for Phong or Gouraud shading.
 ****************************************************************************/
 
 boolean  HitTetPar  (objptr, rayO, rayD, mindist, intersect, normal)
@@ -276,8 +276,8 @@ boolean  HitTetPar  (objptr, rayO, rayD, mindist, intersect, normal)
       return false;
 
    /* If we're testing for the nearest intersection, then we can trivially
-   // reject those candidate intersection points that occur behind some
-   // other object in the scene.  */
+   ** reject those candidate intersection points that occur behind some
+   ** other object in the scene.  */
 
    if (mindist && (*mindist > 0) && ((rayT < MINDIST) || (rayT > *mindist)))
       return false;
@@ -285,31 +285,31 @@ boolean  HitTetPar  (objptr, rayO, rayD, mindist, intersect, normal)
    V4_3Vec (intr, =, rayO, +, rayT * rayD);
 
    /* Now we need to find the barycentric coordinates of the 4D object to
-   // determine if the ray/hyperplane intersection point is inside of the
-   // 4D object.  To simplify the process, project the object to a 3-plane.
-   // In order to assure that we don't `squish' the object in the projection,
-   // select the three axes that are not dominant in the normal vector (the
-   // ax1, ax2 and ax3 fields). */
+   ** determine if the ray/hyperplane intersection point is inside of the
+   ** 4D object.  To simplify the process, project the object to a 3-plane.
+   ** In order to assure that we don't `squish' the object in the projection,
+   ** select the three axes that are not dominant in the normal vector (the
+   ** ax1, ax2 and ax3 fields). */
 
    /* ----------------------------------------------------------------------
-   // Use Cramer's rule to solve for the barycentric coordinates
-   // ((1-Bc1-Bc2-Bc3), Bc1, Bc2, Bc3) using the intersection point (I) of
-   // the object.  The equation used is as follows:
-   //
-   //     M0 = (Bc1 * M1) + (Bc2 * M2) + (Bc3 * M3)
-   //
-   //             +-            -+             +-             -+
-   //             |I[ax1]-V0[ax1]|             |V1[ax1]-V0[ax1]|
-   // where M0 is |I[ax2]-V0[ax2]|       M1 is |V1[ax2]-V0[ax2]|
-   //             |I[ax3]-V0[ax3]|             |V1[ax3]-V0[ax3]|
-   //             +-            -+             +-             -+
-   //
-   //             +-             -+            +-             -+
-   //             |V2[ax1]-V0[ax1]|            |V3[ax1]-V0[ax1]|
-   //       M2 is |V2[ax2]-V0[ax2]|  and M3 is |V3[ax2]-V0[ax2]|
-   //             |V2[ax3]-V0[ax3]|            |V3[ax3]-V0[ax3]|
-   //             +-             -+            +-             -+
-   // --------------------------------------------------------------------*/
+   ** Use Cramer's rule to solve for the barycentric coordinates
+   ** ((1-Bc1-Bc2-Bc3), Bc1, Bc2, Bc3) using the intersection point (I) of
+   ** the object.  The equation used is as follows:
+   **
+   **     M0 = (Bc1 * M1) + (Bc2 * M2) + (Bc3 * M3)
+   **
+   **             +-            -+             +-             -+
+   **             |I[ax1]-V0[ax1]|             |V1[ax1]-V0[ax1]|
+   ** where M0 is |I[ax2]-V0[ax2]|       M1 is |V1[ax2]-V0[ax2]|
+   **             |I[ax3]-V0[ax3]|             |V1[ax3]-V0[ax3]|
+   **             +-            -+             +-             -+
+   **
+   **             +-             -+            +-             -+
+   **             |V2[ax1]-V0[ax1]|            |V3[ax1]-V0[ax1]|
+   **       M2 is |V2[ax2]-V0[ax2]|  and M3 is |V3[ax2]-V0[ax2]|
+   **             |V2[ax3]-V0[ax3]|            |V3[ax3]-V0[ax3]|
+   **             +-             -+            +-             -+
+   ** --------------------------------------------------------------------*/
 
    {
       static Real    M01,M02,M03, M11,M12,M13,	/* Matrix Values */
@@ -335,28 +335,12 @@ boolean  HitTetPar  (objptr, rayO, rayD, mindist, intersect, normal)
       M32 = tp->vec3[tp->ax2];
       M33 = tp->vec3[tp->ax3];
 
-#if 0
-   printf ("HitTetpar:  M0  %lg %lg %lg\n", M01, M02, M03);
-   printf ("HitTetpar:  M1  %lg %lg %lg\n", M11, M12, M13);
-   printf ("HitTetpar:  M2  %lg %lg %lg\n", M21, M22, M23);
-   printf ("HitTetpar:  M3  %lg %lg %lg\n", M31, M32, M33);
-#endif
-
       M22M33_M23M32 = (M22 * M33) - (M23 * M32);
       M02M33_M03M32 = (M02 * M33) - (M03 * M32);
       M12M03_M13M02 = (M12 * M03) - (M13 * M02);
       M12M33_M13M32 = (M12 * M33) - (M13 * M32);
       M12M23_M13M22 = (M12 * M23) - (M13 * M22);
       M02M23_M03M22 = (M02 * M23) - (M03 * M22);
-
-#if 0
-   printf ("HitTetpar:  M22M33_M23M32 %lg\n", M22M33_M23M32);
-   printf ("HitTetpar:  M02M33_M03M32 %lg\n", M02M33_M03M32);
-   printf ("HitTetpar:  M12M03_M13M02 %lg\n", M12M03_M13M02);
-   printf ("HitTetpar:  M12M33_M13M32 %lg\n", M12M33_M13M32);
-   printf ("HitTetpar:  M12M23_M13M22 %lg\n", M12M23_M13M22);
-   printf ("HitTetpar:  M02M23_M03M22 %lg\n", M02M23_M03M22);
-#endif
 
       Bc1 = (  (M01*M22M33_M23M32)
              - (M21*M02M33_M03M32)
@@ -393,7 +377,7 @@ boolean  HitTetPar  (objptr, rayO, rayD, mindist, intersect, normal)
    }
 
    /* Test the barycentric coordinates to determine if the intersection
-   // point is within the object.  */
+   ** point is within the object.  */
 
 #  if (DB_TETPAR >= 1)
    {
@@ -433,15 +417,15 @@ boolean  HitTetPar  (objptr, rayO, rayD, mindist, intersect, normal)
       return false;
 
    /* At this point we know that the ray intersects the 4D object.  If we're
-   // only testing for shadowing, return true immediately and leave the
-   // specific intersection parameters unaltered.  */
+   ** only testing for shadowing, return true immediately and leave the
+   ** specific intersection parameters unaltered.  */
 
    if (!mindist)
       return true;
 
    /* We've already tested to see if the intersection point occurs behind
-   // some other object in the scene, so now we just load up the intersection
-   // parameters and return true.  */
+   ** some other object in the scene, so now we just load up the intersection
+   ** parameters and return true.  */
 
    *mindist = rayT;
 
@@ -463,11 +447,11 @@ boolean  HitTetPar  (objptr, rayO, rayD, mindist, intersect, normal)
 
 
 /****************************************************************************
-//  This is the intersection routine for 2D triangles in 4-space.  If the ray
-//  intersects triangle and the conditions are met to set the intersection
-//  specifics, then the barycentric coordinates of the triangle will also be
-//  set according to the intersection point.  These values will be used by
-//  the shading routines for Phong or Gouraud shading.
+**  This is the intersection routine for 2D triangles in 4-space.  If the ray
+**  intersects triangle and the conditions are met to set the intersection
+**  specifics, then the barycentric coordinates of the triangle will also be
+**  set according to the intersection point.  These values will be used by
+**  the shading routines for Phong or Gouraud shading.
 ****************************************************************************/
 
 boolean  HitTriangle  (objptr, rayO, rayD, mindist, intersect, normal)
@@ -488,19 +472,19 @@ boolean  HitTriangle  (objptr, rayO, rayD, mindist, intersect, normal)
    auto Vector4  vecTemp1, vecTemp2;	/* Temporary Vectors */
 
    /*------------------------------------------------------------------------
-   // The following segment calculates the intersection point (if one exists)
-   // with the ray and the plane containing the polygon.  The equation for
-   // this is as follows:
-   //
-   //            +-                       -+
-   //            | (V0 - rayO) x vec1,vec2 | . (rayD x vec1,vec2)
-   //            +-                       -+
-   //     rayT = --------------------------------------------------
-   //                                              2
-   //                         | rayD x vec1, vec2 |
-   //
-   // V0 a vertex of the triangle, vec1 is the vector from V0 to another
-   // vertex, and vec2 is the vector from V0 to the other vertex.
+   ** The following segment calculates the intersection point (if one exists)
+   ** with the ray and the plane containing the polygon.  The equation for
+   ** this is as follows:
+   **
+   **            +-                       -+
+   **            | (V0 - rayO) x vec1,vec2 | . (rayD x vec1,vec2)
+   **            +-                       -+
+   **     rayT = --------------------------------------------------
+   **                                              2
+   **                         | rayD x vec1, vec2 |
+   **
+   ** V0 a vertex of the triangle, vec1 is the vector from V0 to another
+   ** vertex, and vec2 is the vector from V0 to the other vertex.
    ------------------------------------------------------------------------*/
 
    V4_Cross (vecTemp2, rayD, TRI->vec1, TRI->vec2);
@@ -548,8 +532,8 @@ boolean  HitTriangle  (objptr, rayO, rayD, mindist, intersect, normal)
       return false;
 
    /* If we've previously hit something and the current intersection distance
-   // is either less than epsilon or greater then the previous distance, then
-   // return false; we don't have a nearer intersection. */
+   ** is either less than epsilon or greater then the previous distance, then
+   ** return false; we don't have a nearer intersection. */
 
    if (mindist && (*mindist > 0) && ((rayT < MINDIST) || (rayT > *mindist)))
       return false;
@@ -558,14 +542,14 @@ boolean  HitTriangle  (objptr, rayO, rayD, mindist, intersect, normal)
 
 
    /* Compute the triangle normal vector.  Since the triangle is embedded in
-   // 2-space, we've got an extra degree of freedom floating around, so we
-   // need to do some jazz to pin it down.  To do this I confine the normal
-   // vector to the 3-plane that contains the triangle and the ray.  The
-   // analogous situation is trying to compute the normal vector to a line
-   // in 3-space -- you'd want the normal to be perpendicular to the line
-   // and in the plane defined by the line and the ray.  It turns out that
-   // this is fairly simple to do (although 4D cross products are quite
-   // expensive computationally).  */
+   ** 2-space, we've got an extra degree of freedom floating around, so we
+   ** need to do some jazz to pin it down.  To do this I confine the normal
+   ** vector to the 3-plane that contains the triangle and the ray.  The
+   ** analogous situation is trying to compute the normal vector to a line
+   ** in 3-space -- you'd want the normal to be perpendicular to the line
+   ** and in the plane defined by the line and the ray.  It turns out that
+   ** this is fairly simple to do (although 4D cross products are quite
+   ** expensive computationally).  */
    
 
    {  auto Vector4  Vtemp;	/* Temporary Vector */
@@ -606,10 +590,10 @@ boolean  HitTriangle  (objptr, rayO, rayD, mindist, intersect, normal)
 #  endif
 
    /* In order to find the barycentric coordinates of the intersection point
-   // in the triangle, we need to find the two minor axes of the normal
-   // vector.  The intersection point and triangle can then be projected to
-   // the plane spanned by the two minor axes without fear of "collapsing"
-   // the triangle in the process.  */
+   ** in the triangle, we need to find the two minor axes of the normal
+   ** vector.  The intersection point and triangle can then be projected to
+   ** the plane spanned by the two minor axes without fear of "collapsing"
+   ** the triangle in the process.  */
 
    if (fabs(_normal[0]) < fabs(_normal[1]))	   /* X, Y */
       ax1 = 0,    ax2 = 1;
@@ -631,24 +615,24 @@ boolean  HitTriangle  (objptr, rayO, rayD, mindist, intersect, normal)
    }
 
    /* ----------------------------------------------------------------------
-   // Now compute the barycentric coordinates of the intersection point
-   // relative to the three vertices of the triangle.  The equation used
-   // here is as follows (I=intersection point, Vx=Triangle vertex):
-   //
-   // +-              -+       +-               -+       +-               -+
-   // |I[ax1] - V0[ax1]|       |V1[ax1] - V0[ax1]|       |V2[ax1] - V0[ax1]|
-   // |I[ax2] - V0[ax2]| = Bc1 |V1[ax2] - V0[ax2]| + Bc2 |V2[ax2] - V0[ax2]|
-   // +-              -+       +-               -+       +-               -+
-   //
-   //                       Bc1 Bc2
-   //            +-  -+   +-       -+
-   //      or:   | I1 |   | V11 V21 |
-   //            | I2 | = | V12 V22 |
-   //            +-  -+   +-       -+
-   //
-   // where Bc1 and Bc2 are the barycentric coordinates for vertex 1 and
-   // vertex 2.  The barycentric coordinates for vertex 0 is (1-Bc1-Bc2).
-   // --------------------------------------------------------------------*/
+   ** Now compute the barycentric coordinates of the intersection point
+   ** relative to the three vertices of the triangle.  The equation used
+   ** here is as follows (I=intersection point, Vx=Triangle vertex):
+   **
+   ** +-              -+       +-               -+       +-               -+
+   ** |I[ax1] - V0[ax1]|       |V1[ax1] - V0[ax1]|       |V2[ax1] - V0[ax1]|
+   ** |I[ax2] - V0[ax2]| = Bc1 |V1[ax2] - V0[ax2]| + Bc2 |V2[ax2] - V0[ax2]|
+   ** +-              -+       +-               -+       +-               -+
+   **
+   **                       Bc1 Bc2
+   **            +-  -+   +-       -+
+   **      or:   | I1 |   | V11 V21 |
+   **            | I2 | = | V12 V22 |
+   **            +-  -+   +-       -+
+   **
+   ** where Bc1 and Bc2 are the barycentric coordinates for vertex 1 and
+   ** vertex 2.  The barycentric coordinates for vertex 0 is (1-Bc1-Bc2).
+   ** --------------------------------------------------------------------*/
 
 
    {  auto Real  div;		/* Cramer's Rule Divisor */
@@ -703,15 +687,15 @@ boolean  HitTriangle  (objptr, rayO, rayD, mindist, intersect, normal)
 #  endif
 
    /* At this point we know that the ray intersects the 2D triangle.  If
-   // we're only testing for shadowing, return true immediately and leave
-   // the specific intersection parameters unaltered.  */
+   ** we're only testing for shadowing, return true immediately and leave
+   ** the specific intersection parameters unaltered.  */
 
    if (!mindist)
       return true;
 
    /* We've already tested to see if the intersection point occurs behind
-   // some other object in the scene, so now we just load up the intersection
-   // parameters and return true.  */
+   ** some other object in the scene, so now we just load up the intersection
+   ** parameters and return true.  */
 
    *mindist = rayT;
 

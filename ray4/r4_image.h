@@ -64,6 +64,13 @@
 #define R4_IMAGE_H
 
 
+   /*=====================*/
+   /*  Macro Definitions  */
+   /*=====================*/
+
+#define R4_IMAGE_ID   0x52617934L	/* 'Ray4' */
+
+
    /*=========================*/
    /*  Structure Definitions  */
    /*=========================*/
@@ -74,7 +81,7 @@ typedef struct S_IMAGEHDR   ImageHdr;
    //        addressing convinience on most architectures.  */
 
 struct S_IMAGEHDR
-{  unsigned long   magic;	/* Magic Number */
+{  unsigned long   magic;	/* Magic Number = R4_IMAGE_ID */
    unsigned char   version;	/* Image File Version Number */
    unsigned char   bitsperpixel;/* Number of Bits per Pixel */
    unsigned short  aspect[3];	/* Aspect Ratios [X,Y,Z] */

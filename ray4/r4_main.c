@@ -1,97 +1,102 @@
 
 /***********************************************************************
-//
-//  "ray4" is Copyright (c) 1991 by Steve R. Hollasch.
-//
-//  All rights reserved.  This software may be freely copied, modified
-//  and redistributed, provided that this copyright notice is preserved
-//  in all copies.  This software is provided "as is", without express
-//  or implied warranty.  You may not include this software in a program
-//  or other software product without also supplying the source, or
-//  without informing the end-user that the source is available for no
-//  extra charge.  If you modify this software, please include a notice
-//  detailing the author, date and purpose of the modification.
-//
+**
+**  "ray4" is Copyright (C) 1991, 1992, 1993 by Steve R. Hollasch.
+**
+**  All rights reserved.  This software may be freely copied, modified
+**  and redistributed, provided that this copyright notice is preserved
+**  in all copies.  This software is provided "as is", without express
+**  or implied warranty.  You may not include this software in a program
+**  or other software product without also supplying the source, or
+**  without informing the end-user that the source is available for no
+**  extra charge.  If you modify this software, please include a notice
+**  detailing the author, date and purpose of the modification.
+**
 ***********************************************************************/
 
 /****************************************************************************
-//
-//  File:  r4_main.c
-//
-//    This file contains the main procedures in the Ray4 4D ray tracer.
-//    This program is written to run on the Silicon Graphics Iris work-
-//    station, but should be able to run in any environment that supports
-//    the main Unix functions.  The following files comprise the Ray4 ray
-//    tracer:
-//
-//        ray4.h      :  Ray4 Common Header File
-//        r4_main.c   :  Main Program File
-//        r4_hit.c    :  Ray/Object Intersection Routines
-//        r4_io.c     :  Input/Output Routines
-//        r4_parse.c  :  Routines for Parsing the Input File
-//        r4_trace.c  :  Ray Firing, Shading & Illumination Procedures
-//
-//     Note:  All source files in this package use 3-space indentation and
-//            8-space tabs.
-//
-//  Revisions:
-//
-//    1.00 25-Jan-92  Hollasch
-//         Released to the public domain.
-//
-//    0.35 27-May-91  Hollasch
-//         Fixed bug in tetrahedron/parallelepiped normal and intersection
-//         assignment code; previous version did not ensure that the
-//         passed parameter pointers were non-nil.
-//
-//    0.34 15-May-91  Hollasch
-//         Fixed logic flaw in HitSphere t1/t2 selection.
-//
-//    0.33 12-May-91  Hollasch
-//         Fixed bug in shadow-ray intersection routine call; `mindist' was
-//         incorrectly passed by value, rather than by reference.
-//
-//    0.32 04-Mar-91  Hollasch
-//         Moved global variables & declarations to r4_globals.h.
-//         Renamed r4image.h to r4_image.h.
-//         Fixed error in r4_trace.c where objects behind point light sources
-//           could still produce shadows.
-//
-//    0.31 02-Feb-91  Hollasch
-//         Altered scanline buffer implementation to use a minimum sized
-//         buffer; moved buffer constants from ray4.h to r4_main.c
-//
-//    0.30 05-Jan-91  Hollasch
-//         Implemented the attribute list.  Color-rendering attributes are
-//         no longer embedded in each object description.  Also reversed
-//         the meaning of the directional light source direction:  the
-//         given vector is the direction _towards_ the light source.
-//
-//    0.20 19-Dec-90  Hollasch
-//         Added parallelepipeds; generalized tetrahedra code to accomodate
-//         parallelepipeds with a minimum of additional code.
-//
-//    0.13 13-Dec-90  Hollasch
-//         Added internal verification code for tetrahedra for debugging
-//         purposes.  Added reflections.
-//
-//    0.12 05-Dec-90  Hollasch
-//         Fixed problems with ray-grid basis-vector generation.
-//
-//    0.11 20-Nov-90  Hollasch
-//         Fixed ray-triangle intersection; moved some variable computations
-//         from on-the-fly to precomputed fields in structures for both
-//         2D triangles and tetrahedrons.
-//
-//    0.10 15-Nov-90  Hollasch
-//         Added tetrahedron and triangle code.
-//
-//    0.02 24-Oct-90  Hollasch
-//         Changed the aspect ratio definition.
-//
-//    0.01 21-Oct-90  Steve R. Hollasch
-//         Initial version.
-//
+**
+**  File:  r4_main.c
+**
+**    This file contains the main procedures in the Ray4 4D ray tracer.
+**    This program is written to run on the Silicon Graphics Iris work-
+**    station, but should be able to run in any environment that supports
+**    the main Unix functions.  The following files comprise the Ray4 ray
+**    tracer:
+**
+**        ray4.h      :  Ray4 Common Header File
+**        r4_main.c   :  Main Program File
+**        r4_hit.c    :  Ray/Object Intersection Routines
+**        r4_io.c     :  Input/Output Routines
+**        r4_parse.c  :  Routines for Parsing the Input File
+**        r4_trace.c  :  Ray Firing, Shading & Illumination Procedures
+**
+**     Note:  All source files in this package use 3-space indentation and
+**            8-space tabs.
+**
+**  Revisions:
+**
+**    1.30 07-Feb-93  Hollasch
+**         Minor mods to compile on the Amiga again.  I've bumped the
+**         revision to 1.30 because the last version of this file printed
+**         out 1.25 for the revision (it should have been 1.00; oh well).
+**
+**    1.00 25-Jan-92  Hollasch
+**         Released to the public domain.
+**
+**    0.35 27-May-91  Hollasch
+**         Fixed bug in tetrahedron/parallelepiped normal and intersection
+**         assignment code; previous version did not ensure that the
+**         passed parameter pointers were non-nil.
+**
+**    0.34 15-May-91  Hollasch
+**         Fixed logic flaw in HitSphere t1/t2 selection.
+**
+**    0.33 12-May-91  Hollasch
+**         Fixed bug in shadow-ray intersection routine call; `mindist' was
+**         incorrectly passed by value, rather than by reference.
+**
+**    0.32 04-Mar-91  Hollasch
+**         Moved global variables & declarations to r4_globals.h.
+**         Renamed r4image.h to r4_image.h.
+**         Fixed error in r4_trace.c where objects behind point light sources
+**           could still produce shadows.
+**
+**    0.31 02-Feb-91  Hollasch
+**         Altered scanline buffer implementation to use a minimum sized
+**         buffer; moved buffer constants from ray4.h to r4_main.c
+**
+**    0.30 05-Jan-91  Hollasch
+**         Implemented the attribute list.  Color-rendering attributes are
+**         no longer embedded in each object description.  Also reversed
+**         the meaning of the directional light source direction:  the
+**         given vector is the direction _towards_ the light source.
+**
+**    0.20 19-Dec-90  Hollasch
+**         Added parallelepipeds; generalized tetrahedra code to accomodate
+**         parallelepipeds with a minimum of additional code.
+**
+**    0.13 13-Dec-90  Hollasch
+**         Added internal verification code for tetrahedra for debugging
+**         purposes.  Added reflections.
+**
+**    0.12 05-Dec-90  Hollasch
+**         Fixed problems with ray-grid basis-vector generation.
+**
+**    0.11 20-Nov-90  Hollasch
+**         Fixed ray-triangle intersection; moved some variable computations
+**         from on-the-fly to precomputed fields in structures for both
+**         2D triangles and tetrahedrons.
+**
+**    0.10 15-Nov-90  Hollasch
+**         Added tetrahedron and triangle code.
+**
+**    0.02 24-Oct-90  Hollasch
+**         Changed the aspect ratio definition.
+**
+**    0.01 21-Oct-90  Steve R. Hollasch
+**         Initial version.
+**
 ****************************************************************************/
 
 #include <stdio.h>
@@ -117,8 +122,8 @@
 
 char notice[] = "\
 \n\
-       Ray4 [4D Raytracer]        Version 1.25          27-May-1991\n\
-       Steve R. Hollasch                              (C) 1990-1991\n\
+       Ray4 [4D Raytracer]        Version 1.30                07-Feb-1993\n\
+       Steve R. Hollasch                               (C) 1991,1992,1993\n\
 \n\n";
 
 char usage[] = "\
@@ -130,9 +135,9 @@ usage:  ray4 -s<Scan Range> -a<Aspect Ratios> -r<Image Resolution>\n\
 fields of X:Y:Z triples.  All components are unsigned 16-bit integers.\n\
 The aspect ratios are the width, height & depth (in some integer units) of\n\
 a square voxel.  The scan range fields may consist of a range with a low\n\
-low number, then a '-', and then a high number.  You can specify the\n\
-entire range with a single underscore character.  You may select 12 or 24\n\
-color bits per pixel (default is 24).\n\
+number, then a '-', and then a high number.  You can specify the entire\n\
+range with a single underscore character.  You may select 12 or 24 color\n\
+bits per pixel (default is 24).\n\
 \n\
     Examples:  ray4 -b12 -a2:1:2 -s_:_:_ -r256:256:256 <MyFile -omy.img\n\
                ray4 -a 1:1 -r 1024:768 -s 0-1023:0-767 -iSphere4 -os2.img\n\
@@ -166,7 +171,7 @@ void  FireRays     ARGS((void));
    /*******************************/
 
 ImageHdr  iheader =		/* Output Image Header */
-   { 0x52617934, 1, 24, {1,1,1}, {0,0,0}, {0xFFFF,0xFFFF,0xFFFF} };
+   { R4_IMAGE_ID, 1, 24, {1,1,1}, {0,0,0}, {0xFFFF,0xFFFF,0xFFFF} };
 
 Vector4   Gx,  Gy,  Gz;		/* Ray-Grid Basis Vectors */
 Point4    Gorigin;		/* Ray-Grid Origin Point  */
@@ -194,7 +199,7 @@ void  main  (argc, argv)
    ParseInput ();
 
    /* If the global ambient factor is zero, then clear all of the ambient
-   // factor flags in the objects. */
+   ** factor flags in the objects. */
 
    if ((ambient.r + ambient.g + ambient.b) < EPSILON)
    {  register   ObjInfo *optr;      /* Object Pointer */
@@ -203,7 +208,7 @@ void  main  (argc, argv)
    }
 
    /* Open the output stream and write out the image header (to be followed
-   // by the generated scanline data. */
+   ** by the generated scanline data. */
 
    OpenOutput ();
    WriteBlock (&iheader, (ulong) sizeof(iheader));
@@ -219,7 +224,7 @@ void  main  (argc, argv)
    }
 
    /* Compute the number of scanlines and size of the scanline buffer that
-   // meets the parameters MIN_SLB_COUNT and MIN_SLB_SIZE.  */
+   ** meets the parameters MIN_SLB_COUNT and MIN_SLB_SIZE.  */
 
    if ((MIN_SLB_SIZE / scanlsize) > MIN_SLB_COUNT)
       slbuff_count = MIN_SLB_SIZE / scanlsize;
@@ -564,9 +569,9 @@ void  Halt  (message, arg1)
 
 
 /****************************************************************************
-//  This routine allocates memory using the system malloc() function.  If the
-//  malloc() call fails to allocate the memory, this routine halts the
-//  program with an "out of memory" message.
+**  This routine allocates memory using the system malloc() function.  If the
+**  malloc() call fails to allocate the memory, this routine halts the
+**  program with an "out of memory" message.
 ****************************************************************************/
 
 char  *MyAlloc  (size)
@@ -591,7 +596,7 @@ void  MyFree  (addr)
 
 #if (DB_SCENE)
 /****************************************************************************
-//  This routine dumps the object list for debugging.
+**  This routine dumps the object list for debugging.
 ****************************************************************************/
 
 void  PrintScene  ()
@@ -756,7 +761,7 @@ void  PrintScene  ()
 
 
 /****************************************************************************
-//  This procedure calculates the ray-grid basis vectors.
+**  This procedure calculates the ray-grid basis vectors.
 ****************************************************************************/
 
 void  CalcRayGrid  ()
@@ -835,8 +840,8 @@ void  CalcRayGrid  ()
 
 
 /****************************************************************************
-//  This is the main routine that fires the rays through the ray grid and
-//  into the 4D scene.
+**  This is the main routine that fires the rays through the ray grid and
+**  into the 4D scene.
 ****************************************************************************/
 
 void  FireRays  ()

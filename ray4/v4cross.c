@@ -7,7 +7,7 @@
 **
 ****************************************************************************/
 
-#include <vector.h>
+#include "vector.h"
 
 
 void  V4_Cross  (result,u,v,w)

@@ -1,7 +1,7 @@
 
 /***********************************************************************
 **
-**  "r4tosgi" is Copyright (c) 1991 by Steve R. Hollasch.
+**  "r4tosgi" is Copyright (c) 1991,1992,1993 by Steve R. Hollasch.
 **
 **  All rights reserved.  This software may be freely copied, modified
 **  and redistributed, provided that this copyright notice is preserved
@@ -55,9 +55,9 @@
    /***  Debug Flags  ***/
    /*********************/
 
-#define DB_ARGS    1      /* Dump Command Options */
-#define DB_MISC    1      /* Miscellaneous Output */
-#define DB_HEADER  1      /* Dump Image Header Fields */
+#define DB_ARGS    0      /* Dump Command Options */
+#define DB_MISC    0      /* Miscellaneous Output */
+#define DB_HEADER  0      /* Dump Image Header Fields */
 
 
    /**********************************/
@@ -66,7 +66,7 @@
 
 char notice[] = "\
 \n\
-r4tosgi  Version 1.00  19-Nov-1991  (C) 1990,1991  Steven R. Hollasch\n\
+r4tosgi  Version 1.00  07-Feb-1993  (C) 1991,1992,1993  Steven R. Hollasch\n\
 \n";
 
 char usage[] = "\
@@ -94,7 +94,7 @@ usage  :  r4tosgi [-t] [-z <Image Plane>] <Image Cube File>\n\
 #define true     1
 #define false    0
 
-#define nil      0
+#define nil      ((void*)0)
 
 #ifdef _STDC_
 #  define ARGS(list)    list		/* Function Argument List */

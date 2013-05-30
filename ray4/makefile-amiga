@@ -1,0 +1,71 @@
+############################################################################
+##
+##  This makefile is used to create the Amiga version of the 4D raytracer
+##  and the ray4 --> IFF image generator.  This makefile runs with the old
+##  Aztec C compiler, version 3.4.  You may have to modify this makefile to
+##  run on your setup.
+##
+############################################################################
+
+MainIncl = :Include
+CFLAGS   = -B -I$(MainIncl)
+
+Ray4_objs     = r4_main.o r4_hit.o r4_io.o r4_parse.o r4_trace.o v4cross.o \
+		v4normalize.o
+Ray4881_objs  = r4_main.o881 r4_hit.o881 r4_io.o881 r4_parse.o881 \
+		r4_trace.o881 v4cross.o881 v4normalize.o881
+r4toiff_objs  = r4toiff.o write_ilbm.o
+
+.c.o:
+	cc +fi $(CFLAGS) -Z3072 $*.c
+
+.c.o881:
+	cc +f8 $(CFLAGS) -Z3072 $*.c -o $*.o881
+
+all:  Ray4  r4toiff
+
+clean:
+	delete $(Ray4_objs)
+	delete $(Ray4881_objs)
+	delete $(r4toiff_objs)
+
+## Executable File Formation
+
+Ray4:  r4_main.o r4_hit.o r4_io.o r4_parse.o r4_trace.o v4cross.o \
+       v4normalize.o
+	ln +Q -o Ray4 r4_main.o r4_hit.o r4_io.o r4_parse.o r4_trace.o \
+		v4cross.o v4normalize.o ma.lib c.lib
+	FileNote Ray4 "Four Dimensional Raytracer"
+
+R4toIFF:  r4toiff.o  write_ilbm.o
+	ln +Q -o R4toIFF r4toiff.o write_ilbm.o c.lib
+	FileNote R4toIFF "Ray4 Output File --> ILBM Image File"
+
+Ray4.881:  r4_main.o881 r4_hit.o881 r4_io.o r4_parse.o881 \
+		r4_trace.o881 v4cross.o881 v4normalize.o881
+	ln +Q -o Ray4.881 r4_main.o881 r4_hit.o881 r4_io.o r4_parse.o881 \
+		r4_trace.o881 v4cross.o881 v4normalize.o881 ma.lib c.lib
+	FileNote Ray4.881 "Four Dimensional Raytracer (68881 Version)"
+
+
+## Object File Histories
+
+r4_main.o:   r4_main.c  ray4.h r4_globals.h vector.h r4_image.h
+r4_hit.o:    r4_hit.c   ray4.h r4_globals.h vector.h
+r4_parse.o:  r4_parse.c ray4.h r4_globals.h vector.h
+r4_trace.o:  r4_trace.c ray4.h r4_globals.h vector.h
+r4_io.o:     r4_io.c  ray4.h r4_globals.h
+
+v4cross.o:	v4cross.c vector.h
+v4normalize.o:	v4normalize.c vector.h
+
+r4_main.o881:   r4_main.c  ray4.h r4_globals.h vector.h r4_image.h
+r4_hit.o881:    r4_hit.c   ray4.h r4_globals.h vector.h
+r4_parse.o881:  r4_parse.c ray4.h r4_globals.h vector.h
+r4_trace.o881:  r4_trace.c ray4.h r4_globals.h vector.h
+
+v4cross.o881:	   v4cross.c vector.h
+v4normalize.o881:  v4normalize.c vector.h
+
+r4toiff.o:	r4toiff.c  r4_image.h  amiga.h
+write_ilbm.o:	write_ilbm.c  amiga.h

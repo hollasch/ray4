@@ -1,35 +1,35 @@
 
 /***********************************************************************
-//
-//  "ray4" is Copyright (c) 1991 by Steve R. Hollasch.
-//
-//  All rights reserved.  This software may be freely copied, modified
-//  and redistributed, provided that this copyright notice is preserved
-//  in all copies.  This software is provided "as is", without express
-//  or implied warranty.  You may not include this software in a program
-//  or other software product without also supplying the source, or
-//  without informing the end-user that the source is available for no
-//  extra charge.  If you modify this software, please include a notice
-//  detailing the author, date and purpose of the modification.
-//
+**
+**  "ray4" is Copyright (c) 1991,1992,1993 by Steve R. Hollasch.
+**
+**  All rights reserved.  This software may be freely copied, modified
+**  and redistributed, provided that this copyright notice is preserved
+**  in all copies.  This software is provided "as is", without express
+**  or implied warranty.  You may not include this software in a program
+**  or other software product without also supplying the source, or
+**  without informing the end-user that the source is available for no
+**  extra charge.  If you modify this software, please include a notice
+**  detailing the author, date and purpose of the modification.
+**
 ***********************************************************************/
 
 /****************************************************************************
-//
-//  File:  r4_io.c
-//
-//          This file contains the I/O routines needed for the Ray4 4D
-//      raytracer.  See the r4_main.c header for more information on Ray4.
-//      This version of r4_io.c contains Unix-based I/O routines.
-//
-//  Revisions:
-//
-//    1.00  25-Jan-92  Hollasch
-//          Released to the public domain.
-//
-//    0.00  30-Sep-90  Steve R. Hollasch
-//          Initial version.
-//
+**
+**  File:  r4_io.c
+**
+**          This file contains the I/O routines needed for the Ray4 4D
+**      raytracer.  See the r4_main.c header for more information on Ray4.
+**      This version of r4_io.c contains Unix-based I/O routines.
+**
+**  Revisions:
+**
+**    1.00  25-Jan-92  Hollasch
+**          Released to the public domain.
+**
+**    0.00  30-Sep-90  Steve R. Hollasch
+**          Initial version.
+**
 ****************************************************************************/
 
 #include <fcntl.h>
@@ -47,7 +47,7 @@ int   outstream = 0;	/* Output Stream */
 
 
 /****************************************************************************
-//  These procedures close the input and output streams.
+**  These procedures close the input and output streams.
 ****************************************************************************/
 
 void  CloseInput  ()
@@ -69,8 +69,8 @@ void  CloseOutput  ()
 
 
 /****************************************************************************
-//  This routine returns then next character from the input stream.  If the
-//  end of file is reached, it returns -1.
+**  This routine returns then next character from the input stream.  If the
+**  end of file is reached, it returns -1.
 ****************************************************************************/
 
 int  ReadChar  ()
@@ -81,8 +81,8 @@ int  ReadChar  ()
 
 
 /****************************************************************************
-//  This subroutine opens the input file.  If no filename was given in the
-//  command-line arguments, we'll use the standard input stream.
+**  This subroutine opens the input file.  If no filename was given in the
+**  command-line arguments, we'll use the standard input stream.
 ****************************************************************************/
 
 void  OpenInput  ()
@@ -96,7 +96,7 @@ void  OpenInput  ()
 
 
 /****************************************************************************
-//  This subroutine opens the output file.
+**  This subroutine opens the output file.
 ****************************************************************************/
 
 void  OpenOutput  ()
@@ -111,7 +111,7 @@ void  OpenOutput  ()
 
 
 /****************************************************************************
-//  This routine writes a block to the output file.
+**  This routine writes a block to the output file.
 ****************************************************************************/
 
 void  WriteBlock  (buff, num)
