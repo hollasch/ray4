@@ -1,6 +1,7 @@
-<!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<!DOCTYPE HTML>
 <html>
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Four-Space Visualization of 4D Objects - Appendix A</title>
     <link rel="stylesheet" href="./thesis.css" type="text/css">
 </head>
@@ -11,33 +12,19 @@
     <br>Implementation Notes
 </h1>
 
-The programs written for this research are:
+<p class="noindent">The programs written for this research are:</p>
 
-<blockquote>
+<div class="indented" style="margin-bottom: 1em;">
+    <table class="indentded" border=1 cellpadding=8>
+        <tr><td><b>wire4</b>    <td>4D Wireframe Display Program</td></tr>
+        <tr><td><b>ray4</b>     <td>4D Raytracer</td></tr>
+        <tr><td><b>r4toiff</b>  <td>Ray4 to Interchange File Format (IFF) Image</td></tr>
+        <tr><td><b>r4tosgi</b>  <td>Ray4 to SGI Display</td></tr>
+    </table></blockquote>
+</div>
 
-<table border=1 cellpadding=8>
-
-<tr><td><b>wire4</b>
-    <td>4D Wireframe Display Program
-    <td><a href="wire4-101.tar.gz">wire4-101.tar.gz</a>
-        <br><a href="wire4-101.zip">wire4-101.zip</a>
-        <br><a href="wire4data.tar.gz">wire4data.tar.gz</a>
-        <br><a href="wire4data.zip">wire4data.zip</a>
-
-<tr><td><b>ray4</b>
-    <td>4D Raytracer
-    <td><a href="ray4-131.tar.gz">ray4-131.tar.gz</a>
-        <br><a href="ray4-131.zip">ray4-131.zip</a>
-
-<tr><td><b>r4toiff</b>
-    <td>Ray4 to Interchange File Format (IFF) Image
-    <td><i>Included in Ray4 Package</i>
-
-<tr><td><b>r4tosgi</b>
-    <td>Ray4 to SGI Display
-    <td><i>Included in Ray4 Package</i>
-
-</table></blockquote>
+<p class="noindent">The current version of these programs is available on GitHub at
+<a href="http://github.com/hollasch/ray4/">http://github.com/hollasch/ray4/</a>.</p>
 
 <h2>The <i>wire4</i> Program</h2>
 
@@ -53,14 +40,14 @@ specifies the following data:
     <li>Vertex List
     <li>Edge List
     <li>Edge Color Palette
-    <li>Depthcue Parameters:  Minimum & Maximum Distance
-    <li>Depthcue Parameters:  Near & Far Colors, Depthcue Levels
+    <li>Depthcue Parameters:  Minimum &amp; Maximum Distance
+    <li>Depthcue Parameters:  Near &amp; Far Colors, Depthcue Levels
 </ul>
 
 <p>
 <cite>wire4</cite> reads the input file and displays the wireframe with the
-initial viewing parameters.  Since only the viewpoints are rotated, the 4D and
-3D distances from the from-point to the to-point are constant.  The user has
+initial viewing parameters. Since only the viewpoints are rotated, the 4D and
+3D distances from the from-point to the to-point are constant. The user has
 interactive control over the following:
 
 <p>
@@ -135,7 +122,7 @@ command-line arguments which govern the resolution of the output image:
 <p><hr>
 <p><center>
 <table border=2 cellpadding=4>
-<tr><td><a href="default.htm">Table of Contents</a>
+<tr><td><a href="index.html">Table of Contents</a>
 </table>
 </center>
 

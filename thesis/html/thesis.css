@@ -38,3 +38,8 @@ div.figure
 .noindent
 {   text-indent: 0;
 }
+
+div.indented
+{
+    margin-left: 4em;
+}

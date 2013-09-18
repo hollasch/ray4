@@ -1,6 +1,7 @@
-<!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<!DOCTYPE HTML>
 <html>
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Four-Space Visualization of 4D Objects - Chapter 5</title>
     <link rel="stylesheet" href="./thesis.css" type="text/css">
 </head>
@@ -34,14 +35,15 @@ solids with hidden volumes and solids that partially obscure one another.
 This is at best a difficult task in three-space; the four-space extension
 would be even more complex.
 
-<p>For these reasons, the raytracing algorithm was chosen to ``realistically''
-render four-space scenes.  Raytracing solves several rendering problems in a
-straight-forward manner, including hidden surfaces, shadows, reflection, and
-refraction.  In addition, raytracing is not restricted to rendering polygonal
-meshes; it can handle any object that can be <dfn>interrogated</dfn> to find
-the intersection point of a given ray with the surface of the object.  This
-property is especially nice for rendering four-dimensional objects, since many
-N-dimensional objects can be easily described with implicit equations.
+<p>For these reasons, the raytracing algorithm was chosen to
+&ldquo;realistically&rdquo; render four-space scenes.  Raytracing solves
+several rendering problems in a straight-forward manner, including hidden
+surfaces, shadows, reflection, and refraction.  In addition, raytracing is not
+restricted to rendering polygonal meshes; it can handle any object that can be
+<dfn>interrogated</dfn> to find the intersection point of a given ray with the
+surface of the object.  This property is especially nice for rendering
+four-dimensional objects, since many N-dimensional objects can be easily
+described with implicit equations.
 
 <p>Other benefits of raytracing extend quite easily to 4D.  As in the 3D case,
 4D raytracing handles simple shadows merely by checking to see which objects
@@ -58,11 +60,11 @@ reflected rays use equivalent vector arithmetic.
 <p>The main loop in the raytracing algorithm shoots rays from the viewpoint
 through a grid into the scene space.  The grid is constructed so that each
 grid element represents a voxel of the resulting image (see figure 5.1 for an
-illustration of a 2x2x2 ray grid).  As a ray is ``fired'' from the viewpoint
-through the grid, it gathers light information by back-propagation.  In this
-way raytracing approximates the light rays that scatter throughout the scene
-and enter the eye by tracing the rays back from the viewpoint to the light
-sources.
+illustration of a 2x2x2 ray grid).  As a ray is &ldquo;fired&rdquo; from the
+viewpoint through the grid, it gathers light information by back-propagation.
+In this way raytracing approximates the light rays that scatter throughout the
+scene and enter the eye by tracing the rays back from the viewpoint to the
+light sources.
 
 <p>The recursive nature of raytracing, coupled with the fact that every voxel
 is sampled, makes raytracing very time consuming.  Fortunately, extending the
@@ -129,7 +131,7 @@ the cube without intersecting any other point.
         Bx = cross4 (By, Bz, S)
 </pre>
 
-At this point, S is the unit line-of-sight vector, and Bx, By & Bz are the
+At this point, S is the unit line-of-sight vector, and Bx, By &amp; Bz are the
 unit basis vectors for the ray grid.  What we need to do now is to to scale
 these vectors.  There are two additional sets of parameters that govern the
 construction of the ray grid.  These are the the number of voxels along each
@@ -244,9 +246,9 @@ the grid point.
 If the ray intersects no objects in the scene, assign the
 background color to it.
 
-<p><li>The intersection point closest to the ``launch point'' (starting
-with the viewpoint) is chosen, and the current color is
-determined by the ambient color of the intersected object.
+<p><li>The intersection point closest to the &ldquo;launch point&rdquo;
+(starting with the viewpoint) is chosen, and the current color is determined
+by the ambient color of the intersected object.
 
 <p><li>The intersection point is the new launch-point.  Rays are fired
 from the launch point to each of the light sources.  If the ray
@@ -552,8 +554,8 @@ mesh of tetrahedra.  Of course, the tessellation of 4D objects is more
 difficult (<i>e.g.</i> how do you tessellate a hypersphere?), but it does
 allow for the approximation of a wide variety of objects.
 
-<p>In the fourth dimension, the tetrahedron is ``flat'', <i>i.e.</i> it has a
-constant normal vector across its volume.  Any vector embedded in the
+<p>In the fourth dimension, the tetrahedron is &ldquo;flat&rdquo;, <i>i.e.</i>
+it has a constant normal vector across its volume.  Any vector embedded in the
 tetrahedron is perpendicular to the tetrahedron normal vector.
 
 <p>The tetrahedron is specified by four completely-connected vertices in
@@ -643,23 +645,23 @@ The ray-hyperplane intersection point Q is inside the tetrahedron if
     +-      -+         +-       -+        +-       -+         +-       -+
 </pre>
 
-<p>
-To simplify the solution for these coordinates, we project the tetrahedron to
-one of the four primary hyperplanes (XYZ, XYW, XZW or YZW).  To make
-this projection as ``large'' as possible (to ensure that we don't ``flatten''
-the tetrahedron by projecting it to a perpendicular hyperplane), find the
-dominant axis of the normal vector and use the hyperplane perpendicular to the
-dominant axis.  In other words the normal to the major hyperplane is formed by
-replacing the normal coordinate that has the largest absolute value with
-zero.  For example, given a normal vector of &lt;3, 1, 7, 5&gt;, the dominant
-axis is the third coordinate, and the hyperplane perpendicular to
-&lt;3, 1, 0, 5&gt; will yield the largest projection of the tetrahedron.  Once
-again, since the normal vector is constant, the three non-dominant coordinates
-(X, Y, and W for the above example) should be stored for future reference.
-Refer to the intersection algorithm for an illustration of this.
+<p> To simplify the solution for these coordinates, we project the tetrahedron
+to one of the four primary hyperplanes (XYZ, XYW, XZW or YZW).  To make this
+projection as &ldquo;large&rdquo; as possible (to ensure that we don't
+&ldquo;flatten&rdquo; the tetrahedron by projecting it to a perpendicular
+hyperplane), find the dominant axis of the normal vector and use the
+hyperplane perpendicular to the dominant axis.  In other words the normal to
+the major hyperplane is formed by replacing the normal coordinate that has the
+largest absolute value with zero.  For example, given a normal vector of
+&lt;3, 1, 7, 5&gt;, the dominant axis is the third coordinate, and the
+hyperplane perpendicular to &lt;3, 1, 0, 5&gt; will yield the largest
+projection of the tetrahedron.  Once again, since the normal vector is
+constant, the three non-dominant coordinates (X, Y, and W for the above
+example) should be stored for future reference.  Refer to the intersection
+algorithm for an illustration of this.
 
 <p>The hyperplane equation is then reduced to three coordinates,
-i, j, and k (X, Y & W for the previous example), so equation
+i, j, and k (X, Y &amp; W for the previous example), so equation
 <a href="#e5.5.2b">[5.5.2b]</a> is reduced to
 
 <pre>
@@ -916,7 +918,7 @@ the four-cube, and the four-tetrahedron vertices lie on the four-cube edges.
 <table border=2 cellpadding=4>
 <tr>
 <td><a href="chapter4.html">Previous Chapter</a>
-<td><a href="default.htm">Table of Contents</a>
+<td><a href="index.html">Table of Contents</a>
 <td><a href="chapter6.html">Next Chapter</a>
 </table>
 </center>

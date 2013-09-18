@@ -1,6 +1,7 @@
-<!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<!DOCTYPE HTML>
 <html>
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Four-Space Visualization of 4D Objects - Chapter 3</title>
     <link rel="stylesheet" href="./thesis.css" type="text/css">
 </head>
@@ -35,14 +36,14 @@ easily done by specifying a 3D point in space that marks the location of the
 viewpoint.  This is called the <dfn>from-point</dfn> or
 <dfn>viewpoint</dfn>.
 
-<p>The next thing to establish is the line of sight (where we're looking).
-This can be done by either specifying a line-of-sight vector, or by specifying
-a point of interest in the scene.  The point-of-interest method has several
+<p>The next thing to establish is the line of sight (where we're looking).  This
+can be done by either specifying a line-of-sight vector, or by specifying a
+point of interest in the scene.  The point-of-interest method has several
 advantages.  One advantage is that the person doing the rendering usually has
-something in mind to look at, rather than some particular direction. It also
-has the advantage that you can ``tie'' this point to a moving object, so we
-can easily track the object as it moves through space.  This point of interest
-is called the <dfn>to-point</dfn>.
+something in mind to look at, rather than some particular direction. It also has
+the advantage that you can &ldquo;tie&rdquo; this point to a moving object, so
+we can easily track the object as it moves through space.  This point of
+interest is called the <dfn>to-point</dfn>.
 
 <p>
 Now that we've established the line of sight, we need to pin down the
@@ -68,18 +69,17 @@ diagram of the 3D viewing vectors.
     <br>The Resulting View From Figure 3.1
 </a></div>
 
-<p>
-If we're going to use perspective projection, we need to specify the amount
-of perspective, or ``zoom'', that the resultant image will have.  This is done
-by specifying the angle of the viewing cone, also known as the <dfn>viewing
-frustum</dfn>.  The viewing frustum is a rectangular cone in three-space that
-has the from-point as its tip, and that encloses the projection rectangle,
-which is perpendicular to the cone axis.  The angle between opposite sides of
-the viewing frustum is called the <dfn>viewing angle</dfn>.  It is generally
-easier to let the viewing angle specify the angle for one dimension of the
-projection rectangle, and then to tailor the angle of the perpendicular angle
-of the viewing frustum to match the other dimension of the projection
-rectangle.<p>
+<p> If we're going to use perspective projection, we need to specify the
+amount of perspective, or &ldquo;zoom&rdquo;, that the resultant image will
+have.  This is done by specifying the angle of the viewing cone, also known as
+the <dfn>viewing frustum</dfn>.  The viewing frustum is a rectangular cone in
+three-space that has the from-point as its tip, and that encloses the
+projection rectangle, which is perpendicular to the cone axis.  The angle
+between opposite sides of the viewing frustum is called the <dfn>viewing
+angle</dfn>.  It is generally easier to let the viewing angle specify the
+angle for one dimension of the projection rectangle, and then to tailor the
+angle of the perpendicular angle of the viewing frustum to match the other
+dimension of the projection rectangle.<p>
 
 The greater the viewing angle, the greater the amount of perspective
 (wide-angle effect), and the lower the viewing angle, the lower the amount
@@ -101,7 +101,7 @@ frustum in three dimensions.  The angle from <b>D</b> to <b>From</b> to
 project the scene to a two-dimensional rectangle, also known as the
 <dfn>viewport</dfn>.  The viewport can be thought of as a window on the
 display screen between the eye (viewpoint) and the 3D scene.  The scene is
-projected onto (or ``through'') this viewport, which then contains a
+projected onto (or &ldquo;through&rdquo;) this viewport, which then contains a
 two-dimensional projection of the three-dimensional scene.
 
 <h2 id="s3.2">3.2  Viewing in Four-Space</h2>
@@ -148,7 +148,7 @@ all three viewing angles are the same.
 <p><div align="center">
 <table border=2 cellpadding=4><tr>
     <td><a href="chapter2.html">Previous Chapter</a>
-    <td><a href="default.htm">Table of Contents</a>
+    <td><a href="index.html">Table of Contents</a>
     <td><a href="chapter4.html">Next Chapter</a>
 </table>
 </div>

@@ -1,7 +1,8 @@
-<!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<!DOCTYPE HTML>
 <html>
 <head>
-<title>Four-Space Visualization of 4D Objects - Chapter 4</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Four-Space Visualization of 4D Objects - Chapter 4</title>
     <link rev="made" href="mailto:steve@hollasch.net">
     <link rel="stylesheet" href="./thesis.css" type="text/css">
 </head>
@@ -45,11 +46,11 @@ vector subtraction and a multiplication between a 3-vector and a 3x3 matrix
 for each projected point.
 
 <p>The first step in projecting a 3D point is to convert its absolute
-``world'' coordinates to viewer-relative ``eye'' coordinates.  In the
-left-handed eye coordinate system, the eye-point is at the origin, the
-line-of-sight corresponds to the Z axis, the up-vector corresponds to the Y
-axis, and the X axis is orthogonal to the resulting Y and Z axes.  Refer to
-figure 4.1 for a diagram of the eye-coordinate system.
+&ldquo;world&rdquo; coordinates to viewer-relative &ldquo;eye&rdquo;
+coordinates. In the left-handed eye coordinate system, the eye-point is at the
+origin, the line-of-sight corresponds to the Z axis, the up-vector corresponds
+to the Y axis, and the X axis is orthogonal to the resulting Y and Z axes.
+Refer to figure 4.1 for a diagram of the eye-coordinate system.
 
 <p><div class="figure" align="center"><a name="fig4.1">
     <img src="images/fig41.gif"
@@ -217,7 +218,8 @@ by the parameters
 <dl>
 <dt>Cx, Cy</dt><dd>The viewport center, in screen coordinates, and</dd>
 <dt>Lx, Ly</dt>
-<dd>The horizonal & vertical length of the viewport, in screen coordinates.</dd>
+<dd>The horizonal &amp; vertical length of the viewport, in screen
+coordinates.</dd>
 </dl>
 
 Given these viewport parameters, the mapping of the point T in the [-1,+1]
@@ -287,11 +289,11 @@ with vertices &lt;&#177;1, &#177;1, &#177;1&gt; was chosen as the intermediate
 region.
 
 <p>As in the 3D to 2D projections, the 4D data points can be projected to 3D
-space with either a perspective projection or a parallel projection.  Neither
-of these projections are more ``intuitive'' than the other, but a perspective
-projection will yield smaller 3D line segments for edges that are farther from
-the 4D viewpoint.  As an example of the differences between these projections,
-see <a href="#s4.6">section 4.6</a>.
+space with either a perspective projection or a parallel projection.  Neither of
+these projections are more &ldquo;intuitive&rdquo; than the other, but a
+perspective projection will yield smaller 3D line segments for edges that are
+farther from the 4D viewpoint.  As an example of the differences between these
+projections, see <a href="#s4.6">section 4.6</a>.
 
 <p>Changing the 3D projection type between perspective and parallel projection
 does not produce as dramatic (or puzzling) a change as for the 4D projection.
@@ -362,24 +364,24 @@ follows.
     Vector4 Up, Over;    // 4D Up and Over Vectors
 
     void  Calc4Matrix  (
-        Vector4 Wa,
-        Vector4 Wb,
-        Vector4 Wc,
-        Vector4 Wd)
+        Vector4 *Wa,
+        Vector4 *Wb,
+        Vector4 *Wc,
+        Vector4 *Wd)
     {
         double norm;    // Vector Norm
 
         // Get the normalized Wd column-vector.
 
         VecSub (Wd, To, From);
-        norm = Norm4 (Wd);
+        norm = Norm4 (*Wd);
         if (norm == 0)
             Error ("To point and From point are the same.");
         VecScale (Wd, 1/norm);
 
         // Calculate the normalized Wa column-vector.
 
-        Cross4 (Wa, Up,Over,Wd);
+        Cross4 (Wa, Up,Over,*Wd);
         norm = Norm4 (Wa);
         if (norm == 0)
             Error ("Invalid Up vector.");
@@ -387,7 +389,7 @@ follows.
 
         // Calculate the normalized Wb column-vector.
 
-        Cross4 (Wb, Over,Wd,Wa);
+        Cross4 (Wb, Over, *Wd, *Wa);
         norm = Norm4 (Wb);
         if (norm == 0)
             Error ("Invalid Over vector.");
@@ -395,7 +397,7 @@ follows.
 
         // Calculate the Wc column-vector.
 
-        Cross4 (Wc, Wd,Wa,Wb);
+        Cross4 (Wc, *Wd, *Wa, *Wb);
     }
 </pre>
 The 4x4 matrix composed of these column vectors transforms the 4D
@@ -433,9 +435,9 @@ Dividing by this radius ensures that the vertices are projected to fill the
 intermediate region as much as possible without extending past the
 boundaries.
 
-<p>In equation <a href="e4.2b">4.2b</a>, the X and Y eye coordinates are
-divided by the Z eye coordinate to yield the perspective projection.  In the
-4D to 3D perspective projection, this ``depth'' is similarly achieved by
+<p>In equation <a href="#e4.2b">4.2b</a>, the X and Y eye coordinates are
+divided by the Z eye coordinate to yield the perspective projection.  In the 4D
+to 3D perspective projection, this &ldquo;depth&rdquo; is similarly achieved by
 dividing by the W eye coordinate (which corresponds to the four-dimensional
 line-of-sight).
 
@@ -542,15 +544,14 @@ presented here does not perform any type of 4D clipping):
 
 <h2 id="s4.4">4.4  Rotations of 4D Wireframes</h2>
 
-<p class="noindent">
-Rotation of the 4D wireframe is a tremendous aid in understanding the
-fundamental structure of the displayed object.  This rotation is best done by
-tying the rotation input to mouse movement.  The wireframe program written for
-this research uses the horizontal movement of the mouse only.  Restricting the
-rotation input to a single plane helps only somewhat for three-space rotation,
-but greatly helps with four-space rotations, where it's more difficult to
-figure out how to ``undo'' a particular pair of rotations of the four-space
-viewpoint.
+<p class="noindent"> Rotation of the 4D wireframe is a tremendous aid in
+understanding the fundamental structure of the displayed object.  This rotation
+is best done by tying the rotation input to mouse movement.  The wireframe
+program written for this research uses the horizontal movement of the mouse
+only.  Restricting the rotation input to a single plane helps only somewhat for
+three-space rotation, but greatly helps with four-space rotations, where it's
+more difficult to figure out how to &ldquo;undo&rdquo; a particular pair of
+rotations of the four-space viewpoint.
 
 <p>Rotating the view of the object can be accomplished by rotating the
 viewpoint, rather than rotating each of the object vertices.  This way, it
@@ -624,20 +625,19 @@ closer to the viewpoint are rendered with greater intensity, so edges dim in
 intensity as they extend away from the viewer.
 
 <p>This analogy extends quite nicely to four-dimensional wireframes; the
-``depth'' of a vertex is simply the 4D W eye-coordinate.  As an example, when
-the four-cube is rendered with 4D depthcueing, the ``inner'' cube is shaded
-with a lower intensity than the ``outer'' cube, since it is farther away in
-four-dimensional space.
+&ldquo;depth&rdquo; of a vertex is simply the 4D W eye-coordinate.  As an
+example, when the four-cube is rendered with 4D depthcueing, the
+&ldquo;inner&rdquo; cube is shaded with a lower intensity than the
+&ldquo;outer&rdquo; cube, since it is farther away in four-dimensional space.
 
 
 
 <h2 id="s4.6">4.6  Example 4D Wireframe Images</h2>
 
-<p class="noindent">
-In figures 4.5a through 4.5d, the hypercube with vertices of
-&lt;&#177;1, &#177;1, &#177;1, &#177;1&gt; is rendered with 4D parallel &
-perspective and 3D parallel & perspective projections.  The four-cube is
-displayed with the following viewing parameters:
+<p class="noindent"> In figures 4.5a through 4.5d, the hypercube with vertices
+of &lt;&#177;1, &#177;1, &#177;1, &#177;1&gt; is rendered with 4D parallel
+&amp; perspective and 3D parallel &amp; perspective projections.  The
+four-cube is displayed with the following viewing parameters:
 
 <pre>
     From4  = &lt;4, 0, 0, 0&gt; 
@@ -679,22 +679,22 @@ displayed with the following viewing parameters:
     <br>[The 4-Cube with Various 4D and 3D Projections]
 </a></div>
 
-<p>
-In figure <a href="#fig4.5a">4.5a</a>, the ``inner'' cube is actually farther
-away in four-space than the ``outer'' cube, and hence appears smaller in the
-resulting projection.  You can think of the larger cube as the ``front face''
-of the four-cube, and the the smaller cube as the ``rear face'' of the
-four-cube.  When rotating the four-cube in the proper plane, the rear face
-gradually swings to the front, and the front face gradually swings to the
-rear.  In doing this, the cube appears to turn itself inside out, so that
-the originally smaller cube engulfs the previously larger cube.
+<p> In figure <a href="#fig4.5a">4.5a</a>, the &ldquo;inner&rdquo; cube is
+actually farther away in four-space than the &ldquo;outer&rdquo; cube, and hence
+appears smaller in the resulting projection.  You can think of the larger cube
+as the &ldquo;front face&rdquo; of the four-cube, and the the smaller cube as
+the &ldquo;rear face&rdquo; of the four-cube.  When rotating the four-cube in
+the proper plane, the rear face gradually swings to the front, and the front
+face gradually swings to the rear.  In doing this, the cube appears to turn
+itself inside out, so that the originally smaller cube engulfs the previously
+larger cube.
 
-<p>In figure <a href="#fig4.5c">4.5c</a>, the four-cube is displayed with
-4D parallel projection and
-3D perspective projection.  Because of the parallel projection from 4D, the
-``rear face'' and ``front face'' are displayed as the same size, so the
-parallel projection from this point in four-space looks like two
-identically-sized three-cubes superimposed over each other.
+<p>In figure <a href="#fig4.5c">4.5c</a>, the four-cube is displayed with 4D
+parallel projection and 3D perspective projection.  Because of the parallel
+projection from 4D, the &ldquo;rear face&rdquo; and &ldquo;front face&rdquo; are
+displayed as the same size, so the parallel projection from this point in
+four-space looks like two identically-sized three-cubes superimposed over each
+other.
 
 <p>Figures <a href="#fig4.6a">4.6a</a> through <a href="#fig4.6d">4.6d</a>
 are similar to figures <a href="#fig4.5a">4.5a</a> through
@@ -824,14 +824,12 @@ sense of the object, but loses the structural cues.
 </a></div>
 
 
-<p>
-Finally, figures <a href="#fig4.14">4.14</a> and <a href="#fig4.15">4.15</a>
-show generalized curves across the surface
-of a four-sphere.  The curve in figure <a href="#fig4.15">4.15</a>
-is given with poor uniform
-parameterization which yields the two ``kinks'' that are visible in the 4D
-image.  For more information on these particular curves and the choices of
-parameterization, refer to <a href="ref.html#Chen90">[Chen 90]</a>.
+<p> Finally, figures <a href="#fig4.14">4.14</a> and <a href="#fig4.15">4.15</a>
+show generalized curves across the surface of a four-sphere.  The curve in
+figure <a href="#fig4.15">4.15</a> is given with poor uniform parameterization
+which yields the two &ldquo;kinks&rdquo; that are visible in the 4D image.  For
+more information on these particular curves and the choices of parameterization,
+refer to <a href="ref.html#Chen90">[Chen 90]</a>.
 
 <p><div class="figure" align="center"><a name="fig4.14">
     <img src="images/fig414.jpg" alt="Figure 4.14" width=350 height=350>
@@ -850,7 +848,7 @@ parameterization, refer to <a href="ref.html#Chen90">[Chen 90]</a>.
 <table border=2 cellpadding=4>
 <tr>
 <td><a href="chapter3.html">Previous Chapter</a>
-<td><a href="default.htm">Table of Contents</a>
+<td><a href="index.html">Table of Contents</a>
 <td><a href="chapter5.html">Next Chapter</a>
 </table>
 </center>

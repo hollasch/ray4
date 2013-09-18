@@ -1,6 +1,7 @@
-<!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<!DOCTYPE HTML>
 <html>
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Four-Space Visualization of 4D Objects - Chapter 2</title>
     <link rel="stylesheet" href="./thesis.css" type="text/css">
 </head>
@@ -201,10 +202,9 @@ idea.
 // Cross4 computes the four-dimensional cross product of the three vectors
 // U, V and W, in that order.  It returns the resulting four-vector.
 
-Vector4 *Cross4 (Vector4 *U, Vector4 *V, Vector4 *W)
+Vector4 *Cross4 (Vector4 *result, Vector4 U, Vector4 V, Vector4 W)
 {
-    double  A, B, C, D, E, F;       // Intermediate Values
-    Vector4 result;                 // Result Vector
+    double A, B, C, D, E, F;       // Intermediate Values
 
     // Calculate intermediate values.
 
@@ -217,12 +217,12 @@ Vector4 *Cross4 (Vector4 *U, Vector4 *V, Vector4 *W)
 
     // Calculate the result-vector components.
 
-    result[0] =   (U[1] * F) - (U[2] * E) + (U[3] * D);
-    result[1] = - (U[0] * F) + (U[2] * C) - (U[3] * B);
-    result[2] =   (U[0] * E) - (U[1] * C) + (U[3] * A);
-    result[3] = - (U[0] * D) + (U[1] * B) - (U[2] * A);
+    *result[0] =   (U[1] * F) - (U[2] * E) + (U[3] * D);
+    *result[1] = - (U[0] * F) + (U[2] * C) - (U[3] * B);
+    *result[2] =   (U[0] * E) - (U[1] * C) + (U[3] * A);
+    *result[3] = - (U[0] * D) + (U[1] * B) - (U[2] * A);
 
-    return &result;
+    return result;
 }
 </pre>
 
@@ -236,17 +236,16 @@ only coincidence that any rotation in three-space can be determined by an
 axis in three-space.
 
 <p>For example, consider the idea of rotation in two space.  The axis that we
-rotate ``about'' is perpendicular to this space; it isn't even contained in
-the two space.  In addition, given an origin of rotation and a destination
-point in three space, the set of all rotated points for a given rotation
-matrix lie in a single plane, just like the case for two space.
+rotate &ldquo;about&rdquo; is perpendicular to this space; it isn't even
+contained in the two space.  In addition, given an origin of rotation and a
+destination point in three space, the set of all rotated points for a given
+rotation matrix lie in a single plane, just like the case for two space.
 
-<p>Rotations in three-space are more properly thought of not as rotations
-about an axis, but as rotations parallel to a 2D plane.  This way of
-thinking about rotations is consistent with both two space (where there
-is only one such plane) and three space (where each rotation ``axis''
-defines the rotation plane by coinciding with the normal vector to that
-plane).
+<p>Rotations in three-space are more properly thought of not as rotations about
+an axis, but as rotations parallel to a 2D plane.  This way of thinking about
+rotations is consistent with both two space (where there is only one such plane)
+and three space (where each rotation &ldquo;axis&rdquo; defines the rotation
+plane by coinciding with the normal vector to that plane).
 
 <p><a name="rotmats">Once</a> this idea is established, it is easy to
 construct the basis 4D rotation
@@ -277,7 +276,7 @@ ZX, XW, YW and ZW planes.  These are given by (using angle T):
 <table border=2 cellpadding=4>
 <tr>
 <td><a href="chapter1.html">Previous Chapter</a>
-<td><a href="default.htm">Table of Contents</a>
+<td><a href="index.html">Table of Contents</a>
 <td><a href="chapter3.html">Next Chapter</a>
 </table>
 </center>
