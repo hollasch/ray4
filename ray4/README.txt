@@ -1,5 +1,5 @@
 
-    This is ray4, version 1.30.  Ray4 is a 4D raytracer that I wrote for my
+This is ray4, version 1.30.  Ray4 is a 4D raytracer that I wrote for my
 master's thesis in May 1991 ("Four-Space Visualization of 4D Objects").  The
 thesis is available via anonymous FTP in both PostScript and TROFF formats,
 at ftp.kpc.com.
@@ -36,9 +36,9 @@ at ftp.kpc.com.
     blank.r4
     wdots.r4
 
-    You will probably need to tweak the makefile to get it to run on
-your platform.  I've tried to make this as straightforward as possible,
-but let me know if you have problems.
+You will probably need to tweak the makefile to get it to run on your
+platform.  I've tried to make this as straightforward as possible, but let
+me know if you have problems.
 
 
 Beta Testers
