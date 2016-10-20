@@ -1,0 +1,8 @@
+
+    =====  4D Package List  =====
+
+thesis        "Four-Space Visualization of 4D Objects"
+ray4 v1.00    4D Raytracer    
+wire4 v1.00   4D Wireframe Viewer
+r4tomtv       Ray4 Image to MTV format and sunraster format.
+r4torle       Ray4 Image to Utah RLE format.

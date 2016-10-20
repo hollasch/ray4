@@ -1,0 +1,68 @@
+
+    This is the initial release of my 4D wireframe viewer that I wrote for
+my master's thesis, "Four-Space Visualization of 4D Objects", in May 1991.
+The thesis is also available from whatever means you got this package, or
+you can send me e-mail and I'll forward a copy to you.
+
+    Please send me e-mail to let me know if you're using this package so
+I can add you to my mailing list.  This way I can send out patches and
+upgrades and be fairly confident that the folks that need them will get
+them.  I'll also try to pass along any useful tips or comments that I
+receive.
+
+    This release should include the following files:
+
+        README          // This File
+        copyright       // Copyright Notice
+        wire4.doc       // User's Manual for wire4
+        psplot.doc      // User's Manual for psplot
+        makefile        // Unix Make File
+        wire4.h         // wire4 Main Header File
+        vector.h        // Header File for Vector Operations
+        psplot.c        // Source for psplot
+        strcmpic.c      // Case-Insensitive String Comparison
+        v3cross.c       // 3D Vector Cross Product
+        v4cross.c       // 4D Vector Cross Product
+        w4_display.c    // Graphics Display Functions
+        w4_geometry.c   // 4D Geometry Functions
+        w4_main.c       // Main wire4 File
+        w4_parse.c      // wire4 Input File Parsing Functions
+        axes.w4         // wire4 Input Files...
+        cube.w4
+        cube3d.w4
+        curve1.w4
+        curve2.w4
+        curve3.w4
+        dual.w4
+        frustum.w4
+
+    You will probably need to tweak the makefile to get it to run on
+your platform.  I've tried to make this as straightforward as possible,
+but let me know if you have problems.
+
+    Wire4 supports wireframe display of arbitrary 4D objects (from ASCII
+input files) and displays objects with user-specified edge colors,
+depth-cueing, and interactive 3D and 4D rotation.  Both 4D to 3D and
+3D to 2D projections can be interactively set to parallel or perspective
+projection.  Also included in the package is a program to generate
+simple PostScript files of arbitrary wireframe views.
+
+    Wire4 uses the GL library, so it is mostly useful for SGI boxes,
+although other platforms that have a GL compatibility library may also run
+the program.
+
+    Also available for release is my 4D raytracing program.  Let me know
+if you are interested and I'll send you a copy.  Ray4 runs on any platform
+that supports C and floating point, but currently the only display
+programs available are for the Amiga, SGI platforms, and Sun rasterfiles.
+
+    Finally, I'd like to acknowledge and thank the folks who volunteered
+to beta-test this software for me:
+
+        Greg Aharonian
+        Brian Carney
+        Mark Ferneau
+        Marty Ryan
+
+                                             Steve Hollasch
+                                             hollasch@kpc.com
