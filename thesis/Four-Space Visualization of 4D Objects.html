@@ -241,8 +241,8 @@
 <!-- =========================================================================================== -->
 <h1 id="abstract">Abstract</h1>
 
-<p style="text-indent: 0;"> In the field of scientific visualization, the term &quot;four
-dimensional visualization&quot; usually refers to the process of rendering a three dimensional field
+<p style="text-indent: 0;"> In the field of scientific visualization, the term “four
+dimensional visualization” usually refers to the process of rendering a three dimensional field
 of scalar values. While this paradigm applies to many different data sets, there are also uses for
 visualizing data that correspond to actual four-dimensional structures. Four dimensional structures
 have typically been visualized via wireframe methods, but this process alone is usually insufficient
@@ -439,14 +439,14 @@ hyperstereograms are very difficult to view, but do provide another method of un
 four-dimensional structures.</p>
 
 <p>In the early 1980's, Thomas Banchoff (who is heavily involved in the visualization of four-space)
-rendered hypersphere &ldquo;peels&rdquo; (<a href="#Dewdney86">[Dewdney 86]</a> and <a
+rendered hypersphere “peels” (<a href="#Dewdney86">[Dewdney 86]</a> and <a
 href="#Banchoff90">[Banchoff 90]</a>) which resulted in some beautiful images of their rotation in
 four-space.</p>
 
 <p>Several people have rendered four-dimensional objects by producing the three-dimensional slices
 of the object; this is presented in <a href="#Banchoff90">[Banchoff 90]</a>.</p>
 
-<p>Rendering solid four-dimension objects yields a three-dimensional &ldquo;image&rdquo;, rather
+<p>Rendering solid four-dimension objects yields a three-dimensional “image”, rather
 than the two-dimensional image of a three-dimensional object. <a href="#Steiner87">[Steiner 87]</a>
 and <a href="#Carey87">[Carey 87]</a> use scanplane conversion to render four-dimensional objects
 into three-dimensional voxel fields. Both approaches also tackle the difficult problem of hidden
@@ -498,7 +498,7 @@ four-space to three-space, and then from three-space to the 2D viewport. It also
 implementation of 4D object rotation and other wireframe visual aids. The four-dimensional
 raytracing method is presented in Chapter 5; this includes the generation of the ray target grid,
 the intersection algorithms used for the fundamental 4D objects, and the methods of visualizing the
-resulting 3D &ldquo;image&rdquo; of RGB data. Finally, Chapter 6 provides a conclusion to this
+resulting 3D “image” of RGB data. Finally, Chapter 6 provides a conclusion to this
 research. It includes notes on the research in general, suggestions for further research and
 exploration, and provides a few comments on the implementation of the programs discussed in this
 paper.</p>
@@ -528,15 +528,15 @@ four-space points is a simple matter of subtracting pairwise coordinates of the 
 the four coordinates of the resulting four-vector.</p>
 
 <p>For completeness, the equations of the more common four-space vector operations follow. In these
-equations, U = &lt;U<sub>0</sub>, U<sub>1</sub>, U<sub>2</sub>, U<sub>3</sub>&gt; and V =
-&lt;V<sub>0</sub>, V<sub>1</sub>, V<sub>2</sub>, V<sub>3</sub>&gt; are two source four-vectors and k
+equations, U = &lt;U₀, U₁, U₂, U₃&gt; and V =
+&lt;V₀, V₁, V₂, V₃&gt; are two source four-vectors and k
 is a scalar value:</p>
 
 <equations>
-U + V = &lt;U<sub>0</sub> + V<sub>0</sub>, U<sub>1</sub> + V<sub>1</sub>, U<sub>2</sub> + V<sub>2</sub>, U<sub>3</sub> + V<sub>3</sub>&gt;
-U - V = &lt;U<sub>0</sub> - V<sub>0</sub>, U<sub>1</sub> - V<sub>1</sub>, U<sub>2</sub> - V<sub>2</sub>, U<sub>3</sub> - V<sub>3</sub>&gt;
-   kV = &lt;kU<sub>0</sub>, kU<sub>1</sub>, kU<sub>2</sub>, kU<sub>3</sub>&gt;
-  U&#x22c5;V = U<sub>0</sub>V<sub>0</sub> + U<sub>1</sub>V<sub>1</sub> + U<sub>2</sub>V<sub>2</sub> + U<sub>3</sub>V<sub>3</sub>
+U + V = &lt;U₀ + V₀, U₁ + V₁, U₂ + V₂, U₃ + V₃&gt;
+U − V = &lt;U₀ − V₀, U₁ − V₁, U₂ − V₂, U₃ − V₃&gt;
+   kV = &lt;kU₀, kU₁, kU₂, kU₃&gt;
+  U&#x22c5;V = U₀V₀ + U₁V₁ + U₂V₂ + U₃V₃
 </equations>
 
 <p class="noindent">The main vector operation that does not extend trivially to four-space is the
@@ -544,12 +544,12 @@ cross product. A three-dimensional space is spanned by three basis vectors, so t
 three-space computes an orthogonal three-vector from two linearly independent three-vectors. Hence,
 the three-space cross product is a binary operation.</p>
 
-<p>In N-space, the resulting vector must be orthogonal to the remaining N-1 basis vectors. Since a
+<p>In N-space, the resulting vector must be orthogonal to the remaining N−1 basis vectors. Since a
 four-dimensional space requires four basis vectors, the four-space cross product requires three
 linearly independent four-vectors to determine the remaining orthogonal vector. Hence, the
 four-space cross product is a trinary operation; it requires three operand vectors and yields a
 single resultant vector. In the remainder of this paper, the four-dimensional cross product will be
-represented in the form <b>X</b><sub>4</sub>(<b>U</b>,<b>V</b>,<b>W</b>).</p>
+represented in the form <b>X</b>₄(<b>U</b>,<b>V</b>,<b>W</b>).</p>
 
 <p>To find the equation of the four-dimensional cross product, we must first establish criteria of
 the cross product. These are as follows:</p>
@@ -563,10 +563,10 @@ the cross product. These are as follows:</p>
 
     <li>The four-space cross product preserves scaling, <i>i.e.</i> for any scalar <i>k</i>:
 
-    <i>k</i><b>X</b><sub>4</sub>(<b>U</b>,<b>V</b>,<b>W</b>)
-    = <b>X</b><sub>4</sub>(<i>k</i><b>U</b>,<b>V</b>,<b>W</b>)
-    = <b>X</b><sub>4</sub>(<b>U</b>,<i>k</i><b>V</b>,<b>W</b>)
-    = <b>X</b><sub>4</sub>(<b>U</b>,<b>V</b>,<i>k</i><b>W</b>)</li>
+    <i>k</i><b>X</b>₄(<b>U</b>,<b>V</b>,<b>W</b>)
+    = <b>X</b>₄(<i>k</i><b>U</b>,<b>V</b>,<b>W</b>)
+    = <b>X</b>₄(<b>U</b>,<i>k</i><b>V</b>,<b>W</b>)
+    = <b>X</b>₄(<b>U</b>,<b>V</b>,<i>k</i><b>W</b>)</li>
 
     <li>Changing the order of two of the operands results only in a sign change
         of the resultant vector.</li>
@@ -574,15 +574,14 @@ the cross product. These are as follows:</p>
 
 <p class="noindent"> It turns out that a somewhat simple-minded approach to computing the
 four-dimensional cross product is the correct one. To motivate this idea, we first consider the
-three-dimensional cross product. The 3D cross product can be thought of as the determinant of a 3x3
+three-dimensional cross product. The 3D cross product can be thought of as the determinant of a 3×3
 matrix whose entries are as follows:</p>
 
 <equations>
-          +-        -+
-          | i  j  k  |
-X<sub>3</sub>(U,V) = | U0 U1 U2 |
-          | V0 V1 V2 |
-          +-        -+
+          &#x23a1; i  j  k  &#x23a4;
+X₃(U,V) = &#x23a2; U₀ U₁ U₂ &#x23a5;
+          &#x23a2; V₀ V₁ V₂ &#x23a5;
+          &#x23a3;          &#x23a6;
 </equations>
 
 <p class="noindent"> where <b>U</b> and <b>V</b> are the operand vectors, and <i>i</i>, <i>j</i>
@@ -590,35 +589,35 @@ X<sub>3</sub>(U,V) = | U0 U1 U2 |
 is</p>
 
 <equations>
-i (U<sub>1</sub>V<sub>2</sub> - U<sub>2</sub>V<sub>1</sub>) - j (U<sub>0</sub>V<sub>2</sub> - U<sub>2</sub>V<sub>0</sub>) + k (U<sub>0</sub>V<sub>1</sub> - U<sub>1</sub>V<sub>0</sub>)
+i (U₁V₂ − U₂V₁) − j (U₀V₂ − U₂V₀) + k (U₀V₁ − U₁V₀)
 </equations>
 
 <p class="noindent"> which is the three-dimensional cross product. Using this idea, we'll form the
-analogous 4x4 matrix, and see if it meets the four cross product properties listed above:</p>
+analogous 4×4 matrix, and see if it meets the four cross product properties listed above:</p>
 
 <equations id="2.1a">
-            +-           -+
-            | i  j  k  l  |
-X<sub>4</sub>(U,V,W) = | U0 U1 U2 U3 |
-            | V0 V1 V2 V3 |
-            | W0 W1 W2 W3 |
-            +-           -+
+            &#x23a1; i  j  k  l  &#x23a4;
+X₄(U,V,W) = &#x23a2; U₀ U₁ U₂ U₃ &#x23a5;
+            &#x23a2; V₀ V₁ V₂ V₃ &#x23a5;
+            &#x23a2; W₀ W₁ W₂ W₃ &#x23a5;
+            &#x23a3;             &#x23a6;
 <equationid>[2.1a]</equationid>
 </equations>
 
 <p class="noindent">The determinant of this matrix is</p>
 
 <equations id="2.1b">
- |U<sub>1</sub> U<sub>2</sub> U<sub>3</sub>|    |U<sub>0</sub> U<sub>2</sub> U<sub>3</sub>|    |U<sub>0</sub> U<sub>1</sub> U<sub>3</sub>|    |U<sub>0</sub> U<sub>1</sub> U<sub>2</sub>|
-i|V<sub>1</sub> V<sub>2</sub> V<sub>3</sub>| - j|V<sub>0</sub> V<sub>2</sub> V<sub>3</sub>| + k|V<sub>0</sub> V<sub>1</sub> V<sub>3</sub>| - l|V<sub>0</sub> V<sub>1</sub> V<sub>2</sub>|
- |W<sub>1</sub> W<sub>2</sub> W<sub>3</sub>|    |W<sub>0</sub> W<sub>2</sub> W<sub>3</sub>|    |W<sub>0</sub> W<sub>1</sub> W<sub>3</sub>|    |W<sub>0</sub> W<sub>1</sub> W<sub>2</sub>|
+  &#x23a2; U₁ U₂ U₃ &#x23a5;     &#x23a2; U₀ U₂ U₃ &#x23a5;     &#x23a2; U₀ U₁ U₃ &#x23a5;     &#x23a2; U₀ U₁ U₂ &#x23a5;
+i &#x23a2; V₁ V₂ V₃ &#x23a5; − j &#x23a2; V₀ V₂ V₃ &#x23a5; + k &#x23a2; V₀ V₁ V₃ &#x23a5; − l &#x23a2; V₀ V₁ V₂ &#x23a5;
+  &#x23a2; W₁ W₂ W₃ &#x23a5;     &#x23a2; W₀ W₂ W₃ &#x23a5;     &#x23a2; W₀ W₁ W₃ &#x23a5;     &#x23a2; W₀ W₁ W₂ &#x23a5;
+  &#x23a2;          &#x23a5;     &#x23a2;          &#x23a5;     &#x23a2;          &#x23a5;     &#x23a2;          &#x23a5;
 <equationid>[2.1b]</equationid>
 </equations>
 
-<p class="noindent">If the operand vectors are linearly dependent, then the vector rows of the 4x4
+<p class="noindent">If the operand vectors are linearly dependent, then the vector rows of the 4×4
 matrix will be linearly dependent, and the determinant of this matrix will be zero. This satisfies
 the first condition. The third condition is also satisfied, since a scalar multiple of one of the
-vectors yields a scalar multiple of one of the rows of the 4x4 matrix. This results in a determinant
+vectors yields a scalar multiple of one of the rows of the 4×4 matrix. This results in a determinant
 that is scaled by that factor, so condition three is also met.</p>
 
 <p>The fourth condition falls out as a property of determinants, <i>i.e.</i> when two rows of a
@@ -633,31 +632,34 @@ orthogonal to each of the operand vectors.</p>
 (refer to equation <a href="#2.1b">[2.1b]</a>):</p>
 
 <equations>
-U&#183;X<sub>4</sub>(U,V,W) =
+U&#183;X₄(U,V,W) =
 
-  |U<sub>1</sub> U<sub>2</sub> U<sub>3</sub>|     |U<sub>0</sub> U<sub>2</sub> U<sub>3</sub>|     |U<sub>0</sub> U<sub>1</sub> U<sub>3</sub>|     |U<sub>0</sub> U<sub>1</sub> U<sub>2</sub>|
-U<sub>0</sub>|V<sub>1</sub> V<sub>2</sub> V<sub>3</sub>| - U<sub>1</sub>|V<sub>0</sub> V<sub>2</sub> V<sub>3</sub>| + U<sub>2</sub>|V<sub>0</sub> V<sub>1</sub> V<sub>3</sub>| - U<sub>3</sub>|V<sub>0</sub> V<sub>1</sub> V<sub>2</sub>|
-  |W<sub>1</sub> W<sub>2</sub> W<sub>3</sub>|     |W<sub>0</sub> W<sub>2</sub> W<sub>3</sub>|     |W<sub>0</sub> W<sub>1</sub> W<sub>3</sub>|     |W<sub>0</sub> W<sub>1</sub> W<sub>2</sub>|
+  &#x23a2;U₁ U₂ U₃&#x23a5;     &#x23a2;U₀ U₂ U₃&#x23a5;     &#x23a2;U₀ U₁ U₃&#x23a5;     &#x23a2;U₀ U₁ U₂&#x23a5;
+U₀&#x23a2;V₁ V₂ V₃&#x23a5; − U₁&#x23a2;V₀ V₂ V₃&#x23a5; + U₂&#x23a2;V₀ V₁ V₃&#x23a5; − U₃&#x23a2;V₀ V₁ V₂&#x23a5;
+  &#x23a2;W₁ W₂ W₃&#x23a5;     &#x23a2;W₀ W₂ W₃&#x23a5;     &#x23a2;W₀ W₁ W₃&#x23a5;     &#x23a2;W₀ W₁ W₂&#x23a5;
+  &#x23a2;        &#x23a5;     &#x23a2;        &#x23a5;     &#x23a2;        &#x23a5;     &#x23a2;        &#x23a5;
 </equations>
 
 <p class="noindent">This dot product can be rewritten as the determinant</p>
 
 <equations>
-| U<sub>0</sub> U<sub>1</sub> U<sub>2</sub> U<sub>3</sub> |
-| U<sub>0</sub> U<sub>1</sub> U<sub>2</sub> U<sub>3</sub> |
-| V<sub>0</sub> V<sub>1</sub> V<sub>2</sub> V<sub>3</sub> |
-| W<sub>0</sub> W<sub>1</sub> W<sub>2</sub> W<sub>3</sub> |,
+&#x23a2; U₀ U₁ U₂ U₃ &#x23a5;
+&#x23a2; U₀ U₁ U₂ U₃ &#x23a5;
+&#x23a2; V₀ V₁ V₂ V₃ &#x23a5;
+&#x23a2; W₀ W₁ W₂ W₃ &#x23a5; 
+&#x23a2;             &#x23a5;,
 </equations>
 
 <p class="noindent"> which is zero, since the first two rows are identical. Hence, the resultant
-vector X<sub>4</sub>(U,V,W) is orthogonal to the operand vector U. In the same way, the dot products
-of V&#183;X<sub>4</sub>(U,V,W) and W&#183;X<sub>4</sub>(U,V,W) are given by the determinants</p>
+vector X₄(U,V,W) is orthogonal to the operand vector U. In the same way, the dot products
+of V&#183;X₄(U,V,W) and W&#183;X₄(U,V,W) are given by the determinants</p>
 
 <equations>
-| V<sub>0</sub> V<sub>1</sub> V<sub>2</sub> V<sub>3</sub> |           | W<sub>0</sub> W<sub>1</sub> W<sub>2</sub> W<sub>3</sub> |
-| U<sub>0</sub> U<sub>1</sub> U<sub>2</sub> U<sub>3</sub> |           | U<sub>0</sub> U<sub>1</sub> U<sub>2</sub> U<sub>3</sub> |
-| V<sub>0</sub> V<sub>1</sub> V<sub>2</sub> V<sub>3</sub> |    and    | V<sub>0</sub> V<sub>1</sub> V<sub>2</sub> V<sub>3</sub> |
-| W<sub>0</sub> W<sub>1</sub> W<sub>2</sub> W<sub>3</sub> |           | W<sub>0</sub> W<sub>1</sub> W<sub>2</sub> W<sub>3</sub> |,
+&#x23a2; V₀ V₁ V₂ V₃ &#x23a5;           &#x23a2; W₀ W₁ W₂ W₃ &#x23a5;
+&#x23a2; U₀ U₁ U₂ U₃ &#x23a5;           &#x23a2; U₀ U₁ U₂ U₃ &#x23a5;
+&#x23a2; V₀ V₁ V₂ V₃ &#x23a5;    and    &#x23a2; V₀ V₁ V₂ V₃ &#x23a5;
+&#x23a2; W₀ W₁ W₂ W₃ &#x23a5;           &#x23a2; W₀ W₁ W₂ W₃ &#x23a5; 
+&#x23a2;             &#x23a5;           &#x23a2;             &#x23a5;,
 </equations>
 
 <p class="noindent">which are each zero.</p>
@@ -705,13 +707,13 @@ by our experience in three space, but it is only coincidence that any rotation i
 determined by an axis in three-space.</p>
 
 <p>For example, consider the idea of rotation in two space. The axis that we rotate
-&ldquo;about&rdquo; is perpendicular to this space; it isn't even contained in the two space. In
+“about” is perpendicular to this space; it isn't even contained in the two space. In
 addition, given an origin of rotation and a destination point in three space, the set of all rotated
 points for a given rotation matrix lie in a single plane, just like the case for two space.</p>
 
 <p>Rotations in three-space are more properly thought of not as rotations about an axis, but as
 rotations parallel to a 2D plane. This way of thinking about rotations is consistent with both two
-space (where there is only one such plane) and three space (where each rotation &ldquo;axis&rdquo;
+space (where there is only one such plane) and three space (where each rotation “axis”
 defines the rotation plane by coinciding with the normal vector to that plane).</p>
 
 <p id="rotmats">Once this idea is established, it is easy to construct the basis 4D rotation
@@ -720,20 +722,18 @@ rotation matrices, corresponding to the XY, YZ, ZX, XW, YW and ZW planes. These 
 angle T):</p>
 
 <equations>
-&#x23a1;               &#x23a4;     &#x23a1;                &#x23a4;     &#x23a1;                &#x23a4;
-&#x23a2; cosT sinT 0 0 &#x23a5;     &#x23a2; 1   0    0   0 &#x23a5;     &#x23a2; cosT 0 -sinT 0 &#x23a5;
-&#x23a2;-sinT cosT 0 0 &#x23a5;     &#x23a2; 0  cosT sinT 0 &#x23a5;     &#x23a2;  0   1   0   0 &#x23a5;
-&#x23a2;  0    0   1 0 &#x23a5;     &#x23a2; 0 -sinT cosT 0 &#x23a5;     &#x23a2; sinT 0  cosT 0 &#x23a5;
+&#x23a1; cosT sinT 0 0 &#x23a4;     &#x23a1; 1   0    0   0 &#x23a4;     &#x23a1; cosT 0 −sinT 0 &#x23a4;
+&#x23a2;−sinT cosT 0 0 &#x23a5;     &#x23a2; 0  cosT sinT 0 &#x23a5;     &#x23a2;  0   1   0   0 &#x23a5;
+&#x23a2;  0    0   1 0 &#x23a5;     &#x23a2; 0 −sinT cosT 0 &#x23a5;     &#x23a2; sinT 0  cosT 0 &#x23a5;
 &#x23a2;  0    0   0 1 &#x23a5;     &#x23a2; 0   0    0   1 &#x23a5;     &#x23a2;  0   0   0   1 &#x23a5;
 &#x23a3;               &#x23a6;     &#x23a3;                &#x23a6;     &#x23a3;                &#x23a6;
     XY Plane               YZ Plane                ZX Plane
 
 
-&#x23a1;               &#x23a4;     &#x23a1;                &#x23a4;     &#x23a1;                &#x23a4;
-&#x23a2; cosT 0 0 sinT &#x23a5;     &#x23a2; 1  0   0   0   &#x23a5;     &#x23a2; 1 0  0     0   &#x23a5;
-&#x23a2;  0   1 0  0   &#x23a5;     &#x23a2; 0 cosT 0 -sinT &#x23a5;     &#x23a2; 0 1  0     0   &#x23a5;
-&#x23a2;  0   0 1  0   &#x23a5;     &#x23a2; 0  0   1   0   &#x23a5;     &#x23a2; 0 0 cosT -sinT &#x23a5;
-&#x23a2;-sinT 0 0 cosT &#x23a5;     &#x23a2; 0 sinT 0  cosT &#x23a5;     &#x23a2; 0 0 sinT  cosT &#x23a5;
+&#x23a1; cosT 0 0 sinT &#x23a4;     &#x23a1; 1  0   0   0   &#x23a4;     &#x23a1; 1 0  0     0   &#x23a4;
+&#x23a2;  0   1 0  0   &#x23a5;     &#x23a2; 0 cosT 0 −sinT &#x23a5;     &#x23a2; 0 1  0     0   &#x23a5;
+&#x23a2;  0   0 1  0   &#x23a5;     &#x23a2; 0  0   1   0   &#x23a5;     &#x23a2; 0 0 cosT −sinT &#x23a5;
+&#x23a2;−sinT 0 0 cosT &#x23a5;     &#x23a2; 0 sinT 0  cosT &#x23a5;     &#x23a2; 0 0 sinT  cosT &#x23a5;
 &#x23a3;               &#x23a6;     &#x23a3;                &#x23a6;     &#x23a3;                &#x23a6;
     XW Plane               YW Plane                ZW Plane
 </equations>
@@ -769,7 +769,7 @@ specifying a 3D point in space that marks the location of the viewpoint. This is
 either specifying a line-of-sight vector, or by specifying a point of interest in the scene. The
 point-of-interest method has several advantages. One advantage is that the person doing the
 rendering usually has something in mind to look at, rather than some particular direction. It also
-has the advantage that you can &ldquo;tie&rdquo; this point to a moving object, so we can easily
+has the advantage that you can “tie” this point to a moving object, so we can easily
 track the object as it moves through space. This point of interest is called the
 <dfn>to-point</dfn>.</p>
 
@@ -797,7 +797,7 @@ viewing vectors.</p>
 </div>
 
 <p class="noindent"> If we're going to use perspective projection, we need to specify the amount of
-perspective, or &ldquo;zoom&rdquo;, that the resultant image will have. This is done by specifying
+perspective, or “zoom”, that the resultant image will have. This is done by specifying
 the angle of the viewing cone, also known as the <dfn>viewing frustum</dfn>. The viewing frustum is
 a rectangular cone in three-space that has the from-point as its tip, and that encloses the
 projection rectangle, which is perpendicular to the cone axis. The angle between opposite sides of
@@ -824,7 +824,7 @@ angle, and the angle from <b>A</b> to <b>From</b> to <b>C</b> is the vertical vi
 <p>To render a three-dimensional scene, we use these viewing parameters to project the scene to a
 two-dimensional rectangle, also known as the <dfn>viewport</dfn>. The viewport can be thought of as
 a window on the display screen between the eye (viewpoint) and the 3D scene. The scene is projected
-onto (or &ldquo;through&rdquo;) this viewport, which then contains a two-dimensional projection of
+onto (or “through”) this viewport, which then contains a two-dimensional projection of
 the three-dimensional scene.</p>
 
 
@@ -893,14 +893,14 @@ is displayed.</p>
 
 <p class="noindent"> There are several methods of projecting three-space points to a two-dimensional
 viewport. The method used and extended for this research is found in <a href="#Foley87">[Foley
-87]</a>, and involves a vector subtraction and a multiplication between a 3-vector and a 3x3 matrix
-for each projected point.</p>
+87]</a>, and involves a vector subtraction and a multiplication between a 3-vector and a 3×3 matrix
+for each projected point.
 
-<p>The first step in projecting a 3D point is to convert its absolute &ldquo;world&rdquo;
-coordinates to viewer-relative &ldquo;eye&rdquo; coordinates. In the left-handed eye coordinate
-system, the eye-point is at the origin, the line-of-sight corresponds to the Z axis, the up-vector
-corresponds to the Y axis, and the X axis is orthogonal to the resulting Y and Z axes. Refer to
-figure 4.1 for a diagram of the eye-coordinate system.</p>
+<p>The first step in projecting a 3D point is to convert its absolute “world” coordinates to
+viewer-relative “eye” coordinates. In the left-handed eye coordinate system, the eye-point is at the
+origin, the line-of-sight corresponds to the Z axis, the up-vector corresponds to the Y axis, and
+the X axis is orthogonal to the resulting Y and Z axes. Refer to figure 4.1 for a diagram of the
+eye-coordinate system.
 
 <div id="fig4.1" class="figure">
     <!-- <img width="500" height="251" src="images/fig4.1.gif"> -->
@@ -912,20 +912,20 @@ figure 4.1 for a diagram of the eye-coordinate system.</p>
 vector from the eye-coordinate origin to the point by subtracting the from-point from the 3D vertex.
 Then the vector difference is rotated so that the to-point lies on the Z axis of the eye-coordinate
 system, and the up-vector lies on the Y axis. This is accomplished by multiplying the vector
-difference by the transformation matrix. The 3x3 transformation matrix has column vectors A, B and
+difference by the transformation matrix. The 3×3 transformation matrix has column vectors A, B and
 C, where A, B and C correspond to the X, Y, and Z axes in eye coordinates, respectively. The
 equations for these vectors are</p>
 
 <equations>
-      To - From
-C = -------------,
-    ||To - From||
+      To − From
+C = ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯,
+    ‖ To − From ‖
 
-      Up x C
-A = ----------, and
-    ||Up x C||
+      Up ⨯ C
+A = ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯, and
+    ‖ Up ⨯ C ‖
 
-B = C x A,
+B = C ⨯ A,
 </equations>
 
 <p class="noindent">where To is the to-point, From is the from-point, Up is the up-vector, and the
@@ -969,25 +969,24 @@ void Calc3Matrix (
 }
 </codeblock>
 
-<p class="noindent">Once the A, B and C vectors (corresponding to Va, Vb and Vc in the pseudo-code above) are
-calculated, all 3D points can be transformed from 3D world coordinates to 3D eye coordinates as
-follows:</p>
+<p class="noindent">Once the A, B and C vectors (corresponding to V<sub>a</sub>, V<sub>b</sub> and
+V<sub>c</sub> in the pseudo-code above) are calculated, all 3D points can be transformed from 3D
+world coordinates to 3D eye coordinates as follows:</p>
 
 <equations>
-                               +-        -+
-                               | Ax Bx Cx |
-P' = [(Px-Fx) (Py-Fy) (Pz-Fz)] | Ay By Cy |
-                               | Az Bz Cz |
-                               +-        -+
+     <sub>      </sub>                    &#x23a1; A<sub>x</sub> B<sub>x</sub> C<sub>x</sub> &#x23a4;
+P′ = [(P<sub>x</sub>−F<sub>x</sub>) (P<sub>y</sub>−F<sub>y</sub>) (P<sub>z</sub>−F<sub>z</sub>)] &#x23a2; A<sub>y</sub> B<sub>y</sub> C<sub>y</sub> &#x23a5;
+     <sub>      </sub>                    &#x23a2; A<sub>z</sub> B<sub>z</sub> C<sub>z</sub> &#x23a5;
+     <sub>      </sub>                    &#x23a3; <sub>   </sub>      &#x23a6;
 </equations>
 
-<p class="noindent">where Fx, Fy and Fz are the X, Y and Z coordinates of the from-point, P is the
-original data point in 3D world coordinates, and P' is the transformed data point in eye
-coordinates.</p>
+<p class="noindent">where F<sub>x</sub>, Fy</sub> and Fz</sub> are the X, Y and Z coordinates of the
+from-point, P is the original data point in 3D world coordinates, and P′ is the transformed data
+point in eye coordinates.</p>
 
 <p>We can now use the resulting 3D eye coordinates to project the 3D points to a two-dimensional
 rectangle. What we want is a projection that maps 3D points that lie in the 3D viewing frustum to
-the [-1,+1] x [-1,+1] rectangle. This rectangle will later be mapped to the viewport on the display
+the [−1,+1] × [−1,+1] rectangle. This rectangle will later be mapped to the viewport on the display
 device.</p>
 
 <p>The projection from three-space to the 2D rectangle can be either a parallel projection or a
@@ -997,29 +996,29 @@ perspective projection.</p>
 same size as near objects. This is the effect that you'd get if the eye-point was infinitely far
 away from the object to be viewed. In the simple case where the projection plane is parallel to the
 XY plane, parallel projection can be achieved by dropping the Z coordinate (this is the case for eye
-coordinates). Scaling the projection to fit the [-1,+1] x [-1,+1] rectangle makes it easy to project
+coordinates). Scaling the projection to fit the [−1,+1] x [−1,+1] rectangle makes it easy to project
 the image to the viewport.</p>
 
 <p>Perspective projection is the more natural of the two projections. With perspective projection,
 objects that are far away appear smaller than objects that are near. In the simple case, perspective
 projection is achieved by dividing by the Z coordinate. Perspective projection should map all data
-points that lie in the viewing frustum to the [-1,+1] x [-1,+1] rectangle.</p>
+points that lie in the viewing frustum to the [−1,+1] × [−1,+1] rectangle.</p>
 
 <p>When using parallel projection, the equation of the data point's normalized screen coordinates
 (from eye coordinates) is given by the following pair of equations:</p>
 
-<equations id="e4.2a">     P'x                P'y
-Tx = ---    and    Ty = ---,
-     R3                 R3
+<equations id="e4.2a">     P′<sub>x</sub>                 P′<sub>y</sub>
+T<sub>x</sub> = ⎯⎯⎯⎯    and    T<sub>y</sub> = ⎯⎯⎯⎯,
+     R3                  R3
 <equationid>[4.2a]</equationid>
 </equations>
 
-<p class="noindent">where P' is the 3D point in eye coordinates, R3 is the radius of the set of 3D
-points centered at the 3D to-point, and T is the 2D parallel projection of P' to the [-1,+1] x
-[-1,+1] rectangle. Dividing by R3 ensures that the parallel projection fills the viewport as much as
+<p class="noindent">where P′ is the 3D point in eye coordinates, R3 is the radius of the set of 3D
+points centered at the 3D to-point, and T is the 2D parallel projection of P′ to the [−1,+1] ×
+[−1,+1] rectangle. Dividing by R3 ensures that the parallel projection fills the viewport as much as
 possible without extending past the viewport boundaries.</p>
 
-<p>For the perspective projection of point P', consider figure 4.2.</p>
+<p>For the perspective projection of point P′, consider figure 4.2.</p>
 
 <div id="fig4.2" class="figure">
     <!-- <img  width=400 height=300 src="images/fig4.2.gif"> -->
@@ -1028,45 +1027,47 @@ possible without extending past the viewport boundaries.</p>
     <br>3D Perspective Projection in Eye Coordinates
 </div>
 
-<p class="noindent"> To calculate the perspective projection of point P', we need to project the
+<p class="noindent"> To calculate the perspective projection of point P′, we need to project the
 point to the viewplane and then to normalize the values so that points on the Z axis are projected
-to X (or Y) = 0, and so that the values of X (or Y) range from -1 to +1. The X axis value from
-figure 4.2 is calculated by noting that P'x/P'z = T'x/T'z. We can let T'z = 1 if the viewing angle
-is still preserved. Thus, T'x = P'x/P'z. To normalize T'x, note that the maximum possible value of
-T'x on the viewing plane occurs at T'x/T'z = tan(theta3/2), or T'x = tan(theta3/2). Thus, the
+to X (or Y) = 0, and so that the values of X (or Y) range from −1 to +1. The X axis value from
+figure 4.2 is calculated by noting that P′<sub>x</sub>/P′<sub>z</sub> =
+T′<sub>x</sub>/T′<sub>z</sub>. We can let T′<sub>z</sub> = 1 if the viewing angle is still
+preserved. Thus, T′<sub>x</sub> = P′<sub>x</sub>/P′<sub>z</sub>. To normalize T′<sub>x</sub>, note
+that the maximum possible value of T′<sub>x</sub> on the viewing plane occurs at
+T′<sub>x</sub>/T′<sub>z</sub> = tan(θ₃/2), or T′<sub>x</sub> = tan(θ₃/2). Thus, the
 equations for the normalized perspective projection T are given by</p>
 
 <equations id="e4.2b">
-            P'x                               P'y
-Tx = -----------------     and     Ty = -----------------
-     P'z tan(theta3/2)                  P'z tan(theta3/2)
+          P′<sub>x</sub>                             P′<sub>y</sub>
+T<sub>x</sub> = ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯     and     T<sub>y</sub> = ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+     P′<sub>z</sub> tan(θ₃/2)                   P′<sub>z</sub> tan(θ₃/2)
 <equationid>[4.2b]</equationid>
 </equations>
 
-<p class="noindent">where theta3 is the 3D viewing angle and T is the normalized perspective
-projection of P' to the [-1,+1] x [-1,+1] rectangle. Note that in the equations presented in this
+<p class="noindent">where θ₃ is the 3D viewing angle and T is the normalized perspective
+projection of P′ to the [−1,+1] × [−1,+1] rectangle. Note that in the equations presented in this
 chapter, the viewport is assumed to be square, so the viewing angle for the horizontal plane and the
 viewing angle for the vertical plane are the same. This assumption will also be held and extended
 for the 4D to 3D projection covered later.</p>
 
-<p>Now that we have the points in the [-1,+1] x [-1,+1] rectangle, we'll need to map them to the
+<p>Now that we have the points in the [−1,+1] × [−1,+1] rectangle, we'll need to map them to the
 viewport on the display device. This viewport is specified by the parameters</p>
 
 <dl>
-    <dt>Cx, Cy</dt>
+    <dt>C<sub>x</sub>, C<sub>y</sub></dt>
     <dd>The viewport center, in screen coordinates, and</dd>
 
-    <dt>Lx, Ly</dt>
+    <dt>L<sub>x</sub>, L<sub>y</sub></dt>
     <dd>The horizonal &amp; vertical length of the viewport, in screen coordinates.</dd>
 </dl>
 
-<p class="noindent">Given these viewport parameters, the mapping of the point T in the [-1,+1] x
-[-1,+1] rectangle to the display device viewport is given by the following equations:</p>
+<p class="noindent">Given these viewport parameters, the mapping of the point T in the
+[−1,+1] × [−1,+1] rectangle to the display device viewport is given by the following equations:
 
 <equations id="e4.2c">
-          Lx                         Ly
-Sx = Cx + ---Tx,    <i>and</i>    Sy = Cy + ---Ty.
-           2                          2
+          L<sub>x</sub>                         L<sub>y</sub>
+S<sub>x</sub> = C<sub>x</sub> + ⎯⎯⎯T<sub>x</sub>,    <i>and</i>    S<sub>y</sub> = C<sub>y</sub> + ⎯⎯⎯T<sub>y</sub>.
+           2                         2
 <equationid>[4.2c]</equationid>
 </equations>
 
@@ -1118,12 +1119,12 @@ from different angles while maintaining a constant 4D view.</p>
 
 <p>Since the 4D to 2D projection takes place in two discrete steps, we'll need to specify an
 intermediate 3D region for the projection to 3D coordinates. For this research, the unit cube (edge
-length two) centered at the origin, with vertices &lt;&#177;1, &#177;1, &#177;1&gt; was chosen as
+length two) centered at the origin, with vertices &lt;±1, ±1, ±1&gt; was chosen as
 the intermediate region.</p>
 
 <p>As in the 3D to 2D projections, the 4D data points can be projected to 3D space with either a
 perspective projection or a parallel projection. Neither of these projections are more
-&ldquo;intuitive&rdquo; than the other, but a perspective projection will yield smaller 3D line
+“intuitive” than the other, but a perspective projection will yield smaller 3D line
 segments for edges that are farther from the 4D viewpoint. As an example of the differences between
 these projections, see <a href="#s4.6">section 4.6</a>.</p>
 
@@ -1159,19 +1160,19 @@ C and D, which correspond to the X, Y, Z and W eye-coordinate axes, respectively
 these column vectors are</p>
 
 <equations>
-      To - From
-D = -------------,
-    ||To - From||
+      To − From
+D = ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯,
+    ‖ To − From ‖
 
-      X<sub>4</sub>(Up,Over,D)
-A = -----------------,
-    ||X<sub>4</sub>(Up,Over,D)||
+      X₄(Up,Over,D)
+A = ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯,
+    ‖ X₄(Up,Over,D) ‖
 
-      X<sub>4</sub>(Over,D,A)
-B = ----------------, and
-    ||X<sub>4</sub>(Over,D,A)||
+      X₄(Over,D,A)
+B = ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯, and
+    ‖ X₄(Over,D,A) ‖
 
-C = X<sub>4</sub>(D,A,B)
+C = X₄(D,A,B)
 </equations>
 
 <p class="noindent">where To is the to-point, From is the from-point, Up is the up-vector, and Over
@@ -1180,7 +1181,7 @@ is the Over vector (all of which reside in four-space).</p>
 <p>The routine to calculate the four-dimensional transformation matrix follows.</p>
 
 <codeblock>// Calc4Matrix calculates the four-dimensional viewing transformation
-// matrix and places the resulting 4x4 matrix column vectors in
+// matrix and places the resulting 4×4 matrix column vectors in
 // Wa, Wb, Wc, and Wd.
 
 Point4  From, To;    // 4D From and To Points
@@ -1224,33 +1225,33 @@ void  Calc4Matrix  (
 }
 </codeblock>
 
-<p class="noindent">The 4x4 matrix composed of these column vectors transforms the 4D world
+<p class="noindent">The 4×4 matrix composed of these column vectors transforms the 4D world
 coordinates to 4D eye coordinates. The full transformation is given by the following product:</p>
 
 <equations>
-                                       +-           -+
-                                       | Ax Bx Cx Dx |
-V' = [(Vx-Fx) (Vy-Fy) (Vz-Fz) (Vw-Fw)] | Ay By Cy Dy |,
-                                       | Az Bz Cz Dz |
-                                       | Aw Bw Cw Dw |
-                                       +-           -+
+     <sub>        </sub>                          &#x23a1; A<sub>x</sub> B<sub>x</sub> C<sub>x</sub> D<sub>x</sub> &#x23a4;
+V′ = [(V<sub>x</sub>−F<sub>x</sub>) (V<sub>y</sub>−F<sub>y</sub>) (V<sub>z</sub>−F<sub>z</sub>) (V<sub>w</sub>−F<sub>w</sub>)] &#x23a2; A<sub>y</sub> B<sub>y</sub> C<sub>y</sub> D<sub>y</sub> &#x23a5;
+     <sub>        </sub>                          &#x23a2; A<sub>z</sub> B<sub>z</sub> C<sub>z</sub> D<sub>z</sub> &#x23a5;
+     <sub>        </sub>                          &#x23a2; A<sub>w</sub> B<sub>w</sub> C<sub>w</sub> D<sub>w</sub> &#x23a5;
+     <sub>        </sub>                          &#x23a3; <sub>    </sub>        &#x23a6;,
 </equations>
 
-<p class="noindent">where Fx, Fy, Fz and Fw are the coordinates of the from-point and Vx, Vy, Vz and
-Vw are the 4D world coordinates of the vertex. This equation yields the 4D eye-coordinates of the
-vertex: V'.</p>
+<p class="noindent">where F<sub>x</sub>, F<sub>y</sub>, F<sub>z</sub> and F<sub>w</sub> are the
+coordinates of the from-point and V<sub>x</sub>, V<sub>y</sub>, V<sub>z</sub> and V<sub>w</sub> are
+the 4D world coordinates of the vertex. This equation yields the 4D eye-coordinates of the vertex:
+V′.</p>
 
 <p>Now that the vertices have been transformed from 4D world coordinates to 4D eye coordinates, we
-can project them to the normalized [-1,+1] x [-1,+1] x [-1,+1] region in three-space. As for the 3D
+can project them to the normalized [−1,+1] × [−1,+1] × [−1,+1] region in three-space. As for the 3D
 to 2D case, this projection can be either parallel or perspective. The equations for these
 projections are extensions of equations <a href="#e4.2a">4.2a</a> and <a href="#e4.2b">4.2b</a>.</p>
 
 <p>The equations for parallel 4D to 3D projection are extended from equation
 <a href="#e4.2a">4.2a</a> by one coordinate:</p>
 
-<equations id="e4.3a">     V'x          V'y              V'z
-Qx = ---,    Qy = ---, and    Qz = ---,
-     R4           R4               R4
+<equations id="e4.3a">     V′<sub>x</sub>          V′<sub>y</sub>                V′<sub>z</sub>
+Q<sub>x</sub> = ⎯⎯⎯,    Q<sub>y</sub> = ⎯⎯⎯,   and    Q<sub>z</sub> = ⎯⎯⎯,
+     R4           R4                 R4
 <equationid>[4.3a]</equationid>
 </equations>
 
@@ -1260,7 +1261,7 @@ possible without extending past the boundaries.</p>
 
 <p>In equation <a href="#e4.2b">4.2b</a>, the X and Y eye coordinates are divided by the Z eye
 coordinate to yield the perspective projection. In the 4D to 3D perspective projection, this
-&ldquo;depth&rdquo; is similarly achieved by dividing by the W eye coordinate (which corresponds to
+“depth” is similarly achieved by dividing by the W eye coordinate (which corresponds to
 the four-dimensional line-of-sight).</p>
 
 <div id="fig4.4" class="figure">
@@ -1274,14 +1275,14 @@ the four-dimensional line-of-sight).</p>
 derivation of the normalized 4D perspective projection follows the same reasoning as for the 3D
 normalized perspective projection. The equations are</p>
 
-<equations id="e4.3b">                         V'x         V'y             V'z
-T = tan(theta4/2), Qx = -----, Qy = -----, and Qz = -----.
-                        V'w T       V'w T           V'w T
+<equations id="e4.3b">                     V′<sub>x</sub>          V′<sub>y</sub>              V′<sub>z</sub>
+T = tan(θ₄/2), Q<sub>x</sub> = ⎯⎯⎯⎯⎯⎯, Q<sub>y</sub> = ⎯⎯⎯⎯⎯⎯, and Q<sub>z</sub> = ⎯⎯⎯⎯⎯⎯.
+                    V′<sub>w</sub> T        V′<sub>w</sub> T            V′<sub>w</sub> T
 <equationid>[4.3b]</equationid>
 </equations>
 
-<p class="noindent">where theta4 is the 4D viewing angle. These equations yield values in the range
-of [-1,+1] for vertices that lie in the 4D viewing frustum.</p>
+<p class="noindent">where θ₄ is the 4D viewing angle. These equations yield values in the range
+of [−1,+1] for vertices that lie in the 4D viewing frustum.</p>
 
 <p>Mapping the projected points to a viewbox in three-space can be accomplished in the same manner
 that we mapped normalized 2D coordinates to the 2D viewport. Given the viewbox parameters</p>
@@ -1294,30 +1295,31 @@ that we mapped normalized 2D coordinates to the 2D viewport. Given the viewbox p
 <p class="noindent">we can map the normalized 3D coordinates to the viewbox with the following
 equations:</p>
 
-<equations id="e4.3c">          Dx                 Dy                     Dz
-Px = Bx + -- Qx,   Py = By + -- Qy, and   Pz = Bz + -- Qz.
-          2                  2                      2
+<equations id="e4.3c">          D<sub>x</sub>                  D<sub>y</sub>                     D<sub>z</sub>
+P<sub>x</sub> = B<sub>x</sub> + ⎯⎯⎯ Q<sub>x</sub>,   P<sub>y</sub> = B<sub>y</sub> + ⎯⎯⎯ Q<sub>y</sub>, and   P<sub>z</sub> = B<sub>z</sub> + ⎯⎯⎯ Q<sub>z</sub>.
+           2                  2                      2
 <equationid>[4.3c]</equationid>
 </equations>
 
 <p>As mentioned earlier, the intermediate 3D region used in this research is the cube with vertices
-&lt;&#177;1, &#177;1, &#177;1&gt;, centered at the three-space origin. For this particular region,
-Bx = By = Bz = 0, and Lx = Ly = Lz = 2, so the simplified equations are</p>
+&lt;±1, ±1, ±1&gt;, centered at the three-space origin. For this particular region, B<sub>x</sub> =
+B<sub>y</sub> = B<sub>z</sub> = 0, and L<sub>x</sub> = L<sub>y</sub> = L<sub>z</sub> = 2, so the
+simplified equations are</p>
 
 <equations>
-     V'x          V'y              V'z
-Px = ---,    Py = ---, and    Pz = ---.
-     R4           R4               R4
+     V′<sub>x</sub>           V′<sub>y</sub>               V′<sub>z</sub>
+P<sub>x</sub> = ⎯⎯⎯⎯,    P<sub>y</sub> = ⎯⎯⎯⎯, and    P<sub>z</sub> = ⎯⎯⎯⎯.
+      R4            R4               R4
 </equations>
 
 <p class="noindent">for 4D to 3D parallel projection, and</p>
 
 <equations>
-T = tan (theta4/2)
+T = tan (θ₄/2)
 
-      V'x         V'y             V'z
-Px = -----, Py = -----, and Pz = -----.
-     V'w T       V'w T           V'w T
+      V′<sub>x</sub>          V′<sub>y</sub>              V′<sub>z</sub>
+P<sub>x</sub> = ⎯⎯⎯⎯⎯⎯, P<sub>y</sub> = ⎯⎯⎯⎯⎯⎯, and P<sub>z</sub> = ⎯⎯⎯⎯⎯⎯.
+     V′<sub>w</sub> T        V′<sub>w</sub> T            V′<sub>w</sub> T
 </equations>
 
 <p class="noindent">for 4D to 3D perspective projection.</p>
@@ -1362,7 +1364,7 @@ fundamental structure of the displayed object. This rotation is best done by tyi
 input to mouse movement. The wireframe program written for this research uses the horizontal
 movement of the mouse only. Restricting the rotation input to a single plane helps only somewhat for
 three-space rotation, but greatly helps with four-space rotations, where it's more difficult to
-figure out how to &ldquo;undo&rdquo; a particular pair of rotations of the four-space viewpoint.</p>
+figure out how to “undo” a particular pair of rotations of the four-space viewpoint.</p>
 
 <p>Rotating the view of the object can be accomplished by rotating the viewpoint, rather than
 rotating each of the object vertices. This way, it isn't necessary to rotate all of the wireframe
@@ -1410,11 +1412,11 @@ perspective.</p>
 in orienting the object with the 3D or 4D world, and also helps the user to choose the desired
 object rotation; this is especially helpful when trying to choose four-space rotations.</p>
 
-<p>Displaying the edges of the &lt;&#177;1, &#177;1, &#177;1&gt; cube (the intermediate
-three-dimensional projection space) along with the object helps the user to select the proper 3D and
-4D viewing parameters in order to best fill the intermediate 3D cube and 2D viewport. It also helps
-the user to identify rotations in four-space versus rotations in three-space without looking away
-from the object display.</p>
+<p>Displaying the edges of the &lt;±1, ±1, ±1&gt; cube (the intermediate three-dimensional
+projection space) along with the object helps the user to select the proper 3D and 4D viewing
+parameters in order to best fill the intermediate 3D cube and 2D viewport. It also helps the user to
+identify rotations in four-space versus rotations in three-space without looking away from the
+object display.</p>
 
 <p>Finally, a useful four-dimensional visual aid is the depthcueing of the wireframe according to
 the four-dimensional depth of each vertex. In normal three-dimensional depthcueing, the Z
@@ -1423,16 +1425,16 @@ interpolating the intensities of the two endpoint vertices. Typically, vertices 
 from the viewpoint are rendered with a lower intensity, and vertices closer to the viewpoint are
 rendered with greater intensity, so edges dim in intensity as they extend away from the viewer.</p>
 
-<p>This analogy extends quite nicely to four-dimensional wireframes; the &ldquo;depth&rdquo; of a
+<p>This analogy extends quite nicely to four-dimensional wireframes; the “depth” of a
 vertex is simply the 4D W eye-coordinate. As an example, when the four-cube is rendered with 4D
-depthcueing, the &ldquo;inner&rdquo; cube is shaded with a lower intensity than the
-&ldquo;outer&rdquo; cube, since it is farther away in four-dimensional space.</p>
+depthcueing, the “inner” cube is shaded with a lower intensity than the
+“outer” cube, since it is farther away in four-dimensional space.</p>
 
 
 <h2 id="s4.6">4.6  Example 4D Wireframe Images</h2>
 
-<p class="noindent"> In figures 4.5a through 4.5d, the hypercube with vertices of &lt;&#177;1,
-&#177;1, &#177;1, &#177;1&gt; is rendered with 4D parallel &amp; perspective and 3D parallel &amp;
+<p class="noindent"> In figures 4.5a through 4.5d, the hypercube with vertices of &lt;±1,
+±1, ±1, ±1&gt; is rendered with 4D parallel &amp; perspective and 3D parallel &amp;
 perspective projections. The four-cube is displayed with the following viewing parameters:</p>
 
 <pre>
@@ -1479,21 +1481,21 @@ perspective projections. The four-cube is displayed with the following viewing p
     <br>[The 4-Cube with Various 4D and 3D Projections]
 </div>
 
-<p class="noindent"> In figure <a href="#fig4.5a">4.5a</a>, the &ldquo;inner&rdquo; cube is actually
-farther away in four-space than the &ldquo;outer&rdquo; cube, and hence appears smaller in the
-resulting projection. You can think of the larger cube as the &ldquo;front face&rdquo; of the
-four-cube, and the the smaller cube as the &ldquo;rear face&rdquo; of the four-cube. When rotating
-the four-cube in the proper plane, the rear face gradually swings to the front, and the front face
-gradually swings to the rear. In doing this, the cube appears to turn itself inside out, so that the
-originally smaller cube engulfs the previously larger cube.</p>
+<p class="noindent"> In figure <a href="#fig4.5a">4.5a</a>, the “inner” cube is actually farther
+away in four-space than the “outer” cube, and hence appears smaller in the resulting projection. You
+can think of the larger cube as the “front face” of the four-cube, and the the smaller cube as the
+“rear face” of the four-cube. When rotating the four-cube in the proper plane, the rear face
+gradually swings to the front, and the front face gradually swings to the rear. In doing this, the
+cube appears to turn itself inside out, so that the originally smaller cube engulfs the previously
+larger cube.</p>
 
 <p>In figure <a href="#fig4.5c">4.5c</a>, the four-cube is displayed with 4D parallel projection and
-3D perspective projection. Because of the parallel projection from 4D, the &ldquo;rear face&rdquo;
-and &ldquo;front face&rdquo; are displayed as the same size, so the parallel projection from this
-point in four-space looks like two identically-sized three-cubes superimposed over each other.</p>
+3D perspective projection. Because of the parallel projection from 4D, the “rear face” and “front
+face” are displayed as the same size, so the parallel projection from this point in four-space looks
+like two identically-sized three-cubes superimposed over each other.</p>
 
-<p>Figures <a href="#fig4.6a">4.6a</a> through <a href="#fig4.6d">4.6d</a> are similar to figures <a
-href="#fig4.5a">4.5a</a> through <a href="#fig4.5d">4.5d</a>, except that the four-dimensional
+<p>Figures <a href="#fig4.6a">4.6a</a> through <a href="#fig4.6d">4.6d</a> are similar to figures
+<a href="#fig4.5a">4.5a</a> through <a href="#fig4.5d">4.5d</a>, except that the four-dimensional
 viewpoint has changed. For these views, the four-dimensional viewing parameters are:</p>
 
 <pre>
@@ -1565,9 +1567,9 @@ projection. Figure 4.7b shows the same sequence with 4D parallel and 3D perspect
 
 <p> In figure <a href="#fig4.9">4.9</a>, the dual of the four-cube is rendered with all edges
 rendered the same color. The dual of the four-cube is the wireframe of convex hull of the face
-centers of the four-cube. In other words, the convex hull of the points &lt;&#177;1, 0, 0, 0&gt;,
-&lt;0, &#177;1, 0, 0&gt;, &lt;0, 0, &#177;1, 0&gt;, and &lt;0, 0, 0, &#177;1&gt;. One could also
-think of it as the four-dimensional analog of the three-dimensional octahedron.</p>
+centers of the four-cube. In other words, the convex hull of the points &lt;±1, 0, 0, 0&gt;, &lt;0,
+±1, 0, 0&gt;, &lt;0, 0, ±1, 0&gt;, and &lt;0, 0, 0, ±1&gt;. One could also think of it as the
+four-dimensional analog of the three-dimensional octahedron.</p>
 
 <p> Figures <a href="#fig4.8">4.8</a> through <a href="#fig4.13">4.13</a> illustrate the differences
 in single edge-color rendering, multiple edge-color rendering, and depth-cued edge rendering. Even
@@ -1620,10 +1622,10 @@ loses the structural cues.</p>
 </div>
 
 <p class="noindent"> Finally, figures <a href="#fig4.14">4.14</a> and <a href="#fig4.15">4.15</a>
-show generalized curves across the surface of a four-sphere. The curve in figure <a
-href="#fig4.15">4.15</a> is given with poor uniform parameterization which yields the two
-&ldquo;kinks&rdquo; that are visible in the 4D image. For more information on these particular
-curves and the choices of parameterization, refer to <a href="#Chen90">[Chen 90]</a>.</p>
+show generalized curves across the surface of a four-sphere. The curve in figure
+<a href="#fig4.15">4.15</a> is given with poor uniform parameterization which yields the two “kinks”
+that are visible in the 4D image. For more information on these particular curves and the choices of
+parameterization, refer to <a href="#Chen90">[Chen 90]</a>.</p>
 
 <div id="fig4.14" class="figure">
     <!-- <img width=350 height=350 src="images/fig4.14.jpg"> -->
@@ -1664,13 +1666,13 @@ counterpart would have to deal with tessellating solids; thus, it would also hav
 intersecting solids with hidden volumes and solids that partially obscure one another. This is at
 best a difficult task in three-space; the four-space extension would be even more complex.</p>
 
-<p>For these reasons, the raytracing algorithm was chosen to &ldquo;realistically&rdquo; render
-four-space scenes. Raytracing solves several rendering problems in a straight-forward manner,
-including hidden surfaces, shadows, reflection, and refraction. In addition, raytracing is not
-restricted to rendering polygonal meshes; it can handle any object that can be
-<dfn>interrogated</dfn> to find the intersection point of a given ray with the surface of the
-object. This property is especially nice for rendering four-dimensional objects, since many
-N-dimensional objects can be easily described with implicit equations.</p>
+<p>For these reasons, the raytracing algorithm was chosen to “realistically” render four-space
+scenes. Raytracing solves several rendering problems in a straight-forward manner, including hidden
+surfaces, shadows, reflection, and refraction. In addition, raytracing is not restricted to
+rendering polygonal meshes; it can handle any object that can be <dfn>interrogated</dfn> to find the
+intersection point of a given ray with the surface of the object. This property is especially nice
+for rendering four-dimensional objects, since many N-dimensional objects can be easily described
+with implicit equations.</p>
 
 <p>Other benefits of raytracing extend quite easily to 4D. As in the 3D case, 4D raytracing handles
 simple shadows merely by checking to see which objects obscure each light source. Reflections and
@@ -1686,10 +1688,10 @@ refracted and reflected rays use equivalent vector arithmetic.</p>
 
 <p class="noindent">The main loop in the raytracing algorithm shoots rays from the viewpoint through
 a grid into the scene space. The grid is constructed so that each grid element represents a voxel of
-the resulting image (see figure 5.1 for an illustration of a 2x2x2 ray grid). As a ray is
-&ldquo;fired&rdquo; from the viewpoint through the grid, it gathers light information by
-back-propagation. In this way raytracing approximates the light rays that scatter throughout the
-scene and enter the eye by tracing the rays back from the viewpoint to the light sources.</p>
+the resulting image (see figure 5.1 for an illustration of a 2×2×2 ray grid). As a ray is “fired”
+from the viewpoint through the grid, it gathers light information by back-propagation. In this way
+raytracing approximates the light rays that scatter throughout the scene and enter the eye by
+tracing the rays back from the viewpoint to the light sources.</p>
 
 <p>The recursive nature of raytracing, coupled with the fact that every voxel is sampled, makes
 raytracing very time consuming. Fortunately, extending the raytracing algorithm to four dimensions
@@ -1731,33 +1733,35 @@ intersecting any other point.</p>
 <p>The grid basis vectors are computed as follows:</p>
 
 <equations>
-       From - To
- S = -------------
-     ||From - To||
+      From − To
+ S = ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+     ‖From − To‖
 
-       cross4 (Over, Up, S)
-Bz = ------------------------
-     ||cross4 (Over, Up, S)||
+      cross4 (Over, Up, S)
+B<sub>z</sub> = ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+     ‖cross4 (Over, Up, S)‖
 
-       cross4 (Bz, S, Over)
-By = ------------------------
-     ||cross4 (Bz, S, Over)||
+      cross4 (B<sub>z</sub>, S, Over)
+B<sub>y</sub> = ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+     ‖cross4 (B<sub>z</sub>, S, Over)‖
 
-Bx = cross4 (By, Bz, S)
+B<sub>x</sub> = cross4 (B<sub>y</sub>, B<sub>z</sub>, S)
 </equations>
 
-<p class="noindent">At this point, S is the unit line-of-sight vector, and Bx, By &amp; Bz are the
-unit basis vectors for the ray grid. What we need to do now is to to scale these vectors. There are
-two additional sets of parameters that govern the construction of the ray grid. These are the the
-number of voxels along each axis of the grid (the resolution of the ray grid), and the shape of each
-voxel (the aspect ratios). In addition, we need to incorporate the viewing angle.</p>
+<p class="noindent">At this point, S is the unit line-of-sight vector, and B<sub>x</sub>,
+B<sub>y</sub> &amp; B<sub>z</sub> are the unit basis vectors for the ray grid. What we need to do
+now is to to scale these vectors. There are two additional sets of parameters that govern the
+construction of the ray grid. These are the the number of voxels along each axis of the grid (the
+resolution of the ray grid), and the shape of each voxel (the aspect ratios). In addition, we need
+to incorporate the viewing angle.</p>
 
-<p>The resolution of the grid cube is given by the parameters Rx, Ry and Rz, which specify the
-number of voxels along the width, height and depth of the cube, respectively. The aspect ratio of
-each voxel is given by the parameters Ax, Ay and Az. These parameters specify the width, height and
-depth of each voxel in arbitrary units (these numbers are used only in the ratio). For example, an
-aspect ratio of 1:4:9 specifies a voxel that is four times as high as it is wide, and that is 4/9ths
-as high as it is deep.</p>
+<p>The resolution of the grid cube is given by the parameters R<sub>x</sub>, R<sub>y</sub> and
+R<sub>z</sub>, which specify the number of voxels along the width, height and depth of the cube,
+respectively. The aspect ratio of each voxel is given by the parameters A<sub>x</sub>, A<sub>y</sub>
+and A<sub>z</sub>. These parameters specify the width, height and depth of each voxel in arbitrary
+units (these numbers are used only in the ratio). For example, an aspect ratio of 1&ratio;4&ratio;9
+specifies a voxel that is four times as high as it is wide, and that is 4/9<sup>ths</sup> as high as
+it is deep.</p>
 
 <p>The ray grid is centered at the to-point; we use the viewing angle to determine the ray-grid
 size. As mentioned earlier, the viewing angle corresponds to the X axis. The other axes are sized
@@ -1765,46 +1769,47 @@ according to the resolution and aspect ratios. Determining the proper scale of t
 easily done from the viewing angle</p>
 
 <equations>
-Lx = 2 ||From-To|| tan(theta4/2)</equations>
+L<sub>x</sub> = 2 ‖From−To‖ tan(θ₄/2)</equations>
 
-<p class="noindent">where theta4 is the 4D viewing angle, and Lx is the width of the ray grid. The
-other dimensions of the ray grid are determined by Lx, the aspect ratios, and the resolutions:</p>
+<p class="noindent">where θ₄ is the 4D viewing angle, and L<sub>x</sub> is the width of the ray
+grid. The other dimensions of the ray grid are determined by L<sub>x</sub>, the aspect ratios, and
+the resolutions:</p>
 
 <equations>
-        Ry Ay                    Rz Az
-Ly = Lx -- --,    and    Lz = Lx -- --
-        Rx Ax                    Rx Ax
+        R<sub>y</sub> A<sub>y</sub>                    R<sub>z</sub> A<sub>z</sub>
+L<sub>y</sub> = Lx ⎯⎯ ⎯⎯,    and    L<sub>z</sub> = Lx ⎯⎯ ⎯⎯
+        R<sub>x</sub> A<sub>x</sub>                    R<sub>x</sub> A<sub>x</sub>
 </equations>
 
-<p class="noindent">Thus, Lx, Ly and Lz are the lengths of each edge of the ray grid, and the grid
-basis vectors are scaled with these lengths to yield</p>
+<p class="noindent">Thus, L<sub>x</sub>, L<sub>y</sub> and L<sub>z</sub> are the lengths of each
+edge of the ray grid, and the grid basis vectors are scaled with these lengths to yield</p>
 
-<equations>Gx = Lx Bx,  Gy = Ly By, and  Gz = Lz Bz.</equations>
+<equations>G<sub>x</sub> = L<sub>x</sub> B<sub>x</sub>,  G<sub>y</sub> = L<sub>y</sub> B<sub>y</sub>, and  G<sub>z</sub> = L<sub>z</sub> B<sub>z</sub>.</equations>
 
 <p class="noindent">The main ray loop will start at a corner of the ray grid and scan in X, Y and Z
 order, respectively. The origin of the grid (each basis vector zero) is given by</p>
 
 <equations>
-         Gx + Gy + Gz
-O = To - ------------.
-              2
+          G<sub>x</sub> + G<sub>y</sub> + G<sub>z</sub>
+O = To − ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯.
+               2
 </equations>
 
 <p class="noindent">The incremental grid vectors are used to move from one grid voxel to another.
 They are computed by dividing the grid-length vectors by the respective resolution:</p>
 
 <equations>
-     Gx        Gy        Gz
-Dx = --,  Dy = --,  Dz = --.
-     Rx        Ry        Rz
+      G<sub><sub>x</sub></sub>         G<sub><sub>y</sub></sub>          G<sub><sub>z</sub></sub>
+D<sub><sub>x</sub></sub> = ⎯⎯⎯⎯,  D<sub><sub>y</sub></sub> = ⎯⎯⎯⎯,  D<sub><sub>z</sub></sub> = ⎯⎯⎯⎯.
+      R<sub>x</sub>         R<sub>y</sub>          R<sub>z</sub>
 </equations>
 
 <p class="noindent">Finally, the grid origin is offset by half a voxel, in order that the voxel
 centers are sampled.</p>
 
 <equations>
-        Dx + Dy + Dz
-O = O + ------------
+        D<sub>x</sub> + D<sub>y</sub> + D<sub>z</sub>
+O = O + ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
              2
 </equations>
 
@@ -1847,7 +1852,7 @@ void FireRays (void)
     <li>Find the intersection of the ray with all objects in the scene. If the ray intersects no
         objects in the scene, assign the background color to it.</li>
 
-    <li>The intersection point closest to the &ldquo;launch point&rdquo; (starting with the
+    <li>The intersection point closest to the “launch point” (starting with the
         viewpoint) is chosen, and the current color is determined by the ambient color of the
         intersected object.</li>
 
@@ -1886,7 +1891,7 @@ rays are given by the following equations for raytracing in any dimension higher
 
 <p class="noindent">The equation of the reflection ray is given by is</p>
 
-<equations>R = D - 2 (N&#183;D) N</equations>
+<equations>R = D − 2(N&middot;D)N</equations>
 
 <p class="noindent">where R is the resulting reflection ray, D is the unit direction of the light
 ray towards the surface, and N is the unit vector normal to the surface. Refer to <a
@@ -1895,20 +1900,20 @@ href="#Foley87">[Foley 87]</a> for a derivation of the reflection equation.</p>
 <p>The refraction ray T is given by</p>
 
 <equations>
-T = dC + (1-d)(-N)
+T = dC + (1−d)(−N)
 
        D
-C = -------
-    ||N&#183;D||
+C = ⎯⎯⎯⎯⎯⎯⎯⎯
+     ‖N&middot;D‖
 
-                      1
-d = ------------------------------------
-    sqrt(((r1/r2)&#178; * ||C||&#178;) - ||C+N||&#178;)
+                    1
+d = ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+    <i>sqrt</i>(((r₁/r₂)² &middot; ‖C‖²) − ‖C+N‖²)
 </equations>
 
 <p style="text-indent: 0"> where T is the refraction ray, D is the unit direction of the light ray
-towards the surface, N is the unit normal vector to the surface, r1 is the index of refraction of
-the medium containing the light ray, and r2 is the index of refraction of the object. Note that this
+towards the surface, N is the unit normal vector to the surface, r₁ is the index of refraction of
+the medium containing the light ray, and r₂ is the index of refraction of the object. Note that this
 equation <i>does not</i> yield a unit vector for T; T must be normalized after this equation. Refer
 to <a href="#Hill90">[Hill 90]</a> for a derivation of this formula.</p>
 
@@ -1920,25 +1925,23 @@ those for raytracing in three dimensions, although the underlying geometry is ch
 extended illumination equation is as follows:</p>
 
 <equations>
-            N
-            __
-            \                           n
-I = Ia Ka + /  IL(Kd cos(theta) + Ks cos (alpha)) + Ks Ir + Kt It.
-            ~~
-            L=1
+<sub>    </sub>         N
+<sub>  </sub>          ⎲
+I = I<sub>a</sub>&middot;K<sub>a</sub> + ⎳ I<sub>L</sub>(K<sub>d</sub>&middot;<i>cos</i>(θ) + K<sub>s</sub>&middot;<i>cos</i>ⁿ(α)) + K<sub>s</sub>&middot;I<sub>r</sub> + K<sub>t</sub>&middot;I<sub>t</sub>.
+<sub>   </sub>         L=1
 </equations>
 
 <p class="noindent">The values used in this equation are</p>
 
 <table class="hcenter">
-    <tr><td align=right>Ia [RGB]</td><td>Global ambient light.</td><tr>
-    <tr><td align=right>IL [RGB]</td><td>Light contributed by light L.</td><tr>
-    <tr><td align=right>Ir [RGB]</td><td>Light contributed by reflection.</td><tr>
-    <tr><td align=right>It [RGB]</td><td>Light contributed by transmission (refraction).</td><tr>
-    <tr><td align=right>Ka [RGB]</td><td>Object ambient color.</td><tr>
-    <tr><td align=right>Kd [RGB]</td><td>Object diffuse color.</td><tr>
-    <tr><td align=right>Ks [RGB]</td><td>Object reflection color.</td><tr>
-    <tr><td align=right>Kt [RGB]</td><td>Object transparent color.</td><tr>
+    <tr><td align=right>I<sub>a</sub> [RGB]</td><td>Global ambient light.</td><tr>
+    <tr><td align=right>I<sub>L</sub> [RGB]</td><td>Light contributed by light L.</td><tr>
+    <tr><td align=right>I<sub>r</sub> [RGB]</td><td>Light contributed by reflection.</td><tr>
+    <tr><td align=right>I<sub>t</sub> [RGB]</td><td>Light contributed by transmission (refraction).</td><tr>
+    <tr><td align=right>K<sub>a</sub> [RGB]</td><td>Object ambient color.</td><tr>
+    <tr><td align=right>K<sub>d</sub> [RGB]</td><td>Object diffuse color.</td><tr>
+    <tr><td align=right>K<sub>s</sub> [RGB]</td><td>Object reflection color.</td><tr>
+    <tr><td align=right>K<sub>t</sub> [RGB]</td><td>Object transparent color.</td><tr>
     <tr><td align=right>n [Real]</td><td>Phong specular factor.</td><tr>
     <tr><td align=right>N [Integer]</td><td>Number of light sources.</td><tr>
 </table>
@@ -1952,28 +1955,28 @@ I = Ia Ka + /  IL(Kd cos(theta) + Ks cos (alpha)) + Ks Ir + Kt It.
 
 <p class="noindent">Refer to figure 5.3 for a diagram of the illumination vectors and components.
 The angle theta between the surface normal vector and the light direction vector determines the
-amount of diffuse illumination at the surface point. The angle alpha is the angle between the
+amount of diffuse illumination at the surface point. The angle α is the angle between the
 reflected light vector and the viewing vector, and determines the the amount of specular
 illumination at the surface point. These angles are given by the following formulas.</p>
 
 <equations>
-cos(theta) = N&#183;L(lambda)
-cos(alpha) = R&#183;L(lambda)
+<i>cos</i>(θ) = N&middot;L<sub>λ</sub>
+<i>cos</i>(α) = R&middot;L<sub>λ</sub>
 </equations>
 
-<p class="noindent">If cos(theta) is negative, then there is no diffuse or specular illumination at
-the surface point. If cos(theta) is non-negative and cos(alpha) is negative, then the surface point
-has diffuse illumination but no specular illumination.</p>
+<p class="noindent">If <i>cos</i>(θ) is negative, then there is no diffuse or specular illumination
+at the surface point. If <i>cos</i>(θ) is non-negative and <i>cos</i>(α) is negative, then the
+surface point has diffuse illumination but no specular illumination.</p>
 
 <p>In the summation loop, a ray is fired from the surface point to each light source in the scene.
 If this <dfn>shadow</dfn> ray intersects any other object before the light source, then the
-contribution from that light source is zero; I(lambda) for light source lambda is set to zero. If no
-object blocks the light source, then I(lambda) is used according to the type of light source.</p>
+contribution from that light source is zero; I<sub>λ</sub> for light source λ is set to zero. If no
+object blocks the light source, then I<sub>λ</sub> is used according to the type of light source.
 
 <p>The raytracer developed for this research implements both point and directional light sources.
-For directional light sources, the vector L(lambda) is constant for all points in the scene. For
-point light sources, L(lambda) is calculated by subtracting the point light source location from the
-surface point. Both of these light sources are assigned a color value (I(lambda)).</p>
+For directional light sources, the vector L<sub>λ</sub> is constant for all points in the scene. For
+point light sources, L<sub>λ</sub> is calculated by subtracting the point light source location from
+the surface point. Both of these light sources are assigned a color value (I<sub>λ</sub>).</p>
 
 
 <h2 id="s5.6">5.6 Intersection Algorithms</h2>
@@ -1990,7 +1993,7 @@ intersection point closest to the ray origin (since other intersection points wo
 the nearest one.)</p>
 
 
-<h3 id="s5.6.1">5.6.1 Ray - Hypersphere Intersection</h3>
+<h3 id="s5.6.1">5.6.1 Ray-Hypersphere Intersection</h3>
 
 <p class="noindent"> The hypersphere is one of the simplest four-dimensional objects, just as the
 three-sphere is among the simplest objects in 3D raytracers. Like the three-sphere, the four-sphere
@@ -1998,14 +2001,14 @@ is specified by a center point and a radius.</p>
 
 <p>The implicit equation of the four-sphere is</p>
 
-<equations>(Sx - Cx)&#178; + (Sy - Cy)&#178; + (Sz - Cz)&#178; + (Sw - Cw)&#178; - r&#178; = 0</equations>
+<equations>(S<sub>x</sub> − C<sub>x</sub>)² + (S<sub>y</sub> − C<sub>y</sub>)² + (S<sub>z</sub> − C<sub>z</sub>)² + (S<sub>w</sub> − C<sub>w</sub>)² − r² = 0</equations>
 
 <p class="noindent"> where r is the radius of the four-sphere, C is the center of the sphere, and S
 is a point on the surface of the sphere.</p>
 
 <p>Obtaining the normal vector from the intersection point is a trivial matter, since the surface
 normal of a sphere always passes through the center. Hence, for an intersection point I, the surface
-normal at I is given by N = I - C.</p>
+normal at I is given by N = I − C.</p>
 
 <p>Calculating the intersection of a ray with the sphere is also fairly straight-forward. Given a
 ray defined by the equation r = P + tD, where P is the ray origin, D is the unit ray direction
@@ -2013,39 +2016,39 @@ vector, and t is a parametric variable, we can find the intersection of the ray 
 hypersphere in the following manner:</p>
 
 <equations>
-(Cx - Sx)&#178; + (Cy - Sy)&#178; + (Cz - Sz)&#178; +  (Cw - Sw)&#178; - r&#178; = 0
+(C<sub>x</sub>−S<sub>x</sub>)² + (C<sub>y</sub>−S<sub>y</sub>)² + (C<sub>z</sub>−S<sub>z</sub>)² + (C<sub>w</sub>−S<sub>w</sub>)² − r² = 0
 
-||C - S||&#178; - r&#178; = 0
+‖C − S‖² − r² = 0
 </equations>
 
 <p class="noindent">Substitute the ray equation into the surface value to get</p>
 
 <equations>
-||C - (P + tD)||&#178; - r&#178; = 0
+‖−(P + tD)‖² − r² = 0
 
-||(C - P) - tD||&#178; - r&#178; = 0
+‖(C−P) − tD‖² − r² = 0
 
-||V - tD||&#178; - r&#178; = 0         <i>where V = C - P</i>
+‖V−tD‖² − r² = 0         <i>where V = C−P</i>
 
-(Vx - tDx)&#178; + (Vy - tDy)&#178; + (Vz - tDz)&#178; + (Vw - tDw)&#178; - r&#178; = 0
+(V<sub>x</sub>−tD<sub>x</sub>)² + (V<sub>y</sub>−tD<sub>y</sub>)² + (V<sub>z</sub>−tD<sub>z</sub>)² + (V<sub>w</sub>−tD<sub>w</sub>)² − r² = 0
 
-t&#178;(Dx&#178; + Dy&#178; + Dz&#178; + Dw&#178;) - 2t (VxDx + VyDy + VzDz + VwDw)
+t²(D<sub>x</sub>² + D<sub>y</sub>² + D<sub>z</sub>² + D<sub>w</sub>²) − 2t(V<sub>x</sub>D<sub>x</sub> + V<sub>y</sub>D<sub>y</sub> + V<sub>z</sub>D<sub>z</sub> + V<sub>w</sub>D<sub>w</sub>)
 
-    + (Vx&#178; + Vy&#178; + Vz&#178; + Vw&#178;) - r&#178; = 0
+    + (V<sub>x</sub>² + V<sub>y</sub>² + V<sub>z</sub>² + V<sub>w</sub>²) − r² = 0
 </equations>
 
 <p class="noindent">This simplifies to</p>
 
-<equations>t&#178;(D&#183;D) - 2t (V&#183;D) + (V&#183;V - r&#178;) = 0.</equations>
+<equations>t²(D&middot;D) − 2t(V&middot;D) + (V&middot;V − r²) = 0.</equations>
 
 <p class="noindent">Since D is a unit vector, this equation further simplifies to</p>
 
-<equations>t&#178; - 2t (V&#183;D) + (V&#183;V - r&#178;) = 0.</equations>
+<equations>t² − 2t(V&middot;D) + (V&middot;V − r²) = 0.</equations>
 
-<p class="noindent">The quadratic formula x&#178; - 2bx + c = 0 has roots b &#177; sqrt(b&#178; -
-c). So, solving for t, we get</p>
+<p class="noindent">The quadratic formula x² − 2bx + c = 0 has roots b ± sqrt(b²−c). So, solving
+for t, we get</p>
 
-<equations>t = (V&#183;D) &#177; sqrt((V&#183;D)&#178; - (V&#183;V - r&#178;)).</equations>
+<equations>t = (V&middot;D) ± sqrt((V&middot;D)² − (V&middot;V − r²)).</equations>
 
 <p class="noindent">The intersection point is given by plugging the smallest non-negative solution
 for t into the ray equation. If there is no solution to this equation (<i>e.g.</i>, the quantity
@@ -2096,7 +2099,7 @@ endfunc HitSphere
 </codeblock>
 
 
-<h3 id="s5.6.2">5.6.2 Ray - Tetrahedron Intersection</h3>
+<h3 id="s5.6.2">5.6.2 Ray-Tetrahedron Intersection</h3>
 
 <p class="noindent"> The tetrahedron is to the 4D raytracer what the triangle is to the 3D
 raytracer. Just as all 3D objects can be approximated by an appropriate mesh of tessellating
@@ -2104,7 +2107,7 @@ triangles, 4D objects can be approximated with an appropriate mesh of tetrahedra
 tessellation of 4D objects is more difficult (<i>e.g.</i> how do you tessellate a hypersphere?), but
 it does allow for the approximation of a wide variety of objects.</p>
 
-<p>In the fourth dimension, the tetrahedron is &ldquo;flat&rdquo;, <i>i.e.</i> it has a constant
+<p>In the fourth dimension, the tetrahedron is “flat”, <i>i.e.</i> it has a constant
 normal vector across its volume. Any vector embedded in the tetrahedron is perpendicular to the
 tetrahedron normal vector.</p>
 
@@ -2118,18 +2121,18 @@ description before raytracing the scene. The normal is computed by finding three
 on the tetrahedron and crossing them to compute the orthogonal normal vector.</p>
 
 <equations>
-B1 = V1 - V0,
+B₁ = V₁ − V₀,
 
-B2 = V2 - V0,
+B₂ = V₂ − V₀,
 
-B3 = V3 - V0, and
+B₃ = V₃ − V₀, and
 
-      X4(B1,B2,B3)
-N = ----------------
-    ||X4(B1,B2,B3)||
+      X4(B₁,B₂,B₃)
+N = ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+     ‖X4(B₁,B₂,B₃)‖
 </equations>
 
-<p class="noindent"> where V0, V1, V2, and V3 are the tetrahedron vertices and N is the unit normal
+<p class="noindent"> where V₀, V₁, V₂, and V₃ are the tetrahedron vertices and N is the unit normal
 vector.</p>
 
 <p>Finding the intersection point of a ray and tetrahedron is much more difficult than for the
@@ -2145,16 +2148,16 @@ coordinates).</p>
 
 <p>The method used to find the barycentric coordinates of the ray-hyperplane intersection with
 respect to the tetrahedron is an extension of the algorithm for computing barycentric coordinates of
-the ray-plane intersection with respect to the triangle, presented in <a
-href="#Glassner90">[Glassner 90]</a>.</p>
+the ray-plane intersection with respect to the triangle, presented in
+<a href="#Glassner90">[Glassner 90]</a>.</p>
 
 <p>Again, the ray is specified by the equation P + tD, where P is the ray origin, D is the unit
-direction vector, and t is the ray parameter. For each point Q on the tetrahedron, Q&#183;N is
-constant. Let d = - V0&#183;N. Thus, the hyperplane is defined by N&#183;Q + d = 0, where the
+direction vector, and t is the ray parameter. For each point Q on the tetrahedron, Q&middot;N is
+constant. Let d = −V₀&middot;N. Thus, the hyperplane is defined by N&middot;Q + d = 0, where the
 tetrahedron is embedded in this hyperplane.</p>
 
-<p>First compute the ray-hyperplane intersection with t = - (d + N&#183;P) / (N&#183;D). If N&#183;D
-is zero, then the ray is parallel to the embedding hyperplane; it does not intersect the
+<p>First compute the ray-hyperplane intersection with t = −(d + N&middot;P) / (N&middot;D). If
+N&middot;D is zero, then the ray is parallel to the embedding hyperplane; it does not intersect the
 tetrahedron. If t &lt; 0, then the embedding hyperplane is behind the ray, so the ray does not
 intersect the tetrahedron.</p>
 
@@ -2162,72 +2165,69 @@ intersect the tetrahedron.</p>
 coordinates of the intersection point Q is given by the equation</p>
 
 <equations id="e5.5.2a">
-____         _____        _____         _____
-V0 Q = alpha V0 V1 + beta V0 V2 + gamma V0 V3.
+___       ____       ____       ____
+V₀Q = α &middot; V₀V₁ + β &middot; V₀V₂ + γ &middot; V₀V₃.
 <equationid>[5.5.2a]</equationid>
 </equations>
 
 <p class="noindent"> The ray-hyperplane intersection point Q is inside the tetrahedron if
-<nobr>alpha &gt;= 0</nobr>, <nobr>beta &gt;= 0</nobr>, <nobr>gamma &gt;= 0</nobr>, and <nobr>alpha +
-beta + gamma &lt;= 1</nobr>.</p>
+α ≥ 0, β ≥ 0, γ ≥ 0, and α+β+γ ≤ 1.
 
 <p>Equation 5.5.2a can be rewritten as</p>
 
 <equations id="e5.5.2b">
-+-      -+         +-       -+        +-       -+         +-       -+
-|Qx - V0x|         |V1x - V0x|        |V2x - V0x|         |V3x - V0x|
-|Qy - V0y| = alpha |V1y - V0y| + beta |V2y - V0y| + gamma |V3y - V0y|.
-|Qz - V0z|         |V1z - V0z|        |V2z - V0z|         |V3z - V0z|
-|Qw - V0w|         |V1w - V0w|        |V2w - V0w|         |V3w - V0w|
-+-      -+         +-       -+        +-       -+         +-       -+
+&#x23a1;Q<sub>x</sub> − V<sub>0<sub>x</sub></sub>&#x23a4;     &#x23a1;V<sub>1<sub>x</sub></sub> − V<sub>0<sub>x</sub></sub>&#x23a4;     &#x23a1;V<sub>2<sub>x</sub></sub> − V<sub>0<sub>x</sub></sub>&#x23a4;     &#x23a1;V<sub>3<sub>x</sub></sub> − V<sub>0<sub>x</sub></sub>&#x23a4;
+&#x23a2;Q<sub>y</sub> − V<sub>0<sub>y</sub></sub>&#x23a5; = α &#x23a2;V<sub>1<sub>y</sub></sub> − V<sub>0<sub>y</sub></sub>&#x23a5; + β &#x23a2;V<sub>2<sub>y</sub></sub> − V<sub>0<sub>y</sub></sub>&#x23a5; + γ &#x23a2;V<sub>3<sub>y</sub></sub> − V<sub>0<sub>y</sub></sub>&#x23a5; 
+&#x23a2;Q<sub>z</sub> − V<sub>0<sub>z</sub></sub>&#x23a5;     &#x23a2;V<sub>1<sub>z</sub></sub> − V<sub>0<sub>z</sub></sub>&#x23a5;     &#x23a2;V<sub>2<sub>z</sub></sub> − V<sub>0<sub>z</sub></sub>&#x23a5;     &#x23a2;V<sub>3<sub>z</sub></sub> − V<sub>0<sub>z</sub></sub>&#x23a5;
+&#x23a2;Q<sub>w</sub> − V<sub>0<sub>w</sub></sub>&#x23a5;     &#x23a2;V<sub>1<sub>w</sub></sub> − V<sub>0<sub>w</sub></sub>&#x23a5;     &#x23a2;V<sub>2<sub>w</sub></sub> − V<sub>0<sub>w</sub></sub>&#x23a5;     &#x23a2;V<sub>3<sub>w</sub></sub> − V<sub>0<sub>w</sub></sub>&#x23a5;
+&#x23a3; <sub> </sub>    <sub> <sub> </sub></sub>&#x23a6;     &#x23a3; <sub> <sub> </sub></sub>    <sub> <sub> </sub></sub>&#x23a6;     &#x23a3; <sub> <sub> </sub></sub>    <sub> <sub> </sub></sub>&#x23a6;     &#x23a3; <sub> <sub> </sub></sub>    <sub> <sub> </sub></sub>&#x23a6;.
 <equationid>[5.5.2b]</equationid>
 </equations>
 
 <p class="noindent">To simplify the solution for these coordinates, we project the tetrahedron to
-one of the four primary hyperplanes (XYZ, XYW, XZW or YZW). To make this projection as
-&ldquo;large&rdquo; as possible (to ensure that we don't &ldquo;flatten&rdquo; the tetrahedron by
-projecting it to a perpendicular hyperplane), find the dominant axis of the normal vector and use
-the hyperplane perpendicular to the dominant axis. In other words the normal to the major hyperplane
-is formed by replacing the normal coordinate that has the largest absolute value with zero. For
-example, given a normal vector of &lt;3, 1, 7, 5&gt;, the dominant axis is the third coordinate, and
-the hyperplane perpendicular to &lt;3, 1, 0, 5&gt; will yield the largest projection of the
-tetrahedron. Once again, since the normal vector is constant, the three non-dominant coordinates (X,
-Y, and W for the above example) should be stored for future reference. Refer to the intersection
-algorithm for an illustration of this.</p>
+one of the four primary hyperplanes (XYZ, XYW, XZW or YZW). To make this projection as “large” as
+possible (to ensure that we don't “flatten” the tetrahedron by projecting it to a perpendicular
+hyperplane), find the dominant axis of the normal vector and use the hyperplane perpendicular to the
+dominant axis. In other words the normal to the major hyperplane is formed by replacing the normal
+coordinate that has the largest absolute value with zero. For example, given a normal vector of
+&lt;3, 1, 7, 5&gt;, the dominant axis is the third coordinate, and the hyperplane perpendicular to
+&lt;3, 1, 0, 5&gt; will yield the largest projection of the tetrahedron. Once again, since the
+normal vector is constant, the three non-dominant coordinates (X, Y, and W for the above example)
+should be stored for future reference. Refer to the intersection algorithm for an illustration of
+this.</p>
 
 <p>The hyperplane equation is then reduced to three coordinates, i, j, and k (X, Y &amp; W for the
 previous example), so equation <a href="#e5.5.2b">[5.5.2b]</a> is reduced to</p>
 
 <equations id="e5.5.2c">
-+-      -+         +-       -+        +-       -+         +-       -+
-|Qi - V0i|         |V1i - V0i|        |V2i - V0i|         |V3i - V0i|
-|Qj - V0j| = alpha |V1j - V0j| + beta |V2j - V0j| + gamma |V3j - V0j|.
-|Qk - V0k|         |V1k - V0k|        |V2k - V0k|         |V3k - V0k|
-+-      -+         +-       -+        +-       -+         +-       -+
+&#x23a1;Q<sub>i</sub> − V<sub>0<sub>i</sub></sub>&#x23a4;     &#x23a1;V<sub>1<sub>i</sub></sub> − V<sub>0<sub>i</sub></sub>&#x23a4;     &#x23a1;V<sub>2<sub>i</sub></sub> − V<sub>0<sub>i</sub></sub>&#x23a4;     &#x23a1;V<sub>3<sub>i</sub></sub> − V<sub>0<sub>i</sub></sub>&#x23a4;
+&#x23a2;Q<sub>j</sub> − V<sub>0<sub>j</sub></sub>&#x23a5; = α &#x23a2;V<sub>1<sub>j</sub></sub> − V<sub>0<sub>j</sub></sub>&#x23a5; + β &#x23a2;V<sub>2<sub>j</sub></sub> − V<sub>0<sub>j</sub></sub>&#x23a5; + γ &#x23a2;V<sub>3<sub>j</sub></sub> − V<sub>0<sub>j</sub></sub>&#x23a5;.
+&#x23a2;Q<sub>k</sub> − V<sub>0<sub>k</sub></sub>&#x23a5;     &#x23a2;V<sub>1<sub>k</sub></sub> − V<sub>0<sub>k</sub></sub>&#x23a5;     &#x23a2;V<sub>2<sub>k</sub></sub> − V<sub>0<sub>k</sub></sub>&#x23a5;     &#x23a2;V<sub>3<sub>k</sub></sub> − V<sub>0<sub>k</sub></sub>&#x23a5;
+&#x23a3; <sub> </sub>    <sub> <sub> </sub></sub>&#x23a6;     &#x23a3; <sub> <sub> </sub></sub>    <sub> <sub> </sub></sub>&#x23a6;     &#x23a3; <sub> <sub> </sub></sub>    <sub> <sub> </sub></sub>&#x23a6;     &#x23a3; <sub> <sub> </sub></sub>    <sub> <sub> </sub></sub>&#x23a6;
 <equationid>[5.5.2c]</equationid>
 </equations>
 
-<p class="noindent">Now find alpha, beta, and gamma by solving the system of three equations and
+<p class="noindent">Now find α, β, and γ by solving the system of three equations and
 three unknowns; these are the barycentric coordinates of the intersection point Q relative to the
-tetrahedron. The fourth barycentric coordinate is given by (1 - alpha - beta - gamma).</p>
+tetrahedron. The fourth barycentric coordinate is given by (1 − α − β − γ).</p>
 
 <p>In order for the tetrahedron to contain the ray-hyperplane intersection point, the following
 equations must be met:</p>
 
 <equations>
-alpha &gt;= 0,  beta &gt;= 0,  gamma &gt;= 0, and
+α ≥ 0,  β ≥ 0,  γ ≥ 0, and
 
-(alpha + beta + gamma) &lt;= 1.
+(α + β + γ) ≤ 1.
 </equations>
 
 <p class="noindent">If any of the barycentric coordinates are less than zero, or if the barycentric
 coordinates sum to greater than one, then the ray does not intersect the tetrahedron.</p>
 
-<p>Once alpha, beta and gamma are known for the point of intersection, the ray-hyperplane
+<p>Once α, β and γ are known for the point of intersection, the ray-hyperplane
 intersection point Q can be found by the following equation:
 
 <equations>
-Q = (1 - alpha - beta - gamma)V0 + alpha V1 + beta V2 + gamma V3.
+Q = (1−α−β−γ)V₀ + αV₁ + βV₂ + γV₃.
 </equations>
 
 <p class="noindent">The following pseudo-code implements the ray-tetrahedron intersection
@@ -2303,22 +2303,20 @@ endfunc HitTet
 
 <p class="noindent"> The tetrahedron can be rendered with Flat, Gouraud or Phong shading, since the
 barycentric coordinates of the intersection points are known. For Gouraud shading with vertex colors
-C0, C1, C2 and C3 corresponding to V0, V1, V2 and V3, respectively, the color Cintersect of the
-intersection point is given by</p>
+C₀, C₁, C₂ and C₃ corresponding to V₀, V₁, V₂ and V₃, respectively, the color C<sub>intersect</sub>
+of the intersection point is given by</p>
 
 <equations>
-Ci = (1 - alpha - beta - gamma)C0 + alpha C1 + beta C2 + gamma C3.
+C<sub>i</sub> = (1−α−β−γ)C₀ + αC₁ + βC₂ + γC₃.
 </equations>
 
-<p class="noindent">Phong shading can be used to interpolate the normals N0, N1, N2 and N3 to find
+<p class="noindent">Phong shading can be used to interpolate the normals N₀, N₁, N₂ and N₃ to find
 the interpolated normal Ni of the intersection point with this equation:</p>
 
-<equations>
-Ni = (1 - alpha - beta - gamma)N0 + alpha N1 + beta N2 + gamma N3.
-</equations>
+<equations>Nᵢ = (1−α−β−γ)N₀ + αN₁ + βN₂ + γN₃.</equations>
 
 
-<h3 id="s5.6.3">5.6.3 Ray - Parallelepiped Intersection</h3>
+<h3 id="s5.6.3">5.6.3 Ray-Parallelepiped Intersection</h3>
 
 <p class="noindent">The parallelepiped was included in the 4D raytracer because of the similarities
 between the parallelepiped and the tetrahedron. Like the tetrahedron, the parallelepiped is
@@ -2329,26 +2327,24 @@ objects is relatively free if the tetrahedron is already provided.</p>
 <p>Like the tetrahedron, the normal vector for the parallelepiped is constant and is given by the 4D
 cross product of the three vectors</p>
 
-<equations>
-_____   _____      _____
-V1 V0,  V2 V0, and V3 V0.
+<equations>_____   _____      _____
+V₁ V₀,  V₂ V₀, and V₃ V₀.
 </equations>
 
 <p class="noindent">The intersection point is computed in the same manner as for the tetrahedron,
-with the exception that the barycentric coordinates alpha, beta and gamma must meet slightly
-different criteria:</p>
+with the exception that the barycentric coordinates α, β and γ must meet slightly different
+criteria:
 
 <equations>
-0 &lt;= alpha &lt;= 1,
-0 &lt;= beta  &lt;= 1, and
-0 &lt;= gamma &lt;= 1.
+0 ≤ α ≤ 1,
+0 ≤ β ≤ 1, and
+0 ≤ γ ≤ 1.
 </equations>
 
 <p class="noindent">If the tetrahedron and parallelepiped data structures are defined properly, the
 intersection routine for the tetrahedron can also solve for ray-parallelepiped intersections. The
-only difference is that for the parallelepiped, the barycentric coordinates alpha, beta, and gamma
-can sum to greater than one, whereas the tetrahedron requires that their sum does not exceed
-one.</p>
+only difference is that for the parallelepiped, the barycentric coordinates α, β, and γ can sum to
+greater than one, whereas the tetrahedron requires that their sum does not exceed one.</p>
 
 
 <h2 id="s5.7">5.7 Display of 4D Raytrace Data</h2>
@@ -2405,8 +2401,8 @@ four-sphere.</p>
 </div>
 
 <p class="noindent">Figure 5.5 is the sliced image cube of sixteen four-spheres of radius 0.5
-positioned at the vertices of a four-cube at locations &lt;&#177;1.25, &#177;1.25, &#177;1.25,
-&#177;1.25&gt;.</p>
+positioned at the vertices of a four-cube at locations &lt;±1.25, ±1.25, ±1.25,
+±1.25&gt;.</p>
 
 <div id="fig5.5" class="figure">
     <!-- <img width=600 height=468 src="images/fig5.5.jpg"> -->
@@ -2469,7 +2465,7 @@ four-parallelepiped. It handles point &amp; directional lighting, reflection, re
 ambient, diffuse and specular lighting.</p>
 
 <p>The primary catch with four-dimensional raytracing is the fact that the resulting image is a
-three-dimensional voxel field, which (for &ldquo;interesting&rdquo; images) will have a complex
+three-dimensional voxel field, which (for “interesting” images) will have a complex
 internal structure that is difficult to visualize with current techniques.</p>
 
 
@@ -2518,33 +2514,33 @@ solve these. See <a href="#Brisson78">[Brisson 78]</a> for an example of 4D ster
 
     <dt id="Barnhill84">Barnhill 84</dt>
     <dd>R. E. Barnhill and F. F. Little,
-        &ldquo;Three&ndash; and Four&ndash;Dimensional Surfaces,&rdquo;
+        “Three– and Four–Dimensional Surfaces,”
         <cite>The Rocky Mountain Journal of Mathematics</cite> 14(1),
         Winter 1984, pp 77-102.</dd>
 
     <dt id="Brisson78">Brisson 78</dt>
     <dd>edited by David W. Brisson,
-        &ldquo;Visual Comprehension of <i>n</i>-Dimensions,&rdquo;
+        “Visual Comprehension of <i>n</i>-Dimensions,”
         <cite>Hypergraphics: Visualizing Complex Relationships in Art,
         Science &amp; Technology</cite>,
         Westview Press, Boulder CO, 1978, pp 109-146.</dd>
 
     <dt id="Carey87">Carey 87</dt>
     <dd>Scott A. Carey, Robert P. Burton, and Douglas M. Campbell,
-        &ldquo;Shades of a Higher Dimension,&rdquo;
+        “Shades of a Higher Dimension,”
         <cite>Computer Graphics World</cite>,
         October 1987, pp 93-94.</dd>
 
     <dt id="Chen85">Chen 85</dt>
     <dd>L. Chen, G. Herman, R. Reynolds, J. Udupa,
-        &ldquo;Surface Shading in the Cuberille Environment,&rdquo;
+        “Surface Shading in the Cuberille Environment,”
         <cite>IEEE Computer Graphics and Applications</cite> 5(12),
         December 1985, pp 33-43.</dd>
 
     <dt id="Chen90">Chen 90</dt>
     <dd>Chao-Chi Chen,
-        &ldquo;Interpolation of Orientation Matrices Using Sphere Splines in Computer
-        Animation,&rdquo;
+        “Interpolation of Orientation Matrices Using Sphere Splines in Computer
+        Animation,”
         Master's Thesis, Computer Science Department, Arizona State University,
         December 1990.</dd>
 
@@ -2555,12 +2551,12 @@ solve these. See <a href="#Brisson78">[Brisson 78]</a> for an example of 4D ster
 
     <dt id="Dewdney86">Dewdney 86</dt>
     <dd>A. K. Dewdney,
-        &ldquo;Computer Recreations,&rdquo; <cite>Scientific American</cite>,
+        “Computer Recreations,” <cite>Scientific American</cite>,
         April 1986, pp 14-23.</dd>
 
     <dt id="Drebin88">Drebin 88</dt>
     <dd>Robert Drebin, Loren Carpenter, Pat Hanrahan,
-        &ldquo;Volume Rendering,&rdquo;
+        “Volume Rendering,”
         <cite>Computer Graphics</cite> 22(4), August 1988, pp 65-74.</dd>
 
     <dt id="Farin88">Farin 88</dt>
@@ -2570,12 +2566,12 @@ solve these. See <a href="#Brisson78">[Brisson 78]</a> for an example of 4D ster
 
     <dt id="Foley87">Foley 87</dt>
     <dd>Thomas A. Foley, Gregory M. Nielson,
-        &ldquo;Practical Techniques for Producing 3D Graphical Images,&rdquo;
+        “Practical Techniques for Producing 3D Graphical Images,”
         <cite>VMEbus Systems</cite>,  November-December 1987, pp 65-73.</dd>
 
     <dt id="Frieder85">Frieder 85</dt>
     <dd>G. Frieder, D. Gordon, R. Reynolds,
-        &ldquo;Back-to-Front Display of Voxel-Based Objects,&rdquo;
+        “Back-to-Front Display of Voxel-Based Objects,”
         <cite>IEEE Computer Graphics and Applications</cite> 5(1), January 1985, pp 52-60.</dd>
 
     <dt id="Glassner90">Glassner 90</dt>
@@ -2593,32 +2589,32 @@ solve these. See <a href="#Brisson78">[Brisson 78]</a> for an example of 4D ster
 
     <dt id="Kajiya84">Kajiya 84</dt>
     <dd>James Kajiya, Brian Von Herzen,
-        &ldquo;Ray Tracing Volume Densities,&rdquo;
+        “Ray Tracing Volume Densities,”
         <cite>Computer Graphics</cite> 18(3), July 1984, pp 165-174.</dd>
 
     <dt id="Lorensen87">Lorensen 87</dt>
     <dd>William Lorensen, Harvey Cline,
-        &ldquo;Marching Cubes: A High Resolution 3D Surface Construction Algorithm,&rdquo;
+        “Marching Cubes: A High Resolution 3D Surface Construction Algorithm,”
         <cite>Computer Graphics</cite> 21(4), July 1987, pp 163-169.</dd>
 
     <dt id="Noll67">Noll 67</dt>
     <dd>Michael A. Noll,
-        &ldquo;A Computer Technique for Displaying n-Dimensional Hyperobjects,&rdquo;
+        “A Computer Technique for Displaying n-Dimensional Hyperobjects,”
         <cite>Communications of the ACM</cite> 10(8), August 1967, pp 469-473.</dd>
 
     <dt id="Sabella88">Sabella 88</dt>
     <dd>Paolo Sabella,
-        &ldquo;A Rendering Algorithm for Visualizing 3D Scalar Fields,&rdquo;
+        “A Rendering Algorithm for Visualizing 3D Scalar Fields,”
         <cite>Computer Graphics</cite> 22(4), August 1988, pp 51-55.</dd>
 
     <dt id="Steiner87">Steiner 87</dt>
     <dd>K. Victor Steiner and Robert P. Burton,
-        &ldquo;Hidden Volumes: The 4th Dimension,&rdquo;
+        “Hidden Volumes: The 4th Dimension,”
         <cite>Computer Graphics World</cite>, February 1987, pp 71-74.</dd>
 
     <dt id="Whitted80">Whitted 80</dt>
     <dd>Turner Whitted,
-        &ldquo;An Improved Illumination Model for Shaded Display,&rdquo;
+        “An Improved Illumination Model for Shaded Display,”
         <cite>Communications of the ACM</cite> 23(6), June 1980, pp 343-349.</dd>
 
 </dl>
