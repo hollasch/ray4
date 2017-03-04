@@ -12,7 +12,7 @@
     <style type="text/css">
 
         body {
-            margin: 2em auto 0 auto;
+            margin: 2em auto 40% auto;
             padding: 0 8%;
             max-width: 80ex;
         }
@@ -45,9 +45,9 @@
         }
 
         P {
-            text-align: justify;
+            text-align: left;
             text-indent: 2em;
-            margin: 0;
+            margin: 0.25em 0 0 0;
         }
 
         p.title-desc {
@@ -59,6 +59,34 @@
         dt {
             margin-top: 1em;
             font-weight: bold;
+        }
+
+        codeblock {
+            display: block;
+            white-space: pre;
+            font-family: consolas, menlo, monospace;
+            font-size: 80%;
+            line-height: 100%;
+            border: solid 2px #eee;
+            background-color: #f4f8f0;
+            padding: 1em;
+            margin: 1em 0;
+        }
+
+        equations {
+            display: block;
+            white-space: pre;
+            font-family: consolas, menlo, monospace;
+            font-size: 80%;
+            line-height: 100%;
+            padding: 1em;
+            margin: 0 4ex 1em 4ex;
+        }
+
+        equationid {
+            display: inline;
+            float: right;
+            margin-top: 1.0em;
         }
 
         div.figure {
@@ -504,13 +532,12 @@ equations, U = &lt;U<sub>0</sub>, U<sub>1</sub>, U<sub>2</sub>, U<sub>3</sub>&gt
 &lt;V<sub>0</sub>, V<sub>1</sub>, V<sub>2</sub>, V<sub>3</sub>&gt; are two source four-vectors and k
 is a scalar value:</p>
 
-<p>
-<pre>
-        U + V = &lt;U<sub>0</sub> + V<sub>0</sub>, U<sub>1</sub> + V<sub>1</sub>, U<sub>2</sub> + V<sub>2</sub>, U<sub>3</sub> + V<sub>3</sub>&gt;
-        U - V = &lt;U<sub>0</sub> - V<sub>0</sub>, U<sub>1</sub> - V<sub>1</sub>, U<sub>2</sub> - V<sub>2</sub>, U<sub>3</sub> - V<sub>3</sub>&gt;
-           kV = &lt;kU<sub>0</sub>, kU<sub>1</sub>, kU<sub>2</sub>, kU<sub>3</sub>&gt;
-          U&#x22c5;V = U<sub>0</sub>V<sub>0</sub> + U<sub>1</sub>V<sub>1</sub> + U<sub>2</sub>V<sub>2</sub> + U<sub>3</sub>V<sub>3</sub>
-</pre>
+<equations>
+U + V = &lt;U<sub>0</sub> + V<sub>0</sub>, U<sub>1</sub> + V<sub>1</sub>, U<sub>2</sub> + V<sub>2</sub>, U<sub>3</sub> + V<sub>3</sub>&gt;
+U - V = &lt;U<sub>0</sub> - V<sub>0</sub>, U<sub>1</sub> - V<sub>1</sub>, U<sub>2</sub> - V<sub>2</sub>, U<sub>3</sub> - V<sub>3</sub>&gt;
+   kV = &lt;kU<sub>0</sub>, kU<sub>1</sub>, kU<sub>2</sub>, kU<sub>3</sub>&gt;
+  U&#x22c5;V = U<sub>0</sub>V<sub>0</sub> + U<sub>1</sub>V<sub>1</sub> + U<sub>2</sub>V<sub>2</sub> + U<sub>3</sub>V<sub>3</sub>
+</equations>
 
 <p class="noindent">The main vector operation that does not extend trivially to four-space is the
 cross product. A three-dimensional space is spanned by three basis vectors, so the cross-product in
@@ -550,45 +577,43 @@ four-dimensional cross product is the correct one. To motivate this idea, we fir
 three-dimensional cross product. The 3D cross product can be thought of as the determinant of a 3x3
 matrix whose entries are as follows:</p>
 
-<pre>
-                  +-        -+
-                  | i  j  k  |
-        X<sub>3</sub>(U,V) = | U0 U1 U2 |
-                  | V0 V1 V2 |
-                  +-        -+
-</pre>
+<equations>
+          +-        -+
+          | i  j  k  |
+X<sub>3</sub>(U,V) = | U0 U1 U2 |
+          | V0 V1 V2 |
+          +-        -+
+</equations>
 
 <p class="noindent"> where <b>U</b> and <b>V</b> are the operand vectors, and <i>i</i>, <i>j</i>
 &amp; <i>k</i> represent the unit components of the resultant vector. The determinant of this matrix
 is</p>
 
-<pre>
-    i (U<sub>1</sub>V<sub>2</sub> - U<sub>2</sub>V<sub>1</sub>) - j (U<sub>0</sub>V<sub>2</sub> - U<sub>2</sub>V<sub>0</sub>) + k (U<sub>0</sub>V<sub>1</sub> - U<sub>1</sub>V<sub>0</sub>)
-</pre>
+<equations>
+i (U<sub>1</sub>V<sub>2</sub> - U<sub>2</sub>V<sub>1</sub>) - j (U<sub>0</sub>V<sub>2</sub> - U<sub>2</sub>V<sub>0</sub>) + k (U<sub>0</sub>V<sub>1</sub> - U<sub>1</sub>V<sub>0</sub>)
+</equations>
 
 <p class="noindent"> which is the three-dimensional cross product. Using this idea, we'll form the
 analogous 4x4 matrix, and see if it meets the four cross product properties listed above:</p>
 
-<pre id="2.1a">
-[2.1a]
-
-                    +-           -+
-                    | i  j  k  l  |
-        X<sub>4</sub>(U,V,W) = | U0 U1 U2 U3 |
-                    | V0 V1 V2 V3 |
-                    | W0 W1 W2 W3 |
-                    +-           -+
-</pre>
+<equations id="2.1a">
+            +-           -+
+            | i  j  k  l  |
+X<sub>4</sub>(U,V,W) = | U0 U1 U2 U3 |
+            | V0 V1 V2 V3 |
+            | W0 W1 W2 W3 |
+            +-           -+
+<equationid>[2.1a]</equationid>
+</equations>
 
 <p class="noindent">The determinant of this matrix is</p>
 
-<pre id="2.1b">
-[2.1b]
-
-         |U<sub>1</sub> U<sub>2</sub> U<sub>3</sub>|    |U<sub>0</sub> U<sub>2</sub> U<sub>3</sub>|    |U<sub>0</sub> U<sub>1</sub> U<sub>3</sub>|    |U<sub>0</sub> U<sub>1</sub> U<sub>2</sub>|
-        i|V<sub>1</sub> V<sub>2</sub> V<sub>3</sub>| - j|V<sub>0</sub> V<sub>2</sub> V<sub>3</sub>| + k|V<sub>0</sub> V<sub>1</sub> V<sub>3</sub>| - l|V<sub>0</sub> V<sub>1</sub> V<sub>2</sub>|
-         |W<sub>1</sub> W<sub>2</sub> W<sub>3</sub>|    |W<sub>0</sub> W<sub>2</sub> W<sub>3</sub>|    |W<sub>0</sub> W<sub>1</sub> W<sub>3</sub>|    |W<sub>0</sub> W<sub>1</sub> W<sub>2</sub>|
-</pre>
+<equations id="2.1b">
+ |U<sub>1</sub> U<sub>2</sub> U<sub>3</sub>|    |U<sub>0</sub> U<sub>2</sub> U<sub>3</sub>|    |U<sub>0</sub> U<sub>1</sub> U<sub>3</sub>|    |U<sub>0</sub> U<sub>1</sub> U<sub>2</sub>|
+i|V<sub>1</sub> V<sub>2</sub> V<sub>3</sub>| - j|V<sub>0</sub> V<sub>2</sub> V<sub>3</sub>| + k|V<sub>0</sub> V<sub>1</sub> V<sub>3</sub>| - l|V<sub>0</sub> V<sub>1</sub> V<sub>2</sub>|
+ |W<sub>1</sub> W<sub>2</sub> W<sub>3</sub>|    |W<sub>0</sub> W<sub>2</sub> W<sub>3</sub>|    |W<sub>0</sub> W<sub>1</sub> W<sub>3</sub>|    |W<sub>0</sub> W<sub>1</sub> W<sub>2</sub>|
+<equationid>[2.1b]</equationid>
+</equations>
 
 <p class="noindent">If the operand vectors are linearly dependent, then the vector rows of the 4x4
 matrix will be linearly dependent, and the determinant of this matrix will be zero. This satisfies
@@ -607,33 +632,33 @@ orthogonal to each of the operand vectors.</p>
 <p>The dot product of the resultant vector X4(U,V,W) with the operand vector U is the following
 (refer to equation <a href="#2.1b">[2.1b]</a>):</p>
 
-<pre>
-                           U&#183;X<sub>4</sub>(U,V,W) =
+<equations>
+U&#183;X<sub>4</sub>(U,V,W) =
 
-      |U<sub>1</sub> U<sub>2</sub> U<sub>3</sub>|     |U<sub>0</sub> U<sub>2</sub> U<sub>3</sub>|     |U<sub>0</sub> U<sub>1</sub> U<sub>3</sub>|     |U<sub>0</sub> U<sub>1</sub> U<sub>2</sub>|
-    U<sub>0</sub>|V<sub>1</sub> V<sub>2</sub> V<sub>3</sub>| - U<sub>1</sub>|V<sub>0</sub> V<sub>2</sub> V<sub>3</sub>| + U<sub>2</sub>|V<sub>0</sub> V<sub>1</sub> V<sub>3</sub>| - U<sub>3</sub>|V<sub>0</sub> V<sub>1</sub> V<sub>2</sub>|
-      |W<sub>1</sub> W<sub>2</sub> W<sub>3</sub>|     |W<sub>0</sub> W<sub>2</sub> W<sub>3</sub>|     |W<sub>0</sub> W<sub>1</sub> W<sub>3</sub>|     |W<sub>0</sub> W<sub>1</sub> W<sub>2</sub>|
-</pre>
+  |U<sub>1</sub> U<sub>2</sub> U<sub>3</sub>|     |U<sub>0</sub> U<sub>2</sub> U<sub>3</sub>|     |U<sub>0</sub> U<sub>1</sub> U<sub>3</sub>|     |U<sub>0</sub> U<sub>1</sub> U<sub>2</sub>|
+U<sub>0</sub>|V<sub>1</sub> V<sub>2</sub> V<sub>3</sub>| - U<sub>1</sub>|V<sub>0</sub> V<sub>2</sub> V<sub>3</sub>| + U<sub>2</sub>|V<sub>0</sub> V<sub>1</sub> V<sub>3</sub>| - U<sub>3</sub>|V<sub>0</sub> V<sub>1</sub> V<sub>2</sub>|
+  |W<sub>1</sub> W<sub>2</sub> W<sub>3</sub>|     |W<sub>0</sub> W<sub>2</sub> W<sub>3</sub>|     |W<sub>0</sub> W<sub>1</sub> W<sub>3</sub>|     |W<sub>0</sub> W<sub>1</sub> W<sub>2</sub>|
+</equations>
 
 <p class="noindent">This dot product can be rewritten as the determinant</p>
 
-<pre>
-        | U<sub>0</sub> U<sub>1</sub> U<sub>2</sub> U<sub>3</sub> |
-        | U<sub>0</sub> U<sub>1</sub> U<sub>2</sub> U<sub>3</sub> |
-        | V<sub>0</sub> V<sub>1</sub> V<sub>2</sub> V<sub>3</sub> |
-        | W<sub>0</sub> W<sub>1</sub> W<sub>2</sub> W<sub>3</sub> |,
-</pre>
+<equations>
+| U<sub>0</sub> U<sub>1</sub> U<sub>2</sub> U<sub>3</sub> |
+| U<sub>0</sub> U<sub>1</sub> U<sub>2</sub> U<sub>3</sub> |
+| V<sub>0</sub> V<sub>1</sub> V<sub>2</sub> V<sub>3</sub> |
+| W<sub>0</sub> W<sub>1</sub> W<sub>2</sub> W<sub>3</sub> |,
+</equations>
 
 <p class="noindent"> which is zero, since the first two rows are identical. Hence, the resultant
 vector X<sub>4</sub>(U,V,W) is orthogonal to the operand vector U. In the same way, the dot products
 of V&#183;X<sub>4</sub>(U,V,W) and W&#183;X<sub>4</sub>(U,V,W) are given by the determinants</p>
 
-<pre>
-        | V<sub>0</sub> V<sub>1</sub> V<sub>2</sub> V<sub>3</sub> |           | W<sub>0</sub> W<sub>1</sub> W<sub>2</sub> W<sub>3</sub> |
-        | U<sub>0</sub> U<sub>1</sub> U<sub>2</sub> U<sub>3</sub> |           | U<sub>0</sub> U<sub>1</sub> U<sub>2</sub> U<sub>3</sub> |
-        | V<sub>0</sub> V<sub>1</sub> V<sub>2</sub> V<sub>3</sub> |    and    | V<sub>0</sub> V<sub>1</sub> V<sub>2</sub> V<sub>3</sub> |
-        | W<sub>0</sub> W<sub>1</sub> W<sub>2</sub> W<sub>3</sub> |           | W<sub>0</sub> W<sub>1</sub> W<sub>2</sub> W<sub>3</sub> |,
-</pre>
+<equations>
+| V<sub>0</sub> V<sub>1</sub> V<sub>2</sub> V<sub>3</sub> |           | W<sub>0</sub> W<sub>1</sub> W<sub>2</sub> W<sub>3</sub> |
+| U<sub>0</sub> U<sub>1</sub> U<sub>2</sub> U<sub>3</sub> |           | U<sub>0</sub> U<sub>1</sub> U<sub>2</sub> U<sub>3</sub> |
+| V<sub>0</sub> V<sub>1</sub> V<sub>2</sub> V<sub>3</sub> |    and    | V<sub>0</sub> V<sub>1</sub> V<sub>2</sub> V<sub>3</sub> |
+| W<sub>0</sub> W<sub>1</sub> W<sub>2</sub> W<sub>3</sub> |           | W<sub>0</sub> W<sub>1</sub> W<sub>2</sub> W<sub>3</sub> |,
+</equations>
 
 <p class="noindent">which are each zero.</p>
 
@@ -644,8 +669,7 @@ four of the criteria for the four-dimensional cross product.</p>
 used more than once, it is best to store these values rather than re-calculate them. The following
 algorithm uses this idea.</p>
 
-<pre>
-// Cross4 computes the four-dimensional cross product of the three vectors
+<codeblock>// Cross4 computes the four-dimensional cross product of the three vectors
 // U, V and W, in that order. It returns the resulting four-vector.
 
 Vector4 *Cross4 (Vector4 *result, Vector4 U, Vector4 V, Vector4 W)
@@ -670,7 +694,7 @@ Vector4 *Cross4 (Vector4 *result, Vector4 U, Vector4 V, Vector4 W)
 
     return result;
 }
-</pre>
+</codeblock>
 
 
 <h2 id="s2.2">2.2 Rotations in Four Dimensions</h2>
@@ -695,24 +719,24 @@ matrices, since only two coordinates will change for a given rotation. There are
 rotation matrices, corresponding to the XY, YZ, ZX, XW, YW and ZW planes. These are given by (using
 angle T):</p>
 
-<pre>
-     +-             -+     +-              -+     +-              -+
-     | cosT sinT 0 0 |     | 1   0    0   0 |     | cosT 0 -sinT 0 |
-     |-sinT cosT 0 0 |     | 0  cosT sinT 0 |     |  0   1   0   0 |
-     |  0    0   1 0 |     | 0 -sinT cosT 0 |     | sinT 0  cosT 0 |
-     |  0    0   0 1 |     | 0   0    0   1 |     |  0   0   0   1 |
-     +-             -+     +-              -+     +-              -+
-         XY Plane               YZ Plane                ZX Plane
+<equations>
+&#x23a1;               &#x23a4;     &#x23a1;                &#x23a4;     &#x23a1;                &#x23a4;
+&#x23a2; cosT sinT 0 0 &#x23a5;     &#x23a2; 1   0    0   0 &#x23a5;     &#x23a2; cosT 0 -sinT 0 &#x23a5;
+&#x23a2;-sinT cosT 0 0 &#x23a5;     &#x23a2; 0  cosT sinT 0 &#x23a5;     &#x23a2;  0   1   0   0 &#x23a5;
+&#x23a2;  0    0   1 0 &#x23a5;     &#x23a2; 0 -sinT cosT 0 &#x23a5;     &#x23a2; sinT 0  cosT 0 &#x23a5;
+&#x23a2;  0    0   0 1 &#x23a5;     &#x23a2; 0   0    0   1 &#x23a5;     &#x23a2;  0   0   0   1 &#x23a5;
+&#x23a3;               &#x23a6;     &#x23a3;                &#x23a6;     &#x23a3;                &#x23a6;
+    XY Plane               YZ Plane                ZX Plane
 
 
-     +-             -+     +-              -+     +-              -+
-     | cosT 0 0 sinT |     | 1  0   0   0   |     | 1 0  0     0   |
-     |  0   1 0  0   |     | 0 cosT 0 -sinT |     | 0 1  0     0   |
-     |  0   0 1  0   |     | 0  0   1   0   |     | 0 0 cosT -sinT |
-     |-sinT 0 0 cosT |     | 0 sinT 0  cosT |     | 0 0 sinT  cosT |
-     +-             -+     +-              -+     +-              -+
-         XW Plane               YW Plane                ZW Plane
-</pre>
+&#x23a1;               &#x23a4;     &#x23a1;                &#x23a4;     &#x23a1;                &#x23a4;
+&#x23a2; cosT 0 0 sinT &#x23a5;     &#x23a2; 1  0   0   0   &#x23a5;     &#x23a2; 1 0  0     0   &#x23a5;
+&#x23a2;  0   1 0  0   &#x23a5;     &#x23a2; 0 cosT 0 -sinT &#x23a5;     &#x23a2; 0 1  0     0   &#x23a5;
+&#x23a2;  0   0 1  0   &#x23a5;     &#x23a2; 0  0   1   0   &#x23a5;     &#x23a2; 0 0 cosT -sinT &#x23a5;
+&#x23a2;-sinT 0 0 cosT &#x23a5;     &#x23a2; 0 sinT 0  cosT &#x23a5;     &#x23a2; 0 0 sinT  cosT &#x23a5;
+&#x23a3;               &#x23a6;     &#x23a3;                &#x23a6;     &#x23a3;                &#x23a6;
+    XW Plane               YW Plane                ZW Plane
+</equations>
 
 
 
@@ -892,17 +916,17 @@ difference by the transformation matrix. The 3x3 transformation matrix has colum
 C, where A, B and C correspond to the X, Y, and Z axes in eye coordinates, respectively. The
 equations for these vectors are</p>
 
-<pre>
-              To - From
-        C = -------------,
-            ||To - From||
+<equations>
+      To - From
+C = -------------,
+    ||To - From||
 
-              Up x C
-        A = ----------, and
-            ||Up x C||
+      Up x C
+A = ----------, and
+    ||Up x C||
 
-        B = C x A,
-</pre>
+B = C x A,
+</equations>
 
 <p class="noindent">where To is the to-point, From is the from-point, Up is the up-vector, and the
 original world coordinates are supplied in the left-handed coordinate system. For the right-handed
@@ -912,51 +936,50 @@ coordinate system, the cross product order for column vectors A and B would be r
 that Norm3(V) returns the vector norm of the 3-vector parameter V, and Cross3(U,V,W) assigns to U
 the 3-vector cross product of the parameter vectors V and W.</p>
 
-<pre>
-    // The parameters a, b and c are the resulting transformation matrix
-    // column vectors.
+<codeblock>// The parameters a, b and c are the resulting transformation matrix
+// column vectors.
 
-    void Calc3Matrix (
-        Point3   From,      // Looking From This Point
-        Point3   To,        // Point of Interest
-        Vector3  Up,        // Direction Up
-        Vector3 *Va,        // Return Vector A
-        Vector3 *Vb,        // Return Vector B
-        Vector3 *Vc)        // Return Vector C
-    {
-        // Get the normalized Vc column-vector.
+void Calc3Matrix (
+    Point3   From,      // Looking From This Point
+    Point3   To,        // Point of Interest
+    Vector3  Up,        // Direction Up
+    Vector3 *Va,        // Return Vector A
+    Vector3 *Vb,        // Return Vector B
+    Vector3 *Vc)        // Return Vector C
+{
+    // Get the normalized Vc column-vector.
 
-        VecSub (Vc, To, From);
-        norm = Norm3 (Vc);
-        if (norm == 0)
-            Error ("To point and From point are the same.");
-        VecScale (Vc, 1/norm);
+    VecSub (Vc, To, From);
+    norm = Norm3 (Vc);
+    if (norm == 0)
+        Error ("To point and From point are the same.");
+    VecScale (Vc, 1/norm);
 
-        // Calculate the normalized Va column-vector.
+    // Calculate the normalized Va column-vector.
 
-        VecCross3 (Va, Vc, Up3);
-        norm = Norm3 (Va);
-        if (norm == 0)
-            Error ("Up is parallel to the line of sight.");
-        VecScale (Va, 1/norm);
+    VecCross3 (Va, Vc, Up3);
+    norm = Norm3 (Va);
+    if (norm == 0)
+        Error ("Up is parallel to the line of sight.");
+    VecScale (Va, 1/norm);
 
-        // Calculate the Vb column-vector.
+    // Calculate the Vb column-vector.
 
-        Cross3 (Vb, Va, Vc);
-    }
-</pre>
+    Cross3 (Vb, Va, Vc);
+}
+</codeblock>
 
 <p class="noindent">Once the A, B and C vectors (corresponding to Va, Vb and Vc in the pseudo-code above) are
 calculated, all 3D points can be transformed from 3D world coordinates to 3D eye coordinates as
 follows:</p>
 
-<pre>
-                                   +-        -+
-                                   | Ax Bx Cx |
-    P' = [(Px-Fx) (Py-Fy) (Pz-Fz)] | Ay By Cy |
-                                   | Az Bz Cz |
-                                   +-        -+
-</pre>
+<equations>
+                               +-        -+
+                               | Ax Bx Cx |
+P' = [(Px-Fx) (Py-Fy) (Pz-Fz)] | Ay By Cy |
+                               | Az Bz Cz |
+                               +-        -+
+</equations>
 
 <p class="noindent">where Fx, Fy and Fz are the X, Y and Z coordinates of the from-point, P is the
 original data point in 3D world coordinates, and P' is the transformed data point in eye
@@ -985,11 +1008,11 @@ points that lie in the viewing frustum to the [-1,+1] x [-1,+1] rectangle.</p>
 <p>When using parallel projection, the equation of the data point's normalized screen coordinates
 (from eye coordinates) is given by the following pair of equations:</p>
 
-<pre id="e4.2a">
-             P'x                P'y
-        Tx = ---    and    Ty = ---,       [4.2a]
-             R3                 R3
-</pre>
+<equations id="e4.2a">     P'x                P'y
+Tx = ---    and    Ty = ---,
+     R3                 R3
+<equationid>[4.2a]</equationid>
+</equations>
 
 <p class="noindent">where P' is the 3D point in eye coordinates, R3 is the radius of the set of 3D
 points centered at the 3D to-point, and T is the 2D parallel projection of P' to the [-1,+1] x
@@ -1013,11 +1036,12 @@ is still preserved. Thus, T'x = P'x/P'z. To normalize T'x, note that the maximum
 T'x on the viewing plane occurs at T'x/T'z = tan(theta3/2), or T'x = tan(theta3/2). Thus, the
 equations for the normalized perspective projection T are given by</p>
 
-<pre id="e4.2b">
-                P'x                               P'y
-    Tx = -----------------     and     Ty = -----------------        [4.2b]
-         P'z tan(theta3/2)                  P'z tan(theta3/2)
-</pre>
+<equations id="e4.2b">
+            P'x                               P'y
+Tx = -----------------     and     Ty = -----------------
+     P'z tan(theta3/2)                  P'z tan(theta3/2)
+<equationid>[4.2b]</equationid>
+</equations>
 
 <p class="noindent">where theta3 is the 3D viewing angle and T is the normalized perspective
 projection of P' to the [-1,+1] x [-1,+1] rectangle. Note that in the equations presented in this
@@ -1039,47 +1063,47 @@ viewport on the display device. This viewport is specified by the parameters</p>
 <p class="noindent">Given these viewport parameters, the mapping of the point T in the [-1,+1] x
 [-1,+1] rectangle to the display device viewport is given by the following equations:</p>
 
-<pre id="e4.2c">
-                  Lx                         Ly
-        Sx = Cx + ---Tx,    <i>and</i>    Sy = Cy + ---Ty.      [4.2c]
-                   2                          2
-</pre>
+<equations id="e4.2c">
+          Lx                         Ly
+Sx = Cx + ---Tx,    <i>and</i>    Sy = Cy + ---Ty.
+           2                          2
+<equationid>[4.2c]</equationid>
+</equations>
 
 <p class="noindent">Putting this all together, we get the following algorithm. Note that the
 function <tt>Dot3(U,V)</tt> returns the dot product of the two 3-vector parameters <tt>U</tt> and
 <tt>V</tt>.</p>
 
-<pre>
-    int      NumVerts;  // Number of 3D Vertices
-    double   Radius;    // Radius of Vertices About the To3 Point
-    Vector3  Va,Vb,Vc;  // Viewing-Transformation Column Vectors
-    Radians  Vangle;    // 3D Viewing Angle
-    Vertex3 *VertList;  // The Set of 3D Vertices
+<codeblock>int      NumVerts;  // Number of 3D Vertices
+double   Radius;    // Radius of Vertices About the To3 Point
+Vector3  Va,Vb,Vc;  // Viewing-Transformation Column Vectors
+Radians  Vangle;    // 3D Viewing Angle
+Vertex3 *VertList;  // The Set of 3D Vertices
 
-    void ProjectToScreen (
-        float Cx, float Cy,
-        float Lx, float Ly,
-        ProjectionType proj_type)
-    {
-        double  S, T;    // Divisor Values
-        Vector3 V;       // Scratch Vector
+void ProjectToScreen (
+    float Cx, float Cy,
+    float Lx, float Ly,
+    ProjectionType proj_type)
+{
+    double  S, T;    // Divisor Values
+    Vector3 V;       // Scratch Vector
 
-        if (proj_type == PARALLEL)
-            S = 1 / Radius;
-        else
-            T = 1 / tan (Vangle / 2);
+    if (proj_type == PARALLEL)
+        S = 1 / Radius;
+    else
+        T = 1 / tan (Vangle / 2);
 
-        for (i=0;  i &lt; NumVerts;  ++i) {
-            V = VertList[i].Position - From;
+    for (i=0;  i &lt; NumVerts;  ++i) {
+        V = VertList[i].Position - From;
 
-            if (proj_type == PERSPECTIVE)
-                S = T / Dot3 (V, Vc);
+        if (proj_type == PERSPECTIVE)
+            S = T / Dot3 (V, Vc);
 
-            VertList[i].Screen[x] = Cx + (Lx * S * Dot3 (V, Va));
-            VertList[i].Screen[y] = Cy + (Ly * S * Dot3 (V, Vb));
-        }
+        VertList[i].Screen[x] = Cx + (Lx * S * Dot3 (V, Va));
+        VertList[i].Screen[y] = Cy + (Ly * S * Dot3 (V, Vb));
     }
-</pre>
+}
+</codeblock>
 
 
 <h2 id="s4.3">4.3  Description of 4D to 3D Projection</h2>
@@ -1134,84 +1158,83 @@ transformation matrix. The 4D viewing transformation matrix is composed of the c
 C and D, which correspond to the X, Y, Z and W eye-coordinate axes, respectively. The equations for
 these column vectors are</p>
 
-<pre>
-              To - From
-        D = -------------,
-            ||To - From||
+<equations>
+      To - From
+D = -------------,
+    ||To - From||
 
-              X<sub>4</sub>(Up,Over,D)
-        A = -----------------,
-            ||X<sub>4</sub>(Up,Over,D)||
+      X<sub>4</sub>(Up,Over,D)
+A = -----------------,
+    ||X<sub>4</sub>(Up,Over,D)||
 
-              X<sub>4</sub>(Over,D,A)
-        B = ----------------, and
-            ||X<sub>4</sub>(Over,D,A)||
+      X<sub>4</sub>(Over,D,A)
+B = ----------------, and
+    ||X<sub>4</sub>(Over,D,A)||
 
-        C = X<sub>4</sub>(D,A,B)
-</pre>
+C = X<sub>4</sub>(D,A,B)
+</equations>
 
 <p class="noindent">where To is the to-point, From is the from-point, Up is the up-vector, and Over
 is the Over vector (all of which reside in four-space).</p>
 
 <p>The routine to calculate the four-dimensional transformation matrix follows.</p>
 
-<pre>
-    // Calc4Matrix calculates the four-dimensional viewing transformation
-    // matrix and places the resulting 4x4 matrix column vectors in
-    // Wa, Wb, Wc, and Wd.
+<codeblock>// Calc4Matrix calculates the four-dimensional viewing transformation
+// matrix and places the resulting 4x4 matrix column vectors in
+// Wa, Wb, Wc, and Wd.
 
-    Point4  From, To;    // 4D From and To Points
-    Vector4 Up, Over;    // 4D Up and Over Vectors
+Point4  From, To;    // 4D From and To Points
+Vector4 Up, Over;    // 4D Up and Over Vectors
 
-    void  Calc4Matrix  (
-        Vector4 *Wa,
-        Vector4 *Wb,
-        Vector4 *Wc,
-        Vector4 *Wd)
-    {
-        double norm;    // Vector Norm
+void  Calc4Matrix  (
+    Vector4 *Wa,
+    Vector4 *Wb,
+    Vector4 *Wc,
+    Vector4 *Wd)
+{
+    double norm;    // Vector Norm
 
-        // Get the normalized Wd column-vector.
+    // Get the normalized Wd column-vector.
 
-        VecSub (Wd, To, From);
-        norm = Norm4 (*Wd);
-        if (norm == 0)
-            Error ("To point and From point are the same.");
-        VecScale (Wd, 1/norm);
+    VecSub (Wd, To, From);
+    norm = Norm4 (*Wd);
+    if (norm == 0)
+        Error ("To point and From point are the same.");
+    VecScale (Wd, 1/norm);
 
-        // Calculate the normalized Wa column-vector.
+    // Calculate the normalized Wa column-vector.
 
-        Cross4 (Wa, Up,Over,*Wd);
-        norm = Norm4 (Wa);
-        if (norm == 0)
-            Error ("Invalid Up vector.");
-        VecScale (Wa, 1/norm);
+    Cross4 (Wa, Up,Over,*Wd);
+    norm = Norm4 (Wa);
+    if (norm == 0)
+        Error ("Invalid Up vector.");
+    VecScale (Wa, 1/norm);
 
-        // Calculate the normalized Wb column-vector.
+    // Calculate the normalized Wb column-vector.
 
-        Cross4 (Wb, Over, *Wd, *Wa);
-        norm = Norm4 (Wb);
-        if (norm == 0)
-            Error ("Invalid Over vector.");
-        VecScale (Wb, 1/norm);
+    Cross4 (Wb, Over, *Wd, *Wa);
+    norm = Norm4 (Wb);
+    if (norm == 0)
+        Error ("Invalid Over vector.");
+    VecScale (Wb, 1/norm);
 
-        // Calculate the Wc column-vector.
+    // Calculate the Wc column-vector.
 
-        Cross4 (Wc, *Wd, *Wa, *Wb);
-    }
-</pre>
+    Cross4 (Wc, *Wd, *Wa, *Wb);
+}
+</codeblock>
 
 <p class="noindent">The 4x4 matrix composed of these column vectors transforms the 4D world
 coordinates to 4D eye coordinates. The full transformation is given by the following product:</p>
 
-<pre>
-                                               +-           -+
-                                               | Ax Bx Cx Dx |
-        V' = [(Vx-Fx) (Vy-Fy) (Vz-Fz) (Vw-Fw)] | Ay By Cy Dy |,
-                                               | Az Bz Cz Dz |
-                                               | Aw Bw Cw Dw |
-                                               +-           -+
-</pre>
+<equations>
+                                       +-           -+
+                                       | Ax Bx Cx Dx |
+V' = [(Vx-Fx) (Vy-Fy) (Vz-Fz) (Vw-Fw)] | Ay By Cy Dy |,
+                                       | Az Bz Cz Dz |
+                                       | Aw Bw Cw Dw |
+                                       +-           -+
+</equations>
 
 <p class="noindent">where Fx, Fy, Fz and Fw are the coordinates of the from-point and Vx, Vy, Vz and
 Vw are the 4D world coordinates of the vertex. This equation yields the 4D eye-coordinates of the
@@ -1225,11 +1248,11 @@ projections are extensions of equations <a href="#e4.2a">4.2a</a> and <a href="#
 <p>The equations for parallel 4D to 3D projection are extended from equation
 <a href="#e4.2a">4.2a</a> by one coordinate:</p>
 
-<pre id="e4.3a">
-             V'x          V'y              V'z
-        Qx = ---,    Qy = ---, and    Qz = ---,       [4.3a]
-             R4           R4               R4
-</pre>
+<equations id="e4.3a">     V'x          V'y              V'z
+Qx = ---,    Qy = ---, and    Qz = ---,
+     R4           R4               R4
+<equationid>[4.3a]</equationid>
+</equations>
 
 <p class="noindent">where R4 is the radius of the set of 4D vertices about the to-point. Dividing by
 this radius ensures that the vertices are projected to fill the intermediate region as much as
@@ -1251,12 +1274,11 @@ the four-dimensional line-of-sight).</p>
 derivation of the normalized 4D perspective projection follows the same reasoning as for the 3D
 normalized perspective projection. The equations are</p>
 
-<pre id="e4.3b">
-
-                             V'x         V'y             V'z
-    T = tan(theta4/2), Qx = -----, Qy = -----, and Qz = -----.      [4.3b]
-                            V'w T       V'w T           V'w T
-</pre>
+<equations id="e4.3b">                         V'x         V'y             V'z
+T = tan(theta4/2), Qx = -----, Qy = -----, and Qz = -----.
+                        V'w T       V'w T           V'w T
+<equationid>[4.3b]</equationid>
+</equations>
 
 <p class="noindent">where theta4 is the 4D viewing angle. These equations yield values in the range
 of [-1,+1] for vertices that lie in the 4D viewing frustum.</p>
@@ -1272,66 +1294,65 @@ that we mapped normalized 2D coordinates to the 2D viewport. Given the viewbox p
 <p class="noindent">we can map the normalized 3D coordinates to the viewbox with the following
 equations:</p>
 
-<pre id="e4.3c">
-              Dx                 Dy                     Dz
-    Px = Bx + -- Qx,   Py = By + -- Qy, and   Pz = Bz + -- Qz.     [4.3c]
-              2                  2                      2
-</pre>
+<equations id="e4.3c">          Dx                 Dy                     Dz
+Px = Bx + -- Qx,   Py = By + -- Qy, and   Pz = Bz + -- Qz.
+          2                  2                      2
+<equationid>[4.3c]</equationid>
+</equations>
 
 <p>As mentioned earlier, the intermediate 3D region used in this research is the cube with vertices
 &lt;&#177;1, &#177;1, &#177;1&gt;, centered at the three-space origin. For this particular region,
 Bx = By = Bz = 0, and Lx = Ly = Lz = 2, so the simplified equations are</p>
 
-<pre>
-             V'x          V'y              V'z
-        Px = ---,    Py = ---, and    Pz = ---.
-             R4           R4               R4
-</pre>
+<equations>
+     V'x          V'y              V'z
+Px = ---,    Py = ---, and    Pz = ---.
+     R4           R4               R4
+</equations>
 
 <p class="noindent">for 4D to 3D parallel projection, and</p>
 
-<pre>
-        T = tan (theta4/2)
+<equations>
+T = tan (theta4/2)
 
-              V'x         V'y             V'z
-        Px = -----, Py = -----, and Pz = -----.
-             V'w T       V'w T           V'w T
-</pre>
+      V'x         V'y             V'z
+Px = -----, Py = -----, and Pz = -----.
+     V'w T       V'w T           V'w T
+</equations>
 
 <p class="noindent">for 4D to 3D perspective projection.</p>
 
 <p>The routine to project the four-dimensional vertices to the three-dimensional region is given by
 the following algorithm (the algorithm presented here does not perform any type of 4D clipping):</p>
 
-<pre>
-    double   Radius;      // Radius of the 4D Vertices
-    int      NumVerts;    // Number of Vertices
-    Radians  Vangle;      // 4D Viewing Angle
-    Point4  *VertList;    // Vertex Array
-    Vector4  Wa,Wb,Wc,Wd; // 4D Transformation Matrix Column Vectors
+<codeblock>double   Radius;      // Radius of the 4D Vertices
+int      NumVerts;    // Number of Vertices
+Radians  Vangle;      // 4D Viewing Angle
+Point4  *VertList;    // Vertex Array
+Vector4  Wa,Wb,Wc,Wd; // 4D Transformation Matrix Column Vectors
 
-    void ProjectTo3D (ProjectionType proj_type)
-    {
-        double  S,T;    // Divisor Values
-        Vector4 V;      // Scratch Vector
+void ProjectTo3D (ProjectionType proj_type)
+{
+    double  S,T;    // Divisor Values
+    Vector4 V;      // Scratch Vector
 
-        if (proj_type == PARALLEL)
-            S = 1 / Radius;
-        else
-            T = 1 / tan (Vangle / 2);
+    if (proj_type == PARALLEL)
+        S = 1 / Radius;
+    else
+        T = 1 / tan (Vangle / 2);
 
-        for (i=0;  i &lt; NumVerts;  ++i) {
-            VecSub (V, VertList[i].Position,From);
+    for (i=0;  i &lt; NumVerts;  ++i) {
+        VecSub (V, VertList[i].Position,From);
 
-            if (proj_type == PERSPECTIVE)
-                S = T / Dot4 (V, Wd);
+        if (proj_type == PERSPECTIVE)
+            S = T / Dot4 (V, Wd);
 
-            VertList[i].Position[0] = S * Dot4 (V, Wa);
-            VertList[i].Position[1] = S * Dot4 (V, Wb);
-            VertList[i].Position[2] = S * Dot4 (V, Wc);
-        }
+        VertList[i].Position[0] = S * Dot4 (V, Wa);
+        VertList[i].Position[1] = S * Dot4 (V, Wb);
+        VertList[i].Position[2] = S * Dot4 (V, Wc);
     }
-</pre>
+}
+</codeblock>
 
 
 <h2 id="s4.4">4.4  Rotations of 4D Wireframes</h2>
@@ -1709,21 +1730,21 @@ intersecting any other point.</p>
 
 <p>The grid basis vectors are computed as follows:</p>
 
-<pre>
-               From - To
-         S = -------------
-             ||From - To||
+<equations>
+       From - To
+ S = -------------
+     ||From - To||
 
-               cross4 (Over, Up, S)
-        Bz = ------------------------
-             ||cross4 (Over, Up, S)||
+       cross4 (Over, Up, S)
+Bz = ------------------------
+     ||cross4 (Over, Up, S)||
 
-               cross4 (Bz, S, Over)
-        By = ------------------------
-             ||cross4 (Bz, S, Over)||
+       cross4 (Bz, S, Over)
+By = ------------------------
+     ||cross4 (Bz, S, Over)||
 
-        Bx = cross4 (By, Bz, S)
-</pre>
+Bx = cross4 (By, Bz, S)
+</equations>
 
 <p class="noindent">At this point, S is the unit line-of-sight vector, and Bx, By &amp; Bz are the
 unit basis vectors for the ray grid. What we need to do now is to to scale these vectors. There are
@@ -1743,80 +1764,76 @@ size. As mentioned earlier, the viewing angle corresponds to the X axis. The oth
 according to the resolution and aspect ratios. Determining the proper scale of the grid X axis is
 easily done from the viewing angle</p>
 
-<pre>
-        Lx = 2 ||From-To|| tan(theta4/2)
-</pre>
+<equations>
+Lx = 2 ||From-To|| tan(theta4/2)</equations>
 
 <p class="noindent">where theta4 is the 4D viewing angle, and Lx is the width of the ray grid. The
 other dimensions of the ray grid are determined by Lx, the aspect ratios, and the resolutions:</p>
 
-<pre>
-                Ry Ay                    Rz Az
-        Ly = Lx -- --,    and    Lz = Lx -- --
-                Rx Ax                    Rx Ax
-</pre>
+<equations>
+        Ry Ay                    Rz Az
+Ly = Lx -- --,    and    Lz = Lx -- --
+        Rx Ax                    Rx Ax
+</equations>
 
 <p class="noindent">Thus, Lx, Ly and Lz are the lengths of each edge of the ray grid, and the grid
 basis vectors are scaled with these lengths to yield</p>
 
-<pre>
-        Gx = Lx Bx,  Gy = Ly By, and  Gz = Lz Bz.
-</pre>
+<equations>Gx = Lx Bx,  Gy = Ly By, and  Gz = Lz Bz.</equations>
 
 <p class="noindent">The main ray loop will start at a corner of the ray grid and scan in X, Y and Z
 order, respectively. The origin of the grid (each basis vector zero) is given by</p>
 
-<pre>
-                 Gx + Gy + Gz
-        O = To - ------------.
-                      2
-</pre>
+<equations>
+         Gx + Gy + Gz
+O = To - ------------.
+              2
+</equations>
 
 <p class="noindent">The incremental grid vectors are used to move from one grid voxel to another.
 They are computed by dividing the grid-length vectors by the respective resolution:</p>
 
-<pre>
-             Gx        Gy        Gz
-        Dx = --,  Dy = --,  Dz = --.
-             Rx        Ry        Rz
-</pre>
+<equations>
+     Gx        Gy        Gz
+Dx = --,  Dy = --,  Dz = --.
+     Rx        Ry        Rz
+</equations>
 
 <p class="noindent">Finally, the grid origin is offset by half a voxel, in order that the voxel
 centers are sampled.</p>
 
-<pre>
-                Dx + Dy + Dz
-        O = O + ------------
-                     2
-</pre>
+<equations>
+        Dx + Dy + Dz
+O = O + ------------
+             2
+</equations>
 
 <p class="noindent">The main raytracing procedure looks like this:</p>
 
-<pre>
-    Vector4 Dx,Dy,Dz;   // Grid-Traversal Vectors
-    Point4  From4;      // 4D Viewpoint
-    Point4  Origin;     // Grid Origin Corner
-    int     Rx,Ry,Rz;   // Grid Resolutions
+<codeblock>Vector4 Dx,Dy,Dz;   // Grid-Traversal Vectors
+Point4  From4;      // 4D Viewpoint
+Point4  Origin;     // Grid Origin Corner
+int     Rx,Ry,Rz;   // Grid Resolutions
 
-    void FireRays (void)
-    {
-        int     i,j,k;  // Grid Traversal Indices
-        Vector4 T;      // Scratch Vector
-        Ray4    ray;    // 4D View Ray
+void FireRays (void)
+{
+    int     i,j,k;  // Grid Traversal Indices
+    Vector4 T;      // Scratch Vector
+    Ray4    ray;    // 4D View Ray
 
-        for (i=0;  i &lt; Rx;  ++i) {
-            for (j=0;  j &lt; Ry;  ++j) {
-                for (k=0;  k &lt; Rz;  ++k) {
-                    T = Origin + i*Dx + j*Dy + k*Dz;
-                    VecCopy (ray.origin, From);
-                    VecSub  (ray.direction, T,ray.origin);
-                    // Recursively fire sample rays into the scene.
-                    Raytrace (ray);
-                }
+    for (i=0;  i &lt; Rx;  ++i) {
+        for (j=0;  j &lt; Ry;  ++j) {
+            for (k=0;  k &lt; Rz;  ++k) {
+                T = Origin + i*Dx + j*Dy + k*Dz;
+                VecCopy (ray.origin, From);
+                VecSub  (ray.direction, T,ray.origin);
+                // Recursively fire sample rays into the scene.
+                Raytrace (ray);
             }
         }
     }
-</pre>
+}
+</codeblock>
 
 
 <h2 id="s5.3">5.3 The General Raytrace Algorithm</h2>
@@ -1869,9 +1886,7 @@ rays are given by the following equations for raytracing in any dimension higher
 
 <p class="noindent">The equation of the reflection ray is given by is</p>
 
-<pre>
-        R = D - 2 (N&#183;D) N
-</pre>
+<equations>R = D - 2 (N&#183;D) N</equations>
 
 <p class="noindent">where R is the resulting reflection ray, D is the unit direction of the light
 ray towards the surface, and N is the unit vector normal to the surface. Refer to <a
@@ -1879,17 +1894,17 @@ href="#Foley87">[Foley 87]</a> for a derivation of the reflection equation.</p>
 
 <p>The refraction ray T is given by</p>
 
-<pre>
-        T = dC + (1-d)(-N)
+<equations>
+T = dC + (1-d)(-N)
 
-               D
-        C = -------
-            ||N&#183;D||
+       D
+C = -------
+    ||N&#183;D||
 
-                              1
-        d = ------------------------------------
-            sqrt(((r1/r2)&#178; * ||C||&#178;) - ||C+N||&#178;)
-</pre>
+                      1
+d = ------------------------------------
+    sqrt(((r1/r2)&#178; * ||C||&#178;) - ||C+N||&#178;)
+</equations>
 
 <p style="text-indent: 0"> where T is the refraction ray, D is the unit direction of the light ray
 towards the surface, N is the unit normal vector to the surface, r1 is the index of refraction of
@@ -1904,14 +1919,14 @@ to <a href="#Hill90">[Hill 90]</a> for a derivation of this formula.</p>
 those for raytracing in three dimensions, although the underlying geometry is changed. A simple
 extended illumination equation is as follows:</p>
 
-<pre>
-                    N
-                    __
-                    \                           n
-        I = Ia Ka + /  IL(Kd cos(theta) + Ks cos (alpha)) + Ks Ir + Kt It.
-                    ~~
-                    L=1
-</pre>
+<equations>
+            N
+            __
+            \                           n
+I = Ia Ka + /  IL(Kd cos(theta) + Ks cos (alpha)) + Ks Ir + Kt It.
+            ~~
+            L=1
+</equations>
 
 <p class="noindent">The values used in this equation are</p>
 
@@ -1941,10 +1956,10 @@ amount of diffuse illumination at the surface point. The angle alpha is the angl
 reflected light vector and the viewing vector, and determines the the amount of specular
 illumination at the surface point. These angles are given by the following formulas.</p>
 
-<pre>
-        cos(theta) = N&#183;L(lambda)
-        cos(alpha) = R&#183;L(lambda)
-</pre>
+<equations>
+cos(theta) = N&#183;L(lambda)
+cos(alpha) = R&#183;L(lambda)
+</equations>
 
 <p class="noindent">If cos(theta) is negative, then there is no diffuse or specular illumination at
 the surface point. If cos(theta) is non-negative and cos(alpha) is negative, then the surface point
@@ -1983,9 +1998,7 @@ is specified by a center point and a radius.</p>
 
 <p>The implicit equation of the four-sphere is</p>
 
-<pre>
-        (Sx - Cx)&#178; + (Sy - Cy)&#178; + (Sz - Cz)&#178; + (Sw - Cw)&#178; - r&#178; = 0
-</pre>
+<equations>(Sx - Cx)&#178; + (Sy - Cy)&#178; + (Sz - Cz)&#178; + (Sw - Cw)&#178; - r&#178; = 0</equations>
 
 <p class="noindent"> where r is the radius of the four-sphere, C is the center of the sphere, and S
 is a point on the surface of the sphere.</p>
@@ -1999,46 +2012,40 @@ ray defined by the equation r = P + tD, where P is the ray origin, D is the unit
 vector, and t is a parametric variable, we can find the intersection of the ray with a given
 hypersphere in the following manner:</p>
 
-<pre>
-        (Cx - Sx)&#178; + (Cy - Sy)&#178; + (Cz - Sz)&#178; +  (Cw - Sw)&#178; - r&#178; = 0
+<equations>
+(Cx - Sx)&#178; + (Cy - Sy)&#178; + (Cz - Sz)&#178; +  (Cw - Sw)&#178; - r&#178; = 0
 
-        ||C - S||&#178; - r&#178; = 0
-</pre>
+||C - S||&#178; - r&#178; = 0
+</equations>
 
 <p class="noindent">Substitute the ray equation into the surface value to get</p>
 
-<pre>
-        ||C - (P + tD)||&#178; - r&#178; = 0
+<equations>
+||C - (P + tD)||&#178; - r&#178; = 0
 
-        ||(C - P) - tD||&#178; - r&#178; = 0
+||(C - P) - tD||&#178; - r&#178; = 0
 
-        ||V - tD||&#178; - r&#178; = 0         <i>where V = C - P</i>
+||V - tD||&#178; - r&#178; = 0         <i>where V = C - P</i>
 
-        (Vx - tDx)&#178; + (Vy - tDy)&#178; + (Vz - tDz)&#178; + (Vw - tDw)&#178; - r&#178; = 0
+(Vx - tDx)&#178; + (Vy - tDy)&#178; + (Vz - tDz)&#178; + (Vw - tDw)&#178; - r&#178; = 0
 
-        t&#178;(Dx&#178; + Dy&#178; + Dz&#178; + Dw&#178;) - 2t (VxDx + VyDy + VzDz + VwDw)
+t&#178;(Dx&#178; + Dy&#178; + Dz&#178; + Dw&#178;) - 2t (VxDx + VyDy + VzDz + VwDw)
 
-            + (Vx&#178; + Vy&#178; + Vz&#178; + Vw&#178;) - r&#178; = 0
-</pre>
+    + (Vx&#178; + Vy&#178; + Vz&#178; + Vw&#178;) - r&#178; = 0
+</equations>
 
 <p class="noindent">This simplifies to</p>
 
-<pre>
-        t&#178;(D&#183;D) - 2t (V&#183;D) + (V&#183;V - r&#178;) = 0.
-</pre>
+<equations>t&#178;(D&#183;D) - 2t (V&#183;D) + (V&#183;V - r&#178;) = 0.</equations>
 
 <p class="noindent">Since D is a unit vector, this equation further simplifies to</p>
 
-<pre>
-        t&#178; - 2t (V&#183;D) + (V&#183;V - r&#178;) = 0.
-</pre>
+<equations>t&#178; - 2t (V&#183;D) + (V&#183;V - r&#178;) = 0.</equations>
 
 <p class="noindent">The quadratic formula x&#178; - 2bx + c = 0 has roots b &#177; sqrt(b&#178; -
 c). So, solving for t, we get</p>
 
-<pre>
-        t = (V&#183;D) &#177; sqrt((V&#183;D)&#178; - (V&#183;V - r&#178;)).
-</pre>
+<equations>t = (V&#183;D) &#177; sqrt((V&#183;D)&#178; - (V&#183;V - r&#178;)).</equations>
 
 <p class="noindent">The intersection point is given by plugging the smallest non-negative solution
 for t into the ray equation. If there is no solution to this equation (<i>e.g.</i>, the quantity
@@ -2046,48 +2053,47 @@ under the square root is negative), then the ray does not intersect the hypersph
 
 <p>The pseudo-code for the ray-hypersphere intersection algorithm follows.</p>
 
-<pre>
-    function HitSphere: Boolean  (
-        ray:       Ray4,
-        sphere:    Sphere4,
-        intersect: Point4,
-        normal:    Vector4
-    )
-	bb:    Real    <i>Quadratic Equation Value</i>
-	V:     Vector4 <i>Vector from Ray Origin to Sphere Center</i>
-	rad:   Real    <i>Radical Value</i>
-	t1,t2: Real    <i>Ray Parameter Values for Intersection</i>
+<codeblock>function HitSphere: Boolean  (
+    ray:       Ray4,
+    sphere:    Sphere4,
+    intersect: Point4,
+    normal:    Vector4
+)
+bb:    Real    <i>Quadratic Equation Value</i>
+V:     Vector4 <i>Vector from Ray Origin to Sphere Center</i>
+rad:   Real    <i>Radical Value</i>
+t1,t2: Real    <i>Ray Parameter Values for Intersection</i>
 
-	V &lt;- sphere.center - ray.origin
-	bb &lt;- Dot4(V,ray.direction)
-	rad &lt;- (bb * bb) - Dot4(V,V) + sphere.radius_squared
+V &lt;- sphere.center - ray.origin
+bb &lt;- Dot4(V,ray.direction)
+rad &lt;- (bb * bb) - Dot4(V,V) + sphere.radius_squared
 
-	<i>If the radical is negative, then no intersection.</i>
+<i>If the radical is negative, then no intersection.</i>
 
-	if rad &lt; 0
-	    return false
+if rad &lt; 0
+    return false
 
-	rad &lt;- SquareRoot(rad)
-	t2  &lt;- bb - rad
-	t1  &lt;- bb + rad
+rad &lt;- SquareRoot(rad)
+t2  &lt;- bb - rad
+t1  &lt;- bb + rad
 
-	<i>Ensure that t1 is the smallest non-negative value (nearest point).</i>
+<i>Ensure that t1 is the smallest non-negative value (nearest point).</i>
 
-	if t1 &lt; 0 or (t2 &gt; 0 and t2 &lt; t1)
-	    t1 &lt;- t2
+if t1 &lt; 0 or (t2 &gt; 0 and t2 &lt; t1)
+    t1 &lt;- t2
 
-	<i>If sphere is behind the ray, then no intersection.</i>
+<i>If sphere is behind the ray, then no intersection.</i>
 
-	if t1 &lt; 0
-	    return false
+if t1 &lt; 0
+    return false
 
-	intersect &lt;- ray.origin + (t1 * ray.direction)
-	normal  &lt;- (intersect - sphere.center) / sphere.radius
+intersect &lt;- ray.origin + (t1 * ray.direction)
+normal  &lt;- (intersect - sphere.center) / sphere.radius
 
-	return true
+return true
 
-    endfunc HitSphere
-</pre>
+endfunc HitSphere
+</codeblock>
 
 
 <h3 id="s5.6.2">5.6.2 Ray - Tetrahedron Intersection</h3>
@@ -2111,17 +2117,17 @@ invisibly thin.</p>
 description before raytracing the scene. The normal is computed by finding three independent vectors
 on the tetrahedron and crossing them to compute the orthogonal normal vector.</p>
 
-<pre>
-        B1 = V1 - V0,
+<equations>
+B1 = V1 - V0,
 
-        B2 = V2 - V0,
+B2 = V2 - V0,
 
-        B3 = V3 - V0, and
+B3 = V3 - V0, and
 
-              X4(B1,B2,B3)
-        N = ----------------
-            ||X4(B1,B2,B3)||
-</pre>
+      X4(B1,B2,B3)
+N = ----------------
+    ||X4(B1,B2,B3)||
+</equations>
 
 <p class="noindent"> where V0, V1, V2, and V3 are the tetrahedron vertices and N is the unit normal
 vector.</p>
@@ -2155,10 +2161,11 @@ intersect the tetrahedron.</p>
 <p>Now compute the ray-hyperplane intersection with relation to the tetrahedron. The barycentric
 coordinates of the intersection point Q is given by the equation</p>
 
-<pre id="e5.5.2a">
-        ____         _____        _____         _____
-        V0 Q = alpha V0 V1 + beta V0 V2 + gamma V0 V3.     [5.5.2a]
-</pre>
+<equations id="e5.5.2a">
+____         _____        _____         _____
+V0 Q = alpha V0 V1 + beta V0 V2 + gamma V0 V3.
+<equationid>[5.5.2a]</equationid>
+</equations>
 
 <p class="noindent"> The ray-hyperplane intersection point Q is inside the tetrahedron if
 <nobr>alpha &gt;= 0</nobr>, <nobr>beta &gt;= 0</nobr>, <nobr>gamma &gt;= 0</nobr>, and <nobr>alpha +
@@ -2166,16 +2173,15 @@ beta + gamma &lt;= 1</nobr>.</p>
 
 <p>Equation 5.5.2a can be rewritten as</p>
 
-<pre id="e5.5.2b">
-    [5.5.2b]
-
-    +-      -+         +-       -+        +-       -+         +-       -+
-    |Qx - V0x|         |V1x - V0x|        |V2x - V0x|         |V3x - V0x|
-    |Qy - V0y| = alpha |V1y - V0y| + beta |V2y - V0y| + gamma |V3y - V0y|.
-    |Qz - V0z|         |V1z - V0z|        |V2z - V0z|         |V3z - V0z|
-    |Qw - V0w|         |V1w - V0w|        |V2w - V0w|         |V3w - V0w|
-    +-      -+         +-       -+        +-       -+         +-       -+
-</pre>
+<equations id="e5.5.2b">
++-      -+         +-       -+        +-       -+         +-       -+
+|Qx - V0x|         |V1x - V0x|        |V2x - V0x|         |V3x - V0x|
+|Qy - V0y| = alpha |V1y - V0y| + beta |V2y - V0y| + gamma |V3y - V0y|.
+|Qz - V0z|         |V1z - V0z|        |V2z - V0z|         |V3z - V0z|
+|Qw - V0w|         |V1w - V0w|        |V2w - V0w|         |V3w - V0w|
++-      -+         +-       -+        +-       -+         +-       -+
+<equationid>[5.5.2b]</equationid>
+</equations>
 
 <p class="noindent">To simplify the solution for these coordinates, we project the tetrahedron to
 one of the four primary hyperplanes (XYZ, XYW, XZW or YZW). To make this projection as
@@ -2192,15 +2198,14 @@ algorithm for an illustration of this.</p>
 <p>The hyperplane equation is then reduced to three coordinates, i, j, and k (X, Y &amp; W for the
 previous example), so equation <a href="#e5.5.2b">[5.5.2b]</a> is reduced to</p>
 
-<pre id="e5.5.2c">
-    [5.5.2c]
-
-    +-      -+         +-       -+        +-       -+         +-       -+
-    |Qi - V0i|         |V1i - V0i|        |V2i - V0i|         |V3i - V0i|
-    |Qj - V0j| = alpha |V1j - V0j| + beta |V2j - V0j| + gamma |V3j - V0j|.
-    |Qk - V0k|         |V1k - V0k|        |V2k - V0k|         |V3k - V0k|
-    +-      -+         +-       -+        +-       -+         +-       -+
-</pre>
+<equations id="e5.5.2c">
++-      -+         +-       -+        +-       -+         +-       -+
+|Qi - V0i|         |V1i - V0i|        |V2i - V0i|         |V3i - V0i|
+|Qj - V0j| = alpha |V1j - V0j| + beta |V2j - V0j| + gamma |V3j - V0j|.
+|Qk - V0k|         |V1k - V0k|        |V2k - V0k|         |V3k - V0k|
++-      -+         +-       -+        +-       -+         +-       -+
+<equationid>[5.5.2c]</equationid>
+</equations>
 
 <p class="noindent">Now find alpha, beta, and gamma by solving the system of three equations and
 three unknowns; these are the barycentric coordinates of the intersection point Q relative to the
@@ -2209,108 +2214,108 @@ tetrahedron. The fourth barycentric coordinate is given by (1 - alpha - beta - g
 <p>In order for the tetrahedron to contain the ray-hyperplane intersection point, the following
 equations must be met:</p>
 
-<pre>
-        alpha &gt;= 0,  beta &gt;= 0,  gamma &gt;= 0, and
+<equations>
+alpha &gt;= 0,  beta &gt;= 0,  gamma &gt;= 0, and
 
-        (alpha + beta + gamma) &lt;= 1.
-</pre>
+(alpha + beta + gamma) &lt;= 1.
+</equations>
 
 <p class="noindent">If any of the barycentric coordinates are less than zero, or if the barycentric
 coordinates sum to greater than one, then the ray does not intersect the tetrahedron.</p>
 
 <p>Once alpha, beta and gamma are known for the point of intersection, the ray-hyperplane
-intersection point Q can be found by the following equation:</p>
+intersection point Q can be found by the following equation:
 
-<pre>
-    Q = (1 - alpha - beta - gamma)V0 + alpha V1 + beta V2 + gamma V3.
-</pre>
+<equations>
+Q = (1 - alpha - beta - gamma)V0 + alpha V1 + beta V2 + gamma V3.
+</equations>
 
-<p>The following pseudo-code implements the ray-tetrahedron intersection algorithm.</p>
+<p class="noindent">The following pseudo-code implements the ray-tetrahedron intersection
+algorithm.
 
-<pre>
-    function HitTet: Boolean (
-        ray:       Ray4,
-        tet:       Tetrahedron,
-        intersect: Point4,
-        normal:    Vector4
-    )
-	A11,A12,A13: Real    <i>Equation System Matrix Values</i>
-	A21,A22,A23: Real
-	A31,A32,A33: Real
-	b1, b2, b3 : Real    <i>Equation System Results</i>
-	rayt:        Real    <i>Ray Parameter Value for Intersection</i>
-	x1, x2, x3 : Real    <i>Equation System Solution</i>
+<codeblock>function HitTet: Boolean (
+    ray:       Ray4,
+    tet:       Tetrahedron,
+    intersect: Point4,
+    normal:    Vector4
+)
+    A11,A12,A13: Real    <i>Equation System Matrix Values</i>
+    A21,A22,A23: Real
+    A31,A32,A33: Real
+    b1, b2, b3 : Real    <i>Equation System Results</i>
+    rayt:        Real    <i>Ray Parameter Value for Intersection</i>
+    x1, x2, x3 : Real    <i>Equation System Solution</i>
 
-	<i>Compute the intersection of the ray with the hyperplane containing
-	the tetrahedron.</i>
+    <i>Compute the intersection of the ray with the hyperplane containing
+    the tetrahedron.</i>
 
-	rayt &lt;- Dot4 (tet.normal,ray.direction)
-	if rayt &lt; 0 return false
+    rayt &lt;- Dot4 (tet.normal,ray.direction)
+    if rayt &lt; 0 return false
 
-	rayt &lt;- - (tet.HPlaneConst + Dot4 (tet-&gt;normal,ray.origin)) / rayt
-	if rayt &lt; 0 return false
+    rayt &lt;- - (tet.HPlaneConst + Dot4 (tet-&gt;normal,ray.origin)) / rayt
+    if rayt &lt; 0 return false
 
-	<i>Calculate the intersection point of the ray and embedding hyperplane.</i>
+    <i>Calculate the intersection point of the ray and embedding hyperplane.</i>
 
-	intersect &lt;- ray.origin + (rayt * ray.direction)
+    intersect &lt;- ray.origin + (rayt * ray.direction)
 
-	<i>Calculate the equation result values. Note that the dominant axes are
-	precomputed and stored in tet.axis1, tet.axis2, and tet.axis3.</i>
+    <i>Calculate the equation result values. Note that the dominant axes are
+    precomputed and stored in tet.axis1, tet.axis2, and tet.axis3.</i>
 
-	b1  &lt;- intersect[tet.axis1] - tet.V0[tet.axis1]
-	b2  &lt;- intersect[tet.axis2] - tet.V0[tet.axis2]
-	b3  &lt;- intersect[tet.axis3] - tet.V0[tet.axis3]
+    b1  &lt;- intersect[tet.axis1] - tet.V0[tet.axis1]
+    b2  &lt;- intersect[tet.axis2] - tet.V0[tet.axis2]
+    b3  &lt;- intersect[tet.axis3] - tet.V0[tet.axis3]
 
-	<i>Calculate the matrix of the system of equations. Note that the
-	vectors corresponding to V1-V0, V2-V0, and V3-V0 have been precomputed,
-	and are stored in the fields tet.vec1, tet.vec2, and tet.vec3.</i>
+    <i>Calculate the matrix of the system of equations. Note that the
+    vectors corresponding to V1-V0, V2-V0, and V3-V0 have been precomputed,
+    and are stored in the fields tet.vec1, tet.vec2, and tet.vec3.</i>
 
-	A11 &lt;- tet.vec1[tet.axis1]
-	A12 &lt;- tet.vec1[tet.axis2]
-	A13 &lt;- tet.vec1[tet.axis3]
+    A11 &lt;- tet.vec1[tet.axis1]
+    A12 &lt;- tet.vec1[tet.axis2]
+    A13 &lt;- tet.vec1[tet.axis3]
 
-	A21 &lt;- tet.vec2[tet.axis1]
-	A22 &lt;- tet.vec2[tet.axis2]
-	A23 &lt;- tet.vec2[tet.axis3]
+    A21 &lt;- tet.vec2[tet.axis1]
+    A22 &lt;- tet.vec2[tet.axis2]
+    A23 &lt;- tet.vec2[tet.axis3]
 
-	A31 &lt;- tet.vec3[tet.axis1]
-	A32 &lt;- tet.vec3[tet.axis2]
-	A33 &lt;- tet.vec3[tet.axis3]
+    A31 &lt;- tet.vec3[tet.axis1]
+    A32 &lt;- tet.vec3[tet.axis2]
+    A33 &lt;- tet.vec3[tet.axis3]
 
-	<i>Solve the system of three equations and three unknowns.</i>
+    <i>Solve the system of three equations and three unknowns.</i>
 
-	SolveSys3 (A11,A12,A13, A21,A22,A23,  A31,A32,A33, b1,b2,b3, x1,x2,x3)
+    SolveSys3 (A11,A12,A13, A21,A22,A23,  A31,A32,A33, b1,b2,b3, x1,x2,x3)
 
-	if x1 &lt; 0 or x2 &lt; 0 or x3 &lt; 0 or (x1+x2+x3) &gt; 1
-	    return false
+    if x1 &lt; 0 or x2 &lt; 0 or x3 &lt; 0 or (x1+x2+x3) &gt; 1
+        return false
 
-	<i>Set the intersection barycentric coordinates.</i>
+    <i>Set the intersection barycentric coordinates.</i>
 
-	tet.bc1 &lt;- x1
-	tet.bc2 &lt;- x2
-	tet.bc3 &lt;- x3
+    tet.bc1 &lt;- x1
+    tet.bc2 &lt;- x2
+    tet.bc3 &lt;- x3
 
-	normal &lt;- tet.normal  <i>The tetrahedron normal is precomputed.</i>
-	return true
+    normal &lt;- tet.normal  <i>The tetrahedron normal is precomputed.</i>
+    return true
 
-    endfunc HitTet
-</pre>
+endfunc HitTet
+</codeblock>
 
 <p class="noindent"> The tetrahedron can be rendered with Flat, Gouraud or Phong shading, since the
 barycentric coordinates of the intersection points are known. For Gouraud shading with vertex colors
 C0, C1, C2 and C3 corresponding to V0, V1, V2 and V3, respectively, the color Cintersect of the
 intersection point is given by</p>
 
-<pre>
-    Ci = (1 - alpha - beta - gamma)C0 + alpha C1 + beta C2 + gamma C3.
-</pre>
+<equations>
+Ci = (1 - alpha - beta - gamma)C0 + alpha C1 + beta C2 + gamma C3.
+</equations>
 
 <p class="noindent">Phong shading can be used to interpolate the normals N0, N1, N2 and N3 to find
 the interpolated normal Ni of the intersection point with this equation:</p>
 
-<pre>
-    Ni = (1 - alpha - beta - gamma)N0 + alpha N1 + beta N2 + gamma N3.
-</pre>
+<equations>
+Ni = (1 - alpha - beta - gamma)N0 + alpha N1 + beta N2 + gamma N3.
+</equations>
 
 
 <h3 id="s5.6.3">5.6.3 Ray - Parallelepiped Intersection</h3>
@@ -2324,20 +2329,20 @@ objects is relatively free if the tetrahedron is already provided.</p>
 <p>Like the tetrahedron, the normal vector for the parallelepiped is constant and is given by the 4D
 cross product of the three vectors</p>
 
-<pre>
-        _____   _____      _____
-        V1 V0,  V2 V0, and V3 V0.
-</pre>
+<equations>
+_____   _____      _____
+V1 V0,  V2 V0, and V3 V0.
+</equations>
 
 <p class="noindent">The intersection point is computed in the same manner as for the tetrahedron,
 with the exception that the barycentric coordinates alpha, beta and gamma must meet slightly
 different criteria:</p>
 
-<pre>
-        0 &lt;= alpha &lt;= 1,
-        0 &lt;= beta  &lt;= 1, and
-        0 &lt;= gamma &lt;= 1.
-</pre>
+<equations>
+0 &lt;= alpha &lt;= 1,
+0 &lt;= beta  &lt;= 1, and
+0 &lt;= gamma &lt;= 1.
+</equations>
 
 <p class="noindent">If the tetrahedron and parallelepiped data structures are defined properly, the
 intersection routine for the tetrahedron can also solve for ray-parallelepiped intersections. The
