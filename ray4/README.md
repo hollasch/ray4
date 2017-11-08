@@ -1,32 +1,30 @@
 ray4
 ====================================================================================================
 
-This is ray4, a 4D raytracer I wrote for my master’s thesis in May 1991
-([“Four-Space Visualization of 4D Objects”](http://hollasch.github.io/ray4)).
+This is `ray4`, a 4D raytracer I wrote for my master’s thesis in May 1991
+([_Four-Space Visualization of 4D Objects_]).
 
 This project includes the following files:
 
-| File           | Description
-|----------------|-----------------------------------------------
-| README.md      | This File
-| copyright      | Ray4 Release Copyright
-| ray4.doc       | Ray4 Documentation
-| makefile       | Program Make File (Unix)
-| makefile-Amiga | Program Make File (Amiga)
-| ray4.h         | Main Header File
-| r4_globals.h   | Ray4 Global Variables
-| r4_image.h     | Ray4 Image Cube File Format Structures
-| vector.h       | Vector Operation Macros
-| v4cross.c      | Vector Cross-Product Routine
-| v4normalize.c  | Vector Normalization Routine
-| r4_main.c      | Main Ray4 Functions
-| r4_io.c        | Ray4 Input/Output Functions (for portability)
-| r4_parse.c     | Ray4 Input File Parsing Routines
-| r4_trace.c     | Ray4 Raytracing Routines
-| r4_hit.c       | Ray4 Ray-Object Intersection Routines
-| r4tosgi.c      | Ray4 Output File to GL-Device Display Program
-| r4toiff.c      | Ray4 Output File to Amiga display & IFF File
-| scube.r4<br>sphere.r4<br>tcube.r4<br>dots.r4<br>dots3.r4<br>dots4.r4<br>format.r4<br>blank.r4<br>wdots.r4 | Example Input Files
+    README.md ........ This file
+    copyright ........ Ray4 release copyright
+    ray4.doc ......... Ray4 documentation
+    makefile ......... Program make file (Unix)
+    makefile-Amiga ... Program make file (Amiga)
+    ray4.h ........... Main header file
+    r4_globals.h ..... Ray4 global variables
+    r4_image.h ....... Ray4 image cube file format structures
+    vector.h ......... Vector operation macros
+    v4cross.c ........ Vector cross-product routine
+    v4normalize.c .... Vector normalization routine
+    r4_main.c ........ Main ray4 functions
+    r4_io.c .......... Ray4 input/output functions (for portability)
+    r4_parse.c ....... Ray4 input file parsing routines
+    r4_trace.c ....... Ray4 raytracing routines
+    r4_hit.c ......... Ray4 ray-object intersection routines
+    r4tosgi.c ........ Ray4 output file to GL-device display program
+    r4toiff.c ........ Ray4 output file to Amiga display & IFF file
+    *.r4 ............. Example input files
 
 You will probably need to tweak the makefile to get it to run on your platform. I’ve tried to make
 it as straightforward as possible, but let me know if you have problems.
@@ -50,3 +48,7 @@ Example Run
 
 ----
 Steve Hollasch / steve@hollasch.net
+
+
+
+[_Four-Space Visualization of 4D Objects_]: https://hollasch.github.io/ray4/Four-Space_Visualization_of_4D_Objects.html
