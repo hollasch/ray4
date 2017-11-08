@@ -1,25 +1,28 @@
+`ray4/thesis/troff/`
+====================================================================================================
 
-This archive contains the TROFF source for of my thesis entitled "Four-Space
-Visualization of 4D Objects". The following files are included:
+This archive contains the TROFF source for of my thesis _Four-Space Visualization of 4D Objects_.
 
-    README .......... This file.
-    makefile ........ This makefile should be easily modified for your environ.
-    title ........... Title page & approval page.
-    abstract ........ Abstract and acknowledgements.
-    chapter1 ........ Thesis chapter
-    chapter2 ........       \
-    chapter3 ........       /
-    chapter4 ........       \
-    chapter5 ........       /
-    chapter6 ........ Thesis chapter
-    references ...... Articles, books & papers referred to from the thesis.
-    appendix ........ Thesis appendix (notes on implementation).
-    pageinfo ........ The generated pagination code.
-    thesis.macros ... General macros for the thesis.
-    4dv.macros ...... eqn macros that are helpful for my mathematical notation.
-    toc.macros ...... Macros for constructing the table of contents.
-    lof.macros ...... Macros for constructing the list of figures.
+The following files are included:
 
-Note that if you have a PostScript printer you can pick up the already-generated
-PostScript verision of this thesis from the PostScript directory.
+    README.md ....... This file
+    4dv.macros ...... TROFF macros for mathematical notation
+    lof.macros ...... TROFF Macros for constructing the list of figures
+    thesis.macros ... TROFF macros for the thesis source
+    toc.macros ...... TROFF macros for constructing the table of contents
+    makefile ........ The makefile for creating the various thesis assets
+    pageinfo ........ Generated pagination code
+
+    title ........... Title & approval page
+    abstract ........ Abstract and acknowledgements
+    chapter1 ........ Thesis chapter 1
+    chapter2 ........ Thesis chapter 2
+    chapter3 ........ Thesis chapter 3
+    chapter4 ........ Thesis chapter 4
+    chapter5 ........ Thesis chapter 5
+    chapter6 ........ Thesis chapter 6
+    appendix ........ Thesis appendix (notes on implementation)
+    references ...... Referenced articles, books & papers
+
+Generated PostScript files can be found in the peer directory `../PostScript/`.
 
