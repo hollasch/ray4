@@ -504,8 +504,8 @@ will be added to the light list.
 
 void  DoLight  ()
 {
-    Light *prev = &DefLight;   /* Previously Defined Light */
-    Light *light;                       /* New Light Source */
+    static Light *prev = &DefLight;   /* Previously Defined Light */
+    Light *light;                     /* New Light Source */
 
     /* Gobble up the opening parenthesis. */
 
@@ -552,8 +552,8 @@ DefSphere structure for the first sphere, and then by the previous sphere.
 
 void  DoSphere  ()
 {
-    Sphere *prev = &DefSphere;  /* Previously Defined Sphere */
-    Sphere *snew;               /* New Sphere */
+    static Sphere *prev = &DefSphere;  /* Previously Defined Sphere */
+    Sphere *snew;                      /* New Sphere */
 
     /* Gobble up the opening parenthesis. */
 
@@ -598,8 +598,8 @@ vertices) and adds it to the object list.
 
 void  DoParallelepiped ()
 {
-    Parallelepiped *prev= &DefPllp; /* Previously Defined Tetrahedron*/
-    Parallelepiped *pnew;         /* New Parallelepiped */
+    static Parallelepiped *prev= &DefPllp; /* Previously Defined Tetrahedron*/
+    Parallelepiped *pnew;                  /* New Parallelepiped */
 
     /* Gobble up the opening parenthesis. */
 
@@ -645,8 +645,8 @@ adds it to the object list.
 
 void  DoTetrahedron ()
 {
-    Tetrahedron *prev = &DefTetra; /* Previously Defined Tetrahedron*/
-    Tetrahedron *tnew;             /* New Tetrahedron */
+    static Tetrahedron *prev = &DefTetra; /* Previously Defined Tetrahedron*/
+    Tetrahedron *tnew;                    /* New Tetrahedron */
 
     /* Gobble up the opening parenthesis. */
 
@@ -690,8 +690,8 @@ This subroutine reads in a triangle description.
 
 void  DoTriangle  ()
 {
-    Triangle *prev = &DefTriangle; /* Previously Defined Triangle */
-    Triangle *tnew;                /* New Triangle */
+    static Triangle *prev = &DefTriangle; /* Previously Defined Triangle */
+    Triangle *tnew;                       /* New Triangle */
 
     /* Gobble up the opening parenthesis. */
 
