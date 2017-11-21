@@ -41,8 +41,6 @@ Revisions:
 FILE *instream  = nil;  /* Input Stream */
 int   outstream = 0;    /* Output Stream */
 
-int   unreadChar = -2; /* If > -2 it's a character that has been given to UnreadChar. Can also unread EOF, which is -1 . */
-
 
 /*****************************************************************************
 These procedures close the input and output streams.
@@ -71,19 +69,17 @@ This routine returns then next character from the input stream.  If the end of
 file is reached, it returns -1.
 *****************************************************************************/
 
+int UNREAD_NONE = -2;
+int unreadChar = UNREAD_NONE;
+
 int  ReadChar  ()
 {
-    if (unreadChar > -2)
-    {
-        int ret;
+    if (unreadChar == UNREAD_NONE)
+        return character;
 
-        ret= unreadChar;
-        unreadChar= -2;
-
-        return ret;
-    }
-
-    return getc (instream);
+    int character = unreadChar;
+    unreadChar = UNREAD_NONE;
+    return character;
 }
 
 /*****************************************************************************
@@ -92,9 +88,9 @@ something parsers often need. It cannot unread more than one character at
 a time though.
 *****************************************************************************/
 
-void UnreadChar  (int cc)
+void UnreadChar  (int character)
 {
-    unreadChar= cc;
+    unreadChar = character;
 }
 
 
