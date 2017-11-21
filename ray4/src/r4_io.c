@@ -121,7 +121,7 @@ This subroutine opens the output file.
 void  OpenOutput  ()
 {
     if (!outfile || (*outfile == 0))
-        Halt ("No output file specified.", 0);
+        Halt ("No output file specified.");
 
     if (-1 == (outstream = open (outfile, O_TRUNC|O_CREAT|O_WRONLY, 0666)))
         Halt ("Open failed on output file (%s).", outfile);
@@ -138,5 +138,5 @@ void  WriteBlock  (
     int   num)     /* Number of Bytes to Write */
 {
     if (num != write (outstream, buff, (int)(num)))
-        Halt ("Write error to output file; aborting", 0);
+        Halt ("Write error to output file; aborting");
 }

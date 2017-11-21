@@ -252,7 +252,7 @@ void ParseInput ()
                 break;
 
             default:
-                Halt ("Internal Error (Globals vtype switch).",0);
+                Halt ("Internal Error (Globals vtype switch).");
         }
     }
 
@@ -283,7 +283,7 @@ char *GetToken  (
     if (cc == EOFC)
     {   eofflag = true;
         if (eofok)  return nil;
-        Error ("Unexpected end-of-file.",0);
+        Error ("Unexpected end-of-file.");
     }
 
     ptr = buff;
@@ -298,7 +298,7 @@ char *GetToken  (
             {   if (cc == EOFC)
                 {   eofflag = true;
                     if (eofok)  return nil;
-                    Error ("Unexpected end-of-file.",0);
+                    Error ("Unexpected end-of-file.");
                 }
             }
         }
@@ -310,7 +310,7 @@ char *GetToken  (
             if ((char)(EOFC) == (cc = ReadChar ()))
             {   eofflag = true;
                 if (eofok)  return nil;
-                Error ("Unexpected end-of-file.",0);
+                Error ("Unexpected end-of-file.");
             }
         }
 
@@ -356,7 +356,7 @@ char *GetToken  (
 
         eofflag = true;
         if (eofok)  return nil;
-        Error ("Unexpected end-of-file.",0);
+        Error ("Unexpected end-of-file.");
     }
 
     if (CTYPE(cc) == NUM)
@@ -412,12 +412,12 @@ char *GetToken  (
 
         eofflag = true;
         if (eofok)  return nil;
-        Error ("Unexpected end-of-file.",0);
+        Error ("Unexpected end-of-file.");
     }
 
     /* Unexpected character.  Print out the hexadecimal value and halt. */
 
-    Error ("Unexpected character in input stream (0x%02x).", (char*)(cc & 0xFF));
+    Error ("Unexpected character in input stream (0x%02x).", (int)(cc & 0xFF));
     return nil;
 }
 
@@ -511,7 +511,7 @@ void  DoLight  ()
     /* Gobble up the opening parenthesis. */
 
     if (GetToken(token,false), token[0] != '(')
-        Error ("Missing opening parenthesis for light definition.", nil);
+        Error ("Missing opening parenthesis for light definition.");
 
     light = NEW (Light,1);
     *light = *prev;
@@ -536,7 +536,7 @@ void  DoLight  ()
 
     if (light->type == L_DIRECTIONAL)
     {   if (! V4_Normalize (light->u.dir))
-            Error ("Zero light direction vector.",0);
+            Error ("Zero light direction vector.");
     }
 
     light->next = lightlist;
@@ -559,7 +559,7 @@ void  DoSphere  ()
     /* Gobble up the opening parenthesis. */
 
     if (GetToken(token,false), token[0] != '(')
-        Error ("Missing opening parenthesis for sphere definition.", nil);
+        Error ("Missing opening parenthesis for sphere definition.");
 
     snew = NEW(Sphere,1);
     *snew = *prev;
@@ -579,10 +579,10 @@ void  DoSphere  ()
     }
 
     if (snew->radius < EPSILON)
-        Error ("Sphere has non-positive radius.", nil);
+        Error ("Sphere has non-positive radius.");
 
     if (!snew->info.attr)
-        Error ("Missing attributes for sphere description.", nil);
+        Error ("Missing attributes for sphere description.");
 
     snew->rsqrd = snew->radius * snew->radius;
 
@@ -605,8 +605,7 @@ void  DoParallelepiped ()
     /* Gobble up the opening parenthesis. */
 
     if (GetToken(token,false), token[0] != '(')
-        Error ("Missing opening parenthesis for parallelepiped definition.",
-               nil);
+        Error ("Missing opening parenthesis for parallelepiped definition.");
 
     pnew = NEW (Parallelepiped,1);
     *pnew = *prev;
@@ -631,7 +630,7 @@ void  DoParallelepiped ()
     Process_TetPar (&pnew->tp);
 
     if (!pnew->info.attr)
-        Error ("Missing attributes for parallelepiped description.", nil);
+        Error ("Missing attributes for parallelepiped description.");
 
     pnew->info.next = objlist;
     objlist = (ObjInfo *)(prev = pnew);
@@ -652,7 +651,7 @@ void  DoTetrahedron ()
     /* Gobble up the opening parenthesis. */
 
     if (GetToken(token,false), token[0] != '(')
-        Error ("Missing opening parenthesis for tetrahedron definition.", nil);
+        Error ("Missing opening parenthesis for tetrahedron definition.");
 
     tnew = NEW (Tetrahedron,1);
     *tnew = *prev;
@@ -677,7 +676,7 @@ void  DoTetrahedron ()
     Process_TetPar (&tnew->tp);
 
     if (!tnew->info.attr)
-        Error ("Missing attributes for tetrahedron description.", nil);
+        Error ("Missing attributes for tetrahedron description.");
 
     tnew->info.next = objlist;
     objlist = (ObjInfo *)(prev = tnew);
@@ -697,7 +696,7 @@ void  DoTriangle  ()
     /* Gobble up the opening parenthesis. */
 
     if (GetToken(token,false), token[0] != '(')
-        Error ("Missing opening parenthesis for triangle definition.", nil);
+        Error ("Missing opening parenthesis for triangle definition.");
 
     tnew = NEW (Triangle,1);
     *tnew = *prev;
@@ -724,7 +723,7 @@ void  DoTriangle  ()
     V4_3Vec (tnew->vec2, =, tnew->vert[2], -, tnew->vert[0]);
 
     if (!tnew->info.attr)
-        Error ("Missing attributes for triangle description.", nil);
+        Error ("Missing attributes for triangle description.");
 
     tnew->info.next = objlist;
     objlist = (ObjInfo *)(prev = tnew);
@@ -741,7 +740,7 @@ void  DoView  ()
     /* Gobble up the opening parenthesis. */
 
     if (GetToken(token,false), token[0] != '(')
-        Error ("Missing opening parenthesis for view definition.", nil);
+        Error ("Missing opening parenthesis for view definition.");
 
     while (GetToken(token,false), token[0] != ')')
     {
@@ -777,7 +776,7 @@ void  Process_TetPar  (TetPar *tp)
         V4_Cross(tp->normal, tp->vec1,tp->vec2,tp->vec3);
 
         if (! V4_Normalize (tp->normal))
-            Error ("Degenerate parallelepiped/tetrahedron; not 3D.", nil);
+            Error ("Degenerate parallelepiped/tetrahedron; not 3D.");
 
         /* Find the dominant axis of the normal vector and load up the
         ** ax1, ax2 and ax3 fields accordingly. */
@@ -886,7 +885,7 @@ Attributes  *ReadAttributes  ()
         else if (keyeq (token, "index"))
         {   ReadReal (token, &newattr->indexref);
             if (newattr->indexref <= 0.0)
-            Error ("Non-positive index of refraction.", nil);
+            Error ("Non-positive index of refraction.");
         }
         else if (keyeq (token, "refle"))
         {   ushort  scratch;
@@ -896,7 +895,7 @@ Attributes  *ReadAttributes  ()
             else if (scratch == 0)
                 newattr->flags &= ~AT_REFLECT;
             else
-                Error ("Invalid `reflect' argument; should be 0 or 1.", nil);
+                Error ("Invalid `reflect' argument; should be 0 or 1.");
         }
         else
             Error ("Invalid attributes field (%s).", token);
@@ -1041,5 +1040,5 @@ void  Error  (char *format, ...)
 
     /* Halt the program. */
 
-    Halt ("Aborting.", 0);
+    Halt ("Aborting.");
 }

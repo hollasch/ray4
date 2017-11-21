@@ -223,7 +223,7 @@ void main (int argc, char *argv[])
     StartTime = time (nil);
     FireRays ();      /* Raytrace the scene. */
 
-    Halt (nil, 0);    /* Clean up and exit. */
+    Halt (nil);       /* Clean up and exit. */
 }
 
 
@@ -312,13 +312,13 @@ void  ProcessArgs  (int argc, char *argv[])
         {
             case 'a':
             {   if (ptr = GetField(ptr,&iheader.aspect[0]), (!ptr || !*ptr))
-                    Halt ("Invalid X argument for -a option.",0);
+                    Halt ("Invalid X argument for -a option.");
 
                 if (ptr = GetField(ptr,&iheader.aspect[1]), !ptr)
-                    Halt ("Invalid Y argument for -a option.",0);
+                    Halt ("Invalid Y argument for -a option.");
 
                 if (ptr = GetField(ptr,&iheader.aspect[2]), !ptr)
-                    Halt ("Invalid Z argument for -a option.",0);
+                    Halt ("Invalid Z argument for -a option.");
 
                 break;
             }
@@ -350,13 +350,13 @@ void  ProcessArgs  (int argc, char *argv[])
 
             case 'r':
             {   if (ptr = GetField(ptr,&res[X]), (!ptr || !*ptr))
-                    Halt ("Invalid X argument for -r option.",0);
+                    Halt ("Invalid X argument for -r option.");
 
                 if (ptr = GetField(ptr,&res[Y]), !ptr)
-                    Halt ("Invalid Y argument for -r option.",0);
+                    Halt ("Invalid Y argument for -r option.");
 
                 if (ptr = GetField(ptr,&res[Z]), !ptr)
-                    Halt ("Invalid Z argument for -r option.",0);
+                    Halt ("Invalid Z argument for -r option.");
 
                 break;
             }
@@ -364,15 +364,15 @@ void  ProcessArgs  (int argc, char *argv[])
             case 's':
             {   ptr = GetRange(ptr,&iheader.first[0],&iheader.last[0]);
                 if (!ptr || !*ptr)
-                    Halt ("Bad X field argument to -s option.",0);
+                    Halt ("Bad X field argument to -s option.");
 
                 ptr = GetRange(ptr,&iheader.first[1],&iheader.last[1]);
                 if (!ptr)
-                    Halt ("Bad Y field argument to -s option.",0);
+                    Halt ("Bad Y field argument to -s option.");
 
                 ptr = GetRange(ptr,&iheader.first[2],&iheader.last[2]);
                 if (!ptr)
-                    Halt ("Bad Z field argument to -s option.",0);
+                    Halt ("Bad Z field argument to -s option.");
 
                 break;
             }
@@ -388,10 +388,10 @@ void  ProcessArgs  (int argc, char *argv[])
     DELETE (opta);
 
     if ((iheader.aspect[0] == 0) || (iheader.aspect[1] == 0))
-        Halt ("X and Y aspect ratios must be non-zero.",0);
+        Halt ("X and Y aspect ratios must be non-zero.");
 
     if ((res[0] == 0) || (res[1] == 0))
-        Halt ("X and Y resolution must be non-zero.",0);
+        Halt ("X and Y resolution must be non-zero.");
 
     if (res[2] == 0)  res[2] = 1;
 
@@ -403,7 +403,7 @@ void  ProcessArgs  (int argc, char *argv[])
        || (iheader.first[2] >= res[2])
        )
     {
-        Halt ("Invalid scan range given.",0);
+        Halt ("Invalid scan range given.");
     }
 
     if (iheader.last[0] >= res[0])  iheader.last[0] = res[0]-1;
@@ -562,7 +562,7 @@ char *MyAlloc (size_t size)
     char *block;  /* Allocated Memory Block */
 
     if (0 == (block = malloc (size)))
-        Halt ("Out of memory.", 0);
+        Halt ("Out of memory.");
 
     return block;
 }
@@ -590,18 +590,18 @@ void CalcRayGrid (void)
     losnorm = V4_Norm (Los);
 
     if (losnorm < EPSILON)
-        Halt ("To-Point & From-Point are the same.", 0);
+        Halt ("To-Point & From-Point are the same.");
     V4_Scalar (Los, /=, losnorm);
 
     /* Generate the normalized ray-grid basis vectors. */
 
     V4_Cross (Gz, Vover,Vup,Los);
     if (! V4_Normalize(Gz))
-        Halt ("Line-of-sight, Up vector and Over vector aren't orthogonal.",0);
+        Halt ("Line-of-sight, Up vector and Over vector aren't orthogonal.");
 
     V4_Cross (Gy, Gz,Los,Vover);
     if (! V4_Normalize(Gy))
-        Halt ("Orthogonality problem while generating GRIDy.",0);
+        Halt ("Orthogonality problem while generating GRIDy.");
 
     V4_Cross (Gx, Gy,Gz,Los);      /* Gy, Gz & Los are all unit vectors. */
 
