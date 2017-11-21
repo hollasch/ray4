@@ -297,7 +297,7 @@ char *GetToken  (
             {   if (cc == EOFC)
                 {   eofflag = true;
                     if (eofok)  return nil;
-                        Error ("Unexpected end-of-file.",0);
+                    Error ("Unexpected end-of-file.",0);
                 }
             }
         }
@@ -309,7 +309,7 @@ char *GetToken  (
             if ((char)(EOFC) == (cc = ReadChar ()))
             {   eofflag = true;
                 if (eofok)  return nil;
-                    Error ("Unexpected end-of-file.",0);
+                Error ("Unexpected end-of-file.",0);
             }
         }
 
