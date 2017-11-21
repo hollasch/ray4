@@ -323,7 +323,7 @@ char *GetToken  (
     if (CTYPE(cc) == OTH)
     {   *ptr++ = cc;
         *ptr   = 0;
-        cc     = ReadChar ();
+//      cc     = ReadChar ();    // hersto: We are redaing a character and then return from the function. That's skipping a character. Why do we do this?
         return buff;
     }
 
