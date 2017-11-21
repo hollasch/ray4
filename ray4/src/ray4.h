@@ -276,6 +276,7 @@ void     OpenOutput   (void);
 void     ParseInput   (void);
 void     RayTrace     (Point4, Vector4, Color*, ulong);
 int      ReadChar     (void);
+void     UnreadChar   (int);
 void     WriteBlock   (void *block, int size);
 
 #endif

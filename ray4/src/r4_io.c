@@ -40,6 +40,7 @@ Revisions:
 FILE *instream  = nil;  /* Input Stream */
 int   outstream = 0;    /* Output Stream */
 
+int   unreadChar = -2; /* If > -2 it's a character that has been given to UnreadChar. Can also unread EOF, which is -1 . */
 
 
 /*****************************************************************************
@@ -71,7 +72,28 @@ file is reached, it returns -1.
 
 int  ReadChar  ()
 {
+    if (unreadChar > -2)
+    {
+        int ret;
+
+        ret= unreadChar;
+        unreadChar= -2;
+
+        return ret;
+    }
+
     return getc (instream);
+}
+
+/*****************************************************************************
+This routine, together with ReaedChar allow to put back a character, which is
+something parsers often need. It cannot unread more than one character at
+a time though.
+*****************************************************************************/
+
+void UnreadChar  (int cc)
+{
+    unreadChar= cc;
 }
 
 
