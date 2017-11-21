@@ -28,7 +28,7 @@ Revisions:
 
 *******************************************************************************/
 
-#include <io.h>
+#include <stdio.h>
 #include <fcntl.h>
 
 #include "ray4.h"
