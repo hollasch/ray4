@@ -265,7 +265,7 @@ struct S_TRIANGLE
 
 void     CloseInput   (void);
 void     CloseOutput  (void);
-void     Halt         (char*, char*);
+void     Halt         (char*, ...);
 boolean  HitSphere    (ObjInfo*, Point4, Vector4, Real*, Point4, Vector4);
 boolean  HitTetPar    (ObjInfo*, Point4, Vector4, Real*, Point4, Vector4);
 boolean  HitTriangle  (ObjInfo*, Point4, Vector4, Real*, Point4, Vector4);

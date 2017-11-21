@@ -94,6 +94,7 @@ Revisions:
 #include <time.h>
 #include <memory.h>
 #include <string.h>
+#include <stdarg.h>
 
 #define  DEFINE_GLOBALS
 #include "ray4.h"
@@ -484,18 +485,24 @@ files, and so on).
 
 void Halt (
     char *message,      /* Exception Message */
-    char *arg1)         /* Optional Message Arguments */
+    ... )               /* Optional Message Arguments */
 {
     Attributes *aptr;   /* Attributes-List Pointer */
     Light      *lptr;   /* Light-List Pointer */
     ObjInfo    *optr;   /* Object-List Pointer */
+    va_list     args;   /* List of Optional Arguments */
 
     print ("\n");
 
     if (message)
-    {   print  ("Ray4:  ");
-        printf (message, arg1);
+    {
+        va_start(args, message);
+
+        print  ("Ray4:  ");
+        vprintf (message, args);
         print  ("\n\n");
+
+        va_end(args);
     }
 
     CloseInput ();

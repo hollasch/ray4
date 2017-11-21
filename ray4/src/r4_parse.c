@@ -45,6 +45,7 @@ Revisions:
 *******************************************************************************/
 
 #include <string.h>
+#include <stdarg.h>
 
 #include "ray4.h"
 #include "r4_globals.h"
@@ -76,7 +77,7 @@ void        DoTetrahedron    (void);
 void        DoParallelepiped (void);
 void        DoTriangle       (void);
 void        DoView           (void);
-void        Error            (char *, char *);
+void        Error            (char *, ...);
 Attributes *FindAttributes   (char *);
 char       *GetToken         (char *, boolean);
 boolean     keyeq            (char *, char *);
@@ -1018,13 +1019,18 @@ printf()-like argument.  After printing the message it halts execution of the
 raytracer.
 *****************************************************************************/
 
-void  Error  (char *format, char *arg)
+void  Error  (char *format, ...)
 {
     AttrName *attrname;   /* Attribute Name Node Pointer */
+    va_list args;         /* List of Optional Arguments */
+
+    va_start(args, format);
 
     printf ("Input Error [Line %lu]:  ", lcount);
-    printf (format, arg);
+    vprintf (format, args);
     print  ("\n");
+
+    va_end(args);
 
     /* Kill the attributes name list. */
 
