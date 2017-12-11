@@ -3,8 +3,7 @@ Four-Space Visualization of 4D Objects
 
 These files contain the HTML, PostScript and TROFF versions of my master's thesis in computer
 science, _Four-Space Visualization of 4D Objects_. The latest HTML version is a single & complete
-file:
-[Four-Space\_Visualization\_of\_4D\_Objects.html](Four-Space_Visualization_of_4D_Objects.html).
+file: [Four-Space\_Visualization\_of\_4D\_Objects.html].
 
 Abstract
 --------
@@ -36,3 +35,6 @@ arbitrary 4D objects from a simple text file and display them interactively.
 The 4D raytracer (`ray4`) should be able to run on any platform that supports C's floating point
 library. The output is a 3D RGB image that can be displayed with a variety of methods.
 
+
+
+[Four-Space\_Visualization\_of\_4D\_Objects.html]: http://hollasch.github.io/ray4/Four-Space_Visualization_of_4D_Objects.html
