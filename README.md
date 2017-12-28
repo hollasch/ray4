@@ -22,5 +22,14 @@ be displayed with a variety of methods.
 You can send any questions to me at [steve@hollasch.net](mailto:steve@hollasch.net).
 
 
+Other 4D Work
+-------------
+I'm contacted from time to time by others who have referenced my thesis or are embarking on 4D
+visualization work of their own. Here are links to other work I've seen.
+
+- [4D Snake](https://www.youtube.com/watch?v=8IUnqm8j4BE)
+- [4+ Dimensional Solid Wireframes](http://utopian-aunt.surge.sh/)
+
+
 
 [_Four-Space Visualization of 4D Objects_]: https://hollasch.github.io/ray4/Four-Space_Visualization_of_4D_Objects.html
