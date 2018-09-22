@@ -9,7 +9,7 @@ Four-Space Visualization of 4D Objects
 This repository contains my thesis (converted to HTML from the original nroff sources), as well as
 the original code for my 4D wireframe viewer and my 4D raytracer.
 
-The thesis is now a single all-inclusive HTML file: [_Four-Space Visualization of 4D Objects_].
+The thesis is now a single all-inclusive HTML file: [_Four-Space Visualization of 4D Objects_][].
 
 [`wire4`](wire4/) is my 4D wireframe viewer. It was written to run on an SGI Iris workstation. It
 reads in arbitrary 4D wireframes from a simple text file and displays them interactively. The code

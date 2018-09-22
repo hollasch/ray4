@@ -2,7 +2,7 @@ ray4
 ====================================================================================================
 
 This is `ray4`, a 4D raytracer I wrote for my master’s thesis in May 1991
-([_Four-Space Visualization of 4D Objects_]).
+([_Four-Space Visualization of 4D Objects_][]).
 
 This project includes the following files:
 

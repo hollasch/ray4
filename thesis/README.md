@@ -3,7 +3,7 @@ Four-Space Visualization of 4D Objects
 
 These files contain the HTML, PostScript and TROFF versions of my master's thesis in computer
 science, _Four-Space Visualization of 4D Objects_. The latest HTML version is a single & complete
-file: [Four-Space\_Visualization\_of\_4D\_Objects.html].
+file: [Four-Space\_Visualization\_of\_4D\_Objects.html][].
 
 Abstract
 --------
