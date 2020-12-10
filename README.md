@@ -6,8 +6,8 @@ Four-Space Visualization of 4D Objects
 ![Hypersphere Slices](images/fig54a-small.jpg)
 ![Hyperspheres](images/fig54b-small.jpg)
 
-This repository contains my thesis (converted to HTML from the original nroff sources), as well as
-the original code for my 4D wireframe viewer and my 4D raytracer.
+This repository contains my 1991 thesis (converted to HTML from the original nroff sources), as well
+as the original code for my 4D wireframe viewer and my 4D raytracer.
 
 The thesis is now a single all-inclusive HTML file: [_Four-Space Visualization of 4D Objects_][].
 
@@ -19,7 +19,8 @@ has not been maintained, though, and will not run on most modern computers.
 standard output, so should be able to run on most computers. The output is a 3D RGB image that can
 be displayed with a variety of methods.
 
-You can send any questions to me at [steve@hollasch.net](mailto:steve@hollasch.net).
+You can send any questions to me at [steve@hollasch.net](mailto:steve@hollasch.net). Also, now that
+GitHub has a discussions feature, feel free to start a conversation in [the discussions section][].
 
 
 Other 4D Work
@@ -33,3 +34,4 @@ visualization work of their own. Here are links to other work I've seen.
 
 
 [_Four-Space Visualization of 4D Objects_]: https://hollasch.github.io/ray4/Four-Space_Visualization_of_4D_Objects.html
+[the discussions section]:                  https://github.com/hollasch/ray4/discussions/
