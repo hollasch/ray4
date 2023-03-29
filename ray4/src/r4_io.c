@@ -28,7 +28,6 @@ Revisions:
 
 *******************************************************************************/
 
-#include <unistd.h>
 #include <stdio.h>
 #include <fcntl.h>
 
@@ -70,14 +69,15 @@ file is reached, it returns -1.
 *****************************************************************************/
 
 int UNREAD_NONE = -2;
-int unreadChar = UNREAD_NONE;
+int unreadChar = -2;
 
 int  ReadChar  ()
 {
+    int character = unreadChar;
+
     if (unreadChar == UNREAD_NONE)
         return character;
 
-    int character = unreadChar;
     unreadChar = UNREAD_NONE;
     return character;
 }
