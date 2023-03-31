@@ -18,37 +18,6 @@ File:  r4_trace.c
 rays.  It also contains the procedures responsible for shading and
 illumination.
 
-Revisions:
-
-25-Jan-92  Hollasch
-    Released to the public domain.
-
-12-May-91  Hollasch
-    Fixed bug in shadow ray intersection routine call; `mindist' was
-    incorrectly passed by value, rather than by reference.
-
-04-Mar-91  Hollasch
-    Fixed error in light-source shadow code; prior code allowed objects behind
-    point light sources to cast shadows.
-
-05-Jan-91  Hollasch
-    Implemented new attribute list references.
-
-20-Dec-90  Hollasch
-    Fixed illumination by flipping normal vector if sight vector approaches an
-    object from `behind'.  Implemented refracted rays.  Added code to filter
-    light through transparent objects for illumination calculations (ignoring
-    refraction).
-
-13-Dec-90  Hollasch
-    Implemented reflection rays.
-
-15-Nov-90  Hollasch
-    Changed code to reflect new mindist parameter in intersection routines.
-
-30-Sep-90  Steve R. Hollasch
-    Initial version.
-
 *******************************************************************************/
 
 #include "ray4.h"

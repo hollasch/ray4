@@ -23,31 +23,6 @@ File:  ray4.h                                 Author:  Steve Hollasch
            - short integers are 16 bits exactly.
            - long integers are 32 bits exactly.
 
-Revisions:
-
-25-Jan-92  Hollasch
-    Released to the public domain.
-
-11-Apr-91  Hollasch
-    Created the Ray structure (currently unused).
-
-01-Jan-91  Hollasch
-    Defined attribute structure and created linked attribute list structure.
-
-17-Dec-90  Hollasch
-    Added Parallelepiped structure.  Removed tetrahedron/parallelepiped common
-    fields to new `TetPar' structure.
-
-20-Nov-90  Hollasch
-    Moved some variable computations from on-the-fly to precomputed fields in
-    structures for both 2D triangles and tetrahedrons.
-
-15-Nov-90  Hollasch
-    Added tetrahedron and triangle code.
-
-30-Sep-90  Steve R. Hollasch
-    Initial version.
-
 *******************************************************************************/
 
 #ifndef RAY_H

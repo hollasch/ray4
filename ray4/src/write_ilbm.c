@@ -11,11 +11,6 @@
 **    If the file write succeeds, WriteILBM will return 1, otherwise it
 **    will return 0.
 **
-**
-**  Revisions:
-**    1.00  31-Oct-90  SRH
-**          Initial version.
-**
 ****************************************************************************/
 
 #include <stdio.h>

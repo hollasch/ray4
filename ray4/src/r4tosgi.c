@@ -24,24 +24,6 @@
 **  Assumptions:
 **    Images are no larger than 32767 x 32767 in size.
 **
-**  Revisions:
-**
-**    1.00  25-Jan-92  Hollasch
-**          Released to the public domain.
-**
-**    0.10  19-Nov-1991  Hollasch
-**          Initial release; Added default zplane as first available plane.
-**
-**    0.02  15-Jul-1991  Hollasch, Marty Ryan
-**          Removed inclusion of unix.h.  Also keyed typedefs of uchar,
-**          ushort and ulong off of _AIX.
-**
-**    0.01  04-Mar-1991  Hollasch
-**          Source code mods (r4image.h --> r4_image.h), no steve.h.
-**
-**    0.00  26-Nov-1990  Steve R. Hollasch
-**          Preliminary version.
-**
 ****************************************************************************/
 
 #include <gl.h>

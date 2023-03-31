@@ -17,42 +17,6 @@ File:  r4_vec.c
     This file contains utility routines for 4D vector operations.  See the
 header in r4_main.c for more information on Ray4.
 
-
-Revisions:
-
-92-01-25  Hollasch
-    Released to the public domain.
-
-91-05-27  Hollasch
-    Fixed bug in tetrahedron/parallelepiped normal and intersection assignment
-    code; previous version did not ensure that the passed parameter pointers
-    were non-nil.
-
-91-05-15  Hollasch
-    Fixed logic flaw in HitSphere t1/t2 selection.
-
-91-05-12  Hollasch
-    Added hypersphere debug code.
-
-90-12-19  Hollasch
-    Altered tetrahedron-intersection routine to accomodate both tetrahedra
-    and parallelepipeds.
-
-90-12-13  Hollasch
-    Added internal intersection verification code for tetrahedra.
-
-90-11-20  Hollasch
-    Fixed ray-triangle intersection; moved some variable computations from
-    on-the-fly to precomputed fields in structures for both 2D triangles and
-    tetrahedrons.
-
-90-11-15  Hollasch
-    Added tetrahedron & triangle intersection code, and altered intersection
-    routines to use the new mindist parameter.
-
-90-09-30  Steve R. Hollasch
-    Initial version.
-
 *******************************************************************************/
 
 #include "ray4.h"

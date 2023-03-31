@@ -17,31 +17,6 @@ File:  r4_parse.c
     This file contains procedures that are used to parse the input file and
 build the scene for the raytrace.
 
-Revisions:
-
-25-Jan-92  Hollasch
-    Released to the public domain.
-
-01-Jan-91  Hollasch
-    Changed source file format to use enclosing parentheses for directive
-    fields, and added named and immediate attributes and the attribute name
-    list.  I also changed the meaning of the direction vector given for
-    directional light sources:  the vector in the source file now specifies the
-    direction _towards_ the directional light source.
-
-19-Dec-90  Hollasch
-    Added parallelepiped objects.
-
-13-Dec-90  Hollasch
-    Added code to enable object reflections and added internal verification
-    code for debugging tetrahedra.
-
-15-Nov-90  Hollasch
-    Added triangle parsing code.
-
-30-Sep-90  Steve R. Hollasch
-    Initial version.
-
 *******************************************************************************/
 
 #include <string.h>

@@ -18,14 +18,6 @@ File:  r4_io.c
 the r4_main.c header for more information on Ray4.  This version of r4_io.c
 contains standard C I/O routines.
 
-Revisions:
-
-25-Jan-92  Hollasch
-    Released to the public domain.
-
-30-Sep-90  Steve R. Hollasch
-    Initial version.
-
 *******************************************************************************/
 
 #include <stdio.h>

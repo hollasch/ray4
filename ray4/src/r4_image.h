@@ -46,14 +46,6 @@ triples, where each triple is `bitsperpixel' long.  Scanlines are stored left
 to right, top to bottom, back to front.  All scanlines begin on even byte
 boundaries.
 
-Revisions:
-
-92-01-25  Hollasch
-        Released to the public domain.
-
-90-10-02  Steve R. Hollasch
-        Initial version.
-
 *******************************************************************************/
 
 #ifndef R4_IMAGE_H

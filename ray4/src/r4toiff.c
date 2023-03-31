@@ -23,45 +23,6 @@
 **  Assumptions:
 **    Images are no larger than 65535 x 65535 in size.
 **
-**  Revisions:
-**
-**    1.50  08-Feb-1991  Hollasch
-**        Released to the public domain.
-**
-**    1.42  27-May-1991  Hollasch
-**        If the zplane is either left unspecified or is specified at zero,
-**        zplane will automatically be set to the first image plane.
-**
-**    1.41  04-Feb-1991  Hollasch
-**        Fixed bug in image plane seeks.  The previous version assumed that
-**        image data always began at image plane zero (image.first[2]==0).
-**
-**    1.40  02-Feb-1991  Hollasch
-**        Added the -g option.
-**
-**    1.30  29-Nov-1990  Hollasch
-**        Added the -p option.
-**
-**    1.20  14-Nov-1990  Hollasch
-**        Added tiled display.
-**
-**    1.12  11-Nov-1990  Hollasch
-**        Repaired a bug in GetColorPalette.  The result was that not all
-**        pixels were read during the first pass, and the scanline buffer
-**        was not used up completely.
-**
-**    1.11  01-Nov-1990  Hollasch
-**        Program now saves full screen only; too many problems with show
-**        programs that don't properly handle ILBM images smaller than
-**        the full screen.  Also removed ILBM code to another file.  Display
-**        window is now a BACKDROP window.
-**
-**    1.10  24-Oct-1990  Hollasch
-**        Added IFF output and colormap load/save.
-**
-**    0.01  20-Oct-1990  Steve R. Hollasch
-**        Preliminary version.
-**
 ****************************************************************************/
 
 #include <stdio.h>

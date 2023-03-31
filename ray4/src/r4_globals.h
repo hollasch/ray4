@@ -20,14 +20,6 @@ global variables will be declared for file that includes this header.  If the
 macro `DEFINE_GLOBALS' is not defined, then the global variables will be
 declared as external references.
 
-Revisions:
-
-25-Jan-92  Hollasch
-    Released to the public domain.
-
-04-Mar-91  Steve Hollasch
-    Initial version; yanked from original ray4.h.
-
 *******************************************************************************/
 
 #ifndef R4_GLOBALS_H
