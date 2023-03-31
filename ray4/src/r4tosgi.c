@@ -88,8 +88,8 @@ usage  :  r4tosgi [-t] [-z <Image Plane>] <Image Cube File>\n\
    /***  Macro Definitions  ***/
    /***************************/
 
-#define DISPWIDTH     (XMAXSCREEN+1)	/* Max Display Width */
-#define DISPHEIGHT    (YMAXSCREEN+1)	/* Max Display Height */
+#define DISPWIDTH     (XMAXSCREEN+1)    /* Max Display Width */
+#define DISPHEIGHT    (YMAXSCREEN+1)    /* Max Display Height */
 
 #define true     1
 #define false    0
@@ -97,7 +97,7 @@ usage  :  r4tosgi [-t] [-z <Image Plane>] <Image Cube File>\n\
 #define nil      ((void*)0)
 
 #ifdef _STDC_
-#  define ARGS(list)    list		/* Function Argument List */
+#  define ARGS(list)    list            /* Function Argument List */
 #else
 #  define ARGS(list)    ()
 #endif
@@ -132,20 +132,20 @@ void  DisplayImage  ARGS((ushort, short, short));
    /***  Global Variables  ***/
    /**************************/
 
-ImageHdr  image;		/* Image Record */
-long      imgstart;		/* Image Data Start Position */
-long      imgsize;		/* Image Slice Size */
-Boolean   ginit_done = false;	/* True if Graphics Have Been Initialized */
-short     indata;		/* Input Data Slot */
-char     *infile;		/* Input Ray4 Image File */
-FILE     *instream;		/* Image File Input Stream */
-short     offx, offy;		/* Image Rectangle Offset Values */
-RGBvalue *red, *blu, *grn;	/* RGB Scanline Buffers */
-ushort    resx, resy;		/* Image Resoulution */
-ulong     scanlsize;		/* Scanline Buffer Size */
-uchar    *scanbuff;		/* Scanline Buffer */
-Boolean   tile = false;		/* Tiling Option Switch */
-ushort    zplane;		/* Image Plane */
+ImageHdr  image;                /* Image Record */
+long      imgstart;             /* Image Data Start Position */
+long      imgsize;              /* Image Slice Size */
+Boolean   ginit_done = false;   /* True if Graphics Have Been Initialized */
+short     indata;               /* Input Data Slot */
+char     *infile;               /* Input Ray4 Image File */
+FILE     *instream;             /* Image File Input Stream */
+short     offx, offy;           /* Image Rectangle Offset Values */
+RGBvalue *red, *blu, *grn;      /* RGB Scanline Buffers */
+ushort    resx, resy;           /* Image Resoulution */
+ulong     scanlsize;            /* Scanline Buffer Size */
+uchar    *scanbuff;             /* Scanline Buffer */
+Boolean   tile = false;         /* Tiling Option Switch */
+ushort    zplane;               /* Image Plane */
 
 
 
@@ -154,11 +154,11 @@ ushort    zplane;		/* Image Plane */
 ****************************************************************************/
 
 void  main  (argc, argv)
-   int   argc;		/* Command Line Argument Count */
-   char *argv[];	/* Command Line Argument Array */
+   int   argc;          /* Command Line Argument Count */
+   char *argv[];        /* Command Line Argument Array */
 {
-   auto    short  horz_space;	/* Horizontal Spacing Between Tiled Images */
-   auto    short  vert_space;	/* Vertical   Spacing Between Tiled Images */
+   auto    short  horz_space;   /* Horizontal Spacing Between Tiled Images */
+   auto    short  vert_space;   /* Vertical   Spacing Between Tiled Images */
 
 
    print (notice);
@@ -172,7 +172,7 @@ void  main  (argc, argv)
       offy = (DISPHEIGHT - resy) / 2;
    }
    else
-   {  auto short ii;	/* Scratch Variable */
+   {  auto short ii;    /* Scratch Variable */
 
       ii = DISPWIDTH / resx;
       horz_space = (DISPWIDTH - (resx * ii)) / (ii + 1);
@@ -203,9 +203,9 @@ void  main  (argc, argv)
       offx += resx + horz_space;
       if ((offx + resx) > DISPWIDTH)
       {  offx = horz_space;
-	 offy += resy + vert_space;
-	 if ((offy + resy) > DISPHEIGHT)
-	    break;
+         offy += resy + vert_space;
+         if ((offy + resy) > DISPHEIGHT)
+            break;
       }
 
    } while (zplane <= image.last[2]);
@@ -226,8 +226,8 @@ void  main  (argc, argv)
 ****************************************************************************/
 
 void  Halt  (msg, arg)
-   char *msg;	/* Termination Message */
-   char *arg;	/* Optional Message String Argument */
+   char *msg;   /* Termination Message */
+   char *arg;   /* Optional Message String Argument */
 {
    if (instream)  fclose (instream);
 
@@ -260,10 +260,10 @@ void  Halt  (msg, arg)
 ****************************************************************************/
 
 void  ParseArgs  (argc, argv)
-   int   argc;		/* Command Line Argument Count */
-   char *argv[];	/* Command Line Argument Array */
+   int   argc;          /* Command Line Argument Count */
+   char *argv[];        /* Command Line Argument Array */
 {
-   register int argi;	/* Argument Array Index */
+   register int argi;   /* Argument Array Index */
 
    if (argc < 2)
    {  print (usage);
@@ -273,23 +273,23 @@ void  ParseArgs  (argc, argv)
    for (argi=1;  argi < argc;  ++argi)
    {
       if (*argv[argi] != '-')
-	 infile = argv[argi];
+         infile = argv[argi];
       else switch (argv[argi][1])
       {
-	 case 't':
-	    tile = true;
-	    break;
+         case 't':
+            tile = true;
+            break;
 
-	 case 'z':
-	    if (argv[argi][2])
-	    zplane = atoi (argv[argi]+2);
-	    else
-	    zplane = atoi (argv[++argi]);
-	    break;
+         case 'z':
+            if (argv[argi][2])
+            zplane = atoi (argv[argi]+2);
+            else
+            zplane = atoi (argv[++argi]);
+            break;
 
-	 default:
-	    Halt ("Invalid option (%s).", argv[argi]);
-	    break;
+         default:
+            Halt ("Invalid option (%s).", argv[argi]);
+            break;
       }
    }
 
@@ -329,11 +329,11 @@ void  ImagePrep  ()
       printf ("  version     %u\n", image.version);
       printf ("  bits/pixel  %u\n", image.bitsperpixel);
       printf ("  aspect      %u : %u : %u\n",
-	 image.aspect[0], image.aspect[1], image.aspect[2]);
+         image.aspect[0], image.aspect[1], image.aspect[2]);
       printf ("  first       %u : %u : %u\n",
-	 image.first[0], image.first[1], image.first[2]);
+         image.first[0], image.first[1], image.first[2]);
       printf ("  last        %u : %u : %u\n",
-	 image.last[0], image.last[1], image.last[2]);
+         image.last[0], image.last[1], image.last[2]);
       print  ("\n");
 #  endif
 
@@ -347,7 +347,7 @@ void  ImagePrep  ()
 
    if (image.version != 1)
    {  printf ("r4tosgi:  Unknown Ray4 format version (%d).\n",
-	 image.version);
+         image.version);
       Halt ("Aborting.", nil);
    }
 
@@ -411,12 +411,12 @@ void  ImagePrep  ()
 
 void  InitSGI  ()
 {
-   ginit ();		/* Initialize the display. */
+   ginit ();            /* Initialize the display. */
    ginit_done = true;
 
    cursoff ();
 
-   RGBmode ();		/* Select RGB mode (24-bit color). */
+   RGBmode ();          /* Select RGB mode (24-bit color). */
    gconfig ();
    RGBcolor (0, 0, 0);
    clear ();
@@ -431,14 +431,14 @@ void  InitSGI  ()
 ****************************************************************************/
 
 void  DisplayImage  (plane, offx, offy)
-   ushort  plane;	/* Image Plane to Display */
-   short   offx;	/* Image Offset, Horizontal Component */
-   short   offy;	/* Image Offset, Vertical Component */
+   ushort  plane;       /* Image Plane to Display */
+   short   offx;        /* Image Offset, Horizontal Component */
+   short   offy;        /* Image Offset, Vertical Component */
 {
-   auto    Boolean   ebflag;		/* Even-Byte Boundary Flag */
-   auto    uchar    *ptr;		/* Scanline Buffer Point */
-   auto    RGBvalue *Vr, *Vg, *Vb;	/* Color Array Pointers */
-   auto    short     xx, yy;		/* Pixel Position */
+   auto    Boolean   ebflag;            /* Even-Byte Boundary Flag */
+   auto    uchar    *ptr;               /* Scanline Buffer Point */
+   auto    RGBvalue *Vr, *Vg, *Vb;      /* Color Array Pointers */
+   auto    short     xx, yy;            /* Pixel Position */
 
 
    fseek (instream, imgstart + (imgsize * (long)(plane-image.first[2])), 0);
@@ -448,7 +448,7 @@ void  DisplayImage  (plane, offx, offy)
       /* Read in the next scanline. */
 
       if (1 != fread (scanbuff, scanlsize, 1, instream))
-	 Halt ("Read error on image file (%s).", infile);
+         Halt ("Read error on image file (%s).", infile);
 
       ebflag = true;
       ptr    = scanbuff;
@@ -459,23 +459,23 @@ void  DisplayImage  (plane, offx, offy)
 
       for (xx=image.first[0];  xx <= image.last[0];  ++xx)
       {
-	 if (image.bitsperpixel == 24)
-	 {  *Vr++ = *ptr++;
-	    *Vg++ = *ptr++;
-	    *Vb++ = *ptr++;
-	 }
-	 else if (ebflag)
-	 {  *Vr++ = *ptr & 0xF0;
-	    *Vg++ = *ptr++ << 4;
-	    *Vb++ = *ptr & 0xF0;
-	    ebflag = false;
-	 }
-	 else
-	 {  *Vr++ = *ptr++ << 4;
-	    *Vg++ = *ptr & 0xF0;
-	    *Vb++ = *ptr++ << 4;
-	    ebflag = true;
-	 }
+         if (image.bitsperpixel == 24)
+         {  *Vr++ = *ptr++;
+            *Vg++ = *ptr++;
+            *Vb++ = *ptr++;
+         }
+         else if (ebflag)
+         {  *Vr++ = *ptr & 0xF0;
+            *Vg++ = *ptr++ << 4;
+            *Vb++ = *ptr & 0xF0;
+            ebflag = false;
+         }
+         else
+         {  *Vr++ = *ptr++ << 4;
+            *Vg++ = *ptr & 0xF0;
+            *Vb++ = *ptr++ << 4;
+            ebflag = true;
+         }
       }
 
       /* Write the scanline. */

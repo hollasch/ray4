@@ -26,9 +26,9 @@
 
    /***  Function Parameters  ***/
 
-#define MAXWIDTH    640			/* Max Image Width (Pixels) */
-#define MAXPLANES   6			/* Max # Image Bit Planes */
-#define MAXROWSIZE  (MAXWIDTH/ 8)	/* Max # Bytes Image Bit-Plane Row */
+#define MAXWIDTH    640                 /* Max Image Width (Pixels) */
+#define MAXPLANES   6                   /* Max # Image Bit Planes */
+#define MAXROWSIZE  (MAXWIDTH/ 8)       /* Max # Bytes Image Bit-Plane Row */
 
 
    /***  Type Definitions  ***/
@@ -50,32 +50,32 @@ ushort  PutPacked     (/* uchar**, uchar*, int */);
    /***  Data Structures  ***/
 
 struct
-{  ushort  wide, high;			/* Raster Width, Height */
-   short   x, y;			/* Pixel Position, This Image */
-   uchar   nPlanes;			/* Number of Source BitPlanes */
-   uchar   masking;			/* Masking Type */
-   uchar   compression;			/* Compression Type */
-   uchar   pad1;			/* Unused */
-   ushort  transparcolor;		/* Transparent Color Number */
-   uchar   xAspect, yAspect;		/* Aspect Ratio  width:height */
-   short   pageWidth, pageHeight;	/* Page Width & Height */
+{  ushort  wide, high;                  /* Raster Width, Height */
+   short   x, y;                        /* Pixel Position, This Image */
+   uchar   nPlanes;                     /* Number of Source BitPlanes */
+   uchar   masking;                     /* Masking Type */
+   uchar   compression;                 /* Compression Type */
+   uchar   pad1;                        /* Unused */
+   ushort  transparcolor;               /* Transparent Color Number */
+   uchar   xAspect, yAspect;            /* Aspect Ratio  width:height */
+   short   pageWidth, pageHeight;       /* Page Width & Height */
 } BitMapHeader
 =
-{  0, 0,	/* wide, high */
-   0, 0,	/* x, y */
-   1,		/* nPlanes */
-   0,		/* masking */
-   1,		/* compression */
-   0,		/* pad1 */
-   0,		/* transparcolor */
-   0, 0,	/* xAspect, yAspect */
-   0, 0		/* pageWidth, pageHeight */
+{  0, 0,        /* wide, high */
+   0, 0,        /* x, y */
+   1,           /* nPlanes */
+   0,           /* masking */
+   1,           /* compression */
+   0,           /* pad1 */
+   0,           /* transparcolor */
+   0, 0,        /* xAspect, yAspect */
+   0, 0         /* pageWidth, pageHeight */
 };
 
 
    /***  Global Variable Definitions  ***/
 
-uchar  nplanes;		/* Number of Image Bitplanes */
+uchar  nplanes;         /* Number of Image Bitplanes */
 
 
 
@@ -85,15 +85,15 @@ uchar  nplanes;		/* Number of Image Bitplanes */
 ****************************************************************************/
 
 short  WriteILBM  (fname, screen)
-   char   *fname;	/* Destination File Name */
-   Screen *screen;	/* Image Screen */
+   char   *fname;       /* Destination File Name */
+   Screen *screen;      /* Image Screen */
 {
-   auto     long    bodysize;	/* Size of the BODY Property Chunk */
-   auto     long    formsize;	/* Size of the FORM Property Chunk */
-   auto     long    lng;	/* Temporary Long Value */
-   register FILE   *out;	/* Output Stream */
-   auto     long    pos_body;	/* Position of BODY Size Value in File */
-   auto     long    pos_form;	/* Position of FORM Size Value in File */
+   auto     long    bodysize;   /* Size of the BODY Property Chunk */
+   auto     long    formsize;   /* Size of the FORM Property Chunk */
+   auto     long    lng;        /* Temporary Long Value */
+   register FILE   *out;        /* Output Stream */
+   auto     long    pos_body;   /* Position of BODY Size Value in File */
+   auto     long    pos_form;   /* Position of FORM Size Value in File */
 
 
    /* Load the global variables */
@@ -147,8 +147,8 @@ short  WriteILBM  (fname, screen)
 
    /* Write out the color map. */
 
-   {  auto  struct ColorMap *cmap;		/* Color Map Pointer */
-      auto  long             ii;		/* Index Variable */
+   {  auto  struct ColorMap *cmap;              /* Color Map Pointer */
+      auto  long             ii;                /* Index Variable */
 
       fwrite ("CMAP", 1, 4, out);
       lng = 3 * screen->ViewPort.ColorMap->Count;
@@ -157,15 +157,15 @@ short  WriteILBM  (fname, screen)
       cmap = screen->ViewPort.ColorMap;
 
       for (ii=0;  ii < screen->ViewPort.ColorMap->Count;  ++ii)
-      {  auto uchar  RGB[3];		/* 24-bit Color Triple */
-   	 auto short  color;		/* 12-bit Packed Color Value */
+      {  auto uchar  RGB[3];            /* 24-bit Color Triple */
+         auto short  color;             /* 12-bit Packed Color Value */
 
-   	 color  = GetRGB4 (cmap, ii);
-   	 RGB[0] = (color >> 4) & 0xF0;
-   	 RGB[1] = (color     ) & 0xF0;
-   	 RGB[2] = (color << 4) & 0xF0;
+         color  = GetRGB4 (cmap, ii);
+         RGB[0] = (color >> 4) & 0xF0;
+         RGB[1] = (color     ) & 0xF0;
+         RGB[2] = (color << 4) & 0xF0;
 
-   	 fwrite (RGB, 1, sizeof(RGB), out);
+         fwrite (RGB, 1, sizeof(RGB), out);
       }
    }
 
@@ -199,14 +199,14 @@ short  WriteILBM  (fname, screen)
 ****************************************************************************/
 
 void  WriteILBMBody  (out, pos_body, screen)
-   FILE   *out;		/* Output File Stream */
-   long   *pos_body;	/* BODY Property Size Location */
-   Screen *screen;	/* Image Screen */
+   FILE   *out;         /* Output File Stream */
+   long   *pos_body;    /* BODY Property Size Location */
+   Screen *screen;      /* Image Screen */
 {
-   auto	ushort  nrowbytes;		/* # Bytes Per Image Bit-Plane Row */
-   auto	long    ii, jj;			/* Loop Variables */
-   auto	uchar  *imgdata[MAXPLANES];	/* Image Data, Each Plane */
-   auto	short   rowinc;			/* Image Row Increment (Bytes) */
+   auto ushort  nrowbytes;              /* # Bytes Per Image Bit-Plane Row */
+   auto long    ii, jj;                 /* Loop Variables */
+   auto uchar  *imgdata[MAXPLANES];     /* Image Data, Each Plane */
+   auto short   rowinc;                 /* Image Row Increment (Bytes) */
 
    fwrite ("BODY", 1, 4, out);
    *pos_body = ftell (out);
@@ -219,12 +219,12 @@ void  WriteILBMBody  (out, pos_body, screen)
    for (jj=0;  jj < screen->Height;  ++jj)
    {
       for (ii=0;  ii < nplanes;  ++ii)
-      {  auto uchar   rowbuff[MAXROWSIZE];	/* Encoded Row Buffer */
-	 auto ushort  npacked;			/* # Bytes in Packed Row */
+      {  auto uchar   rowbuff[MAXROWSIZE];      /* Encoded Row Buffer */
+         auto ushort  npacked;                  /* # Bytes in Packed Row */
 
-   	 npacked = PackRow (imgdata[ii],rowbuff,screen->BitMap.BytesPerRow);
-   	 fwrite (rowbuff, 1, npacked, out);
-   	 imgdata[ii] += screen->BitMap.BytesPerRow;
+         npacked = PackRow (imgdata[ii],rowbuff,screen->BitMap.BytesPerRow);
+         fwrite (rowbuff, 1, npacked, out);
+         imgdata[ii] += screen->BitMap.BytesPerRow;
       }
    }
 }
@@ -239,17 +239,17 @@ void  WriteILBMBody  (out, pos_body, screen)
 typedef enum { LITERAL, REPEAT } RunType;
 
 ushort  PackRow  (src, dest, num)
-   uchar  *src;		/* Source Buffer */
-   uchar  *dest;	/* Destination (Encoded) Buffer */
-   ushort  num;		/* Number of Source Bytes to Encode */
+   uchar  *src;         /* Source Buffer */
+   uchar  *dest;        /* Destination (Encoded) Buffer */
+   ushort  num;         /* Number of Source Bytes to Encode */
 {
-   auto     ushort   bcount;	/* Byte Output Count */
-   auto     uchar   *blockptr;	/* Start of Current Block */
-   auto     uchar   *dptr;	/* Destination Block Pointer */
-   auto     uchar   *lastsrc;	/* Pointer to Last Source Byte */
-   auto     uchar   *repstart;	/* Repeat Run Length */
-   auto     RunType  runtype;	/* Block Run Type (Literal or Repeat) */
-   register uchar   *sptr;	/* Source Buffer Pointer */
+   auto     ushort   bcount;    /* Byte Output Count */
+   auto     uchar   *blockptr;  /* Start of Current Block */
+   auto     uchar   *dptr;      /* Destination Block Pointer */
+   auto     uchar   *lastsrc;   /* Pointer to Last Source Byte */
+   auto     uchar   *repstart;  /* Repeat Run Length */
+   auto     RunType  runtype;   /* Block Run Type (Literal or Repeat) */
+   register uchar   *sptr;      /* Source Buffer Pointer */
 
    bcount   = 0;
    lastsrc  = src + (num - 1);
@@ -262,21 +262,21 @@ ushort  PackRow  (src, dest, num)
    {
       if (runtype == LITERAL)
       {
-   	 if (*sptr != sptr[-1])
-	    repstart = sptr;
-   	 else if ((sptr - repstart) >= 2)
-   	 {
-	    if (blockptr < repstart)
-	    {  bcount += PutLiteral (&dptr, blockptr, (repstart - blockptr));
-	       blockptr = repstart;
-	    }
-	    runtype  = REPEAT;
-   	 }
+         if (*sptr != sptr[-1])
+            repstart = sptr;
+         else if ((sptr - repstart) >= 2)
+         {
+            if (blockptr < repstart)
+            {  bcount += PutLiteral (&dptr, blockptr, (repstart - blockptr));
+               blockptr = repstart;
+            }
+            runtype  = REPEAT;
+         }
       }
       else if (*sptr != *blockptr)
       {  bcount += PutPacked (&dptr, blockptr, (sptr - repstart));
-	 blockptr = repstart = sptr;
-	 runtype  = LITERAL;
+         blockptr = repstart = sptr;
+         runtype  = LITERAL;
       }
    }
 
@@ -297,12 +297,12 @@ ushort  PackRow  (src, dest, num)
 ****************************************************************************/
 
 ushort  PutLiteral  (dest, block, len)
-   uchar **dest;	/* Destination Buffer */
-   uchar  *block;	/* Source Block */
-   int     len;		/* Length of Source Block */
+   uchar **dest;        /* Destination Buffer */
+   uchar  *block;       /* Source Block */
+   int     len;         /* Length of Source Block */
 {
-   auto	ushort  nwritten;	/* Number of Bytes Written */
-   auto	ushort  blklen;		/* Current Block Length */
+   auto ushort  nwritten;       /* Number of Bytes Written */
+   auto ushort  blklen;         /* Current Block Length */
 
    nwritten = 0;
 
@@ -328,12 +328,12 @@ ushort  PutLiteral  (dest, block, len)
 ****************************************************************************/
 
 ushort  PutPacked  (dest, block, len)
-   uchar **dest;	/* Destination Buffer */
-   uchar  *block;	/* Source Block */
-   int     len;		/* Length of Source Block */
+   uchar **dest;        /* Destination Buffer */
+   uchar  *block;       /* Source Block */
+   int     len;         /* Length of Source Block */
 {
-   auto	ushort  nwritten;	/* Number of Bytes Written */
-   auto	ushort  blklen;		/* Current Block Length */
+   auto ushort  nwritten;       /* Number of Bytes Written */
+   auto ushort  blklen;         /* Current Block Length */
 
    nwritten = 0;
 

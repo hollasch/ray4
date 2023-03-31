@@ -14,11 +14,11 @@ author, date and purpose of the modification.
 
 
 void  V4_Cross  (result,u,v,w)
-   Vector4  result;	/* Result Vector */
-   Vector4  u, v, w;	/* Source Vectors */
+   Vector4  result;     /* Result Vector */
+   Vector4  u, v, w;    /* Source Vectors */
 {
-   auto Real     A, B, C, D, E, F;	/* Intermediate Values */
-   auto Vector4  temp;			/* Intermediate Vector */
+   auto Real     A, B, C, D, E, F;      /* Intermediate Values */
+   auto Vector4  temp;                  /* Intermediate Vector */
 
    A = (v[0] * w[1]) - (v[1] * w[0]);
    B = (v[0] * w[2]) - (v[2] * w[0]);

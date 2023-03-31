@@ -76,17 +76,17 @@ typedef double         Real;
     /*  Program Parameters  */
     /*======================*/
 
-#define EPSILON	 1.0e-15	/* Very Small Number (Effectively Zero) */
+#define EPSILON  1.0e-15        /* Very Small Number (Effectively Zero) */
 
 
     /*========================*/
     /*  Constant Definitions  */
     /*========================*/
 
-#define PI	3.14159265358979323846
+#define PI      3.14159265358979323846
 
-#define DegreeToRadian	(PI/180.0)
-#define RadianToDegree	(180.0/PI)
+#define DegreeToRadian  (PI/180.0)
+#define RadianToDegree  (180.0/PI)
 
 #define  X  0
 #define  Y  1
@@ -101,43 +101,43 @@ typedef enum {    /* Object Type ID's */
     O_PARALLELEPIPED
 } ObjType;
 
-#define true	(1==1)
-#define false	(1!=1)
-#define nil	0
+#define true    (1==1)
+#define false   (1!=1)
+#define nil     0
 
 
     /*=====================*/
     /*  Macro Definitions  */
     /*=====================*/
 
-#define strsize(s)		(strlen(s)+1)
-#define strrel(s1,op,s2)	(strcmp(s1,s2) op 0)
-#define print(s)		fputs(s,stdout)
-#define ALIMIT(array)		(sizeof(array) / sizeof(array[0]))
-#define CLAMP(value,low,high)	\
+#define strsize(s)              (strlen(s)+1)
+#define strrel(s1,op,s2)        (strcmp(s1,s2) op 0)
+#define print(s)                fputs(s,stdout)
+#define ALIMIT(array)           (sizeof(array) / sizeof(array[0]))
+#define CLAMP(value,low,high)   \
    (((value) < (low)) ? (low) : (((value) > (high)) ? (high) : (value)))
 
 #define  NEW(type,num)  (type *) MyAlloc((unsigned long)(num)*sizeof(type))
-#define  DELETE(addr)	MyFree ((char*)addr)
+#define  DELETE(addr)   MyFree ((char*)addr)
 
-#define  Color_List(C)	C.r,C.g,C.b
+#define  Color_List(C)  C.r,C.g,C.b
 
-#define  Color_Scale(C,asn,k)	\
-(   C.r asn k,	\
-    C.g asn k,	\
-    C.b asn k	\
+#define  Color_Scale(C,asn,k)   \
+(   C.r asn k,  \
+    C.g asn k,  \
+    C.b asn k   \
 )
 
 #define  Color_2Op(A,asn,B) \
-(   A.r asn B.r,	\
-    A.g asn B.g,	\
+(   A.r asn B.r,        \
+    A.g asn B.g,        \
     A.b asn B.b  \
 )
 
 #define  Color_3Op(A,asn,B,op,C) \
-(   A.r asn B.r op C.r,	\
-    A.g asn B.g op C.g,	\
-    A.b asn B.b op C.b	\
+(   A.r asn B.r op C.r, \
+    A.g asn B.g op C.g, \
+    A.b asn B.b op C.b  \
 )
 
 
@@ -145,47 +145,47 @@ typedef enum {    /* Object Type ID's */
     /*  Structure Definitions  */
     /*=========================*/
 
-typedef struct S_ATTRIBUTES	Attributes;
-typedef struct S_COLOR		Color;
-typedef struct S_LIGHT		Light;
-typedef struct S_OBJINFO	ObjInfo;
-typedef struct S_PARALLELEPIPED	Parallelepiped;
+typedef struct S_ATTRIBUTES     Attributes;
+typedef struct S_COLOR          Color;
+typedef struct S_LIGHT          Light;
+typedef struct S_OBJINFO        ObjInfo;
+typedef struct S_PARALLELEPIPED Parallelepiped;
 typedef struct S_RAY            Ray;
-typedef struct S_SPHERE		Sphere;
-typedef struct S_STATS		Stats;
-typedef struct S_TETRAHEDRON	Tetrahedron;
-typedef struct S_TETPAR		TetPar;
-typedef struct S_TRIANGLE	Triangle;
+typedef struct S_SPHERE         Sphere;
+typedef struct S_STATS          Stats;
+typedef struct S_TETRAHEDRON    Tetrahedron;
+typedef struct S_TETPAR         TetPar;
+typedef struct S_TRIANGLE       Triangle;
 
-struct S_COLOR		/* Color Triple */
-{   Real r, g, b;	/* Each color should be in [0,1]. */
+struct S_COLOR          /* Color Triple */
+{   Real r, g, b;       /* Each color should be in [0,1]. */
 };
 
-struct S_RAY		/* Ray Definition */
-{   Point4   origin;	/* Ray Origin */
-    Vector4  dir;	/* Ray Direction */
+struct S_RAY            /* Ray Definition */
+{   Point4   origin;    /* Ray Origin */
+    Vector4  dir;       /* Ray Direction */
 };
 
 struct S_STATS
-{   ulong  Ncast;	/* Number of Rays Cast */
-    ulong  Nreflect;	/* Number of Reflection Rays Cast */
-    ulong  Nrefract;	/* Number of Refraction Rays Cast */
-    ulong  maxlevel;	/* Maximum Ray Tree Level */
+{   ulong  Ncast;       /* Number of Rays Cast */
+    ulong  Nreflect;    /* Number of Reflection Rays Cast */
+    ulong  Nrefract;    /* Number of Refraction Rays Cast */
+    ulong  maxlevel;    /* Maximum Ray Tree Level */
 };
 
 typedef enum { L_POINT, L_DIRECTIONAL } LType;
 
 struct S_LIGHT
-{   Light  *next;	/* Next Light Source */
-    Color   color;	/* Light Color */
-    LType   type;	/* Type of Light */
+{   Light  *next;       /* Next Light Source */
+    Color   color;      /* Light Color */
+    LType   type;       /* Type of Light */
     union
-    {   Vector4  dir;	/* Direction for Directional Light Source */
-        Point4   pos;	/* Position for Point Light Source */
+    {   Vector4  dir;   /* Direction for Directional Light Source */
+        Point4   pos;   /* Position for Point Light Source */
     } u;
 };
 
-	/* Attribute Flag Definitions */
+        /* Attribute Flag Definitions */
 
 typedef enum
 {   AT_AMBIENT  = (1<<0),   /* Set if Ambient is Non-Zero */
@@ -196,17 +196,17 @@ typedef enum
 } AttrFlag;
 
 struct S_ATTRIBUTES
-{   Attributes *next;		/* Link to Next Attributes Structure */
-    Color       Ka;		/* Ambient Illumination Color */
-    Color       Kd;		/* Diffuse Illumination Color */
-    Color       Ks;		/* Specular Illumination Color */
-    Color       Kt;		/* Transparent Illumination Color */
-    Real        shine;		/* Phong Specular Reflection Factor */
-    Real        indexref;	/* Index of Refraction */
-    AttrFlag    flags;		/* Attribute Flags */
+{   Attributes *next;           /* Link to Next Attributes Structure */
+    Color       Ka;             /* Ambient Illumination Color */
+    Color       Kd;             /* Diffuse Illumination Color */
+    Color       Ks;             /* Specular Illumination Color */
+    Color       Kt;             /* Transparent Illumination Color */
+    Real        shine;          /* Phong Specular Reflection Factor */
+    Real        indexref;       /* Index of Refraction */
+    AttrFlag    flags;          /* Attribute Flags */
 };
 
-	/* Info Flag Definitions */
+        /* Info Flag Definitions */
 
 typedef enum {
     FL_GOURAUD = (1<<0),   /* Set if the Object is Gouraud Shaded */
@@ -215,46 +215,46 @@ typedef enum {
 
 
 struct S_OBJINFO
-{   ObjInfo    *next;		/* Pointer to Next Object */
-    Attributes *attr;		/* Object Attributes */
-    uchar       type;		/* Object Type */
-    InfoFlag    flags;		/* Information Flags */
-    boolean   (*intersect)	/* Intersection Function */
-		(ObjInfo*, Point4, Vector4, Real*, Point4, Vector4);
+{   ObjInfo    *next;           /* Pointer to Next Object */
+    Attributes *attr;           /* Object Attributes */
+    uchar       type;           /* Object Type */
+    InfoFlag    flags;          /* Information Flags */
+    boolean   (*intersect)      /* Intersection Function */
+                (ObjInfo*, Point4, Vector4, Real*, Point4, Vector4);
 };
 
 struct S_SPHERE
-{   ObjInfo  info;	/* Common Object Fields; Must Be First Field */
-    Point4   center;	/* Sphere Center */
-    Real     radius;	/* Sphere Radius */
-    Real     rsqrd;	/* Sphere Radius, Squared */
+{   ObjInfo  info;      /* Common Object Fields; Must Be First Field */
+    Point4   center;    /* Sphere Center */
+    Real     radius;    /* Sphere Radius */
+    Real     rsqrd;     /* Sphere Radius, Squared */
 };
 
-struct S_TETPAR		   /* Tetrahedron/Parallelepiped Common Fields */
-{   Point4   vert[4];	   /* Vertices */
+struct S_TETPAR            /* Tetrahedron/Parallelepiped Common Fields */
+{   Point4   vert[4];      /* Vertices */
     Vector4  vec1,vec2,vec3;/* Vectors from Vertex 0 to Vertices 1,2,3 */
-    Vector4  normal;	   /* Hyperplane Normal Vector */
+    Vector4  normal;       /* Hyperplane Normal Vector */
     uchar    ax1, ax2, ax3; /* Non-Dominant Normal Vector Axes */
-    Real     planeConst;	   /* Hyperplane Constant */
-    Real     CramerDiv;	   /* Cramer's-Rule Divisor for Barycentric Coords */
+    Real     planeConst;           /* Hyperplane Constant */
+    Real     CramerDiv;    /* Cramer's-Rule Divisor for Barycentric Coords */
 };
 
 struct S_TETRAHEDRON
-{   ObjInfo  info;		/* Common Obj Fields; Must Be First Field */
-    TetPar   tp;			/* Tetrahedron/Parallelepiped Data */
-    Real     Bc1, Bc2, Bc3;	/* Barycentric Coordinate Values */
+{   ObjInfo  info;              /* Common Obj Fields; Must Be First Field */
+    TetPar   tp;                        /* Tetrahedron/Parallelepiped Data */
+    Real     Bc1, Bc2, Bc3;     /* Barycentric Coordinate Values */
 };
 
 struct S_PARALLELEPIPED
-{   ObjInfo  info;	/* Common Obj Fields; Must Be First Field */
-    TetPar   tp;		/* Tetrahedron/Parallelepiped Data */
+{   ObjInfo  info;      /* Common Obj Fields; Must Be First Field */
+    TetPar   tp;                /* Tetrahedron/Parallelepiped Data */
 };
 
 struct S_TRIANGLE
-{   ObjInfo  info;	/* Common Object Fields; Must Be First Field */
-    Point4   vert[3];	/* Triangle Vertices */
-    Vector4  vec1, vec2;	/* vector from Vertex0 to Vertices 1,2. */
-    Real     Bc1, Bc2;	/* Barycentric Coordinate Values */
+{   ObjInfo  info;      /* Common Object Fields; Must Be First Field */
+    Point4   vert[3];   /* Triangle Vertices */
+    Vector4  vec1, vec2;        /* vector from Vertex0 to Vertices 1,2. */
+    Real     Bc1, Bc2;  /* Barycentric Coordinate Values */
 };
 
 

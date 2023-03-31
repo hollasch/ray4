@@ -14,9 +14,9 @@
 
 
 short  V4_Normalize  (V)
-   Vector4  V;			/* Vector to Normalize */
+   Vector4  V;                  /* Vector to Normalize */
 {
-   auto double  norm;	/* Norm of the Vector */
+   auto double  norm;   /* Norm of the Vector */
 
    norm = V4_Dot (V,V);
    if (norm < 1e-30)

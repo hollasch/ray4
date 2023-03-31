@@ -17,11 +17,11 @@
    /***  Vector Definitions  ***/
    /****************************/
 
-typedef  Real    Vector3 [3];	/* 3-Vector */
-typedef  Real    Vector4 [4];	/* 4-Vector */
+typedef  Real    Vector3 [3];   /* 3-Vector */
+typedef  Real    Vector4 [4];   /* 4-Vector */
 
-#define  Point3  Vector3	/* 3D Point (for readability) */
-#define  Point4  Vector4	/* 4D Point (for readability) */
+#define  Point3  Vector3        /* 3D Point (for readability) */
+#define  Point4  Vector4        /* 4D Point (for readability) */
 
 
       /*  NOTE:  All of the following macros are unsafe; they cannot
@@ -34,7 +34,7 @@ typedef  Real    Vector4 [4];	/* 4-Vector */
    /************************************/
 
       /* This macro yields a list of the vector components */
-	
+        
 #define V3_List(V)    V[0],V[1],V[2]
 
       /* This macro provides for scalar multiplication, division, or
@@ -93,7 +93,7 @@ if (1) \
    /************************************/
 
       /* This macro yields a list of the vector components */
-	
+        
 #define V4_List(V)    V[0],V[1],V[2],V[3]
 
       /* This macro provides for scalar multiplication, division, or

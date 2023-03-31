@@ -1,4 +1,3 @@
-
 /***********************************************************************
 **
 **  "ray4" is Copyright (c) 1991,1992,1993 by Steve R. Hollasch.
@@ -84,9 +83,9 @@
    /***  Debug Switches  ***/
    /************************/
 
-#define  DB_MISC  0	/* Print out miscellaneous debugging info. */
-#define  DB_OPTS  0	/* Print Command Line Settings */
-#define  DB_TILE  0	/* Tiling Debug Statements */
+#define  DB_MISC  0     /* Print out miscellaneous debugging info. */
+#define  DB_OPTS  0     /* Print Command Line Settings */
+#define  DB_TILE  0     /* Tiling Debug Statements */
 
 
    /**********************************/
@@ -124,20 +123,20 @@ Usage  :  r4toiff <Input File> [-p<Pixel Size>] [-t] [-g]\n\
    /***  Program Parameters  ***/
    /****************************/
 
-#define  NPLANES    6		/* Number of Bit Planes for HAM Image */
-#define  NPALETTE   16		/* # Popular Colors */
+#define  NPLANES    6           /* Number of Bit Planes for HAM Image */
+#define  NPALETTE   16          /* # Popular Colors */
 
-#define  MAXHEIGHT  400		/* Maximum Image Height */
-#define  MAXWIDTH   320		/* Maximum Image Width */
+#define  MAXHEIGHT  400         /* Maximum Image Height */
+#define  MAXWIDTH   320         /* Maximum Image Width */
 
 
    /***************************/
    /***  Macro Definitions  ***/
    /***************************/
 
-#define lsizeof(x)	(long)(sizeof(x))
+#define lsizeof(x)      (long)(sizeof(x))
 
-		/* File Address of a Given Image Plane */
+                /* File Address of a Given Image Plane */
 
 #define PLANE_START(plane) \
    (lsizeof(ImageHdr) + (((plane)-image.first[2]) * scanlsize * resy))
@@ -177,31 +176,31 @@ ulong   ColorDistance   (/* short, short, short, short */);
 
 struct NewScreen ScreenDef =
 {
-   0, 0,		/* Left Edge, Top Edge */
-   320, 400,		/* Width, Height */
-   NPLANES,		/* Number of Bit Planes (6 for HAM) */
-   0, 1,		/* Detail & Block Pen Colors */
-   HAM,			/* View Modes */
-   CUSTOMSCREEN,	/* Screen Type */
-   NULL,		/* Default Font */
-   NULL,		/* Default Title */
-   NULL, NULL		/* Gadget List and Custom Bit Map */
+   0, 0,                /* Left Edge, Top Edge */
+   320, 400,            /* Width, Height */
+   NPLANES,             /* Number of Bit Planes (6 for HAM) */
+   0, 1,                /* Detail & Block Pen Colors */
+   HAM,                 /* View Modes */
+   CUSTOMSCREEN,        /* Screen Type */
+   NULL,                /* Default Font */
+   NULL,                /* Default Title */
+   NULL, NULL           /* Gadget List and Custom Bit Map */
 };
 
 struct NewWindow WinDef =
 {
-   0, 0,			/* Left Edge, Top Edge */
-   320, 400,			/* Width, Height */
-   0, 1,			/* Detail & Block Pen Colors */
-   MOUSEBUTTONS | CLOSEWINDOW,	/* IDCMP Flags */
-   ACTIVATE | WINDOWCLOSE	/* Window Flags */
-   	| BORDERLESS | BACKDROP,
-   NULL, NULL,			/* Gadget List, Checkmark Image */
-   NULL,			/* Window Title */
-   NULL, NULL,			/* Screen Pointer, BitMap Pointer */
-   320, 400,			/* Minimum Width & Height */
-   320, 400,			/* Maximum Width & Height */
-   CUSTOMSCREEN			/* Window Type */
+   0, 0,                        /* Left Edge, Top Edge */
+   320, 400,                    /* Width, Height */
+   0, 1,                        /* Detail & Block Pen Colors */
+   MOUSEBUTTONS | CLOSEWINDOW,  /* IDCMP Flags */
+   ACTIVATE | WINDOWCLOSE       /* Window Flags */
+        | BORDERLESS | BACKDROP,
+   NULL, NULL,                  /* Gadget List, Checkmark Image */
+   NULL,                        /* Window Title */
+   NULL, NULL,                  /* Screen Pointer, BitMap Pointer */
+   320, 400,                    /* Minimum Width & Height */
+   320, 400,                    /* Maximum Width & Height */
+   CUSTOMSCREEN                 /* Window Type */
 };
 
 
@@ -209,30 +208,30 @@ struct NewWindow WinDef =
    /***  Global Variable Definitions  ***/
    /*************************************/
 
-ulong         class;		/* Inuition Message Class */
-Library      *GfxBase;		/* Graphics Library Base Pointer */
-ImageHdr      image;		/* Image Header */
-char         *infile = nil;	/* Input File Name */
-Fhandle      *instream;		/* Input File Descriptor */
-Library      *IntuitionBase;	/* Intuition Library Base Pointer */
-char         *mapin, *mapout;	/* Color Map File Names */
-IntuiMessage *msg;		/* Inuition Message */
-short         offx, offy;	/* X & Y Image Offset Values */
-char         *outfile = nil;	/* Output File Name */
+ulong         class;            /* Inuition Message Class */
+Library      *GfxBase;          /* Graphics Library Base Pointer */
+ImageHdr      image;            /* Image Header */
+char         *infile = nil;     /* Input File Name */
+Fhandle      *instream;         /* Input File Descriptor */
+Library      *IntuitionBase;    /* Intuition Library Base Pointer */
+char         *mapin, *mapout;   /* Color Map File Names */
+IntuiMessage *msg;              /* Inuition Message */
+short         offx, offy;       /* X & Y Image Offset Values */
+char         *outfile = nil;    /* Output File Name */
 short         palette[NPALETTE];/* Color Palette Array */
-short         pixfact;		/* Pixel Factor [0,5] */
-short         pixsize;		/* Pixel Size (2 ^ pixfact) */
-RastPort     *rastport;		/* Graphics Raster Port */
-short         resx, resy;	/* X and Y Image Resolution */
-short         sresx, sresy;	/* Screen Resolution (considers pixsize) */
-ulong         scanlsize;	/* Scanline Buffer Size */
-uchar        *scanbuff;		/* Scanline Buffer */
-Screen       *screen;		/* Graphics Screen */
-boolean       tile = false;	/* Tile Display of Image Slices */
-ViewPort     *viewport;		/* Graphics Viewport */
-Window       *win;		/* Graphics Window */
-boolean       use_greyscale=0;	/* If true, Use Greyscale For HAM-Encoding */
-ulong         zplane;		/* Z-plane of the Image Cube */
+short         pixfact;          /* Pixel Factor [0,5] */
+short         pixsize;          /* Pixel Size (2 ^ pixfact) */
+RastPort     *rastport;         /* Graphics Raster Port */
+short         resx, resy;       /* X and Y Image Resolution */
+short         sresx, sresy;     /* Screen Resolution (considers pixsize) */
+ulong         scanlsize;        /* Scanline Buffer Size */
+uchar        *scanbuff;         /* Scanline Buffer */
+Screen       *screen;           /* Graphics Screen */
+boolean       tile = false;     /* Tile Display of Image Slices */
+ViewPort     *viewport;         /* Graphics Viewport */
+Window       *win;              /* Graphics Window */
+boolean       use_greyscale=0;  /* If true, Use Greyscale For HAM-Encoding */
+ulong         zplane;           /* Z-plane of the Image Cube */
 
 
 
@@ -242,8 +241,8 @@ void  main  (argc, argv)
    int    argc;
    char **argv;
 {
-   auto   short  horz_space;	/* Horizontal Spacing in Tiled Displays */
-   auto   short  vert_space;	/* Vertical   Spacing in Tiled Displays */
+   auto   short  horz_space;    /* Horizontal Spacing in Tiled Displays */
+   auto   short  vert_space;    /* Vertical   Spacing in Tiled Displays */
 
    print (notice);
 
@@ -267,8 +266,8 @@ void  main  (argc, argv)
    InitGraphics ();
 
    if (tile)
-   {  auto   long  maxhorz, maxvert;	/* Max Images Across, Down */
-      auto   long  ntile;		/* Number of Tiled Images, Max */
+   {  auto   long  maxhorz, maxvert;    /* Max Images Across, Down */
+      auto   long  ntile;               /* Number of Tiled Images, Max */
 
       ntile = image.last[2] - zplane + 1;
 
@@ -277,30 +276,30 @@ void  main  (argc, argv)
 
       if (ntile < maxhorz)         /* Tiles for Single Horizontal Strip */
       {  horz_space = (win->Width - (sresx * ntile)) / (ntile + 1);
-	 vert_space = (win->Height - sresy) / 2;
+         vert_space = (win->Height - sresy) / 2;
       }
       else
       {  horz_space = (win->Width  - (sresx * maxhorz)) / (maxhorz + 1);
-	 vert_space = (win->Height - (sresy * maxvert)) / (maxvert + 1);
+         vert_space = (win->Height - (sresy * maxvert)) / (maxvert + 1);
 
-	 if ((vert_space == 0) && (ntile <= (maxhorz * (maxvert-1))))
-	 {  --maxvert;
-	    vert_space = (win->Height - (sresy * maxvert)) / (maxvert + 1);
-	 }
+         if ((vert_space == 0) && (ntile <= (maxhorz * (maxvert-1))))
+         {  --maxvert;
+            vert_space = (win->Height - (sresy * maxvert)) / (maxvert + 1);
+         }
 
-	 if ((horz_space == 0) && (ntile <= (maxhorz-1) * maxvert))
-	 {  --maxhorz;
-	    horz_space = (win->Width  - (sresx * maxhorz)) / (maxhorz + 1);
-	 }
+         if ((horz_space == 0) && (ntile <= (maxhorz-1) * maxvert))
+         {  --maxhorz;
+            horz_space = (win->Width  - (sresx * maxhorz)) / (maxhorz + 1);
+         }
       }
 
       offx = horz_space;
       offy = vert_space;
 
 #     if DB_TILE
-	 printf ("win->Width %d, win->Height %d\n", win->Width, win->Height);
-	 printf ("horz_space %d, vert_space  %d\n", horz_space, vert_space);
-	 printf ("offx %d, offy %d\n", offx, offy);
+         printf ("win->Width %d, win->Height %d\n", win->Width, win->Height);
+         printf ("horz_space %d, vert_space  %d\n", horz_space, vert_space);
+         printf ("offx %d, offy %d\n", offx, offy);
 #     endif
    }
    else
@@ -312,16 +311,16 @@ void  main  (argc, argv)
    {  DisplayImage (zplane, offx, offy);   /* Display the current image */
 
       if (!tile)
-	 break;
+         break;
 
       ++zplane;
 
       offx += sresx + horz_space;
       if ((offx + sresx) > win->Width)
       {  offx = horz_space;
-	 offy += sresy + vert_space;
-	 if ((offy + sresy) > win->Height)
-	    break;
+         offy += sresy + vert_space;
+         if ((offy + sresy) > win->Height)
+            break;
       }
 
    } while (zplane <= image.last[2]);
@@ -339,9 +338,9 @@ void  main  (argc, argv)
 
       do
       {  WaitPort (win->UserPort);
-	 msg = (IntuiMessage *) GetMsg (win->UserPort);
-	 class = msg->Class;
-	 ReplyMsg (msg);
+         msg = (IntuiMessage *) GetMsg (win->UserPort);
+         class = msg->Class;
+         ReplyMsg (msg);
       } while (class != CLOSEWINDOW);
    }
 
@@ -356,8 +355,8 @@ void  main  (argc, argv)
 ****************************************************************************/
 
 void  Halt  (msg, arg)
-   char *msg;	/* Error Message */
-   char *arg;	/* Message Argument */
+   char *msg;   /* Error Message */
+   char *arg;   /* Message Argument */
 {
    if (msg)
    {  print  ("r4toiff:  ");
@@ -389,64 +388,64 @@ void  ProcessArgs  (argc, argv)
    int    argc;
    char **argv;
 {
-   register char   *aptr;	/* Argument Pointer */
-   register ushort  argi;	/* Command-Line Argument Index */
-   auto     char   *swistr;	/* Command-Line Switch String */
+   register char   *aptr;       /* Argument Pointer */
+   register ushort  argi;       /* Command-Line Argument Index */
+   auto     char   *swistr;     /* Command-Line Switch String */
 
    for (argi=1;  argi < argc;  ++argi)
    {
       if ((argv[argi][0] != '-') && (argv[argi][0] != '+'))
       {  infile = argv[argi];
-	 continue;
+         continue;
       }
 
       swistr = argv[argi];
       if (argv[argi][2])
-	 aptr = argv[argi] + 2;
+         aptr = argv[argi] + 2;
       else
-	 aptr = argv[++argi];
-      
+         aptr = argv[++argi];
+
       switch (swistr[1])
       {
          case 'g':
-	    use_greyscale = true;
-	    --argi;
-	    break;
+            use_greyscale = true;
+            --argi;
+            break;
 
-	 case 'm':
-	    if (swistr[0] == '+')
-	       mapout = aptr;
-	    else if (swistr[0] == '-')
-	       mapin  = aptr;
-	    break;
+         case 'm':
+            if (swistr[0] == '+')
+               mapout = aptr;
+            else if (swistr[0] == '-')
+               mapin  = aptr;
+            break;
 
-	 case 'o':
-	    outfile  = aptr;
-	    break;
+         case 'o':
+            outfile  = aptr;
+            break;
 
-	 case 'p':   
-	    pixfact = atoi (aptr);
+         case 'p':   
+            pixfact = atoi (aptr);
 
-	    if ((pixfact < 0) || (5 < pixfact))
-	    {  printf ("Pixel size (%d) out of range [0,5].\n", pixfact);
-	       Halt ("Aborting.", nil);
-	    }
-	    break;
+            if ((pixfact < 0) || (5 < pixfact))
+            {  printf ("Pixel size (%d) out of range [0,5].\n", pixfact);
+               Halt ("Aborting.", nil);
+            }
+            break;
 
-	 case 't':
-	    tile = true;
-	    --argi;
-	    break;
+         case 't':
+            tile = true;
+            --argi;
+            break;
 
-	 case 'z':
-	    zplane = atol (aptr);
-	    break;
+         case 'z':
+            zplane = atol (aptr);
+            break;
 
-	 default :
-	    printf ("r4toiff:  Unknown option (%c).\n", swistr[1]);
-	    print  (usage);
-	    Halt ("Aborting.", nil);
-	    break;
+         default :
+            printf ("r4toiff:  Unknown option (%c).\n", swistr[1]);
+            print  (usage);
+            Halt ("Aborting.", nil);
+            break;
       }
    }
 
@@ -495,11 +494,11 @@ void  ImagePrep  ()
       printf ("  version     %u\n", image.version);
       printf ("  bits/pixel  %u\n", image.bitsperpixel);
       printf ("  aspect      %u : %u : %u\n",
-	 image.aspect[0], image.aspect[1], image.aspect[2]);
+         image.aspect[0], image.aspect[1], image.aspect[2]);
       printf ("  first       %u : %u : %u\n",
-	 image.first[0], image.first[1], image.first[2]);
+         image.first[0], image.first[1], image.first[2]);
       printf ("  last        %u : %u : %u\n",
-	 image.last[0], image.last[1], image.last[2]);
+         image.last[0], image.last[1], image.last[2]);
       print  ("\n");
 #  endif
 
@@ -531,7 +530,7 @@ void  ImagePrep  ()
       zplane = image.first[2];
    else if ((zplane < image.first[2]) || (image.last[2] < zplane))
    {  printf("r4toiff:  Z plane (%lu) is out of range (range is [%u,%u]).\n",
-	 zplane, image.first[2], image.last[2]);
+         zplane, image.first[2], image.last[2]);
       Halt ("Aborting.", nil);
    }
 
@@ -552,7 +551,7 @@ void  ImagePrep  ()
    }
    else if (image.bitsperpixel != 24)
    {  printf ("r4toiff:  This image has %u bits per pixel.\n",
-	 image.bitsperpixel);
+         image.bitsperpixel);
       Halt ("Can't handle this file format.", nil);
    }
 
@@ -579,12 +578,12 @@ void  ImagePrep  ()
 void  GetColorPalette  (slice)
    ulong  slice;      /* Image Slice */
 {
-   auto     ulong   *chist;		/* Color Histogram */
-   auto     ushort   dark_index;	/* Index of Darkest Popular Color */
-   auto     ushort   dark_value;	/* Darkest Color Value */
-   auto     Fhandle *mapfile;		/* Color Map File Handle */
-   auto     ulong    Npixels;		/* Number of Pixels in Image Slice */
-   register ulong    ii, jj, kk;	/* Loop Indices */
+   auto     ulong   *chist;             /* Color Histogram */
+   auto     ushort   dark_index;        /* Index of Darkest Popular Color */
+   auto     ushort   dark_value;        /* Darkest Color Value */
+   auto     Fhandle *mapfile;           /* Color Map File Handle */
+   auto     ulong    Npixels;           /* Number of Pixels in Image Slice */
+   register ulong    ii, jj, kk;        /* Loop Indices */
 
    /* If the user specified a colormap source file from the command line,
    ** then all we need to do is to load that color map and return. */
@@ -592,11 +591,11 @@ void  GetColorPalette  (slice)
    if (mapin)
    {
       if (!(mapfile = Open (mapin, MODE_OLDFILE)))
-	 Halt ("Couldn't open source map file (%s).", mapin);
+         Halt ("Couldn't open source map file (%s).", mapin);
 
       if (lsizeof(palette) != Read (mapfile, &palette, lsizeof(palette)))
       {  Close (mapfile);
-	 Halt ("Read error from source map file (%s).", mapin);
+         Halt ("Read error from source map file (%s).", mapin);
       }
 
       /* In case we didn't read a genuine map file, normalize the colors. */
@@ -614,7 +613,7 @@ void  GetColorPalette  (slice)
    if (use_greyscale)
    {
       for (ii=0;  ii < NPALETTE;  ++ii)
-	 palette[ii] = ii * 0x111;
+         palette[ii] = ii * 0x111;
 
       return;
    }
@@ -642,10 +641,10 @@ void  GetColorPalette  (slice)
    {
       jj = ii;
       while ((jj > 0) && (chist[ii] > chist[palette[jj-1]]))
-	 --jj;
+         --jj;
 
       for (kk=ii;  kk > jj;  --kk)
-	 palette[kk] = palette[kk-1];
+         palette[kk] = palette[kk-1];
 
       palette[jj] = ii;
    }
@@ -656,13 +655,13 @@ void  GetColorPalette  (slice)
    for (ii=NPALETTE;  ii <= 0xFFF;  ++ii)
    {
       if (chist[ii] <= chist[palette[NPALETTE-1]])
-	 continue;
+         continue;
 
       for (jj=0;  chist[ii] <= chist[palette[jj]];  ++jj)
-	 ;
+         ;
 
       for (kk=(NPALETTE-1);  kk > jj;  --kk)
-	 palette[kk] = palette[kk-1];
+         palette[kk] = palette[kk-1];
 
       palette[jj] = ii;
    }
@@ -680,7 +679,7 @@ void  GetColorPalette  (slice)
       kk = (299 * (jj>>8)) + (587 * ((jj>>4)&0xF)) + (114 * (jj&0xF));
       if (kk < dark_value)
       {  dark_index = ii;
-	 dark_value = kk;
+         dark_value = kk;
       }
    }
 
@@ -698,11 +697,11 @@ void  GetColorPalette  (slice)
    if (mapout)
    {
       if (!(mapfile = Open (mapout, MODE_NEWFILE)))
-	 Halt ("Couldn't open output map file (%s).", mapout);
+         Halt ("Couldn't open output map file (%s).", mapout);
 
       if (lsizeof(palette) != Write (mapfile, &palette, lsizeof(palette)))
       {  Close (mapfile);
-	 Halt ("Write error to output map file (%s).", mapout);
+         Halt ("Write error to output map file (%s).", mapout);
       }
       Close (mapfile);
    }
@@ -716,10 +715,10 @@ void  GetColorPalette  (slice)
 
 short  ReadNextRGB  ()
 {
-   static   boolean  ebflag  = 1;		/* Even-Byte Flag */
-   static   uchar   *scanptr = nil;		/* Scanline Buffer Pointer */
-   static   ulong    xcount  = 0xFFFFFFFF;	/* Horizontal Pixel Count */
-   static   short    red, grn, blu;		/* RGB Color Components */
+   static   boolean  ebflag  = 1;               /* Even-Byte Flag */
+   static   uchar   *scanptr = nil;             /* Scanline Buffer Pointer */
+   static   ulong    xcount  = 0xFFFFFFFF;      /* Horizontal Pixel Count */
+   static   short    red, grn, blu;             /* RGB Color Components */
 
    if (xcount < image.last[0])
       ++xcount;
@@ -761,9 +760,9 @@ short  ReadNextRGB  ()
 void  DisplayImage  (slice, offx, offy)
    ulong  slice;      /* Image Slice to Display */
 {
-   auto     ulong  cpix;	/* HAM-Encoded Pixel Color */
-   auto     short  crgb, prgb;	/* Current and Previous Color */
-   register long   xx, yy;	/* Pixel X & Y Coordinates */
+   auto     ulong  cpix;        /* HAM-Encoded Pixel Color */
+   auto     short  crgb, prgb;  /* Current and Previous Color */
+   register long   xx, yy;      /* Pixel X & Y Coordinates */
 
    /* Seek to the start of the image data. */
 
@@ -778,36 +777,36 @@ void  DisplayImage  (slice, offx, offy)
 
       while (msg = (IntuiMessage *) GetMsg (win->UserPort))
       {  class = msg->Class;
-	 ReplyMsg (msg);
-	 if (class == CLOSEWINDOW)
-	    Halt ("Closewindow button clicked; aborting.", nil);
+         ReplyMsg (msg);
+         if (class == CLOSEWINDOW)
+            Halt ("Closewindow button clicked; aborting.", nil);
       }
 
       if (pixfact == 0)
       {  for (xx=0;  xx < resx;  ++xx)
-	 {
-	    prgb = crgb;
-	    crgb = ReadNextRGB ();
-	    cpix = GetHAM (cpix, &crgb, (xx==0) ? -1 : prgb);
+         {
+            prgb = crgb;
+            crgb = ReadNextRGB ();
+            cpix = GetHAM (cpix, &crgb, (xx==0) ? -1 : prgb);
 
-	    SetAPen (rastport, cpix);
-	    WritePixel (rastport, xx + (long)offx, yy + (long)offy);
-	 }
+            SetAPen (rastport, cpix);
+            WritePixel (rastport, xx + (long)offx, yy + (long)offy);
+         }
       }
       else
       {  for (xx=0;  xx < resx;  ++xx)
-	 {
-	    auto   long  xmin, ymin;      /* Pixel Corner */
+         {
+            auto   long  xmin, ymin;      /* Pixel Corner */
 
-	    prgb = crgb;
-	    crgb = ReadNextRGB ();
-	    cpix = GetHAM (cpix, &crgb, (xx==0) ? -1 : prgb);
+            prgb = crgb;
+            crgb = ReadNextRGB ();
+            cpix = GetHAM (cpix, &crgb, (xx==0) ? -1 : prgb);
 
-	    SetAPen (rastport, cpix);
-	    xmin = (xx << pixfact) + (long)offx;
-	    ymin = (yy << pixfact) + (long)offy;
-	    RectFill (rastport, xmin, ymin, xmin+pixsize-1, ymin+pixsize-1);
-	 }
+            SetAPen (rastport, cpix);
+            xmin = (xx << pixfact) + (long)offx;
+            ymin = (yy << pixfact) + (long)offy;
+            RectFill (rastport, xmin, ymin, xmin+pixsize-1, ymin+pixsize-1);
+         }
       }
    }
 }
@@ -821,7 +820,7 @@ void  DisplayImage  (slice, offx, offy)
 
 void  InitGraphics  ()
 {
-   auto ushort  lines;		/* Number of Image Scan Lines */
+   auto ushort  lines;          /* Number of Image Scan Lines */
 
    /* Open the libraries. */
 
@@ -890,16 +889,16 @@ void  InitGraphics  ()
 #define  HAM_BLU  0x10     /* Specify New Blue  Color Value */
 
 ulong  GetHAM (ppix, crgb, prgb)
-   ulong   ppix;	/* Previous Pixel's HAM Code */
-   short  *crgb;	/* Current RGB-Encoded Color */
-   short   prgb;	/* Previous RGB-Encoded Color */
+   ulong   ppix;        /* Previous Pixel's HAM Code */
+   short  *crgb;        /* Current RGB-Encoded Color */
+   short   prgb;        /* Previous RGB-Encoded Color */
 {
-   auto     ulong  BestAbs;		/* Best Absolute Color */
-   auto     short  cred, cgrn, cblu;	/* Current RGB Color Components */
-   register ulong  distance;		/* Color Distance */
-   register ulong  ii;			/* Scratch Integer */
-   auto     ulong  newdist;		/* New Distance */
-   auto     short  pred, pgrn, pblu;	/* Previous RGB Color Components */
+   auto     ulong  BestAbs;             /* Best Absolute Color */
+   auto     short  cred, cgrn, cblu;    /* Current RGB Color Components */
+   register ulong  distance;            /* Color Distance */
+   register ulong  ii;                  /* Scratch Integer */
+   auto     ulong  newdist;             /* New Distance */
+   auto     short  pred, pgrn, pblu;    /* Previous RGB Color Components */
 
    /* If the new color is the same as the previous color, then use the same
    ** HAM encoding as for the previous pixel.  */
@@ -935,7 +934,7 @@ ulong  GetHAM (ppix, crgb, prgb)
       newdist = ColorDistance (palette[ii], cred, cgrn, cblu);
       if (newdist < distance)
       {  BestAbs  = ii;
-	 distance = newdist;
+         distance = newdist;
       }
    }
 
@@ -965,25 +964,25 @@ ulong  GetHAM (ppix, crgb, prgb)
    switch (ii)
    {
       case 0:
-	 if (ColorDistance (*crgb, cred, pgrn, pblu) < distance)
-	 {  *crgb = (cred << 8) | (pgrn << 4) | pblu;
-	    return HAM_RED | cred;
-	 }
-	 break;
+         if (ColorDistance (*crgb, cred, pgrn, pblu) < distance)
+         {  *crgb = (cred << 8) | (pgrn << 4) | pblu;
+            return HAM_RED | cred;
+         }
+         break;
 
       case 1:
-	 if (ColorDistance (*crgb, pred, cgrn, pblu) < distance)
-	 {  *crgb = (pred << 8) | (cgrn << 4) | pblu;
-	    return HAM_GRN | cgrn;
-	 }
-	 break;
+         if (ColorDistance (*crgb, pred, cgrn, pblu) < distance)
+         {  *crgb = (pred << 8) | (cgrn << 4) | pblu;
+            return HAM_GRN | cgrn;
+         }
+         break;
 
       case 2:
-	 if (ColorDistance (*crgb, pred, pgrn, cblu) < distance)
-	 {  *crgb = (pred << 8) | (pgrn << 4) | cblu;
-	    return HAM_BLU | cblu;
-	 }
-	 break;
+         if (ColorDistance (*crgb, pred, pgrn, cblu) < distance)
+         {  *crgb = (pred << 8) | (pgrn << 4) | cblu;
+            return HAM_BLU | cblu;
+         }
+         break;
    }
 
    /* At this point, the best absolute color match is closer than the
@@ -1004,7 +1003,7 @@ ulong  ColorDistance  (color1, red2, grn2, blu2)
    short  color1;
    short  red2, grn2, blu2;
 {
-   register short red, grn, blu;	/* RGB Color Components */
+   register short red, grn, blu;        /* RGB Color Components */
 
    /* set up for comparisons */
 

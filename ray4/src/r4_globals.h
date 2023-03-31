@@ -50,21 +50,21 @@ Global (char       *outfile,         nil  );  /* Output File Name */
 Global (Real        Vangle,          45.0 );  /* Viewing Angle, X-Axis */
 
 #ifndef DEFINE_GLOBALS
-   extern Color    ambient;	/* Ambient Light Factor */
-   extern Color    background;	/* Background Color */
-   extern Stats    stats;	/* Status Information */
-   extern Point4   Vfrom;	/* Camera Position */
-   extern Vector4  Vover;	/* View Over-Vector */
-   extern Point4   Vto;		/* View Target Point */
-   extern Vector4  Vup;		/* View Up-Vector */
+   extern Color    ambient;     /* Ambient Light Factor */
+   extern Color    background;  /* Background Color */
+   extern Stats    stats;       /* Status Information */
+   extern Point4   Vfrom;       /* Camera Position */
+   extern Vector4  Vover;       /* View Over-Vector */
+   extern Point4   Vto;         /* View Target Point */
+   extern Vector4  Vup;         /* View Up-Vector */
 #else
-   Color    ambient	= { .0, .0, .0 };
-   Color    background	= { .0, .0, .0 };
+   Color    ambient     = { .0, .0, .0 };
+   Color    background  = { .0, .0, .0 };
    Stats    stats       = { 0, 0, 0, 0 };
-   Point4   Vfrom	= { 0.0, 0.0, 0.0, 100.0 };
-   Vector4  Vover	= { 0.0, 0.0, 1.0, 0.0 };
-   Point4   Vto		= { 0.0, 0.0, 0.0, 0.0 };
-   Vector4  Vup		= { 0.0, 1.0, 0.0, 0.0 };
+   Point4   Vfrom       = { 0.0, 0.0, 0.0, 100.0 };
+   Vector4  Vover       = { 0.0, 0.0, 1.0, 0.0 };
+   Point4   Vto         = { 0.0, 0.0, 0.0, 0.0 };
+   Vector4  Vup         = { 0.0, 1.0, 0.0, 0.0 };
 #endif
 
 #endif

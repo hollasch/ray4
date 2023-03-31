@@ -25,22 +25,22 @@
 #define true   1
 #define false  0
 
-#define print(s)	fputs(s,stdout)
+#define print(s)  fputs(s,stdout)
 
-#define ABS(x)		(((x) < 0) ? -(x) : (x))
-#define MIN(x,y)	(((x) < (y)) ? (x) : (y))
-#define MAX(x,y)	(((x) > (y)) ? (x) : (y))
+#define ABS(x)    (((x) < 0) ? -(x) : (x))
+#define MIN(x,y)  (((x) < (y)) ? (x) : (y))
+#define MAX(x,y)  (((x) > (y)) ? (x) : (y))
 
 
     /***  Type Definitions  ***/
 
 #ifndef ulong
-#  define uchar   unsigned char		/* Unsigned  8-bit Integer */
-#  define ushort  unsigned short	/* Unsigned 16-bit Integer */
-#  define ulong   unsigned long		/* Unsigned 32-bit Integer */
+#  define uchar   unsigned char    /* Unsigned  8-bit Integer */
+#  define ushort  unsigned short   /* Unsigned 16-bit Integer */
+#  define ulong   unsigned long    /* Unsigned 32-bit Integer */
 #endif
 
-typedef short boolean;	/* Boolean; `true'(1) or `false'(0) */
+typedef short boolean;  /* Boolean; `true'(1) or `false'(0) */
 
 
     /***  Function Declarations  ***/
