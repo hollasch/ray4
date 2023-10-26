@@ -2,7 +2,7 @@
 # CMake Build Configuration for the ray4 4D raytracer
 #---------------------------------------------------------------------------------------------------
 
-cmake_minimum_required(VERSION 3.1.0)
+cmake_minimum_required(VERSION 3.10.0...3.27.7)
 
 project (ray4 LANGUAGES C)
 
