@@ -25,10 +25,9 @@ header in r4_main.c for more information on Ray4.
 
 
 /*****************************************************************************
-This procedure normalizes a 4-vector.  If the vector is shorter than epsilon,
-this routine will return 0, and will not modify the vector.  If the vector has
-a non-zero length greater than epsilon, the vector will be normalized and this
-routine will return 1.
+This function attempts to normalize a 4-vector. If the vector is not shorter
+than some epsilon, it will normalize the vector and return 1. If the vector is
+shorter than the epsilon, it does not alter the vector and returns 0.
 *****************************************************************************/
 
 short V4_Normalize (Vector4 V)
@@ -39,7 +38,7 @@ short V4_Normalize (Vector4 V)
 
     if (norm < 1e-30) return 0;
 
-    V4_Scalar (V, /=, norm);
+    V4_Scalar (V, /=, sqrt(norm));
 
     return 1;
 }
