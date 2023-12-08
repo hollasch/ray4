@@ -24,6 +24,17 @@ Abstract
 > supports true four-dimensional lighting, reflections and refractions.
 
 
+Thesis Source
+--------------
+You can find my thesis source file components in the following directories:
+
+  - [`html/`][]
+  - `images/`
+  - [`PostScript/`][]
+  - [`PostScript/figures/`][]
+  - [`troff/`][]
+
+
 Associated Programs
 -------------------
 I have also made my 4D wireframe viewer (`wire4`) and 4D raytracer (`ray4`) available in the public
@@ -38,3 +49,8 @@ library. The output is a 3D RGB image that can be displayed with a variety of me
 
 
 [Four-Space\_Visualization\_of\_4D\_Objects.html]: http://hollasch.github.io/ray4/Four-Space_Visualization_of_4D_Objects.html
+[`html/`]:               html/README.md
+[`images/`]:             images/README.md
+[`PostScript/`]:         PostScript/README.md
+[`PostScript/figures/`]: PostScript/figures/README.md
+[`troff/`]:              troff/README.md

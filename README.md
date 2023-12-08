@@ -11,14 +11,24 @@ as the original code for my 4D wireframe viewer and my 4D raytracer.
 
 The thesis is now a single all-inclusive HTML file: [_Four-Space Visualization of 4D Objects_][].
 
-[`wire4`](wire4/) is my 4D wireframe viewer. It was written to run on an SGI Iris workstation. It
+See the [`thesis/`][] directory for my thesis source files and associated material.
+
+
+Wire4
+------
+[`wire4`][] is my 4D wireframe viewer. It was written to run on an SGI Iris workstation. It
 reads in arbitrary 4D wireframes from a simple text file and displays them interactively. The code
 has not been maintained, though, and will not run on most modern computers.
 
-[`ray4`](ray4/) is the 4D raytracer. It is written in standard C, and reads from and writes to
+Ray4
+-----
+[`ray4`][] is the 4D raytracer. It is written in standard C, and reads from and writes to
 standard output, so should be able to run on most computers. The output is a 3D RGB image that can
 be displayed with a variety of methods.
 
+
+GitHub Notes
+-------------
 You can send any questions to me at [steve@hollasch.net](mailto:steve@hollasch.net). Also, now that
 GitHub has a discussions feature, feel free to start a conversation in [the discussions section][].
 
@@ -35,3 +45,6 @@ visualization work of their own. Here are links to other work I've seen.
 
 [_Four-Space Visualization of 4D Objects_]: https://hollasch.github.io/ray4/Four-Space_Visualization_of_4D_Objects.html
 [the discussions section]:                  https://github.com/hollasch/ray4/discussions/
+[`ray4`]:                                   ray4/README.md
+[`wire4`]:                                  wire4/README.md
+[`thesis/`]:                                thesis/README.md

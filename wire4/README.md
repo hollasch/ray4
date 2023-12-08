@@ -5,6 +5,20 @@ This is the initial release of the 4D wireframe viewer that I wrote for my maste
 “Four-Space Visualization of 4D Objects”, in May 1991. The thesis is also available in this same
 GitHub project or from http://hollasch.github.io/ray4.
 
+
+`wire4` User Manual
+--------------------
+See the [Wire4 User Manual][] for usage information.
+
+
+`psplot`
+---------
+`psplot` is a simple PostScript plotting tool to convert wire4 output to a PostScript file. See the
+[psplot User Manual][] for more information.
+
+
+Source Code
+------------
 This release includes the following files:
 
 | File            | Description
@@ -52,3 +66,7 @@ me:
 
 ----
 Steve Hollasch / steve@hollasch.net
+
+
+[Wire4 User Manual]:  wire4.md
+[psplot User Manual]: psplot.md

@@ -4,6 +4,13 @@ ray4
 This is `ray4`, a 4D raytracer I wrote for my master’s thesis in May 1991
 ([_Four-Space Visualization of 4D Objects_][thesis]).
 
+Ray4 User Manual
+-----------------
+See the [Ray4 User Manual][] for usage information.
+
+
+Project Structure
+------------------
 This project includes the following directories:
 
   | Directory   |                                             |
@@ -42,5 +49,6 @@ Steve Hollasch / steve@hollasch.net
 
 
 
-[thesis]: https://hollasch.github.io/ray4/Four-Space_Visualization_of_4D_Objects.html
-[craig/]: craig/README.md
+[craig/]:           craig/README.md
+[Ray4 User Manual]: ray4.md
+[thesis]:           https://hollasch.github.io/ray4/Four-Space_Visualization_of_4D_Objects.html
