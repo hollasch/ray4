@@ -21,3 +21,7 @@ set ( sources_ray4
 )
 
 add_executable (ray4 ${sources_ray4})
+
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    target_link_libraries(ray4 m)
+endif()
