@@ -23,6 +23,10 @@ contains standard C I/O routines.
 #include <stdio.h>
 #include <fcntl.h>
 
+#ifdef __GNUC__
+    #include <unistd.h>
+#endif
+
 #include "ray4.h"
 #include "r4_globals.h"
 
