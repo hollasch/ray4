@@ -22,7 +22,7 @@ has not been maintained, though, and will not run on most modern computers.
 
 Ray4
 -----
-[`ray4`][] is the 4D raytracer. It is written in standard C, and reads from and writes to
+[`ray4-c`][] is the original 4D raytracer. It is written in standard C, and reads from and writes to
 standard output, so should be able to run on most computers. The output is a 3D RGB image that can
 be displayed with a variety of methods.
 
@@ -45,6 +45,6 @@ visualization work of their own. Here are links to other work I've seen.
 
 [_Four-Space Visualization of 4D Objects_]: https://hollasch.github.io/ray4/Four-Space_Visualization_of_4D_Objects.html
 [the discussions section]:                  https://github.com/hollasch/ray4/discussions/
-[`ray4`]:                                   ray4/README.md
+[`ray4-c`]:                                 ray4-c/README.md
 [`wire4`]:                                  wire4/README.md
 [`thesis/`]:                                thesis/README.md
