@@ -1,5 +1,5 @@
 Four-Space Visualization of 4D Objects
-========================================
+====================================================================================================
 
 ![4D Hypercube](images/fig48-small.jpg)
 ![4D Octahedron](images/fig411-small.jpg)

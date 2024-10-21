@@ -1,9 +1,8 @@
 `ray4/thesis/PostScript/`
 ====================================================================================================
 
-This archive contains the PostScript versions of my thesis _Four-Space Visualization of 4D
-Objects_. These files were generated from the original `troff` sources found in the `troff/` peer
-directory.
+This archive contains the PostScript versions of my thesis _Four-Space Visualization of 4D Objects_.
+These files were generated from the original `troff` sources found in the `troff/` peer directory.
 
 The following files are included:
 
