@@ -23,10 +23,6 @@ contains standard C I/O routines.
 #include <stdio.h>
 #include <fcntl.h>
 
-#ifdef __GNUC__
-    #include <unistd.h>
-#endif
-
 #include "ray4.h"
 #include "r4_globals.h"
 
@@ -34,7 +30,7 @@ contains standard C I/O routines.
     /***  Local Global Variables  ***/
 
 FILE *instream  = nil;  /* Input Stream */
-int   outstream = 0;    /* Output Stream */
+FILE *outstream = nil;  /* Output Stream */
 
 
 /*****************************************************************************
@@ -53,8 +49,8 @@ void  CloseOutput  ()
 {
     if (!outstream)
         return;
-    close (outstream);
-    outstream = 0;
+    fclose (outstream);
+    outstream = nil;
 }
 
 
@@ -115,7 +111,8 @@ void  OpenOutput  ()
     if (!outfile || (*outfile == 0))
         Halt ("No output file specified.");
 
-    if (-1 == (outstream = open (outfile, O_TRUNC|O_CREAT|O_WRONLY, 0666)))
+    outstream = fopen (outfile, "wb");
+    if (!outstream)
         Halt ("Open failed on output file (%s).", outfile);
 }
 
@@ -129,6 +126,6 @@ void  WriteBlock  (
     void *buff,    /* Source Buffer */
     int   num)     /* Number of Bytes to Write */
 {
-    if (num != write (outstream, buff, (int)(num)))
+    if (num != fwrite (buff, 1, num, outstream))
         Halt ("Write error to output file; aborting");
 }
