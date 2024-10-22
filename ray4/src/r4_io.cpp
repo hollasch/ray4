@@ -19,15 +19,12 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //**************************************************************************************************
 
-/*******************************************************************************
-
-File:  r4_io.c
-
-    This file contains the I/O routines needed for the Ray4 4D raytracer.  See
-the r4_main.c header for more information on Ray4.  This version of r4_io.c
-contains standard C I/O routines.
-
-*******************************************************************************/
+//==================================================================================================
+// r4_io.c
+//
+// This file contains the I/O routines needed for the Ray4 4D raytracer. See the r4_main.c header
+// for more information on Ray4. This version of r4_io.c contains standard C I/O routines.
+//==================================================================================================
 
 #include <stdio.h>
 #include <fcntl.h>
@@ -38,42 +35,44 @@ contains standard C I/O routines.
 
     /***  Local Global Variables  ***/
 
-FILE *instream  = nil;  /* Input Stream */
-FILE *outstream = nil;  /* Output Stream */
+FILE *instream  = nil;  // Input Stream
+FILE *outstream = nil;  // Output Stream
 
 
-/*****************************************************************************
-These procedures close the input and output streams.
-*****************************************************************************/
+//==================================================================================================
 
 void  CloseInput  ()
 {
+    // Closes the input stream.
+
     if (!infile || (*infile == 0) || (!instream))
         return;
     fclose (instream);
     instream = nil;
 }
 
+//==================================================================================================
+
 void  CloseOutput  ()
 {
+    // Closes the output stream.
+
     if (!outstream)
         return;
     fclose (outstream);
     outstream = nil;
 }
 
-
-
-/*****************************************************************************
-This routine returns then next character from the input stream.  If the end of
-file is reached, it returns -1.
-*****************************************************************************/
+//==================================================================================================
 
 int UNREAD_NONE = -2;
 int unreadChar = -2;
 
 int  ReadChar  ()
 {
+    // This routine returns then next character from the input stream. If the end of file is
+    // reached, it returns -1.
+
     int character = unreadChar;
 
     if (unreadChar == UNREAD_NONE)
@@ -83,40 +82,35 @@ int  ReadChar  ()
     return character;
 }
 
-/*****************************************************************************
-This routine, together with ReaedChar allow to put back a character, which is
-something parsers often need. It cannot unread more than one character at
-a time though.
-*****************************************************************************/
+//==================================================================================================
 
 void UnreadChar  (int character)
 {
+    // This routine, together with ReaedChar allow to put back a character, which is something
+    // parsers often need. It cannot unread more than one character at a time though.
+
     unreadChar = character;
 }
 
-
-
-/*****************************************************************************
-This subroutine opens the input file.  If no filename was given in the
-command-line arguments, we'll use the standard input stream.
-*****************************************************************************/
+//==================================================================================================
 
 void  OpenInput  ()
 {
+    // This subroutine opens the input file. If no filename was given in the command-line arguments,
+    // we'll use the standard input stream.
+
     if (!infile || (*infile == 0))
         instream = stdin;
     else if (! (instream = fopen (infile, "r")))
         Halt ("Open failed on input file (%s).", infile);
 }
 
-
-
-/*****************************************************************************
-This subroutine opens the output file.
-*****************************************************************************/
+//==================================================================================================
 
 void  OpenOutput  ()
 {
+    // This subroutine opens the output file.
+
     if (!outfile || (*outfile == 0))
         Halt ("No output file specified.");
 
@@ -125,16 +119,14 @@ void  OpenOutput  ()
         Halt ("Open failed on output file (%s).", outfile);
 }
 
-
-
-/*****************************************************************************
-This routine writes a block to the output file.
-*****************************************************************************/
+//==================================================================================================
 
 void  WriteBlock  (
-    void *buff,    /* Source Buffer */
-    int   num)     /* Number of Bytes to Write */
+    void *buff,  // Source Buffer
+    int   num)   // Number of Bytes to Write
 {
+    // This routine writes a block to the output file.
+
     if (num != fwrite (buff, 1, num, outstream))
         Halt ("Write error to output file; aborting");
 }

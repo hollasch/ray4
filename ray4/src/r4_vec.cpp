@@ -19,29 +19,27 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //**************************************************************************************************
 
-/*******************************************************************************
-
-File:  r4_vec.c
-
-    This file contains utility routines for 4D vector operations.  See the
-header in r4_main.c for more information on Ray4.
-
-*******************************************************************************/
+//==================================================================================================
+// r4_vec.c
+//
+// This file contains utility routines for 4D vector operations. See the header in r4_main.c for
+// more information on Ray4.
+//==================================================================================================
 
 #include "ray4.h"
 #include "vector.h"
 
 
 
-/*****************************************************************************
-This function attempts to normalize a 4-vector. If the vector is not shorter
-than some epsilon, it will normalize the vector and return 1. If the vector is
-shorter than the epsilon, it does not alter the vector and returns 0.
-*****************************************************************************/
+//==================================================================================================
 
 short V4_Normalize (Vector4 V)
 {
-    double norm;    /* Norm of the Vector */
+    // This function attempts to normalize a 4-vector. If the vector is not shorter than some
+    // epsilon, it will normalize the vector and return 1. If the vector is shorter than the
+    // epsilon, it does not alter the vector and returns 0.
+
+    double norm;  // Norm of the Vector
 
     norm = V4_Dot (V,V);
 
@@ -52,20 +50,18 @@ short V4_Normalize (Vector4 V)
     return 1;
 }
 
-
-
-/*****************************************************************************
-This routine calculates the 4D cross product of the two 4-vectors.
-*****************************************************************************/
+//==================================================================================================
 
 void  V4_Cross  (
-    Vector4  result,  /* Result Vector */
-    Vector4  u,       /* Source Vectors */
+    Vector4  result,  // Result Vector
+    Vector4  u,       // Source Vectors
     Vector4  v,
     Vector4  w)
 {
-    Real     A, B, C, D, E, F;   /* Intermediate Values */
-    Vector4  temp;               /* Intermediate Vector */
+    // This routine calculates the 4D cross product of the two 4-vectors.
+
+    Real     A, B, C, D, E, F;  // Intermediate Values
+    Vector4  temp;              // Intermediate Vector
 
     A = (v[0] * w[1]) - (v[1] * w[0]);
     B = (v[0] * w[2]) - (v[2] * w[0]);

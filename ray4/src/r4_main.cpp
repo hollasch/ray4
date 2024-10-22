@@ -19,22 +19,11 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //**************************************************************************************************
 
-/*******************************************************************************
-
-File:  r4_main.c
-
-    This file contains the main procedures in the Ray4 4D ray tracer.  The
-following files comprise the Ray4 ray tracer:
-
-      ray4.h    :  Ray4 Common Header File
-      r4_main.c :  Main Program File
-      r4_hit.c  :  Ray/Object Intersection Routines
-      r4_io.c   :  Input/Output Routines
-      r4_parse.c:  Routines for Parsing the Input File
-      r4_trace.c:  Ray Firing, Shading & Illumination Procedures
-
-*******************************************************************************/
-
+//==================================================================================================
+// r4_main.c
+//
+// This file contains the main procedures in the Ray4 4D ray tracer.
+//==================================================================================================
 
 #include <time.h>
 #include <memory.h>
@@ -47,14 +36,12 @@ following files comprise the Ray4 ray tracer:
 #include "r4_image.h"
 
 
-   /************************/
    /***  Usage Messages  ***/
-   /************************/
 
 char notice[] = "\
 \n\
 Ray4 4D Raytracer, Version 2\n\
-Copyright (C) Steve Hollasch 1991-1996.  All rights reserved.\n\
+Copyright (C) Steve Hollasch 1991-1996. All rights reserved.\n\
 \n\n";
 
 char usage[] = "\
@@ -63,28 +50,24 @@ usage:  ray4 -s<Scan Range> -a<Aspect Ratios> -r<Image Resolution>\n\
              -b<Bits Per Pixel> -i<Input File> -o<Output File>\n\
 \n\
     The arguments to the -s, -a, and -r options are all colon-separated\n\
-fields of X:Y:Z triples.  All components are unsigned 16-bit integers.\n\
+fields of X:Y:Z triples. All components are unsigned 16-bit integers.\n\
 The aspect ratios are the width, height & depth (in some integer units) of\n\
-a square voxel.  The scan range fields may consist of a range with a low\n\
-number, then a '-', and then a high number.  You can specify the entire\n\
-range with a single underscore character.  You may select 12 or 24 color\n\
+a square voxel. The scan range fields may consist of a range with a low\n\
+number, then a '-', and then a high number. You can specify the entire\n\
+range with a single underscore character. You may select 12 or 24 color\n\
 bits per pixel (default is 24).\n\
 \n\
     Examples:  ray4 -b12 -a2:1:2 -s_:_:_ -r256:256:256 <MyFile -omy.img\n\
                ray4 -a 1:1 -r 1024:768 -s 0-1023:0-767 -iSphere4 -os2.img\n\
 ";
 
-   /******************************/
    /***  Constant Definitions  ***/
-   /******************************/
 
-#define MIN_SLB_COUNT  5        /* Minimum Scanline Buffer Count */
-#define MIN_SLB_SIZE   (5<<10)  /* Minimum Scanline Buffer Size */
+#define MIN_SLB_COUNT 5        // Minimum Scanline Buffer Count
+#define MIN_SLB_SIZE  (5<<10)  // Minimum Scanline Buffer Size
 
 
-   /*******************************/
    /***  Function Declarations  ***/
-   /*******************************/
 
 void  ProcessArgs  (int, char**);
 char *GetField     (char*, ushort*);
@@ -94,29 +77,27 @@ void  CalcRayGrid  (void);
 void  FireRays     (void);
 
 
-   /*******************************/
    /***  File-Global Variables  ***/
-   /*******************************/
 
-ImageHdr  iheader =             /* Output Image Header */
+ImageHdr  iheader =         // Output Image Header
    { R4_IMAGE_ID, 1, 24, {1,1,1}, {0,0,0}, {0xFFFF,0xFFFF,0xFFFF} };
 
-Vector4   Gx,  Gy,  Gz;         /* Ray-Grid Basis Vectors */
-Point4    Gorigin;              /* Ray-Grid Origin Point  */
-ushort    res[3] = {0,0,0};     /* Full Output Image Resolution */
-ulong     scanlsize;            /* Scanline Size */
-ulong     slbuff_count;         /* Number of Lines in Scanline Buffer */
-char     *scanbuff;             /* Scanline Buffer */
-time_t    StartTime;            /* Timestamp */
+Vector4  Gx,  Gy,  Gz;      // Ray-Grid Basis Vectors
+Point4   Gorigin;           // Ray-Grid Origin Point
+ushort   res[3] = {0,0,0};  // Full Output Image Resolution
+ulong    scanlsize;         // Scanline Size
+ulong    slbuff_count;      // Number of Lines in Scanline Buffer
+char    *scanbuff;          // Scanline Buffer
+time_t   StartTime;         // Timestamp
 
 
 
-/*****************************************************************************
-The following is the entry procedure for the ray4 ray tracer.
-*****************************************************************************/
+//==================================================================================================
 
 void main (int argc, char *argv[])
 {
+    // The following is the entry procedure for the ray4 ray tracer.
+
     print (notice);
 
     ProcessArgs (argc, argv);
@@ -124,8 +105,8 @@ void main (int argc, char *argv[])
     OpenInput  ();
     ParseInput ();
 
-    /* If the global ambient factor is zero, then clear all of the ambient
-    ** factor flags in the objects. */
+    // If the global ambient factor is zero, then clear all of the ambient factor flags in the
+    // objects.
 
     if ((ambient.r + ambient.g + ambient.b) < EPSILON)
     {
@@ -137,13 +118,13 @@ void main (int argc, char *argv[])
         }
     }
 
-    /* Open the output stream and write out the image header (to be followed
-    ** by the generated scanline data. */
+    // Open the output stream and write out the image header (to be followed by the generated
+    // scanline data.
 
     OpenOutput ();
     WriteBlock ((char*)(&iheader), sizeof(iheader));
 
-    /* Determine the size of a single scanline. */
+    // Determine the size of a single scanline.
 
     scanlsize = (3 * (1 + iheader.last[0] - iheader.first[0]));
 
@@ -153,8 +134,8 @@ void main (int argc, char *argv[])
         scanlsize >>= 1;
     }
 
-    /* Compute the number of scanlines and size of the scanline buffer that
-    ** meets the parameters MIN_SLB_COUNT and MIN_SLB_SIZE.  */
+    // Compute the number of scanlines and size of the scanline buffer that meets the parameters
+    // MIN_SLB_COUNT and MIN_SLB_SIZE.
 
     if ((MIN_SLB_SIZE / scanlsize) > MIN_SLB_COUNT)
         slbuff_count = MIN_SLB_SIZE / scanlsize;
@@ -163,23 +144,21 @@ void main (int argc, char *argv[])
 
     scanbuff = NEW (char, scanlsize * slbuff_count);
 
-    CalcRayGrid ();   /* Calculate the grid cube to fire rays through. */
+    CalcRayGrid ();   // Calculate the grid cube to fire rays through.
 
     StartTime = time (nil);
-    FireRays ();      /* Raytrace the scene. */
+    FireRays ();      // Raytrace the scene.
 
-    Halt (nil);       /* Clean up and exit. */
+    Halt (nil);       // Clean up and exit.
 }
 
-
-
-/*****************************************************************************
-This subroutine grabs the command-line arguments and the environment variable
-arguments (from RAY4) and sets up the raytrace parameters.
-*****************************************************************************/
+//==================================================================================================
 
 void  ProcessArgs  (int argc, char *argv[])
 {
+    // This subroutine grabs the command-line arguments and the environment variable arguments (from
+    // RAY4) and sets up the raytrace parameters.
+
     char  *ptr;     /* Scratch String Pointer */
     char  *eptr;    /* Environment Variable Pointer */
     int    ii;      /* Option Array Index */
@@ -356,15 +335,13 @@ void  ProcessArgs  (int argc, char *argv[])
     if (iheader.last[2] >= res[2])  iheader.last[2] = res[2]-1;
 }
 
-
-
-/*****************************************************************************
-These subroutine process the command-line arguments.  The first two routines
-get each field of the resolution, aspect ratio, and scan range triples.
-*****************************************************************************/
+//==================================================================================================
 
 char *GetField  (char *str, ushort *value)
 {
+    // These subroutine process the command-line arguments. The first two routines get each field of
+    // the resolution, aspect ratio, and scan range triples.
+
     if (!str)   return nil;
     if (!*str)  return *value=0, str;
 
@@ -379,12 +356,12 @@ char *GetField  (char *str, ushort *value)
     return (*str == ':') ? (str+1) : str;
 }
 
-/********************************/
+//==================================================================================================
 
 char *GetRange  (
-    char   *str,    /* Source String */
-    ushort *val1,   /* First Destination Value of Range */
-    ushort *val2)   /* Second Destination Value of Range */
+    char   *str,    // Source String
+    ushort *val1,   // First Destination Value of Range
+    ushort *val2)   // Second Destination Value of Range
 {
     if (!str)   return nil;
 
@@ -420,18 +397,15 @@ char *GetRange  (
     return (*str == ':') ? (str+1) : str;
 }
 
-
-
-/*****************************************************************************
-This procedure replaces printf() to print out an error message, and has the
-side effect of cleaning up before exiting (de-allocating memory, closing open
-files, and so on).
-*****************************************************************************/
+//==================================================================================================
 
 void Halt (
     char *message,      /* Exception Message */
     ... )               /* Optional Message Arguments */
 {
+    // This procedure replaces printf() to print out an error message, and has the side effect of
+    // cleaning up before exiting (de-allocating memory, closing open files, and so on).
+
     Attributes *aptr;   /* Attributes-List Pointer */
     Light      *lptr;   /* Light-List Pointer */
     ObjInfo    *optr;   /* Object-List Pointer */
@@ -494,17 +468,14 @@ void Halt (
     exit ((!message) ? 0 : 1);
 }
 
-
-
-/*****************************************************************************
-This routine allocates memory using the system malloc() function.  If the
-malloc() call fails to allocate the memory, this routine halts the program
-with an "out of memory" message.
-*****************************************************************************/
+//==================================================================================================
 
 char *MyAlloc (size_t size)
 {
-    char *block;  /* Allocated Memory Block */
+    // This routine allocates memory using the system malloc() function. If the malloc() call fails
+    // to allocate the memory, this routine halts the program with an "out of memory" message.
+
+    char *block;  // Allocated Memory Block
 
     if (0 == (block = static_cast<char*>(malloc (size))))
         Halt ("Out of memory.");
@@ -512,24 +483,23 @@ char *MyAlloc (size_t size)
     return block;
 }
 
+//==================================================================================================
 
 void MyFree (void *addr)
 {   free (addr);
 }
 
-
-
-/*****************************************************************************
-This procedure calculates the ray-grid basis vectors.
-*****************************************************************************/
+//==================================================================================================
 
 void CalcRayGrid (void)
 {
-    Real    GNx, GNy, GNz;    /* Ray-Grid Vector Norms */
-    Vector4 Los;              /* Line-of-Sight Vector */
-    Real    losnorm;          /* Line-of-Sight-Vector Norm */
+    // This procedure calculates the ray-grid basis vectors.
 
-    /* Get the normalized line-of-sight vector. */
+    Real    GNx, GNy, GNz;  // Ray-Grid Vector Norms
+    Vector4 Los;            // Line-of-Sight Vector
+    Real    losnorm;        // Line-of-Sight-Vector Norm
+
+    // Get the normalized line-of-sight vector.
 
     V4_3Vec (Los,=,Vto,-,Vfrom);
     losnorm = V4_Norm (Los);
@@ -538,7 +508,7 @@ void CalcRayGrid (void)
         Halt ("To-Point & From-Point are the same.");
     V4_Scalar (Los, /=, losnorm);
 
-    /* Generate the normalized ray-grid basis vectors. */
+    // Generate the normalized ray-grid basis vectors.
 
     V4_Cross (Gz, Vover,Vup,Los);
     if (! V4_Normalize(Gz))
@@ -548,9 +518,9 @@ void CalcRayGrid (void)
     if (! V4_Normalize(Gy))
         Halt ("Orthogonality problem while generating GRIDy.");
 
-    V4_Cross (Gx, Gy,Gz,Los);      /* Gy, Gz & Los are all unit vectors. */
+    V4_Cross (Gx, Gy,Gz,Los);      // Gy, Gz & Los are all unit vectors.
 
-    /* Now compute the proper scale of the grid unit vectors. */
+    // Now compute the proper scale of the grid unit vectors.
 
     GNx = 2.0 * losnorm * tan (DegreeToRadian*Vangle/2.0);
 
@@ -562,21 +532,20 @@ void CalcRayGrid (void)
         * ((Real) res[Z] / (Real) res[X])
         * ((Real)iheader.aspect[Z]/ (Real)iheader.aspect[X]);
 
-    /* Scale each grid basis vector. */
+    // Scale each grid basis vector.
 
     V4_Scalar (Gx, *=, GNx);
     V4_Scalar (Gy, *=, GNy);
     V4_Scalar (Gz, *=, GNz);
 
-    /* Find the ray-grid origin point. */
+    // Find the ray-grid origin point.
 
     Gorigin[0] = Vto[0] - (Gx[0]/2.0) - (Gy[0]/2.0) - (Gz[0]/2.0);
     Gorigin[1] = Vto[1] - (Gx[1]/2.0) - (Gy[1]/2.0) - (Gz[1]/2.0);
     Gorigin[2] = Vto[2] - (Gx[2]/2.0) - (Gy[2]/2.0) - (Gz[2]/2.0);
     Gorigin[3] = Vto[3] - (Gx[3]/2.0) - (Gy[3]/2.0) - (Gz[3]/2.0);
 
-    /* Finally, scale the grid basis vectors down by the corresponding
-    ** resolutions.  */
+    // Finally, scale the grid basis vectors down by the corresponding resolutions.
 
     V4_Scalar (Gx, /=, res[X]);
     V4_Scalar (Gy, /=, res[Y]);
@@ -588,20 +557,17 @@ void CalcRayGrid (void)
     Gorigin[3] += (Gx[3]/2.0) + (Gy[3]/2.0) + (Gz[3]/2.0);
 }
 
-
-
-/*****************************************************************************
-This is the main routine that fires the rays through the ray grid and into the
-4D scene.
-*****************************************************************************/
+//==================================================================================================
 
 void  FireRays  ()
 {
-    boolean  eflag;                     /* Even RGB Boundary Flag */
-    ulong    scancount;                 /* Scanline Counter */
-    char    *scanptr;                   /* Scanline Buffer Pointer */
-    ushort   Xindex, Yindex, Zindex;    /* Ray-Grid Loop Indices */
-    Point4   Yorigin, Zorigin;          /* Ray-Grid Axis Origins */
+    // This is the main routine that fires the rays through the ray grid and into the 4D scene.
+
+    boolean  eflag;                   // Even RGB Boundary Flag
+    ulong    scancount;               // Scanline Counter
+    char    *scanptr;                 // Scanline Buffer Pointer
+    ushort   Xindex, Yindex, Zindex;  // Ray-Grid Loop Indices */
+    Point4   Yorigin, Zorigin;        // Ray-Grid Axis Origins
 
     scancount = 0;
     scanptr   = scanbuff;
@@ -625,30 +591,30 @@ void  FireRays  ()
 
             for (Xindex=iheader.first[X];  Xindex <= iheader.last[X];  ++Xindex)
             {
-                Color    color;   /* Pixel Color */
-                Vector4  Dir;     /* Ray Direction Vector */
-                Point4   Gpoint;  /* Current Grid Point */
-                Real     norm;    /* Vector Norm Value */
+                Color    color;   // Pixel Color
+                Vector4  Dir;     // Ray Direction Vector
+                Point4   Gpoint;  // Current Grid Point
+                Real     norm;    // Vector Norm Value
 
-                /* Calculate the unit ViewFrom-RayDirection vector. */
+                // Calculate the unit ViewFrom-RayDirection vector.
 
                 V4_3Vec (Gpoint, =, Yorigin, +, Xindex*Gx);
                 V4_3Vec (Dir, =, Gpoint, -, Vfrom);
                 norm = V4_Norm (Dir);
                 V4_Scalar (Dir, /=, norm);
 
-                /* Fire the ray. */
+                // Fire the ray.
 
                 RayTrace (Vfrom, Dir, &color, (ulong)(0));
 
-                /* Scale the resulting color to 0-255. */
+                // Scale the resulting color to 0-255.
 
                 Color_Scale (color, *=, 256.0);
                 color.r = CLAMP (color.r, 0.0, 255.0);
                 color.g = CLAMP (color.g, 0.0, 255.0);
                 color.b = CLAMP (color.b, 0.0, 255.0);
 
-                /* Store the 24-bit RGB triple in the scanline buffer. */
+                // Store the 24-bit RGB triple in the scanline buffer.
 
                 if (iheader.bitsperpixel == 24)
                 {   *scanptr++ = (uchar)(color.r);
@@ -669,7 +635,7 @@ void  FireRays  ()
                 }
             }
 
-            /* If the scanline output buffer is full now, write it to disk. */
+            // If the scanline output buffer is full now, write it to disk.
 
             if (++scancount >= slbuff_count)
             {   scancount = 0;
@@ -680,8 +646,7 @@ void  FireRays  ()
         }
     }
 
-    /* If there are scanlines in the scanline buffer, then write the
-    ** remaining scanlines to disk.  */
+    // If there are scanlines in the scanline buffer, then write the remaining scanlines to disk.
 
     if (scancount != 0)
         WriteBlock (scanbuff, scanlsize * scancount);
