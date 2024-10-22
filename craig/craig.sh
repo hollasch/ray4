@@ -20,7 +20,7 @@ cat << \SHAR_EOF > 'README'
      NOTE:  To convert ray4 image files to SUN rasterfile, you need the
 PBM graphics package - See below for info.
 
-     run and run2 are sample scripts that can be used to run ray4 in the
+     run and run2 are sample scripts that can be used to run ray4-c in the
 background.  For example "run dots" will raytrace the dots.r4 input file
 in the background redirecting all screen output to the file "temp" and
 saving the ray4 image file as "dots.icube".
@@ -546,7 +546,7 @@ then
 	echo shar: "will not over-write existing file 'run'"
 else
 cat << \SHAR_EOF > 'run'
-nohup ray4 -r254:254:12 -i $1.r4 -o $1.icube > temp &
+nohup ray4-c -r254:254:12 -i $1.r4 -o $1.icube > temp &
 SHAR_EOF
 fi
 if test -f 'run2'
@@ -555,7 +555,7 @@ then
 else
 cat << \SHAR_EOF > 'run2'
 
-nohup ray4 -a4:4:33 -r200:190:20 -i $1.r4 -o $1.icube > temp &
+nohup ray4-c -a4:4:33 -r200:190:20 -i $1.r4 -o $1.icube > temp &
 SHAR_EOF
 fi
 exit 0
