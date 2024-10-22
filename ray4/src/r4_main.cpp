@@ -38,28 +38,52 @@
 
    /***  Usage Messages  ***/
 
-char notice[] = "\
-\n\
-Ray4 4D Raytracer, Version 2\n\
-Copyright (C) Steve Hollasch 1991-1996. All rights reserved.\n\
-\n\n";
+static auto notice = "ray4 2.0.0-alpha.1 | 2024-10-22 | https://github.com/hollasch/ray4";
 
-char usage[] = "\
-ray4 :  4-Space Ray Tracer\n\
-usage:  ray4 -s<Scan Range> -a<Aspect Ratios> -r<Image Resolution>\n\
-             -b<Bits Per Pixel> -i<Input File> -o<Output File>\n\
-\n\
-    The arguments to the -s, -a, and -r options are all colon-separated\n\
-fields of X:Y:Z triples. All components are unsigned 16-bit integers.\n\
-The aspect ratios are the width, height & depth (in some integer units) of\n\
-a square voxel. The scan range fields may consist of a range with a low\n\
-number, then a '-', and then a high number. You can specify the entire\n\
-range with a single underscore character. You may select 12 or 24 color\n\
-bits per pixel (default is 24).\n\
-\n\
-    Examples:  ray4 -b12 -a2:1:2 -s_:_:_ -r256:256:256 <MyFile -omy.img\n\
-               ray4 -a 1:1 -r 1024:768 -s 0-1023:0-767 -iSphere4 -os2.img\n\
-";
+static auto usage = R"(
+ray4:   4-Space Ray Tracer
+usage:  ray4-c -r<Image Resolution> -i<Input Filename> -o<Output Filename>
+                [-h] [-a<Aspect Ratio>] [-b<Bits Per Pixel>] [-s<Scan Range>]
+
+This program constructs a 4D raytraced image of the input scene file, outputing
+a 3D image cube of pixels.
+
+-r<Image Resolution>
+    Image resolution specified as 'X:Y:Z'.
+
+-i<Input Filename>
+    Input filename, typically with extension '.r4'.
+
+-o<Output Filename>
+    Output 3D image cube filename, typically with extension '.icube'.
+
+-h
+    Print help information.
+
+-a<Aspect Ratio> (Optional)
+    The 3D image aspect ratio, specified as 'X:Y:Z'. X and Y must be non-zero.
+    By default, the pixel aspect ratio is 1:1:1.
+
+-b<Bits Per Pixel> (Optional)
+    The output number of RGB bits per pixel. This value must be either 12 or 24.
+    By default, 24 bits per pixel.
+
+-s<Scan Range> (Optional)
+    A subset of the full image resolution to raytrace, expressed as 'X:Y:Z'.
+    Each component may be a single number, a range of numbers (expressed as
+    'S-E', where S is the scan start, and E is the scan end, inclusive), or the
+    special value '_', which indicates the entire resolution for that dimension.
+    Unspecified values are interpreted as zero. By default, the full resolution
+    is scanned (equivalent to '_:_:_').
+
+Examples:
+    ray4-c -r128:128:128 <scene.r4 -o scene.icube
+
+    ray4-c -b12 -a2:1:2 -r256:256:256 -s_:_:_ <MyFile.r4 -omy.icube
+
+    ray4-c -a 1:1 -r 1024:768 -s 0-1023:0-767 -iSphere4 -os2.icube
+
+)";
 
    /***  Constant Definitions  ***/
 
@@ -252,6 +276,13 @@ void ProcessArgs (int argc, char *argv[]) {
                 {   printf ("r4toiff:  %d bits per pixel is not supported (select 12 or 24).\n", iheader.bitsperpixel);
                     iheader.bitsperpixel = 24;
                 }
+                break;
+            }
+
+            case 'h':
+            {
+                print (usage);
+                exit (0);
                 break;
             }
 
