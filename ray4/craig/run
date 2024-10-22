@@ -1,1 +1,0 @@
-nohup ray4 -r254:254:12 -i $1.r4 -o $1.icube > temp &
