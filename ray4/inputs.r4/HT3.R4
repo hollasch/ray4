@@ -1,0 +1,235 @@
+> Sixteen 4-tetrahedrons placed at the vertices of a 4-cube.
+> -a4:4:27 -r200:190:20
+
+Ambient	    .35 .35 .35		> Global Ambient Light
+Background  .25 .35 .67		> Define the Background Color
+MaxDepth    1			> Maximum Ray Trace Depth (0 is infinite)
+
+View
+(  From    1.5, 1.5, 1.5, 4.0
+   To      0.0, 0.0, 0.0, 0.0
+   Up      0.0, 1.0, 0.0, 0.0
+   Over    1.0, 0.0, 0.0, 0.0
+   Angle   55.0
+)
+
+Light
+(  direction  1.0  1.2  0.5  1.5
+   color      .90  .90  .90 
+)
+
+Attributes GenericTet
+(  diffuse   [.000 .000 .000]
+   specular  [.800 .800 .800]
+   transpar  [.000 .000 .000]
+   shine     10.0
+   reflect   0
+)
+
+Tetrahedron
+(
+   attributes (
+      ambient [.70 .10 .10]
+      diffuse [.70 .10 .10]
+   )
+   vertices
+       0.10  1.25  1.25  1.25
+       1.25  0.10  1.25  1.25
+       1.25  1.25  0.10  1.25
+       1.25  1.25  1.25  0.10
+)
+
+Tetrahedron
+(
+   attributes (
+      ambient [.10 .10 .85]
+      diffuse [.10 .10 .85]
+   )
+   vertices
+       0.10  1.25  1.25 -1.25
+       1.25  0.10  1.25 -1.25
+       1.25  1.25  0.10 -1.25
+       1.25  1.25  1.25 -0.10
+)
+
+Tetrahedron
+(
+   attributes (
+      ambient [.10 .70 .10]
+      diffuse [.10 .70 .10]
+   )
+   vertices
+       0.10  1.25 -1.25  1.25
+       1.25  0.10 -1.25  1.25
+       1.25  1.25 -0.10  1.25
+       1.25  1.25 -1.25  0.10
+)
+
+Tetrahedron
+(
+   attributes (
+      ambient [.60 .60 .60]
+      diffuse [.60 .60 .60]
+   )
+   vertices
+      0.10  1.25 -1.25 -1.25
+      1.25  0.10 -1.25 -1.25
+      1.25  1.25 -0.10 -1.25
+      1.25  1.25 -1.25 -0.10
+)
+
+Tetrahedron
+(
+   attributes (
+      ambient [.70 .10 .10]
+      diffuse [.70 .10 .10]
+   )
+   vertices
+       0.10 -1.25  1.25  1.25
+       1.25 -0.10  1.25  1.25
+       1.25 -1.25  0.10  1.25
+       1.25 -1.25  1.25  0.10
+)
+
+Tetrahedron
+(
+   attributes (
+      ambient [.10 .10 .85]
+      diffuse [.10 .10 .85]
+   )
+   vertices
+      0.10 -1.25  1.25 -1.25
+      1.25 -0.10  1.25 -1.25
+      1.25 -1.25  0.10 -1.25
+      1.25 -1.25  1.25 -0.10
+)
+
+Tetrahedron
+(
+   attributes (
+      ambient [.10 .70 .10]
+      diffuse [.10 .70 .10]
+   )
+   vertices
+       0.10 -1.25 -1.25  1.25
+       1.25 -0.10 -1.25  1.25
+       1.25 -1.25 -0.10  1.25
+       1.25 -1.25 -1.25  0.10
+)
+
+Tetrahedron
+(
+   attributes (
+      ambient [.60 .60 .60]
+      diffuse [.60 .60 .60]
+   )
+   vertices
+      0.10 -1.25 -1.25 -1.25
+      1.25 -0.10 -1.25 -1.25
+      1.25 -1.25 -0.10 -1.25
+      1.25 -1.25 -1.25 -0.10
+)
+
+Tetrahedron
+(
+   attributes (
+      ambient [.70 .10 .10]
+      diffuse [.70 .10 .10]
+   )
+   vertices
+      -0.10  1.25  1.25  1.25
+      -1.25  0.10  1.25  1.25
+      -1.25  1.25  0.10  1.25
+      -1.25  1.25  1.25  0.10
+)
+
+Tetrahedron
+(
+   attributes (
+      ambient [.10 .10 .85]
+      diffuse [.10 .10 .85]
+   )
+   vertices
+     -0.10  1.25  1.25 -1.25
+     -1.25  0.10  1.25 -1.25
+     -1.25  1.25  0.10 -1.25
+     -1.25  1.25  1.25 -0.10
+)
+
+Tetrahedron
+(
+   attributes (
+      ambient [.10 .70 .10]
+      diffuse [.10 .70 .10]
+   )
+   vertices
+      -0.10  1.25 -1.25  1.25
+      -1.25  0.10 -1.25  1.25
+      -1.25  1.25 -0.10  1.25
+      -1.25  1.25 -1.25  0.10
+)
+
+Tetrahedron
+(
+   attributes (
+      ambient [.60 .60 .60]
+      diffuse [.60 .60 .60]
+   )
+   vertices
+     -0.10  1.25 -1.25 -1.25
+     -1.25  0.10 -1.25 -1.25
+     -1.25  1.25 -0.10 -1.25
+     -1.25  1.25 -1.25 -0.10
+)
+
+Tetrahedron
+(
+   attributes (
+      ambient [.70 .10 .10]
+      diffuse [.70 .10 .10]
+   )
+   vertices
+      -0.10 -1.25  1.25  1.25
+      -1.25 -0.10  1.25  1.25
+      -1.25 -1.25  0.10  1.25
+      -1.25 -1.25  1.25  0.10
+)
+
+Tetrahedron
+(
+   attributes (
+      ambient [.10 .10 .85]
+      diffuse [.10 .10 .85]
+   )
+   vertices
+     -0.10 -1.25  1.25 -1.25
+     -1.25 -0.10  1.25 -1.25
+     -1.25 -1.25  0.10 -1.25
+     -1.25 -1.25  1.25 -0.10
+)
+
+Tetrahedron
+(
+   attributes (
+      ambient [.10 .70 .10]
+      diffuse [.10 .70 .10]
+   )
+   vertices
+      -0.10 -1.25 -1.25  1.25
+      -1.25 -0.10 -1.25  1.25
+      -1.25 -1.25 -0.10  1.25
+      -1.25 -1.25 -1.25  0.10
+)
+
+Tetrahedron
+(
+   attributes (
+      ambient [.60 .60 .60]
+      diffuse [.60 .60 .60]
+   )
+   vertices
+     -0.10 -1.25 -1.25 -1.25
+     -1.25 -0.10 -1.25 -1.25
+     -1.25 -1.25 -0.10 -1.25
+     -1.25 -1.25 -1.25 -0.10
+)

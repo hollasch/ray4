@@ -1,0 +1,182 @@
+> Sixteen 4-spheres placed at the vertices of a 4-cube.
+> -a4:4:33 -r200:190:20
+
+Ambient	    1.0 1.0 1.0		> Global Ambient Light
+Background  .15 .25 .57		> Define the Background Color
+MaxDepth    1			> Maximum Ray Trace Depth (0 is infinite)
+
+View
+(  From    1.5, 1.5, 1.5, 4.0
+   To      0.0, 0.0, 0.0, 0.0
+   Up      0.0, 1.0, 0.0, 0.0
+   Over    1.0, 0.0, 0.0, 0.0
+   Angle   55.0
+)
+
+Attributes GenericTet
+(  diffuse   [.000 .000 .000]
+   specular  [.000 .000 .000]
+   transpar  [.000 .000 .000]
+   shine     10.0
+   reflect   1
+)
+
+Tetrahedron
+(
+   attributes ( ambient [.70 .10 .10] )
+   vertices
+       0.25  1.25  1.25  1.25
+       1.25  0.25  1.25  1.25
+       1.25  1.25  0.25  1.25
+       1.25  1.25  1.25  0.25
+)
+
+Tetrahedron
+(
+   attributes ( ambient [.10 .10 .80] )
+   vertices
+       0.25  1.25  1.25 -1.25
+       1.25  0.25  1.25 -1.25
+       1.25  1.25  0.25 -1.25
+       1.25  1.25  1.25 -0.25
+)
+
+Tetrahedron
+(
+   attributes ( ambient [.10 .70 .10] )
+   vertices
+       0.25  1.25 -1.25  1.25
+       1.25  0.25 -1.25  1.25
+       1.25  1.25 -0.25  1.25
+       1.25  1.25 -1.25  0.25
+)
+
+Tetrahedron
+(
+   attributes ( ambient [.60 .60 .60] )
+   vertices
+      0.25  1.25 -1.25 -1.25
+      1.25  0.25 -1.25 -1.25
+      1.25  1.25 -0.25 -1.25
+      1.25  1.25 -1.25 -0.25
+)
+
+Tetrahedron
+(
+   attributes ( ambient [.70 .10 .10] )
+   vertices
+       0.25 -1.25  1.25  1.25
+       1.25 -0.25  1.25  1.25
+       1.25 -1.25  0.25  1.25
+       1.25 -1.25  1.25  0.25
+)
+
+Tetrahedron
+(
+   attributes ( ambient [.10 .10 .80] )
+   vertices
+      0.25 -1.25  1.25 -1.25
+      1.25 -0.25  1.25 -1.25
+      1.25 -1.25  0.25 -1.25
+      1.25 -1.25  1.25 -0.25
+)
+
+Tetrahedron
+(
+   attributes ( ambient [.10 .70 .10] )
+   vertices
+       0.25 -1.25 -1.25  1.25
+       1.25 -0.25 -1.25  1.25
+       1.25 -1.25 -0.25  1.25
+       1.25 -1.25 -1.25  0.25
+)
+
+Tetrahedron
+(
+   attributes ( ambient [.60 .60 .60] )
+   vertices
+      0.25 -1.25 -1.25 -1.25
+      1.25 -0.25 -1.25 -1.25
+      1.25 -1.25 -0.25 -1.25
+      1.25 -1.25 -1.25 -0.25
+)
+
+Tetrahedron
+(
+   attributes ( ambient [.70 .10 .10] )
+   vertices
+      -0.25  1.25  1.25  1.25
+      -1.25  0.25  1.25  1.25
+      -1.25  1.25  0.25  1.25
+      -1.25  1.25  1.25  0.25
+)
+
+Tetrahedron
+(
+   attributes ( ambient [.10 .10 .80] )
+   vertices
+     -0.25  1.25  1.25 -1.25
+     -1.25  0.25  1.25 -1.25
+     -1.25  1.25  0.25 -1.25
+     -1.25  1.25  1.25 -0.25
+)
+
+Tetrahedron
+(
+   attributes ( ambient [.10 .70 .10] )
+   vertices
+      -0.25  1.25 -1.25  1.25
+      -1.25  0.25 -1.25  1.25
+      -1.25  1.25 -0.25  1.25
+      -1.25  1.25 -1.25  0.25
+)
+
+Tetrahedron
+(
+   attributes ( ambient [.60 .60 .60] )
+   vertices
+     -0.25  1.25 -1.25 -1.25
+     -1.25  0.25 -1.25 -1.25
+     -1.25  1.25 -0.25 -1.25
+     -1.25  1.25 -1.25 -0.25
+)
+
+Tetrahedron
+(
+   attributes ( ambient [.70 .10 .10] )
+   vertices
+      -0.25 -1.25  1.25  1.25
+      -1.25 -0.25  1.25  1.25
+      -1.25 -1.25  0.25  1.25
+      -1.25 -1.25  1.25  0.25
+)
+
+Tetrahedron
+(
+   attributes ( ambient [.10 .10 .80] )
+   vertices
+     -0.25 -1.25  1.25 -1.25
+     -1.25 -0.25  1.25 -1.25
+     -1.25 -1.25  0.25 -1.25
+     -1.25 -1.25  1.25 -0.25
+)
+
+Tetrahedron
+(
+   attributes ( ambient [.10 .70 .10] )
+   vertices
+      -0.25 -1.25 -1.25  1.25
+      -1.25 -0.25 -1.25  1.25
+      -1.25 -1.25 -0.25  1.25
+      -1.25 -1.25 -1.25  0.25
+)
+
+Tetrahedron
+(
+   attributes ( ambient [.60 .60 .60] )
+   vertices
+     -0.25 -1.25 -1.25 -1.25
+     -1.25 -0.25 -1.25 -1.25
+     -1.25 -1.25 -0.25 -1.25
+     -1.25 -1.25 -1.25 -0.25
+)

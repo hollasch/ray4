@@ -1,0 +1,1 @@
+mtvtoppm $1 | ppmquant 256 | pnmtorast | screenload
