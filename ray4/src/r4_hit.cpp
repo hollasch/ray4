@@ -38,7 +38,6 @@
 
 
 
-
 //==================================================================================================
 // All intersection functions must behave in the same manner, since they are called as
 // object-oriented functions that behave generically for different objects. Each function takes the
@@ -77,7 +76,8 @@
 //==================================================================================================
 
 
-boolean  HitSphere  (
+
+boolean HitSphere (
     ObjInfo *objptr,    // Sphere to Test
     Point4   rayO,      // Ray Origin
     Vector4  rayD,      // Ray Direction
@@ -126,8 +126,8 @@ boolean  HitSphere  (
     if (intr)
        V4_3Vec (intr, =, rayO, +, t1*rayD);
 
-    if (normal)
-    {   normal[0] = (intr[0] - SPHERE->center[0]) / SPHERE->radius;
+    if (normal) {
+        normal[0] = (intr[0] - SPHERE->center[0]) / SPHERE->radius;
         normal[1] = (intr[1] - SPHERE->center[1]) / SPHERE->radius;
         normal[2] = (intr[2] - SPHERE->center[2]) / SPHERE->radius;
         normal[3] = (intr[3] - SPHERE->center[3]) / SPHERE->radius;
@@ -138,7 +138,7 @@ boolean  HitSphere  (
 
 //==================================================================================================
 
-boolean  HitTetPar  (
+boolean HitTetPar (
     ObjInfo *objptr,     /* Sphere to Test */
     Point4   rayO,       /* Ray Origin */
     Vector4  rayD,       /* Ray Direction */
@@ -280,8 +280,8 @@ boolean  HitTetPar  (
     if (normal)
         V4_2Vec (normal, =, tp->normal);
 
-    if (objptr->type == O_TETRAHEDRON)
-    {   ((Tetrahedron*)(objptr))->Bc1 = Bc1;
+    if (objptr->type == O_TETRAHEDRON) {
+        ((Tetrahedron*)(objptr))->Bc1 = Bc1;
         ((Tetrahedron*)(objptr))->Bc2 = Bc2;
         ((Tetrahedron*)(objptr))->Bc3 = Bc3;
     }
@@ -291,7 +291,7 @@ boolean  HitTetPar  (
 
 //==================================================================================================
 
-boolean  HitTriangle  (
+boolean HitTriangle (
     ObjInfo *objptr,     // Sphere to Test
     Point4   rayO,       // Ray Origin
     Vector4  rayD,       // Ray Direction
@@ -358,7 +358,8 @@ boolean  HitTriangle  (
     // It turns out that this is fairly simple to do (although 4D cross products are quite expensive
     // computationally).
 
-    {   Vector4  Vtemp;      // Temporary Vector
+    {
+        Vector4  Vtemp;      // Temporary Vector
 
         V4_Cross (Vtemp,    rayD,TRI->vec1,TRI->vec2);
         V4_Cross (_normal, Vtemp,TRI->vec1,TRI->vec2);
@@ -374,18 +375,22 @@ boolean  HitTriangle  (
     else
         ax1 = 1,  ax2 = 0;
 
-    if (fabs(_normal[2]) < fabs(_normal[ax2]))      // X, Y, Z
-    {   if (fabs(_normal[2]) < fabs(_normal[ax1]))
-            ax2 = ax1,  ax1 = 2;
-        else
+    if (fabs(_normal[2]) < fabs(_normal[ax2])) {    // X, Y, Z
+        if (fabs(_normal[2]) < fabs(_normal[ax1])) {
+            ax2 = ax1;
+            ax1 = 2;
+        } else {
             ax2 = 2;
+        }
     }
 
-    if (fabs(_normal[3]) < fabs(_normal[ax2]))      // X, Y, Z, W
-    {   if (fabs(_normal[3]) < fabs(_normal[ax1]))
-            ax2 = ax1,  ax1 = 3;
-        else
+    if (fabs(_normal[3]) < fabs(_normal[ax2])) {    // X, Y, Z, W
+        if (fabs(_normal[3]) < fabs(_normal[ax1])) {
+            ax2 = ax1;
+            ax1 = 3;
+        } else {
             ax2 = 3;
+        }
     }
 
     // Now compute the barycentric coordinates of the intersection point relative to the three

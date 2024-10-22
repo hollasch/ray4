@@ -79,8 +79,14 @@ void  FireRays     (void);
 
    /***  File-Global Variables  ***/
 
-ImageHdr  iheader =         // Output Image Header
-   { R4_IMAGE_ID, 1, 24, {1,1,1}, {0,0,0}, {0xFFFF,0xFFFF,0xFFFF} };
+ImageHdr iheader = {       // Output Image Header
+    R4_IMAGE_ID,
+    1,
+    24,
+    {1, 1, 1},
+    {0, 0, 0},
+    {0xffff, 0xffff, 0xffff}
+};
 
 Vector4  Gx,  Gy,  Gz;      // Ray-Grid Basis Vectors
 Point4   Gorigin;           // Ray-Grid Origin Point
@@ -94,8 +100,7 @@ time_t   StartTime;         // Timestamp
 
 //==================================================================================================
 
-void main (int argc, char *argv[])
-{
+void main (int argc, char *argv[]) {
     // The following is the entry procedure for the ray4 ray tracer.
 
     print (notice);
@@ -108,12 +113,11 @@ void main (int argc, char *argv[])
     // If the global ambient factor is zero, then clear all of the ambient factor flags in the
     // objects.
 
-    if ((ambient.r + ambient.g + ambient.b) < EPSILON)
-    {
+    if ((ambient.r + ambient.g + ambient.b) < EPSILON) {
         ObjInfo *optr = objlist;      /* Object Pointer */
 
-        while (optr)
-        {   optr->flags &= ~AT_AMBIENT;
+        while (optr) {
+            optr->flags &= ~AT_AMBIENT;
             optr = optr->next;
         }
     }
@@ -128,8 +132,8 @@ void main (int argc, char *argv[])
 
     scanlsize = (3 * (1 + iheader.last[0] - iheader.first[0]));
 
-    if (iheader.bitsperpixel == 12)
-    {   if (scanlsize & 1)
+    if (iheader.bitsperpixel == 12) {
+        if (scanlsize & 1)
             ++scanlsize;
         scanlsize >>= 1;
     }
@@ -154,8 +158,7 @@ void main (int argc, char *argv[])
 
 //==================================================================================================
 
-void  ProcessArgs  (int argc, char *argv[])
-{
+void ProcessArgs (int argc, char *argv[]) {
     // This subroutine grabs the command-line arguments and the environment variable arguments (from
     // RAY4) and sets up the raytrace parameters.
 
@@ -169,20 +172,18 @@ void  ProcessArgs  (int argc, char *argv[])
     ** command-line options, otherwise concatenate the command-line options
     ** to the options defined in the RAY4 environment variable. */
 
-    if (!(eptr = getenv ("RAY4")))
-    {   optc = argc - 1;
+    if (!(eptr = getenv ("RAY4"))) {
+        optc = argc - 1;
         opta = NEW (char*, optc);
         for (ii=0;  ii < optc;  ++ii)
             opta[ii] = argv[ii+1];
-    }
-    else
-    {
-        int opti;   /* Option Index */
+    } else {
+        int opti;   // Option Index
 
 #       define SPACE(c)   ((c == ' ') || (c == '\t'))
 
-        for (optc=0, ptr=eptr;  *ptr;  )
-        {   while (SPACE(*ptr))
+        for (optc=0, ptr=eptr;  *ptr;  ) {
+            while (SPACE(*ptr))
                 ++ptr;
             if (!*ptr)
                 break;
@@ -194,8 +195,7 @@ void  ProcessArgs  (int argc, char *argv[])
         optc += argc - 1;
         opta = NEW (char*, optc);
 
-        for (opti=0, ptr=eptr;  *ptr;  )
-        {
+        for (opti=0, ptr=eptr;  *ptr;  ) {
             while (SPACE(*ptr))
                 ++ptr;
 
@@ -215,12 +215,11 @@ void  ProcessArgs  (int argc, char *argv[])
             opta[opti++] = argv[ii];
     }
 
-    for (ii=0;  ii < optc;  ++ii)
-    {
+    for (ii=0;  ii < optc;  ++ii) {
         char oc;   /* Option Character */
 
-        if (opta[ii][0] != '-')
-        {   printf ("ray4:  Unexpected argument (%s).\n", opta[ii]);
+        if (opta[ii][0] != '-') {
+            printf ("ray4:  Unexpected argument (%s).\n", opta[ii]);
             print  (usage);
             exit (1);
         }
@@ -232,10 +231,10 @@ void  ProcessArgs  (int argc, char *argv[])
         else
             ptr = opta[++ii];
 
-        switch (oc)
-        {
-            case 'a':
-            {   if (ptr = GetField(ptr,&iheader.aspect[0]), (!ptr || !*ptr))
+        switch (oc) {
+
+            case 'a': {
+                if (ptr = GetField(ptr,&iheader.aspect[0]), (!ptr || !*ptr))
                     Halt ("Invalid X argument for -a option.");
 
                 if (ptr = GetField(ptr,&iheader.aspect[1]), !ptr)
@@ -247,8 +246,8 @@ void  ProcessArgs  (int argc, char *argv[])
                 break;
             }
 
-            case 'b':
-            {   iheader.bitsperpixel = static_cast<unsigned char>(atoi (ptr));
+            case 'b': {
+                iheader.bitsperpixel = static_cast<unsigned char>(atoi (ptr));
                 if ((iheader.bitsperpixel != 12) && (iheader.bitsperpixel != 24))
                 {   printf ("r4toiff:  %d bits per pixel is not supported (select 12 or 24).\n", iheader.bitsperpixel);
                     iheader.bitsperpixel = 24;
@@ -256,24 +255,24 @@ void  ProcessArgs  (int argc, char *argv[])
                 break;
             }
 
-            case 'i':
-            {   if (infile)
+            case 'i': {
+                if (infile)
                     DELETE(infile);
                 infile = NEW (char, strsize(ptr));
                 strcpy (infile, ptr);
                 break;
             }
 
-            case 'o':
-            {   if (outfile)
+            case 'o': {
+                if (outfile)
                     DELETE(outfile);
                 outfile = NEW (char, strsize(ptr));
                 strcpy (outfile, ptr);
                 break;
             }
 
-            case 'r':
-            {   if (ptr = GetField(ptr,&res[X]), (!ptr || !*ptr))
+            case 'r': {
+                if (ptr = GetField(ptr,&res[X]), (!ptr || !*ptr))
                     Halt ("Invalid X argument for -r option.");
 
                 if (ptr = GetField(ptr,&res[Y]), !ptr)
@@ -285,8 +284,8 @@ void  ProcessArgs  (int argc, char *argv[])
                 break;
             }
 
-            case 's':
-            {   ptr = GetRange(ptr,&iheader.first[0],&iheader.last[0]);
+            case 's': {
+                ptr = GetRange(ptr,&iheader.first[0],&iheader.last[0]);
                 if (!ptr || !*ptr)
                     Halt ("Bad X field argument to -s option.");
 
@@ -301,8 +300,8 @@ void  ProcessArgs  (int argc, char *argv[])
                 break;
             }
 
-            default:
-            {   printf ("ray4:  Unknown option (-%c).\n", oc);
+            default: {
+                printf ("ray4:  Unknown option (-%c).\n", oc);
                 print  (usage);
                 exit (1);
             }
@@ -337,8 +336,7 @@ void  ProcessArgs  (int argc, char *argv[])
 
 //==================================================================================================
 
-char *GetField  (char *str, ushort *value)
-{
+char *GetField (char *str, ushort *value) {
     // These subroutine process the command-line arguments. The first two routines get each field of
     // the resolution, aspect ratio, and scan range triples.
 
@@ -358,20 +356,20 @@ char *GetField  (char *str, ushort *value)
 
 //==================================================================================================
 
-char *GetRange  (
+char *GetRange (
     char   *str,    // Source String
     ushort *val1,   // First Destination Value of Range
     ushort *val2)   // Second Destination Value of Range
 {
     if (!str)   return nil;
 
-    if (!*str)
-    {   *val1 = *val2 = 0;
+    if (!*str) {
+        *val1 = *val2 = 0;
         return str;
     }
 
-    if (*str == '_')
-    {   *val1 = 0;
+    if (*str == '_') {
+        *val1 = 0;
         *val2 = 0xFFFF;
         return (str[1] == ':') ? (str+2) : (str+1);
     }
@@ -399,10 +397,7 @@ char *GetRange  (
 
 //==================================================================================================
 
-void Halt (
-    char *message,      /* Exception Message */
-    ... )               /* Optional Message Arguments */
-{
+void Halt (char *message, ...) {
     // This procedure replaces printf() to print out an error message, and has the side effect of
     // cleaning up before exiting (de-allocating memory, closing open files, and so on).
 
@@ -413,8 +408,7 @@ void Halt (
 
     print ("\n");
 
-    if (message)
-    {
+    if (message) {
         va_start(args, message);
 
         print  ("Ray4:  ");
@@ -431,23 +425,22 @@ void Halt (
     if (outfile)   DELETE (outfile);
     if (scanbuff)  DELETE (scanbuff);
 
-    while ((lptr = lightlist))            /* Free the lightsource list. */
-    {   lightlist = lightlist->next;
+    while ((lptr = lightlist)) {          /* Free the lightsource list. */
+        lightlist = lightlist->next;
         DELETE (lptr);
     }
 
-    while ((optr = objlist))              /* Free the object list. */
-    {   objlist = objlist->next;
+    while ((optr = objlist)) {            /* Free the object list. */
+        objlist = objlist->next;
         DELETE (optr);
     }
 
-    while ((aptr = attrlist))             /* Free the attribute list. */
-    {   attrlist = attrlist->next;
+    while ((aptr = attrlist)) {           /* Free the attribute list. */
+        attrlist = attrlist->next;
         DELETE (aptr);
     }
 
-    if (!message)
-    {
+    if (!message) {
         long  elapsed, hours, minutes, seconds;
 
         print  ("\n");
@@ -470,8 +463,7 @@ void Halt (
 
 //==================================================================================================
 
-char *MyAlloc (size_t size)
-{
+char *MyAlloc (size_t size) {
     // This routine allocates memory using the system malloc() function. If the malloc() call fails
     // to allocate the memory, this routine halts the program with an "out of memory" message.
 
@@ -485,14 +477,13 @@ char *MyAlloc (size_t size)
 
 //==================================================================================================
 
-void MyFree (void *addr)
-{   free (addr);
+void MyFree (void *addr) {
+    free (addr);
 }
 
 //==================================================================================================
 
-void CalcRayGrid (void)
-{
+void CalcRayGrid (void) {
     // This procedure calculates the ray-grid basis vectors.
 
     Real    GNx, GNy, GNz;  // Ray-Grid Vector Norms
@@ -559,8 +550,7 @@ void CalcRayGrid (void)
 
 //==================================================================================================
 
-void  FireRays  ()
-{
+void FireRays () {
     // This is the main routine that fires the rays through the ray grid and into the 4D scene.
 
     boolean  eflag;                   // Even RGB Boundary Flag
@@ -573,24 +563,21 @@ void  FireRays  ()
     scanptr   = scanbuff;
     eflag     = true;
 
-    for (Zindex=iheader.first[Z];  Zindex <= iheader.last[Z];  ++Zindex)
-    {
+    for (Zindex=iheader.first[Z];  Zindex <= iheader.last[Z];  ++Zindex) {
         V4_3Vec (Zorigin, =, Gorigin, +, Zindex*Gz);
-        for (Yindex=iheader.first[Y];  Yindex <= iheader.last[Y];  ++Yindex)
-        {
+        for (Yindex=iheader.first[Y];  Yindex <= iheader.last[Y];  ++Yindex) {
             printf ("%6u %6u\r",
             iheader.last[Z] - Zindex, iheader.last[Y] - Yindex);
             fflush (stdout);
 
             V4_3Vec (Yorigin, =, Zorigin, +, Yindex*Gy);
 
-            if (!eflag)
-            {   ++scanptr;
+            if (!eflag) {
+                ++scanptr;
                 eflag = true;
             }
 
-            for (Xindex=iheader.first[X];  Xindex <= iheader.last[X];  ++Xindex)
-            {
+            for (Xindex=iheader.first[X];  Xindex <= iheader.last[X];  ++Xindex) {
                 Color    color;   // Pixel Color
                 Vector4  Dir;     // Ray Direction Vector
                 Point4   Gpoint;  // Current Grid Point
@@ -616,19 +603,22 @@ void  FireRays  ()
 
                 // Store the 24-bit RGB triple in the scanline buffer.
 
-                if (iheader.bitsperpixel == 24)
-                {   *scanptr++ = (uchar)(color.r);
+                if (iheader.bitsperpixel == 24) {
+
+                    *scanptr++ = (uchar)(color.r);
                     *scanptr++ = (uchar)(color.g);
                     *scanptr++ = (uchar)(color.b);
-                }
-                else if (eflag)
-                {   *scanptr++ = ((uchar)(color.r) & 0xF0)
+
+                } else if (eflag) {
+
+                    *scanptr++ = ((uchar)(color.r) & 0xF0)
                                | ((uchar)(color.g) >> 4);
                     *scanptr   = ((uchar)(color.b) & 0xF0);
                     eflag = false;
-                }
-                else
-                {   *scanptr++ |= ((uchar)(color.r) >> 4);
+
+                } else {
+
+                    *scanptr++ |= ((uchar)(color.r) >> 4);
                     *scanptr++  = ((uchar)(color.g) & 0xF0)
                                 | ((uchar)(color.b) >> 4);
                     eflag = true;
@@ -637,8 +627,8 @@ void  FireRays  ()
 
             // If the scanline output buffer is full now, write it to disk.
 
-            if (++scancount >= slbuff_count)
-            {   scancount = 0;
+            if (++scancount >= slbuff_count) {
+                scancount = 0;
                 scanptr   = scanbuff;
                 eflag     = true;
                 WriteBlock (scanbuff, scanlsize * slbuff_count);

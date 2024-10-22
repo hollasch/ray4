@@ -35,7 +35,7 @@ Color black = { 0.000, 0.000, 0.000 };  // Used to zero out colors.
 
 //==================================================================================================
 
-void  RayTrace  (
+void RayTrace (
     Point4   rayO,       /* Ray Origin */
     Vector4  rayD,       /* Ray Direction */
     Color   *color,      /* Resulting Color */
@@ -69,13 +69,13 @@ void  RayTrace  (
 
     // Find the nearest object intersection.
 
-    {   Real  mindist;  // Nearest Object Distance
+    {
+        Real  mindist;  // Nearest Object Distance
 
         mindist = -1.0;
         nearobj = nil;
 
-        for (optr = objlist;  optr;  optr = optr->next)
-        {
+        for (optr = objlist;  optr;  optr = optr->next) {
             if ((*optr->intersect)
                 (optr, rayO,rayD, &mindist, nearintr,nearnormal))
             nearobj = optr;
@@ -85,8 +85,8 @@ void  RayTrace  (
     // If the ray hit nothing, assign the background color to it. If the hit an object, then
     // determine the shade at the intersection.
 
-    if (!nearobj)
-    {   *color = background;
+    if (!nearobj) {
+        *color = background;
         return;
     }
 
@@ -106,8 +106,8 @@ void  RayTrace  (
 
     NdotD = V4_Dot (nearnormal, rayD);
 
-    if (NdotD > 0.0)
-    {   V4_2Vec (nearnormal, =, -nearnormal);
+    if (NdotD > 0.0) {
+        V4_2Vec (nearnormal, =, -nearnormal);
         NdotD = -NdotD;
     }
 
@@ -118,19 +118,17 @@ void  RayTrace  (
 
     // Add illumation to the point from all visible lights.
 
-    for (lptr=lightlist;  lptr;  lptr=lptr->next)
-    {
+    for (lptr=lightlist;  lptr;  lptr=lptr->next) {
         Color    lcolor;   // Light Color
         Vector4  ldir;     // Light Direction
         Real     mindist;  // Nearest Object Distance
         Vector4  Refl;     // Reflection Vector
 
-        if (lptr->type == L_DIRECTIONAL)
-        {   V4_2Vec (ldir, =, lptr->u.dir);
+        if (lptr->type == L_DIRECTIONAL) {
+            V4_2Vec (ldir, =, lptr->u.dir);
             mindist = -1.0;
-        }
-        else
-        {   Real norm;  // Vector Norm
+        } else {
+            Real norm;  // Vector Norm
 
             V4_3Vec (ldir, =, lptr->u.pos, -, intr_out);
 
@@ -151,12 +149,10 @@ void  RayTrace  (
 
         lcolor = lptr->color;
 
-        for (optr=objlist;  optr;  optr=optr->next)
-        {
+        for (optr=objlist;  optr;  optr=optr->next) {
             Real minsave=mindist;  // Nearest Object Distance (saved)
 
-            if ((*optr->intersect)(optr, intr_out, ldir, &mindist, nil, nil))
-            {
+            if ((*optr->intersect)(optr, intr_out, ldir, &mindist, nil, nil)) {
                 if (!(optr->attr->flags & AT_TRANSPAR))
                     break;
 
@@ -194,8 +190,8 @@ void  RayTrace  (
         // the specular reflection.
 
         ftemp = V4_Dot (-rayD, Refl);
-        if (ftemp > 0.0)
-        {   ftemp = pow (ftemp, nearattr->shine);
+        if (ftemp > 0.0) {
+            ftemp = pow (ftemp, nearattr->shine);
             Color_3Op ((*color), +=, ftemp * nearattr->Ks, *, lcolor);
         }
     }
@@ -209,8 +205,7 @@ void  RayTrace  (
 
     // Find the contribution from the refraction vector, if applicable.
 
-    if (nearattr->flags & AT_TRANSPAR)
-    {
+    if (nearattr->flags & AT_TRANSPAR) {
         Vector4 RefrD;   // Refracted Direction Vector
         Vector4 T;       // Temporary Vector
         Color   Tcolor;  // Transparent Color
@@ -233,8 +228,7 @@ void  RayTrace  (
 
     // Find the contribution from the reflection vector, if applicable.
 
-    if (nearattr->flags & AT_REFLECT)
-    {
+    if (nearattr->flags & AT_REFLECT) {
         Color   Rcolor;  // Reflected Color
         Vector4 ReflD;   // Reflection Direction Vector
 

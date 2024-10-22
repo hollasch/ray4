@@ -41,8 +41,7 @@ FILE *outstream = nil;  // Output Stream
 
 //==================================================================================================
 
-void  CloseInput  ()
-{
+void CloseInput () {
     // Closes the input stream.
 
     if (!infile || (*infile == 0) || (!instream))
@@ -53,8 +52,7 @@ void  CloseInput  ()
 
 //==================================================================================================
 
-void  CloseOutput  ()
-{
+void CloseOutput () {
     // Closes the output stream.
 
     if (!outstream)
@@ -68,8 +66,7 @@ void  CloseOutput  ()
 int UNREAD_NONE = -2;
 int unreadChar = -2;
 
-int  ReadChar  ()
-{
+int ReadChar () {
     // This routine returns then next character from the input stream. If the end of file is
     // reached, it returns -1.
 
@@ -84,8 +81,7 @@ int  ReadChar  ()
 
 //==================================================================================================
 
-void UnreadChar  (int character)
-{
+void UnreadChar (int character) {
     // This routine, together with ReaedChar allow to put back a character, which is something
     // parsers often need. It cannot unread more than one character at a time though.
 
@@ -94,8 +90,7 @@ void UnreadChar  (int character)
 
 //==================================================================================================
 
-void  OpenInput  ()
-{
+void OpenInput () {
     // This subroutine opens the input file. If no filename was given in the command-line arguments,
     // we'll use the standard input stream.
 
@@ -107,8 +102,7 @@ void  OpenInput  ()
 
 //==================================================================================================
 
-void  OpenOutput  ()
-{
+void OpenOutput () {
     // This subroutine opens the output file.
 
     if (!outfile || (*outfile == 0))
@@ -121,7 +115,7 @@ void  OpenOutput  ()
 
 //==================================================================================================
 
-void  WriteBlock  (
+void WriteBlock (
     void *buff,  // Source Buffer
     int   num)   // Number of Bytes to Write
 {

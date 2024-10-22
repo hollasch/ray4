@@ -33,8 +33,7 @@
 
 //==================================================================================================
 
-short V4_Normalize (Vector4 V)
-{
+short V4_Normalize (Vector4 V) {
     // This function attempts to normalize a 4-vector. If the vector is not shorter than some
     // epsilon, it will normalize the vector and return 1. If the vector is shorter than the
     // epsilon, it does not alter the vector and returns 0.
@@ -52,7 +51,7 @@ short V4_Normalize (Vector4 V)
 
 //==================================================================================================
 
-void  V4_Cross  (
+void V4_Cross (
     Vector4  result,  // Result Vector
     Vector4  u,       // Source Vectors
     Vector4  v,

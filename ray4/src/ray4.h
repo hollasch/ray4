@@ -128,17 +128,17 @@ typedef struct S_TETRAHEDRON    Tetrahedron;
 typedef struct S_TETPAR         TetPar;
 typedef struct S_TRIANGLE       Triangle;
 
-struct S_COLOR     // Color Triple
-{   Real r, g, b;  // Each color should be in [0,1].
+struct S_COLOR {   // Color Triple
+    Real r, g, b;  // Each color should be in [0,1].
 };
 
-struct S_RAY          // Ray Definition
-{   Point4   origin;  // Ray Origin
+struct S_RAY {        // Ray Definition
+    Point4   origin;  // Ray Origin
     Vector4  dir;     // Ray Direction
 };
 
-struct S_STATS
-{   ulong  Ncast;     // Number of Rays Cast
+struct S_STATS {
+    ulong  Ncast;     // Number of Rays Cast
     ulong  Nreflect;  // Number of Reflection Rays Cast
     ulong  Nrefract;  // Number of Refraction Rays Cast
     ulong  maxlevel;  // Maximum Ray Tree Level
@@ -146,13 +146,13 @@ struct S_STATS
 
 typedef enum { L_POINT, L_DIRECTIONAL } LType;
 
-struct S_LIGHT
-{   Light *next;   // Next Light Source
+struct S_LIGHT {
+    Light *next;   // Next Light Source
     Color  color;  // Light Color
     LType  type;   // Type of Light
 
-    union
-    {   Vector4 dir;  // Direction for Directional Light Source
+    union {
+        Vector4 dir;  // Direction for Directional Light Source
         Point4  pos;  // Position for Point Light Source
     } u;
 };
@@ -166,8 +166,8 @@ const AttrFlag AT_SPECULAR = (1 << 2);  // Set if Specular is Non-Zero
 const AttrFlag AT_TRANSPAR = (1 << 3);  // Set if Transparency is Non-Zero
 const AttrFlag AT_REFLECT  = (1 << 4);  // Set if Object Reflects Light
 
-struct S_ATTRIBUTES
-{   Attributes *next;      // Link to Next Attributes Structure
+struct S_ATTRIBUTES {
+    Attributes *next;      // Link to Next Attributes Structure
     Color       Ka;        // Ambient Illumination Color
     Color       Kd;        // Diffuse Illumination Color
     Color       Ks;        // Specular Illumination Color
@@ -184,8 +184,8 @@ const InfoFlag FL_GOURAUD = (1 << 0);  // Set if the Object is Gouraud Shaded
 const InfoFlag FL_PHONG   = (1 << 1);  // Set if the Object is Phong Shaded
 
 
-struct S_OBJINFO
-{   ObjInfo    *next;       // Pointer to Next Object
+struct S_OBJINFO {
+    ObjInfo    *next;       // Pointer to Next Object
     Attributes *attr;       // Object Attributes
     uchar       type;       // Object Type
     InfoFlag    flags;      // Information Flags
@@ -193,15 +193,15 @@ struct S_OBJINFO
                 (ObjInfo*, Point4, Vector4, Real*, Point4, Vector4);
 };
 
-struct S_SPHERE
-{   ObjInfo info;    // Common Object Fields; Must Be First Field
+struct S_SPHERE {
+    ObjInfo info;    // Common Object Fields; Must Be First Field
     Point4  center;  // Sphere Center
     Real    radius;  // Sphere Radius
     Real    rsqrd;   // Sphere Radius, Squared
 };
 
-struct S_TETPAR              // Tetrahedron/Parallelepiped Common Fields
-{   Point4  vert[4];         // Vertices
+struct S_TETPAR {            // Tetrahedron/Parallelepiped Common Fields
+    Point4  vert[4];         // Vertices
     Vector4 vec1,vec2,vec3;  // Vectors from Vertex 0 to Vertices 1,2,3
     Vector4 normal;          // Hyperplane Normal Vector
     uchar   ax1, ax2, ax3;   // Non-Dominant Normal Vector Axes
@@ -209,19 +209,19 @@ struct S_TETPAR              // Tetrahedron/Parallelepiped Common Fields
     Real    CramerDiv;       // Cramer's-Rule Divisor for Barycentric Coords
 };
 
-struct S_TETRAHEDRON
-{   ObjInfo info;           // Common Obj Fields; Must Be First Field
+struct S_TETRAHEDRON {
+    ObjInfo info;           // Common Obj Fields; Must Be First Field
     TetPar  tp;             // Tetrahedron/Parallelepiped Data
     Real    Bc1, Bc2, Bc3;  // Barycentric Coordinate Values
 };
 
-struct S_PARALLELEPIPED
-{   ObjInfo info;  // Common Obj Fields; Must Be First Field
+struct S_PARALLELEPIPED {
+    ObjInfo info;  // Common Obj Fields; Must Be First Field
     TetPar  tp;    // Tetrahedron/Parallelepiped Data
 };
 
-struct S_TRIANGLE
-{   ObjInfo  info;        // Common Object Fields; Must Be First Field
+struct S_TRIANGLE {
+    ObjInfo  info;        // Common Object Fields; Must Be First Field
     Point4   vert[3];     // Triangle Vertices
     Vector4  vec1, vec2;  // vector from Vertex0 to Vertices 1,2.
     Real     Bc1, Bc2;    // Barycentric Coordinate Values

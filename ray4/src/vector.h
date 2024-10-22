@@ -53,8 +53,8 @@ typedef Real Vector4 [4];  // 4-Vector
     // This macro provides for scalar multiplication, division, or assignment with a given 3-vector.
 
 #define V3_Scalar(V,assign,k) \
-if (1) \
-{  V[0] assign (k); \
+if (1) { \
+   V[0] assign (k); \
    V[1] assign (k); \
    V[2] assign (k); \
 }else
@@ -63,8 +63,8 @@ if (1) \
     // coordinate has its own scalar factor. For example: V3_3Scalar (A, /=, scale0,scale1,scale2).
 
 #define V3_3Scalar(V,assign,a,b,c) \
-if (1) \
-{  V[0] assign (a); \
+if (1) { \
+   V[0] assign (a); \
    V[1] assign (b); \
    V[2] assign (c); \
 }else
@@ -73,8 +73,8 @@ if (1) \
     // For example: V3_2Vec( A, +=, B).
 
 #define V3_2Vec(V,assign,U) \
-if (1) \
-{  V[0] assign U[0]; \
+if (1) { \
+   V[0] assign U[0]; \
    V[1] assign U[1]; \
    V[2] assign U[2]; \
 }else
@@ -83,8 +83,8 @@ if (1) \
     // e.g. V3_3Vec (A, +=, B, -, C).
 
 #define V3_3Vec(V,assign,A,op,B)  \
-if (1) \
-{  V[0] assign A[0] op B[0]; \
+if (1) { \
+   V[0] assign A[0] op B[0]; \
    V[1] assign A[1] op B[1]; \
    V[2] assign A[2] op B[2]; \
 }else
@@ -108,8 +108,8 @@ if (1) \
     // This macro provides for scalar multiplication, division, or assignment with a given 4-vector.
 
 #define V4_Scalar(V,assign,k) \
-if (1) \
-{  V[0] assign (k); \
+if (1) { \
+   V[0] assign (k); \
    V[1] assign (k); \
    V[2] assign (k); \
    V[3] assign (k); \
@@ -119,8 +119,8 @@ if (1) \
     // coordinate has its own scalar factor. For example: V4_4Scalar (A, /=, x, y, z, w).
 
 #define V4_4Scalar(V,assign,a,b,c,d) \
-if (1) \
-{  V[0] assign (a); \
+if (1) { \
+   V[0] assign (a); \
    V[1] assign (b); \
    V[2] assign (c); \
    V[3] assign (d); \
@@ -130,8 +130,8 @@ if (1) \
     // For example: V4_2Vec( A, +=, B).
 
 #define V4_2Vec(V,assign,U) \
-if (1) \
-{  V[0] assign U[0]; \
+if (1) { \
+   V[0] assign U[0]; \
    V[1] assign U[1]; \
    V[2] assign U[2]; \
    V[3] assign U[3]; \
@@ -141,8 +141,8 @@ if (1) \
     // e.g. V4_3Vec (A, +=, B, -, C).
 
 #define V4_3Vec(V,assign,A,op,B) \
-if (1) \
-{  V[0] assign A[0] op B[0]; \
+if (1) { \
+   V[0] assign A[0] op B[0]; \
    V[1] assign A[1] op B[1]; \
    V[2] assign A[2] op B[2]; \
    V[3] assign A[3] op B[3]; \
