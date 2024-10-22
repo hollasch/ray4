@@ -55,7 +55,7 @@
 // If the ray does not intersect the object, the intersection function returns false and does not
 // alter `mindist', `intr' or `normal'.
 //
-// If the mindist parameter is nil, then it's assumed that the calling program is not interested in
+// If the mindist parameter is null, then it's assumed that the calling program is not interested in
 // the specifics of the intersection; it's only interested in whether the ray intersects the object
 // (as in shadow testing). In this case, if the ray does intersect the object, the function
 // immediately returns true, but does not alter the `mindist', `intr' or `normal' parameters.
@@ -72,7 +72,7 @@
 // function returns false.
 //
 // Note that these routines still behave properly if either the `intr' or `normal' parameters are
-// nil.
+// null.
 //==================================================================================================
 
 

@@ -38,14 +38,14 @@
 #endif
 
 
-Global (Attributes *attrlist,        nil  );  // Attributes List
-Global (Real        global_indexref, 1.00 );  // Global Index Refraction
-Global (char       *infile,          nil  );  // Input File Name
-Global (Light      *lightlist,       nil  );  // Light-Source List
-Global (ushort      maxdepth,        0    );  // Maximum Recursion Depth
-Global (ObjInfo    *objlist,         nil  );  // Object List
-Global (char       *outfile,         nil  );  // Output File Name
-Global (Real        Vangle,          45.0 );  // Viewing Angle, X-Axis
+Global (Attributes *attrlist,        nullptr );  // Attributes List
+Global (Real        global_indexref, 1.00    );  // Global Index Refraction
+Global (char       *infile,          nullptr );  // Input File Name
+Global (Light      *lightlist,       nullptr );  // Light-Source List
+Global (ushort      maxdepth,        0       );  // Maximum Recursion Depth
+Global (ObjInfo    *objlist,         nullptr );  // Object List
+Global (char       *outfile,         nullptr );  // Output File Name
+Global (Real        Vangle,          45.0    );  // Viewing Angle, X-Axis
 
 #ifndef DEFINE_GLOBALS
    extern Color    ambient;     // Ambient Light Factor

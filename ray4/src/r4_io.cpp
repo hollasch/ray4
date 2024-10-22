@@ -35,8 +35,8 @@
 
     /***  Local Global Variables  ***/
 
-FILE *instream  = nil;  // Input Stream
-FILE *outstream = nil;  // Output Stream
+FILE *instream  = nullptr;  // Input Stream
+FILE *outstream = nullptr;  // Output Stream
 
 
 //==================================================================================================
@@ -47,7 +47,7 @@ void CloseInput () {
     if (!infile || (*infile == 0) || (!instream))
         return;
     fclose (instream);
-    instream = nil;
+    instream = nullptr;
 }
 
 //==================================================================================================
@@ -58,7 +58,7 @@ void CloseOutput () {
     if (!outstream)
         return;
     fclose (outstream);
-    outstream = nil;
+    outstream = nullptr;
 }
 
 //==================================================================================================

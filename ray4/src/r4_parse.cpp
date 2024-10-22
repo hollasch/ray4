@@ -130,13 +130,13 @@ struct S_ATTRNAME {
    /*** Default Structures ***/
 
 Light DefLight = {
-    nil,                         // Next Light Source
+    nullptr,                     // Next Light Source
     { 1.0, 1.0, 1.0 },           // Light Color
     L_DIRECTIONAL                // Light Type
 };
 
 Attributes DefAttributes = {
-    nil,                         // Next Attribute Node
+    nullptr,                     // Next Attribute Node
     BLACK, BLACK, BLACK, BLACK,  // Ambient, Diffuse, Specular, Transpar.
     1.0,                         // Shine
     1.0,                         // Index of Refraction
@@ -145,8 +145,8 @@ Attributes DefAttributes = {
 
 Sphere DefSphere = {
     {
-        nil,       // Next Pointer
-        nil,       // Attributes
+        nullptr,   // Next Pointer
+        nullptr,   // Attributes
         O_SPHERE,  // Object Type
         0,         // Object Flags
         HitSphere  // Sphere-Intersection Function
@@ -155,8 +155,8 @@ Sphere DefSphere = {
 
 Tetrahedron DefTetra = {
     {
-        nil,            // Next Pointer
-        nil,            // Attributes
+        nullptr,        // Next Pointer
+        nullptr,        // Attributes
         O_TETRAHEDRON,  // Object Type
         0,              // Object Flags
         HitTetPar       // Tetrahedron-Intersection Function
@@ -165,8 +165,8 @@ Tetrahedron DefTetra = {
 
 Parallelepiped DefPllp = {
     {
-        nil,               // Next Pointer
-        nil,               // Attributes
+        nullptr,           // Next Pointer
+        nullptr,           // Attributes
         O_PARALLELEPIPED,  // Object Type
         0,                 // Object Flags
         HitTetPar          // Parallelepiped-Intersection Function
@@ -175,8 +175,8 @@ Parallelepiped DefPllp = {
 
 Triangle DefTriangle = {
     {
-        nil,         // Next Pointer
-        nil,         // Attributes
+        nullptr,     // Next Pointer
+        nullptr,     // Attributes
         O_TRIANGLE,  // Object Type
         0,           // Object Flags
         HitTriangle  // Triangle-Intersection Function
@@ -186,7 +186,7 @@ Triangle DefTriangle = {
 
     /*** Global Variables ***/
 
-static AttrName   *attrnamelist = nil;        // Attribute Name List
+static AttrName   *attrnamelist = nullptr;    // Attribute Name List
 static bool        eofflag = false;           // Non-Zero If EOF Input File
 static ulong       lcount = 1;                // Input Line Counter
 static Attributes *prevattr= &DefAttributes;  // Previously Named Attribute
@@ -259,7 +259,8 @@ char *GetToken  (
 
     if (cc == EOFC) {
         eofflag = true;
-        if (eofok)  return nil;
+        if (eofok)
+            return nullptr;
         Error ("Unexpected end-of-file.");
     }
 
@@ -273,7 +274,8 @@ char *GetToken  (
             while (cc=ReadChar(), (cc != '\n') && (cc != '\r')) {
                 if (cc == EOFC) {
                     eofflag = true;
-                    if (eofok)  return nil;
+                    if (eofok)
+                        return nullptr;
                     Error ("Unexpected end-of-file.");
                 }
             }
@@ -284,7 +286,8 @@ char *GetToken  (
 
             if ((char)(EOFC) == (cc = ReadChar ())) {
                 eofflag = true;
-                if (eofok)  return nil;
+                if (eofok)
+                    return nullptr;
                 Error ("Unexpected end-of-file.");
             }
         }
@@ -328,7 +331,7 @@ char *GetToken  (
 
         eofflag = true;
         if (eofok)
-            return nil;
+            return nullptr;
 
         Error ("Unexpected end-of-file.");
     }
@@ -381,7 +384,7 @@ char *GetToken  (
 
         eofflag = true;
         if (eofok)
-            return nil;
+            return nullptr;
 
         Error ("Unexpected end-of-file.");
     }
@@ -389,7 +392,7 @@ char *GetToken  (
     // Unexpected character. Print out the hexadecimal value and halt.
 
     Error ("Unexpected character in input stream (0x%02x).", (int)(cc & 0xFF));
-    return nil;
+    return nullptr;
 }
 
 //==================================================================================================

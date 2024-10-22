@@ -73,7 +73,7 @@ void RayTrace (
         Real  mindist;  // Nearest Object Distance
 
         mindist = -1.0;
-        nearobj = nil;
+        nearobj = nullptr;
 
         for (optr = objlist;  optr;  optr = optr->next) {
             if ((*optr->intersect)
@@ -152,7 +152,7 @@ void RayTrace (
         for (optr=objlist;  optr;  optr=optr->next) {
             Real minsave=mindist;  // Nearest Object Distance (saved)
 
-            if ((*optr->intersect)(optr, intr_out, ldir, &mindist, nil, nil)) {
+            if ((*optr->intersect)(optr, intr_out, ldir, &mindist, nullptr, nullptr)) {
                 if (!(optr->attr->flags & AT_TRANSPAR))
                     break;
 

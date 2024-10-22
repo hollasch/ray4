@@ -75,8 +75,6 @@ typedef enum {    // Object Type ID's
     O_PARALLELEPIPED
 } ObjType;
 
-#define nil   0
-
 
     /***  Macro Definitions  ***/
 

@@ -150,10 +150,10 @@ void main (int argc, char *argv[]) {
 
     CalcRayGrid ();   // Calculate the grid cube to fire rays through.
 
-    StartTime = time (nil);
+    StartTime = time(0);
     FireRays ();      // Raytrace the scene.
 
-    Halt (nil);       // Clean up and exit.
+    Halt (nullptr);       // Clean up and exit.
 }
 
 //==================================================================================================
@@ -340,11 +340,11 @@ char *GetField (char *str, ushort *value) {
     // These subroutine process the command-line arguments. The first two routines get each field of
     // the resolution, aspect ratio, and scan range triples.
 
-    if (!str)   return nil;
+    if (!str)   return nullptr;
     if (!*str)  return *value=0, str;
 
     if ((*str < '0') || ('9' < *str))
-        return nil;
+        return nullptr;
 
     *value = static_cast<ushort>(atoi (str));
 
@@ -361,7 +361,8 @@ char *GetRange (
     ushort *val1,   // First Destination Value of Range
     ushort *val2)   // Second Destination Value of Range
 {
-    if (!str)   return nil;
+    if (!str)
+        return nullptr;
 
     if (!*str) {
         *val1 = *val2 = 0;
@@ -374,19 +375,21 @@ char *GetRange (
         return (str[1] == ':') ? (str+2) : (str+1);
     }
 
-    if ((*str < '0') || ('9' < *str))  return nil;
+    if ((*str < '0') || ('9' < *str))
+        return nullptr;
 
     *val1 = *val2 = static_cast<ushort>(atoi (str));
 
     while (('0' <= *str) && (*str <= '9'))
         ++str;
 
-    if (*str == 0)      return str;
-    if (*str == ':')   return str+1;
-    if (*str != '-')   return nil;
+    if (*str == 0)    return str;
+    if (*str == ':')  return str+1;
+    if (*str != '-')  return nullptr;
 
     ++str;
-    if ((*str < '0') || ('9' < *str))   return nil;
+    if ((*str < '0') || ('9' < *str))
+        return nullptr;
 
     *val2 = static_cast<ushort>(atoi (str));
     while (('0' <= *str) && (*str <= '9'))
@@ -449,7 +452,7 @@ void Halt (char *message, ...) {
         printf ("  Refraction rays cast:  %lu\n", stats.Nrefract);
         printf ("Maximum raytrace level:  %lu\n", stats.maxlevel);
 
-        elapsed = static_cast<long>(time(nil) - StartTime);
+        elapsed = static_cast<long>(time(0) - StartTime);
         hours   = elapsed / 3600;
         minutes = (elapsed - 3600*hours) / 60;
         seconds = (elapsed - 3600*hours - 60*minutes);
