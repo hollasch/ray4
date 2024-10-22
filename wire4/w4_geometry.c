@@ -1,18 +1,23 @@
-
-/***********************************************************************
-**
-**  "wire4" is Copyright (c) 1991 by Steve R. Hollasch.
-**
-**  All rights reserved.  This software may be freely copied, modified
-**  and redistributed, provided that this copyright notice is preserved
-**  in all copies.  This software is provided "as is", without express
-**  or implied warranty.  You may not include this software in a program
-**  or other software product without also supplying the source, or
-**  without informing the end-user that the source is available for no
-**  extra charge.  If you modify this software, please include a notice
-**  detailing the author, date and purpose of the modification.
-**
-***********************************************************************/
+//**************************************************************************************************
+//  Copyright (c) 1991-2024 Steven R Hollasch
+//
+//  MIT License
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+//  and associated documentation files (the "Software"), to deal in the Software without
+//  restriction, including without limitation the rights to use, copy, modify, merge, publish,
+//  distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in all copies or
+//  substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+//  BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+//  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+//  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//**************************************************************************************************
 
 /****************************************************************************
 **
