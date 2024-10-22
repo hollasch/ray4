@@ -4,10 +4,10 @@
 
 cmake_minimum_required(VERSION 3.10.0...3.27.7)
 
-project (ray4 LANGUAGES C)
+project (ray4-c LANGUAGES C)
 
 # Source
-set ( sources_ray4
+set ( sources_ray4_c
   src/r4_globals.h
   src/r4_image.h
   src/ray4.h
@@ -20,7 +20,7 @@ set ( sources_ray4
   src/r4_vec.c
 )
 
-add_executable (ray4 ${sources_ray4})
+add_executable (ray4-c ${sources_ray4_c})
 
 if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
     target_link_libraries(ray4 m)

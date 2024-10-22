@@ -1,6 +1,11 @@
 Change Log -- `ray4-c`
 ====================================================================================================
 
+# v1.0.0 (2024-10-22)
+  - Forked from the original C sources, updated occasionally. This will now be the executable from
+    the C sources, with possible future patches, but basically dead-ended. The new version will be
+    C++, with some updates.
+
 # v0.1.50 (1992-01-25)
   - Release to public.
 

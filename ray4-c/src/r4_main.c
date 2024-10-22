@@ -53,25 +53,52 @@ following files comprise the Ray4 ray tracer:
 
 char notice[] = "\
 \n\
-Ray4 4D Raytracer, Version 2\n\
-Copyright (C) Steve Hollasch 1991-1996.  All rights reserved.\n\
-\n\n";
+ray4-c 1.0.0 | 2024-10-22 | https://github.com/hollasch/ray4\n\
+\n";
 
 char usage[] = "\
-ray4 :  4-Space Ray Tracer\n\
-usage:  ray4 -s<Scan Range> -a<Aspect Ratios> -r<Image Resolution>\n\
-             -b<Bits Per Pixel> -i<Input File> -o<Output File>\n\
+ray4-c:  4-Space Ray Tracer\n\
+usage :  ray4-c -r<Image Resolution> -i<Input Filename> -o<Output Filename>\n\
+                [-h] [-a<Aspect Ratio>] [-b<Bits Per Pixel>] [-s<Scan Range>]\n\
 \n\
-    The arguments to the -s, -a, and -r options are all colon-separated\n\
-fields of X:Y:Z triples.  All components are unsigned 16-bit integers.\n\
-The aspect ratios are the width, height & depth (in some integer units) of\n\
-a square voxel.  The scan range fields may consist of a range with a low\n\
-number, then a '-', and then a high number.  You can specify the entire\n\
-range with a single underscore character.  You may select 12 or 24 color\n\
-bits per pixel (default is 24).\n\
+This program constructs a 4D raytraced image of the input scene file, outputing\n\
+a 3D image cube of pixels.\n\
 \n\
-    Examples:  ray4 -b12 -a2:1:2 -s_:_:_ -r256:256:256 <MyFile -omy.img\n\
-               ray4 -a 1:1 -r 1024:768 -s 0-1023:0-767 -iSphere4 -os2.img\n\
+-r<Image Resolution>\n\
+    Image resolution specified as 'X:Y:Z'.\n\
+\n\
+-i<Input Filename>\n\
+    Input filename, typically with extension '.r4'.\n\
+\n\
+-o<Output Filename>\n\
+    Output 3D image cube filename, typically with extension '.icube'.\n\
+\n\
+-h\n\
+    Print help information.\n\
+\n\
+-a<Aspect Ratio> (Optional)\n\
+    The 3D image aspect ratio, specified as 'X:Y:Z'. X and Y must be non-zero.\n\
+    By default, the pixel aspect ratio is 1:1:1.\n\
+\n\
+-b<Bits Per Pixel> (Optional)\n\
+    The output number of RGB bits per pixel. This value must be either 12 or 24.\n\
+    By default, 24 bits per pixel.\n\
+\n\
+-s<Scan Range> (Optional)\n\
+    A subset of the full image resolution to raytrace, expressed as 'X:Y:Z'.\n\
+    Each component may be a single number, a range of numbers (expressed as\n\
+    'S-E', where S is the scan start, and E is the scan end, inclusive), or the\n\
+    special value '_', which indicates the entire resolution for that dimension.\n\
+    Unspecified values are interpreted as zero. By default, the full resolution\n\
+    is scanned (equivalent to '_:_:_').\n\
+\n\
+Examples:\n\
+    ray4-c -r128:128:128 <scene.r4 -o scene.icube\n\
+\n\
+    ray4-c -b12 -a2:1:2 -r256:256:256 -s_:_:_ <MyFile.r4 -omy.icube\n\
+\n\
+    ray4-c -a 1:1 -r 1024:768 -s 0-1023:0-767 -iSphere4 -os2.icube\n\
+\n\
 ";
 
    /******************************/
@@ -277,6 +304,13 @@ void  ProcessArgs  (int argc, char *argv[])
                 break;
             }
 
+            case 'h':
+            {
+                print (usage);
+                exit (0);
+                break;
+            }
+
             case 'i':
             {   if (infile)
                     DELETE(infile);
@@ -386,7 +420,8 @@ char *GetRange  (
     ushort *val1,   /* First Destination Value of Range */
     ushort *val2)   /* Second Destination Value of Range */
 {
-    if (!str)   return nil;
+    if (!str)
+        return nil;
 
     if (!*str)
     {   *val1 = *val2 = 0;
@@ -399,7 +434,8 @@ char *GetRange  (
         return (str[1] == ':') ? (str+2) : (str+1);
     }
 
-    if ((*str < '0') || ('9' < *str))  return nil;
+    if ((*str < '0') || ('9' < *str))
+        return nil;
 
     *val1 = *val2 = atoi (str);
 
