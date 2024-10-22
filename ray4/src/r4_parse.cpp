@@ -192,9 +192,9 @@ raytrace variables and the object lists.
 
 void ParseInput ()
 {
-    AttrName  *attrname;       /* Attribute Name Node Pointer */
-    ushort     ii;             /* Scratch Index Value */
-    boolean  (*func)();        /* Function Pointer */
+    AttrName  *attrname;            /* Attribute Name Node Pointer */
+    ushort     ii;                  /* Scratch Index Value */
+    boolean  (*func)();             /* Function Pointer */
 
     while (GetToken(token, true))
     {
@@ -297,7 +297,7 @@ char *GetToken  (
     ** that character as a single token. */
 
     if (CTYPE(cc) == OTH)
-    {   *ptr++ = cc;
+    {   *ptr++ = static_cast<char>(cc);
         *ptr   = 0;
         return buff;
     }
@@ -313,7 +313,7 @@ char *GetToken  (
             {   *ptr = 0;
                 Error ("Input token is too long (%s).", buff);
             }
-            *ptr++ = cc;
+            *ptr++ = static_cast<char>(cc);
 
             cc = ReadChar ();
 
@@ -348,7 +348,7 @@ char *GetToken  (
             {   *ptr = 0;
                 Error ("Input token is too long (%s).", buff);
             }
-            *ptr++ = cc;
+            *ptr++ = static_cast<char>(cc);
 
             if ((char)(EOFC) == (cc = ReadChar ()))
                 break;
@@ -898,23 +898,23 @@ This routine reads in a color vector from the input stream and stuffs it in
 the location given in the parameter list.
 *****************************************************************************/
 
-void ReadColor (char *token, Color *color)
+void ReadColor (char *ctoken, Color *color)
 {
     char inbuff[MAXTLEN+1];      /* Input Value Buffer */
 
     GetToken (inbuff, false);
     if (CTYPE(*inbuff) != NUM)
-        Error ("Missing real number for red component of '%s'.", token);
+        Error ("Missing real number for red component of '%s'.", ctoken);
     color->r = atof (inbuff);
 
     GetToken (inbuff, false);
     if (CTYPE(*inbuff) != NUM)
-        Error ("Missing real number for green component of '%s'.", token);
+        Error ("Missing real number for green component of '%s'.", ctoken);
     color->g = atof (inbuff);
 
     GetToken (inbuff, false);
     if (CTYPE(*inbuff) != NUM)
-        Error ("Missing real number for blue component of '%s'.", token);
+        Error ("Missing real number for blue component of '%s'.", ctoken);
     color->b = atof (inbuff);
 }
 
@@ -925,13 +925,13 @@ This routine reads in a real-valued number from the input stream and stores it
 in the location given in the parameter list.
 *****************************************************************************/
 
-void  ReadReal  (char *token, Real *num)
+void  ReadReal  (char *ctoken, Real *num)
 {
     char inbuff[MAXTLEN+1];      /* Input Value Buffer */
 
     GetToken (inbuff, false);
     if (CTYPE(*inbuff) != NUM)
-        Error ("Missing real number argument for '%s'.", token);
+        Error ("Missing real number argument for '%s'.", ctoken);
     *num = atof (inbuff);
 }
 
@@ -942,14 +942,14 @@ This procedure reads in a 16-bit unsigned integer from the input stream and
 stores it in the location given in the parameter list.
 *****************************************************************************/
 
-void  ReadUint16  (char *token, ushort *num)
+void  ReadUint16  (char *itoken, ushort *num)
 {
     char inbuff[MAXTLEN+1];      /* Input Value Buffer */
 
     GetToken (inbuff, false);
     if (CTYPE(*inbuff) != NUM)
-        Error ("Missing integer argument for '%s'.", token);
-    *num = atoi (inbuff);
+        Error ("Missing integer argument for '%s'.", itoken);
+    *num = static_cast<ushort>(atoi (inbuff));
 }
 
 
@@ -959,28 +959,28 @@ This procedure reads in a 4-vector from the input stream and stores it into
 the specified location.
 *****************************************************************************/
 
-void  Read4Vec  (char *token, Real *vec)
+void  Read4Vec  (char *vtoken, Real *vec)
 {
     char inbuff[MAXTLEN+1];   /* Input Value Buffer */
 
     GetToken (inbuff, false);
     if (CTYPE(*inbuff) != NUM)
-        Error ("Missing real number for X component of '%s'.", token);
+        Error ("Missing real number for X component of '%s'.", vtoken);
     vec[0] = atof (inbuff);
 
     GetToken (inbuff, false);
     if (CTYPE(*inbuff) != NUM)
-        Error ("Missing real number for Y component of '%s'.", token);
+        Error ("Missing real number for Y component of '%s'.", vtoken);
     vec[1] = atof (inbuff);
 
     GetToken (inbuff, false);
     if (CTYPE(*inbuff) != NUM)
-        Error ("Missing real number for Z component of '%s'.", token);
+        Error ("Missing real number for Z component of '%s'.", vtoken);
     vec[2] = atof (inbuff);
 
     GetToken (inbuff, false);
     if (CTYPE(*inbuff) != NUM)
-        Error ("Missing real number for W component of '%s'.", token);
+        Error ("Missing real number for W component of '%s'.", vtoken);
     vec[3] = atof (inbuff);
 }
 

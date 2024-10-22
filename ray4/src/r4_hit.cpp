@@ -428,20 +428,20 @@ boolean  HitTriangle  (
     ** --------------------------------------------------------------------*/
 
     {
-        Real  div;           /* Cramer's Rule Divisor */
+        Real  cramer_div;    /* Cramer's Rule Divisor */
         Real  I1, I2;        /* Matrix Entries */
 
         I1  = intr[ax1] - TRI->vert[0][ax1];
         I2  = intr[ax2] - TRI->vert[0][ax2];
-        div = (TRI->vec1[ax1] * TRI->vec2[ax2])
-            - (TRI->vec1[ax2] * TRI->vec2[ax1]);
+        cramer_div = (TRI->vec1[ax1] * TRI->vec2[ax2])
+                   - (TRI->vec1[ax2] * TRI->vec2[ax1]);
 
-        TRI->Bc1 = ((I1 * TRI->vec2[ax2]) - (I2 * TRI->vec2[ax1])) / div;
+        TRI->Bc1 = ((I1 * TRI->vec2[ax2]) - (I2 * TRI->vec2[ax1])) / cramer_div;
 
         if ((TRI->Bc1 < 0.0) || (TRI->Bc1 > 1.0))
             return false;
 
-        TRI->Bc2 = ((TRI->vec1[ax1] * I2) - (TRI->vec1[ax2] * I1)) / div;
+        TRI->Bc2 = ((TRI->vec1[ax1] * I2) - (TRI->vec1[ax2] * I1)) / cramer_div;
 
         if ((TRI->Bc2 <0.0) || (TRI->Bc2 >1.0) || ((TRI->Bc1+TRI->Bc2) >1.0))
             return false;

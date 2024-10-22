@@ -24,4 +24,9 @@ set ( sources_ray4
   src/vector.h
 )
 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    add_compile_options("/W4")      # Enable level-4 warnings
+    add_compile_options("/wd 4996") # This function or variable may be unsafe. Consider using XXX instead.
+endif()
+
 add_executable (ray4 ${sources_ray4})

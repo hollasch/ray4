@@ -98,7 +98,7 @@ ushort    res[3] = {0,0,0};     /* Full Output Image Resolution */
 ulong     scanlsize;            /* Scanline Size */
 ulong     slbuff_count;         /* Number of Lines in Scanline Buffer */
 char     *scanbuff;             /* Scanline Buffer */
-ulong     StartTime;            /* Timestamp */
+time_t    StartTime;            /* Timestamp */
 
 
 
@@ -260,7 +260,7 @@ void  ProcessArgs  (int argc, char *argv[])
             }
 
             case 'b':
-            {   iheader.bitsperpixel = atoi (ptr);
+            {   iheader.bitsperpixel = static_cast<unsigned char>(atoi (ptr));
                 if ((iheader.bitsperpixel != 12) && (iheader.bitsperpixel != 24))
                 {   printf ("r4toiff:  %d bits per pixel is not supported (select 12 or 24).\n", iheader.bitsperpixel);
                     iheader.bitsperpixel = 24;
@@ -362,7 +362,7 @@ char *GetField  (char *str, ushort *value)
     if ((*str < '0') || ('9' < *str))
         return nil;
 
-    *value = atoi (str);
+    *value = static_cast<ushort>(atoi (str));
 
     while (('0' <= *str) && (*str <= '9'))
         ++str;
@@ -392,7 +392,7 @@ char *GetRange  (
 
     if ((*str < '0') || ('9' < *str))  return nil;
 
-    *val1 = *val2 = atoi (str);
+    *val1 = *val2 = static_cast<ushort>(atoi (str));
 
     while (('0' <= *str) && (*str <= '9'))
         ++str;
@@ -404,7 +404,7 @@ char *GetRange  (
     ++str;
     if ((*str < '0') || ('9' < *str))   return nil;
 
-    *val2 = atoi (str);
+    *val2 = static_cast<ushort>(atoi (str));
     while (('0' <= *str) && (*str <= '9'))
         ++str;
 
@@ -448,17 +448,17 @@ void Halt (
     if (outfile)   DELETE (outfile);
     if (scanbuff)  DELETE (scanbuff);
 
-    while (lptr = lightlist)            /* Free the lightsource list. */
+    while ((lptr = lightlist))            /* Free the lightsource list. */
     {   lightlist = lightlist->next;
         DELETE (lptr);
     }
 
-    while (optr = objlist)              /* Free the object list. */
+    while ((optr = objlist))              /* Free the object list. */
     {   objlist = objlist->next;
         DELETE (optr);
     }
 
-    while (aptr = attrlist)             /* Free the attribute list. */
+    while ((aptr = attrlist))             /* Free the attribute list. */
     {   attrlist = attrlist->next;
         DELETE (aptr);
     }
@@ -473,7 +473,7 @@ void Halt (
         printf ("  Refraction rays cast:  %lu\n", stats.Nrefract);
         printf ("Maximum raytrace level:  %lu\n", stats.maxlevel);
 
-        elapsed = time(nil) - StartTime;
+        elapsed = static_cast<long>(time(nil) - StartTime);
         hours   = elapsed / 3600;
         minutes = (elapsed - 3600*hours) / 60;
         seconds = (elapsed - 3600*hours - 60*minutes);

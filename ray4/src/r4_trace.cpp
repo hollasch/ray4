@@ -46,8 +46,9 @@ void  RayTrace  (
     ObjInfo    *nearobj;    /* Nearest Object */
     Point4      nearintr;   /* Nearest Object Intersection */
     Vector4     nearnormal; /* Nearest Object Normal */
-    Real        NdotD;      /* Normal dot rayD */
-    ObjInfo    *optr;       /* Object Pointer */
+    Real        NdotD = 0;  /* Normal dot rayD */
+    ObjInfo    *optr;       /* Object List Traversal Pointer */
+
 
     ++ stats.Ncast;
     ++ level;
@@ -120,7 +121,6 @@ void  RayTrace  (
         Color    lcolor;         /* Light Color */
         Vector4  ldir;           /* Light Direction */
         Real     mindist;        /* Nearest Object Distance */
-        ObjInfo *optr;           /* Object List Traversal Pointer */
         Vector4  Refl;           /* Reflection Vector */
 
         if (lptr->type == L_DIRECTIONAL)
