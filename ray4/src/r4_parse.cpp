@@ -61,8 +61,8 @@ void        DoTriangle       (void);
 void        DoView           (void);
 void        Error            (char *, ...);
 Attributes *FindAttributes   (char *);
-char       *GetToken         (char *, boolean);
-boolean     keyeq            (char *, char *);
+char       *GetToken         (char *, bool);
+bool        keyeq            (char *, char *);
 void        ParseInput       (void);
 void        Process_TetPar   (TetPar *);
 Attributes *ReadAttributes   (void);
@@ -187,7 +187,7 @@ Triangle DefTriangle = {
     /*** Global Variables ***/
 
 static AttrName   *attrnamelist = nil;        // Attribute Name List
-static boolean     eofflag = false;           // Non-Zero If EOF Input File
+static bool        eofflag = false;           // Non-Zero If EOF Input File
 static ulong       lcount = 1;                // Input Line Counter
 static Attributes *prevattr= &DefAttributes;  // Previously Named Attribute
 static char        token[MAXTLEN+1];          // Input Token
@@ -202,7 +202,7 @@ void ParseInput () {
 
     AttrName  *attrname;  // Attribute Name Node Pointer
     ushort     ii;        // Scratch Index Value
-    boolean  (*func)();   // Function Pointer
+    bool     (*func)();   // Function Pointer
 
     while (GetToken(token, true)) {
         for (ii=0;  ii < ALIMIT(Globals);  ++ii) {
@@ -227,7 +227,7 @@ void ParseInput () {
                 break;
 
             case T_OTHER:
-                func = (boolean(*)())(Globals[ii].address);
+                func = (bool(*)())(Globals[ii].address);
                 (*func)();
                 break;
 
@@ -248,7 +248,7 @@ void ParseInput () {
 
 char *GetToken  (
     char    *buff,   // Token Buffer
-    boolean  eofok)  // If 1, EOF is OK, otherwise error
+    bool     eofok)  // If 1, EOF is OK, otherwise error
 {
     // This routine reads the input stream and returns the next token. It's basically the lexical
     // analyzer. It returns the destination buffer given as the single parameter.
@@ -334,12 +334,10 @@ char *GetToken  (
     }
 
     if (CTYPE(cc) == NUM) {
-        boolean  eflag;  // True After 'e' Character Is Read
-        boolean  dflag;  // True After '.' Character Is Read
+        bool eflag = false;  // True After 'e' Character Is Read
+        bool dflag = false;  // True After '.' Character Is Read
 
-        eflag = dflag = 0;
-
-        if (cc == '.')   dflag = 1;
+        if (cc == '.')   dflag = true;
 
         for (;;) {
             if (++nn > MAXTLEN) {
@@ -396,7 +394,7 @@ char *GetToken  (
 
 //==================================================================================================
 
-boolean keyeq (
+bool keyeq (
    char *string,  // Input Token
    char *key)     // First KEYSIG digits of keyword.
 {

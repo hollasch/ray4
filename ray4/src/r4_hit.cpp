@@ -77,7 +77,7 @@
 
 
 
-boolean HitSphere (
+bool HitSphere (
     ObjInfo *objptr,    // Sphere to Test
     Point4   rayO,      // Ray Origin
     Vector4  rayD,      // Ray Direction
@@ -138,7 +138,7 @@ boolean HitSphere (
 
 //==================================================================================================
 
-boolean HitTetPar (
+bool HitTetPar (
     ObjInfo *objptr,     /* Sphere to Test */
     Point4   rayO,       /* Ray Origin */
     Vector4  rayD,       /* Ray Direction */
@@ -291,7 +291,7 @@ boolean HitTetPar (
 
 //==================================================================================================
 
-boolean HitTriangle (
+bool HitTriangle (
     ObjInfo *objptr,     // Sphere to Test
     Point4   rayO,       // Ray Origin
     Vector4  rayD,       // Ray Direction

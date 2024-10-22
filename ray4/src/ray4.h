@@ -44,7 +44,6 @@
 typedef unsigned char  uchar;
 typedef unsigned short ushort;
 typedef unsigned long  ulong;
-typedef short          boolean;  // Boolean; `true'(1) or `false'(0)
 typedef double         Real;
 
 
@@ -76,8 +75,6 @@ typedef enum {    // Object Type ID's
     O_PARALLELEPIPED
 } ObjType;
 
-#define true  (1==1)
-#define false (1!=1)
 #define nil   0
 
 
@@ -189,7 +186,7 @@ struct S_OBJINFO {
     Attributes *attr;       // Object Attributes
     uchar       type;       // Object Type
     InfoFlag    flags;      // Information Flags
-    boolean   (*intersect)  // Intersection Function
+    bool      (*intersect)  // Intersection Function
                 (ObjInfo*, Point4, Vector4, Real*, Point4, Vector4);
 };
 
@@ -234,9 +231,9 @@ struct S_TRIANGLE {
 void     CloseInput  (void);
 void     CloseOutput (void);
 void     Halt        (char*, ...);
-boolean  HitSphere   (ObjInfo*, Point4, Vector4, Real*, Point4, Vector4);
-boolean  HitTetPar   (ObjInfo*, Point4, Vector4, Real*, Point4, Vector4);
-boolean  HitTriangle (ObjInfo*, Point4, Vector4, Real*, Point4, Vector4);
+bool     HitSphere   (ObjInfo*, Point4, Vector4, Real*, Point4, Vector4);
+bool     HitTetPar   (ObjInfo*, Point4, Vector4, Real*, Point4, Vector4);
+bool     HitTriangle (ObjInfo*, Point4, Vector4, Real*, Point4, Vector4);
 char    *MyAlloc     (size_t);
 void     MyFree      (void*);
 void     OpenInput   (void);
