@@ -124,7 +124,7 @@ bool HitSphere (
     *mindist = t1;
 
     if (intr)
-       V4_3Vec (intr, =, rayO, +, t1*rayD);
+        V4_3Vec (intr, =, rayO, +, t1*rayD);
 
     if (normal) {
         normal[0] = (intr[0] - SPHERE->center[0]) / SPHERE->radius;
@@ -237,25 +237,25 @@ bool HitTetPar (
         M02M23_M03M22 = (M02 * M23) - (M03 * M22);
 
         Bc1 = (  (M01*M22M33_M23M32)
-            - (M21*M02M33_M03M32)
-            + (M31*M02M23_M03M22)) / tp->CramerDiv;
+              - (M21*M02M33_M03M32)
+              + (M31*M02M23_M03M22)) / tp->CramerDiv;
 
         if ((Bc1 < 0.0) || (Bc1 > 1.0))
             return false;
 
         Bc2 = (  (M11*M02M33_M03M32)
-               - (M01*M12M33_M13M32)
-               + (M31*M12M03_M13M02)) / tp->CramerDiv;
+              - (M01*M12M33_M13M32)
+              + (M31*M12M03_M13M02)) / tp->CramerDiv;
 
         if ((Bc2 < 0.0) || (Bc2 > 1.0))
             return false;
 
         Bc3 = (- (M11*M02M23_M03M22)
-               - (M21*M12M03_M13M02)
-               + (M01*M12M23_M13M22)) / tp->CramerDiv;
+              - (M21*M12M03_M13M02)
+              + (M01*M12M23_M13M22)) / tp->CramerDiv;
 
         if ((Bc3 < 0.0) || (Bc3 > 1.0))
-           return false;
+            return false;
     }
 
     // Test the barycentric coordinates to determine if the intersection point is within the object.
@@ -370,10 +370,13 @@ bool HitTriangle (
     // then be projected to the plane spanned by the two minor axes without fear of "collapsing" the
     // triangle in the process.
 
-    if (fabs(_normal[0]) < fabs(_normal[1]))        // X, Y
-        ax1 = 0,    ax2 = 1;
-    else
-        ax1 = 1,  ax2 = 0;
+    if (fabs(_normal[0]) < fabs(_normal[1])) {      // X, Y
+        ax1 = 0;
+        ax2 = 1;
+    } else {
+        ax1 = 1;
+        ax2 = 0;
+    }
 
     if (fabs(_normal[2]) < fabs(_normal[ax2])) {    // X, Y, Z
         if (fabs(_normal[2]) < fabs(_normal[ax1])) {

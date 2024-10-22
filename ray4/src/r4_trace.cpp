@@ -171,7 +171,8 @@ void RayTrace (
         // If surface normal is turned from light, skip this light.
 
         ftemp = V4_Dot (nearnormal, ldir);
-        if (ftemp <= 0.0)  continue;
+        if (ftemp <= 0.0)
+            continue;
 
         // Add the diffuse component of the light.
 

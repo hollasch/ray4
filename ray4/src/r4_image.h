@@ -66,16 +66,16 @@
 
 typedef struct S_IMAGEHDR   ImageHdr;
 
-   // Note:  Keep the size of this structure a longword multiple for addressing convenience on most
-   //        architectures.
+    // Note:  Keep the size of this structure a longword multiple for addressing convenience on most
+    //        architectures.
 
 struct S_IMAGEHDR {
-   unsigned long  magic;         // Magic Number = R4_IMAGE_ID
-   unsigned char  version;       // Image File Version Number
-   unsigned char  bitsperpixel;  // Number of Bits per Pixel
-   unsigned short aspect[3];     // Aspect Ratios [X,Y,Z]
-   unsigned short first[3];      // Starting Image Pixels for [X,Y,Z]
-   unsigned short last[3];       // Ending Image Pixels for [X,Y,Z]
+    unsigned long  magic;         // Magic Number = R4_IMAGE_ID
+    unsigned char  version;       // Image File Version Number
+    unsigned char  bitsperpixel;  // Number of Bits per Pixel
+    unsigned short aspect[3];     // Aspect Ratios [X,Y,Z]
+    unsigned short first[3];      // Starting Image Pixels for [X,Y,Z]
+    unsigned short last[3];       // Ending Image Pixels for [X,Y,Z]
 };
 
 #endif

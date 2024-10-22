@@ -247,8 +247,8 @@ void ParseInput () {
 //==================================================================================================
 
 char *GetToken  (
-    char    *buff,   // Token Buffer
-    bool     eofok)  // If 1, EOF is OK, otherwise error
+    char *buff,   // Token Buffer
+    bool  eofok)  // If 1, EOF is OK, otherwise error
 {
     // This routine reads the input stream and returns the next token. It's basically the lexical
     // analyzer. It returns the destination buffer given as the single parameter.
@@ -398,8 +398,8 @@ char *GetToken  (
 //==================================================================================================
 
 bool keyeq (
-   char *string,  // Input Token
-   char *key)     // First KEYSIG digits of keyword.
+    char *string,  // Input Token
+    char *key)     // First KEYSIG digits of keyword.
 {
     // This routine compares an input token with a keyword. If the two strings match up to the
     // significant length, this routine returns 1, otherwise it returns 0. This routine assumes that

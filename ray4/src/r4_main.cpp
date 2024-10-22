@@ -556,11 +556,11 @@ void CalcRayGrid (void) {
 void FireRays () {
     // This is the main routine that fires the rays through the ray grid and into the 4D scene.
 
-    bool     eflag;                   // Even RGB Boundary Flag
-    ulong    scancount;               // Scanline Counter
-    char    *scanptr;                 // Scanline Buffer Pointer
-    ushort   Xindex, Yindex, Zindex;  // Ray-Grid Loop Indices */
-    Point4   Yorigin, Zorigin;        // Ray-Grid Axis Origins
+    bool    eflag;                   // Even RGB Boundary Flag
+    ulong   scancount;               // Scanline Counter
+    char   *scanptr;                 // Scanline Buffer Pointer
+    ushort  Xindex, Yindex, Zindex;  // Ray-Grid Loop Indices */
+    Point4  Yorigin, Zorigin;        // Ray-Grid Axis Origins
 
     scancount = 0;
     scanptr   = scanbuff;
