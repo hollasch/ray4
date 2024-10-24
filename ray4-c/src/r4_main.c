@@ -110,18 +110,6 @@ Examples:\n\
 
 
    /*******************************/
-   /***  Function Declarations  ***/
-   /*******************************/
-
-void  ProcessArgs  (int, char**);
-char *GetField     (char*, ushort*);
-char *GetRange     (char*, ushort*, ushort*);
-void  PrintScene   (void);
-void  CalcRayGrid  (void);
-void  FireRays     (void);
-
-
-   /*******************************/
    /***  File-Global Variables  ***/
    /*******************************/
 
@@ -135,260 +123,6 @@ ulong     scanlsize;            /* Scanline Size */
 ulong     slbuff_count;         /* Number of Lines in Scanline Buffer */
 char     *scanbuff;             /* Scanline Buffer */
 ulong     StartTime;            /* Timestamp */
-
-
-
-/*****************************************************************************
-The following is the entry procedure for the ray4 ray tracer.
-*****************************************************************************/
-
-void main (int argc, char *argv[])
-{
-    print (notice);
-
-    ProcessArgs (argc, argv);
-
-    OpenInput  ();
-    ParseInput ();
-
-    /* If the global ambient factor is zero, then clear all of the ambient
-    ** factor flags in the objects. */
-
-    if ((ambient.r + ambient.g + ambient.b) < EPSILON)
-    {
-        ObjInfo *optr = objlist;      /* Object Pointer */
-
-        while (optr)
-        {   optr->flags &= ~AT_AMBIENT;
-            optr = optr->next;
-        }
-    }
-
-    /* Open the output stream and write out the image header (to be followed
-    ** by the generated scanline data. */
-
-    OpenOutput ();
-    WriteBlock ((char*)(&iheader), sizeof(iheader));
-
-    /* Determine the size of a single scanline. */
-
-    scanlsize = (3 * (1 + iheader.last[0] - iheader.first[0]));
-
-    if (iheader.bitsperpixel == 12)
-    {   if (scanlsize & 1)
-            ++scanlsize;
-        scanlsize >>= 1;
-    }
-
-    /* Compute the number of scanlines and size of the scanline buffer that
-    ** meets the parameters MIN_SLB_COUNT and MIN_SLB_SIZE.  */
-
-    if ((MIN_SLB_SIZE / scanlsize) > MIN_SLB_COUNT)
-        slbuff_count = MIN_SLB_SIZE / scanlsize;
-    else
-        slbuff_count = MIN_SLB_COUNT;
-
-    scanbuff = NEW (char, scanlsize * slbuff_count);
-
-    CalcRayGrid ();   /* Calculate the grid cube to fire rays through. */
-
-    StartTime = time (nil);
-    FireRays ();      /* Raytrace the scene. */
-
-    Halt (nil);       /* Clean up and exit. */
-}
-
-
-
-/*****************************************************************************
-This subroutine grabs the command-line arguments and the environment variable
-arguments (from RAY4) and sets up the raytrace parameters.
-*****************************************************************************/
-
-void  ProcessArgs  (int argc, char *argv[])
-{
-    char  *ptr;     /* Scratch String Pointer */
-    char  *eptr;    /* Environment Variable Pointer */
-    int    ii;      /* Option Array Index */
-    char **opta;    /* Option Argument Array */
-    int    optc;    /* Option Argument Count */
-
-    /* If the "RAY4" environment variable is not defined, then just use the
-    ** command-line options, otherwise concatenate the command-line options
-    ** to the options defined in the RAY4 environment variable. */
-
-    if (!(eptr = getenv ("RAY4")))
-    {   optc = argc - 1;
-        opta = NEW (char*, optc);
-        for (ii=0;  ii < optc;  ++ii)
-            opta[ii] = argv[ii+1];
-    }
-    else
-    {
-        int opti;   /* Option Index */
-
-#       define SPACE(c)   ((c == ' ') || (c == '\t'))
-
-        for (optc=0, ptr=eptr;  *ptr;  )
-        {   while (SPACE(*ptr))
-                ++ptr;
-            if (!*ptr)
-                break;
-            ++optc;
-            while (++ptr, *ptr && !SPACE(*ptr))
-                continue;
-        }
-
-        optc += argc - 1;
-        opta = NEW (char*, optc);
-
-        for (opti=0, ptr=eptr;  *ptr;  )
-        {
-            while (SPACE(*ptr))
-                ++ptr;
-
-            if (!*ptr)
-                break;
-
-            opta[opti++] = ptr;
-
-            while (++ptr, *ptr && !SPACE(*ptr))
-                continue;
-
-            if (*ptr)
-                *ptr++ = 0;
-        }
-
-        for (ii=1;  ii < argc;  ++ii)
-            opta[opti++] = argv[ii];
-    }
-
-    for (ii=0;  ii < optc;  ++ii)
-    {
-        char oc;   /* Option Character */
-
-        if (opta[ii][0] != '-')
-        {   printf ("ray4:  Unexpected argument (%s).\n", opta[ii]);
-            print  (usage);
-            exit (1);
-        }
-
-        oc = opta[ii][1];
-
-        if (opta[ii][2])
-            ptr = opta[ii]+2;
-        else
-            ptr = opta[++ii];
-
-        switch (oc)
-        {
-            case 'a':
-            {   if (ptr = GetField(ptr,&iheader.aspect[0]), (!ptr || !*ptr))
-                    Halt ("Invalid X argument for -a option.");
-
-                if (ptr = GetField(ptr,&iheader.aspect[1]), !ptr)
-                    Halt ("Invalid Y argument for -a option.");
-
-                if (ptr = GetField(ptr,&iheader.aspect[2]), !ptr)
-                    Halt ("Invalid Z argument for -a option.");
-
-                break;
-            }
-
-            case 'b':
-            {   iheader.bitsperpixel = atoi (ptr);
-                if ((iheader.bitsperpixel != 12) && (iheader.bitsperpixel != 24))
-                {   printf ("r4toiff:  %d bits per pixel is not supported (select 12 or 24).\n", iheader.bitsperpixel);
-                    iheader.bitsperpixel = 24;
-                }
-                break;
-            }
-
-            case 'h':
-            {
-                print (usage);
-                exit (0);
-                break;
-            }
-
-            case 'i':
-            {   if (infile)
-                    DELETE(infile);
-                infile = NEW (char, strsize(ptr));
-                strcpy (infile, ptr);
-                break;
-            }
-
-            case 'o':
-            {   if (outfile)
-                    DELETE(outfile);
-                outfile = NEW (char, strsize(ptr));
-                strcpy (outfile, ptr);
-                break;
-            }
-
-            case 'r':
-            {   if (ptr = GetField(ptr,&res[X]), (!ptr || !*ptr))
-                    Halt ("Invalid X argument for -r option.");
-
-                if (ptr = GetField(ptr,&res[Y]), !ptr)
-                    Halt ("Invalid Y argument for -r option.");
-
-                if (ptr = GetField(ptr,&res[Z]), !ptr)
-                    Halt ("Invalid Z argument for -r option.");
-
-                break;
-            }
-
-            case 's':
-            {   ptr = GetRange(ptr,&iheader.first[0],&iheader.last[0]);
-                if (!ptr || !*ptr)
-                    Halt ("Bad X field argument to -s option.");
-
-                ptr = GetRange(ptr,&iheader.first[1],&iheader.last[1]);
-                if (!ptr)
-                    Halt ("Bad Y field argument to -s option.");
-
-                ptr = GetRange(ptr,&iheader.first[2],&iheader.last[2]);
-                if (!ptr)
-                    Halt ("Bad Z field argument to -s option.");
-
-                break;
-            }
-
-            default:
-            {   printf ("ray4:  Unknown option (-%c).\n", oc);
-                print  (usage);
-                exit (1);
-            }
-        }
-    }
-
-    DELETE (opta);
-
-    if ((iheader.aspect[0] == 0) || (iheader.aspect[1] == 0))
-        Halt ("X and Y aspect ratios must be non-zero.");
-
-    if ((res[0] == 0) || (res[1] == 0))
-        Halt ("X and Y resolution must be non-zero.");
-
-    if (res[2] == 0)  res[2] = 1;
-
-    if (  (iheader.first[0] >  iheader.last[0])
-       || (iheader.first[1] >  iheader.last[1])
-       || (iheader.first[2] >  iheader.last[2])
-       || (iheader.first[0] >= res[0])
-       || (iheader.first[1] >= res[1])
-       || (iheader.first[2] >= res[2])
-       )
-    {
-        Halt ("Invalid scan range given.");
-    }
-
-    if (iheader.last[0] >= res[0])  iheader.last[0] = res[0]-1;
-    if (iheader.last[1] >= res[1])  iheader.last[1] = res[1]-1;
-    if (iheader.last[2] >= res[2])  iheader.last[2] = res[2]-1;
-}
 
 
 
@@ -721,4 +455,258 @@ void  FireRays  ()
 
     if (scancount != 0)
         WriteBlock (scanbuff, scanlsize * scancount);
+}
+
+
+
+/*****************************************************************************
+This subroutine grabs the command-line arguments and the environment variable
+arguments (from RAY4) and sets up the raytrace parameters.
+*****************************************************************************/
+
+void  ProcessArgs  (int argc, char *argv[])
+{
+    char  *ptr;     /* Scratch String Pointer */
+    char  *eptr;    /* Environment Variable Pointer */
+    int    ii;      /* Option Array Index */
+    char **opta;    /* Option Argument Array */
+    int    optc;    /* Option Argument Count */
+
+    /* If the "RAY4" environment variable is not defined, then just use the
+    ** command-line options, otherwise concatenate the command-line options
+    ** to the options defined in the RAY4 environment variable. */
+
+    if (!(eptr = getenv ("RAY4")))
+    {   optc = argc - 1;
+        opta = NEW (char*, optc);
+        for (ii=0;  ii < optc;  ++ii)
+            opta[ii] = argv[ii+1];
+    }
+    else
+    {
+        int opti;   /* Option Index */
+
+#       define SPACE(c)   ((c == ' ') || (c == '\t'))
+
+        for (optc=0, ptr=eptr;  *ptr;  )
+        {   while (SPACE(*ptr))
+                ++ptr;
+            if (!*ptr)
+                break;
+            ++optc;
+            while (++ptr, *ptr && !SPACE(*ptr))
+                continue;
+        }
+
+        optc += argc - 1;
+        opta = NEW (char*, optc);
+
+        for (opti=0, ptr=eptr;  *ptr;  )
+        {
+            while (SPACE(*ptr))
+                ++ptr;
+
+            if (!*ptr)
+                break;
+
+            opta[opti++] = ptr;
+
+            while (++ptr, *ptr && !SPACE(*ptr))
+                continue;
+
+            if (*ptr)
+                *ptr++ = 0;
+        }
+
+        for (ii=1;  ii < argc;  ++ii)
+            opta[opti++] = argv[ii];
+    }
+
+    for (ii=0;  ii < optc;  ++ii)
+    {
+        char oc;   /* Option Character */
+
+        if (opta[ii][0] != '-')
+        {   printf ("ray4:  Unexpected argument (%s).\n", opta[ii]);
+            print  (usage);
+            exit (1);
+        }
+
+        oc = opta[ii][1];
+
+        if (opta[ii][2])
+            ptr = opta[ii]+2;
+        else
+            ptr = opta[++ii];
+
+        switch (oc)
+        {
+            case 'a':
+            {   if (ptr = GetField(ptr,&iheader.aspect[0]), (!ptr || !*ptr))
+                    Halt ("Invalid X argument for -a option.");
+
+                if (ptr = GetField(ptr,&iheader.aspect[1]), !ptr)
+                    Halt ("Invalid Y argument for -a option.");
+
+                if (ptr = GetField(ptr,&iheader.aspect[2]), !ptr)
+                    Halt ("Invalid Z argument for -a option.");
+
+                break;
+            }
+
+            case 'b':
+            {   iheader.bitsperpixel = atoi (ptr);
+                if ((iheader.bitsperpixel != 12) && (iheader.bitsperpixel != 24))
+                {   printf ("r4toiff:  %d bits per pixel is not supported (select 12 or 24).\n", iheader.bitsperpixel);
+                    iheader.bitsperpixel = 24;
+                }
+                break;
+            }
+
+            case 'h':
+            {
+                print (usage);
+                exit (0);
+                break;
+            }
+
+            case 'i':
+            {   if (infile)
+                    DELETE(infile);
+                infile = NEW (char, strsize(ptr));
+                strcpy (infile, ptr);
+                break;
+            }
+
+            case 'o':
+            {   if (outfile)
+                    DELETE(outfile);
+                outfile = NEW (char, strsize(ptr));
+                strcpy (outfile, ptr);
+                break;
+            }
+
+            case 'r':
+            {   if (ptr = GetField(ptr,&res[X]), (!ptr || !*ptr))
+                    Halt ("Invalid X argument for -r option.");
+
+                if (ptr = GetField(ptr,&res[Y]), !ptr)
+                    Halt ("Invalid Y argument for -r option.");
+
+                if (ptr = GetField(ptr,&res[Z]), !ptr)
+                    Halt ("Invalid Z argument for -r option.");
+
+                break;
+            }
+
+            case 's':
+            {   ptr = GetRange(ptr,&iheader.first[0],&iheader.last[0]);
+                if (!ptr || !*ptr)
+                    Halt ("Bad X field argument to -s option.");
+
+                ptr = GetRange(ptr,&iheader.first[1],&iheader.last[1]);
+                if (!ptr)
+                    Halt ("Bad Y field argument to -s option.");
+
+                ptr = GetRange(ptr,&iheader.first[2],&iheader.last[2]);
+                if (!ptr)
+                    Halt ("Bad Z field argument to -s option.");
+
+                break;
+            }
+
+            default:
+            {   printf ("ray4:  Unknown option (-%c).\n", oc);
+                print  (usage);
+                exit (1);
+            }
+        }
+    }
+
+    DELETE (opta);
+
+    if ((iheader.aspect[0] == 0) || (iheader.aspect[1] == 0))
+        Halt ("X and Y aspect ratios must be non-zero.");
+
+    if ((res[0] == 0) || (res[1] == 0))
+        Halt ("X and Y resolution must be non-zero.");
+
+    if (res[2] == 0)  res[2] = 1;
+
+    if (  (iheader.first[0] >  iheader.last[0])
+       || (iheader.first[1] >  iheader.last[1])
+       || (iheader.first[2] >  iheader.last[2])
+       || (iheader.first[0] >= res[0])
+       || (iheader.first[1] >= res[1])
+       || (iheader.first[2] >= res[2])
+       )
+    {
+        Halt ("Invalid scan range given.");
+    }
+
+    if (iheader.last[0] >= res[0])  iheader.last[0] = res[0]-1;
+    if (iheader.last[1] >= res[1])  iheader.last[1] = res[1]-1;
+    if (iheader.last[2] >= res[2])  iheader.last[2] = res[2]-1;
+}
+
+
+
+/*****************************************************************************
+The following is the entry procedure for the ray4 ray tracer.
+*****************************************************************************/
+
+void main (int argc, char *argv[])
+{
+    print (notice);
+
+    ProcessArgs (argc, argv);
+
+    OpenInput  ();
+    ParseInput ();
+
+    /* If the global ambient factor is zero, then clear all of the ambient
+    ** factor flags in the objects. */
+
+    if ((ambient.r + ambient.g + ambient.b) < EPSILON)
+    {
+        ObjInfo *optr = objlist;      /* Object Pointer */
+
+        while (optr)
+        {   optr->flags &= ~AT_AMBIENT;
+            optr = optr->next;
+        }
+    }
+
+    /* Open the output stream and write out the image header (to be followed
+    ** by the generated scanline data. */
+
+    OpenOutput ();
+    WriteBlock ((char*)(&iheader), sizeof(iheader));
+
+    /* Determine the size of a single scanline. */
+
+    scanlsize = (3 * (1 + iheader.last[0] - iheader.first[0]));
+
+    if (iheader.bitsperpixel == 12)
+    {   if (scanlsize & 1)
+            ++scanlsize;
+        scanlsize >>= 1;
+    }
+
+    /* Compute the number of scanlines and size of the scanline buffer that
+    ** meets the parameters MIN_SLB_COUNT and MIN_SLB_SIZE.  */
+
+    if ((MIN_SLB_SIZE / scanlsize) > MIN_SLB_COUNT)
+        slbuff_count = MIN_SLB_SIZE / scanlsize;
+    else
+        slbuff_count = MIN_SLB_COUNT;
+
+    scanbuff = NEW (char, scanlsize * slbuff_count);
+
+    CalcRayGrid ();   /* Calculate the grid cube to fire rays through. */
+
+    StartTime = time (nil);
+    FireRays ();      /* Raytrace the scene. */
+
+    Halt (nil);       /* Clean up and exit. */
 }
