@@ -19,7 +19,7 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //**************************************************************************************************
 
-#include "vector.h"
+#include "r4_vector.h"
 
 
 void  V4_Cross  (result,u,v,w)

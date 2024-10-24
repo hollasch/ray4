@@ -48,22 +48,22 @@ Ray4.881:  $(Ray4881_objs)
 
 ## Object File Histories
 
-r4_main.o:   r4_main.c  ray4.h vector.h r4_image.h
-r4_hit.o:    r4_hit.c   ray4.h vector.h
-r4_parse.o:  r4_parse.c ray4.h vector.h
-r4_trace.o:  r4_trace.c ray4.h vector.h
+r4_main.o:   r4_main.c  ray4.h r4_vector.h r4_image.h
+r4_hit.o:    r4_hit.c   ray4.h r4_vector.h
+r4_parse.o:  r4_parse.c ray4.h r4_vector.h
+r4_trace.o:  r4_trace.c ray4.h r4_vector.h
 r4_io.o:     r4_io.c    ray4.h
 
-v4cross.o:	v4cross.c vector.h
-v4normalize.o:	v4normalize.c vector.h
+v4cross.o:	v4cross.c r4_vector.h
+v4normalize.o:	v4normalize.c r4_vector.h
 
-r4_main.o881:   r4_main.c  ray4.h vector.h r4_image.h
-r4_hit.o881:    r4_hit.c   ray4.h vector.h
-r4_parse.o881:  r4_parse.c ray4.h vector.h
-r4_trace.o881:  r4_trace.c ray4.h vector.h
+r4_main.o881:   r4_main.c  ray4.h r4_vector.h r4_image.h
+r4_hit.o881:    r4_hit.c   ray4.h r4_vector.h
+r4_parse.o881:  r4_parse.c ray4.h r4_vector.h
+r4_trace.o881:  r4_trace.c ray4.h r4_vector.h
 
-v4cross.o881:	   v4cross.c vector.h
-v4normalize.o881:  v4normalize.c vector.h
+v4cross.o881:	   v4cross.c r4_vector.h
+v4normalize.o881:  v4normalize.c r4_vector.h
 
 r4toiff.o:	r4toiff.c  r4_image.h  amiga.h
 write_ilbm.o:	write_ilbm.c  amiga.h

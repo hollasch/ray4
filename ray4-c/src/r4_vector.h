@@ -20,7 +20,7 @@
 //**************************************************************************************************
 
 //==================================================================================================
-// vector.h
+// r4_vector.h
 //
 // This header file contains the structure and macro definitions for three and four-dimensional
 // vectors.
@@ -36,11 +36,11 @@
     /***  Vector Definitions  ***/
     /****************************/
 
-typedef  Real    Vector3 [3];  // 3-Vector
-typedef  Real    Vector4 [4];  // 4-Vector
+typedef Real Vector3[3];  // 3-Vector
+typedef Real Vector4[4];  // 4-Vector
 
-#define  Point3  Vector3       // 3D Point (for readability)
-#define  Point4  Vector4       // 4D Point (for readability)
+#define Point3  Vector3       // 3D Point (for readability)
+#define Point4  Vector4       // 4D Point (for readability)
 
 
     // NOTE: All of the following macros are unsafe; they cannot properly handle macro arguments
@@ -169,9 +169,7 @@ if (1) { \
     /***  Function Declarations  ***/
     /*******************************/
 
-void  V3_Cross     (Vector3, Vector3, Vector3);
 void  V4_Cross     (Vector4, Vector4, Vector4, Vector4);
-short V3_Normalize (Vector3);
 short V4_Normalize (Vector4);
 
 #endif

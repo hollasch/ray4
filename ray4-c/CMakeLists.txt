@@ -12,12 +12,12 @@ project (ray4-c LANGUAGES C)
 
 # Source
 set ( sources_ray4_c
-  src/r4_image.h
   src/ray4.h
-  src/vector.h
-  src/r4_main.c
+  src/r4_image.h
+  src/r4_vector.h
   src/r4_hit.c
   src/r4_io.c
+  src/r4_main.c
   src/r4_parse.c
   src/r4_trace.c
   src/r4_vec.c

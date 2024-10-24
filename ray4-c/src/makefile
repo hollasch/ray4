@@ -39,14 +39,14 @@ ray4:  r4_main.o r4_hit.o r4_io.o r4_parse.o r4_trace.o v4cross.o v4normalize.o
 r4tosgi:  r4tosgi.c  r4_image.h
 	cc -o r4tosgi r4tosgi.c $(CCOPTS) $(GLLIB) -lm
 
-r4_main.o:	r4_main.c  ray4.h $(MYINCL)/vector.h r4_image.h
-r4_hit.o:	r4_hit.c   ray4.h $(MYINCL)/vector.h
+r4_main.o:	r4_main.c  ray4.h $(MYINCL)/r4_vector.h r4_image.h
+r4_hit.o:	r4_hit.c   ray4.h $(MYINCL)/r4_vector.h
 r4_io.o:	r4_io.c    ray4.h
-r4_parse.o:	r4_parse.c ray4.h $(MYINCL)/vector.h
-r4_trace.o:	r4_trace.c ray4.h $(MYINCL)/vector.h
+r4_parse.o:	r4_parse.c ray4.h $(MYINCL)/r4_vector.h
+r4_trace.o:	r4_trace.c ray4.h $(MYINCL)/r4_vector.h
 
-v4normalize.o:	v4normalize.c $(MYINCL)/vector.h
-v4cross.o:	v4cross.c     $(MYINCL)/vector.h
+v4normalize.o:	v4normalize.c $(MYINCL)/r4_vector.h
+v4cross.o:	v4cross.c     $(MYINCL)/r4_vector.h
 
 clean:
 	-rm -f ray4 r4tosgi

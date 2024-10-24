@@ -50,7 +50,7 @@ typedef short          boolean;  // Boolean; `true'(1) or `false'(0)
 typedef double         Real;
 
 
-#include "vector.h"
+#include "r4_vector.h"
 
 
     //======================

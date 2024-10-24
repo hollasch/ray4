@@ -31,7 +31,7 @@
 
 #include "ray4.h"
 
-int EOFC= -1;
+int EOFC = -1;
 
 
     // Defined Constants
