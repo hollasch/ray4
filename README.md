@@ -20,6 +20,12 @@ Wire4
 reads in arbitrary 4D wireframes from a simple text file and displays them interactively. The code
 has not been maintained, though, and will not run on most modern computers.
 
+
+Ray4
+-----
+[`ray4`][] is the updated 4D raytracer, converted to C++. All new features will be created here.
+
+
 Ray4-c
 -------
 [`ray4-c`][] is the original 4D raytracer, written in standard C. It can read from standard input
@@ -46,6 +52,7 @@ visualization work of their own. Here are links to other work I've seen.
 [_Four-Space Visualization of 4D Objects_]: https://hollasch.github.io/ray4/Four-Space_Visualization_of_4D_Objects.html
 [the discussions section]:                  https://github.com/hollasch/ray4/discussions/
 [`ray4-c`]:                                 ray4-c/README.md
+[`ray4`]:                                   ray4/README.md
 [craig]:                                    ray4-c/craig/README.md
 [`wire4`]:                                  wire4/README.md
 [`thesis/`]:                                thesis/README.md
