@@ -53,7 +53,7 @@ following files comprise the Ray4 ray tracer:
 
 char notice[] = "\
 \n\
-ray4-c 1.0.0 | 2024-10-22 | https://github.com/hollasch/ray4\n\
+ray4-c 1.0.0-alpha.1 | 2024-10-23 | https://github.com/hollasch/ray4\n\
 \n";
 
 char usage[] = "\
@@ -63,6 +63,10 @@ usage :  ray4-c -r<Image Resolution> -i<Input Filename> -o<Output Filename>\n\
 \n\
 This program constructs a 4D raytraced image of the input scene file, outputing\n\
 a 3D image cube of pixels.\n\
+\n\
+Options may also be specified in the RAY4 environment variable. Command-line\n\
+options will be effectively concatenated to these options, so that command-line\n\
+options may override those in the environment variable.\n\
 \n\
 -r<Image Resolution>\n\
     Image resolution specified as 'X:Y:Z'. X must be greater than zero. If Y or\n\
