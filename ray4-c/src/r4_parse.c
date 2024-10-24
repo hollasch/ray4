@@ -19,14 +19,12 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //**************************************************************************************************
 
-/*******************************************************************************
-
-File:  r4_parse.c
-
-    This file contains procedures that are used to parse the input file and
-build the scene for the raytrace.
-
-*******************************************************************************/
+//==================================================================================================
+// r4_parse.c
+//
+// This file contains procedures that are used to parse the input file and build the scene for the
+// raytrace.
+//==================================================================================================
 
 #include <string.h>
 #include <stdarg.h>
@@ -37,22 +35,22 @@ build the scene for the raytrace.
 int EOFC= -1;
 
 
-    /***  Defined Constants  ***/
+    // Defined Constants
 
-#define MAXTLEN    80   /* Maximum Token Length in Input File */
-#define KEYSIG     5    /* Significant Chars of a Keyword (max 255) */
-#define MAXATNAME  15   /* Maximum Attribute Name Length */
+#define MAXTLEN    80   // Maximum Token Length in Input File
+#define KEYSIG     5    // Significant Chars of a Keyword (max 255)
+#define MAXATNAME  15   // Maximum Attribute Name Length
 
-#define ERR ((char)(0))         /* Erroneous Character */
-#define SPC ((char)(1))         /* Whitespace Character */
-#define WRD ((char)(2))         /* Keyword Character */
-#define NUM ((char)(3))         /* Number Character */
-#define OTH ((char)(4))         /* Other Character */
+#define ERR ((char)(0))  // Erroneous Character
+#define SPC ((char)(1))  // Whitespace Character
+#define WRD ((char)(2))  // Keyword Character
+#define NUM ((char)(3))  // Number Character
+#define OTH ((char)(4))  // Other Character
 
-#define BLACK  { 0.000, 0.000, 0.000 }          /* Color Black */
+#define BLACK  { 0.000, 0.000, 0.000 }  // Color Black
 
 
-    /***  Function Declarations  ***/
+    // Function Declarations
 
 void        DoAttributes     (void);
 void        DoLight          (void);
@@ -74,26 +72,26 @@ void        ReadUint16       (char *, ushort *);
 void        Read4Vec         (char *, Real*);
 
 
-    /* The following array is used to determine character types. */
+    // The following array is used to determine character types.
 
-char chtype[256] =
-{   ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,SPC,SPC,SPC, SPC,SPC,ERR,ERR,/* 0 */
-    ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR,/* 1 */
-    SPC,OTH,OTH,OTH, OTH,OTH,OTH,OTH, OTH,OTH,OTH,OTH, SPC,NUM,NUM,OTH,/* 2 */
-    NUM,NUM,NUM,NUM, NUM,NUM,NUM,NUM, NUM,NUM,OTH,OTH, OTH,OTH,OTH,OTH,/* 3 */
-    OTH,WRD,WRD,WRD, WRD,WRD,WRD,WRD, WRD,WRD,WRD,WRD, WRD,WRD,WRD,WRD,/* 4 */
-    WRD,WRD,WRD,WRD, WRD,WRD,WRD,WRD, WRD,WRD,WRD,SPC, OTH,SPC,OTH,WRD,/* 5 */
-    OTH,WRD,WRD,WRD, WRD,WRD,WRD,WRD, WRD,WRD,WRD,WRD, WRD,WRD,WRD,WRD,/* 6 */
-    WRD,WRD,WRD,WRD, WRD,WRD,WRD,WRD, WRD,WRD,WRD,SPC, OTH,SPC,OTH,OTH,/* 7 */
+char chtype[256] = {
+    ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,SPC,SPC,SPC, SPC,SPC,ERR,ERR,  // 0X
+    ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR,  // 1X
+    SPC,OTH,OTH,OTH, OTH,OTH,OTH,OTH, OTH,OTH,OTH,OTH, SPC,NUM,NUM,OTH,  // 2X
+    NUM,NUM,NUM,NUM, NUM,NUM,NUM,NUM, NUM,NUM,OTH,OTH, OTH,OTH,OTH,OTH,  // 3X
+    OTH,WRD,WRD,WRD, WRD,WRD,WRD,WRD, WRD,WRD,WRD,WRD, WRD,WRD,WRD,WRD,  // 4X
+    WRD,WRD,WRD,WRD, WRD,WRD,WRD,WRD, WRD,WRD,WRD,SPC, OTH,SPC,OTH,WRD,  // 5X
+    OTH,WRD,WRD,WRD, WRD,WRD,WRD,WRD, WRD,WRD,WRD,WRD, WRD,WRD,WRD,WRD,  // 6X
+    WRD,WRD,WRD,WRD, WRD,WRD,WRD,WRD, WRD,WRD,WRD,SPC, OTH,SPC,OTH,OTH,  // 7X
 
-    ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR,/* 8 */
-    ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR,/* 9 */
-    ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR,/* A */
-    ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR,/* B */
-    ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR,/* C */
-    ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR,/* D */
-    ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR,/* E */
-    ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR /* F */
+    ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR,  // 8X
+    ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR,  // 9X
+    ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR,  // AX
+    ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR,  // BX
+    ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR,  // CX
+    ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR,  // DX
+    ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR,  // EX
+    ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR   // FX
 };
 
 #define CTYPE(a)   chtype[(unsigned char)(a)]
@@ -101,13 +99,11 @@ char chtype[256] =
 
 typedef enum { T_OTHER, T_VEC4, T_UINT16, T_REAL, T_COLOR } VarType;
 
-struct
-{   char     keyword[KEYSIG+1];
+struct {
+    char     keyword[KEYSIG+1];
     VarType  vtype;
     char    *address;
-} Globals[]
-=
-{
+} Globals[] = {
     { "attri", T_OTHER,  (char*)  DoAttributes    },
     { "ambie", T_COLOR,  (char*) &ambient         },
     { "backg", T_COLOR,  (char*) &background      },
@@ -124,91 +120,92 @@ struct
 
 typedef struct S_ATTRNAME  AttrName;
 
-struct S_ATTRNAME
-{   AttrName   *next;                    /* Next Attribute Name Node */
-    char        name[MAXATNAME+1];       /* Attribute Name */
-    Attributes *attr;                    /* Attributes */
+struct S_ATTRNAME {
+    AttrName   *next;               // Next Attribute Name Node
+    char        name[MAXATNAME+1];  // Attribute Name
+    Attributes *attr;               // Attributes
 };
 
 
-   /*** Default Structures ***/
+    // Default Structures
 
-Light DefLight =
-{   nil,                         /* Next Light Source */
-    { 1.0, 1.0, 1.0 },           /* Light Color */
-    L_DIRECTIONAL                /* Light Type */
+Light DefLight = {
+    nullptr,            // Next Light Source
+    { 1.0, 1.0, 1.0 },  // Light Color
+    L_DIRECTIONAL       // Light Type
 };
 
-Attributes DefAttributes =
-{   nil,                         /* Next Attribute Node */
-    BLACK, BLACK, BLACK, BLACK,  /* Ambient, Diffuse, Specular, Transpar. */
-    1.0,                         /* Shine */
-    1.0,                         /* Index of Refraction */
-    0                            /* Attribute Flags */
+Attributes DefAttributes = {
+    nullptr,                     // Next Attribute Node
+    BLACK, BLACK, BLACK, BLACK,  // Ambient, Diffuse, Specular, Transpar.
+    1.0,                         // Shine
+    1.0,                         // Index of Refraction
+    0                            // Attribute Flags
 };
 
-Sphere DefSphere =
-{   {   nil,                      /* Next Pointer */
-        nil,                      /* Attributes */
-        O_SPHERE,                 /* Object Type */
-        0,                        /* Object Flags */
-        HitSphere                 /* Sphere-Intersection Function */
-    }
-};
-
-Tetrahedron DefTetra =
-{   {   nil,                      /* Next Pointer */
-        nil,                      /* Attributes */
-        O_TETRAHEDRON,            /* Object Type */
-        0,                        /* Object Flags */
-        HitTetPar                 /* Tetrahedron-Intersection Function */
-    }
-};
-
-Parallelepiped DefPllp =
-{   {   nil,                      /* Next Pointer */
-        nil,                      /* Attributes */
-        O_PARALLELEPIPED,         /* Object Type */
-        0,                        /* Object Flags */
-        HitTetPar                 /* Parallelepiped-Intersection Function */
-    }
-};
-
-Triangle DefTriangle =
-{   {   nil,                      /* Next Pointer */
-        nil,                      /* Attributes */
-        O_TRIANGLE,               /* Object Type */
-        0,                        /* Object Flags */
-        HitTriangle               /* Triangle-Intersection Function */
-    }
-};
-
-
-    /*** Global Variables ***/
-
-static AttrName   *attrnamelist = nil;      /* Attribute Name List */
-static boolean     eofflag = false;         /* Non-Zero If EOF Input File */
-static ulong       lcount = 1;              /* Input Line Counter */
-static Attributes *prevattr= &DefAttributes;/* Previously Named Attribute */
-static char        token[MAXTLEN+1];        /* Input Token */
-
-
-
-/*****************************************************************************
-This routine parses the input scene description, and sets up the global
-raytrace variables and the object lists.
-*****************************************************************************/
-
-void ParseInput ()
-{
-    AttrName  *attrname;       /* Attribute Name Node Pointer */
-    ushort     ii;             /* Scratch Index Value */
-    boolean  (*func)();        /* Function Pointer */
-
-    while (GetToken(token, true))
+Sphere DefSphere = {
     {
-        for (ii=0;  ii < ALIMIT(Globals);  ++ii)
-        {
+        nullptr,   // Next Pointer
+        nullptr,   // Attributes
+        O_SPHERE,  // Object Type
+        0,         // Object Flags
+        HitSphere  // Sphere-Intersection Function
+    }
+};
+
+Tetrahedron DefTetra = {
+    {
+        nullptr,        // Next Pointer
+        nullptr,        // Attributes
+        O_TETRAHEDRON,  // Object Type
+        0,              // Object Flags
+        HitTetPar       // Tetrahedron-Intersection Function
+    }
+};
+
+Parallelepiped DefPllp = {
+    {
+        nullptr,           // Next Pointer
+        nullptr,           // Attributes
+        O_PARALLELEPIPED,  // Object Type
+        0,                 // Object Flags
+        HitTetPar          // Parallelepiped-Intersection Function
+    }
+};
+
+Triangle DefTriangle = {
+    {
+        nullptr,     // Next Pointer
+        nullptr,     // Attributes
+        O_TRIANGLE,  // Object Type
+        0,           // Object Flags
+        HitTriangle  // Triangle-Intersection Function
+    }
+};
+
+
+    // Global Variables
+
+static AttrName   *attrnamelist = nullptr;    // Attribute Name List
+static boolean     eofflag = false;           // Non-Zero If EOF Input File
+static ulong       lcount = 1;                // Input Line Counter
+static Attributes *prevattr= &DefAttributes;  // Previously Named Attribute
+static char        token[MAXTLEN+1];          // Input Token
+
+
+
+//==================================================================================================
+
+void ParseInput () {
+    // This routine parses the input scene description, and sets up the global raytrace variables
+    // and the object lists.
+
+    AttrName  *attrname;       // Attribute Name Node Pointer
+    ushort     ii;             // Scratch Index Value
+    boolean  (*func)();        // Function Pointer
+
+    while (GetToken(token, true)) {
+        for (ii=0;  ii < ALIMIT(Globals);  ++ii) {
             if (keyeq(token, Globals[ii].keyword))
                 break;
         }
@@ -216,8 +213,7 @@ void ParseInput ()
         if (ii >= ALIMIT(Globals))
             Error ("Unknown keyword (%s).", token);
 
-        switch (Globals[ii].vtype)
-        {
+        switch (Globals[ii].vtype) {
             case T_COLOR:
                 ReadColor (token, (Color*)(Globals[ii].address));
                 break;
@@ -240,60 +236,58 @@ void ParseInput ()
         }
     }
 
-    /* Kill the attributes alias list. */
+    // Kill the attributes alias list.
 
-    while (attrname=attrnamelist, attrname)
-    {   attrnamelist = attrname->next;
+    while (attrname=attrnamelist, attrname) {
+        attrnamelist = attrname->next;
         DELETE (attrname);
     }
 }
 
+//==================================================================================================
 
-
-/*****************************************************************************
-This routine reads the input stream and returns the next token.  It's
-basically the lexical analyzer.  It returns the destination buffer given as
-the single parameter.
-*****************************************************************************/
-
-char *GetToken  (
-    char    *buff,       /* Token Buffer */
-    boolean  eofok)      /* If 1, EOF is OK, otherwise error */
+char *GetToken (
+    char    *buff,       // Token Buffer
+    boolean  eofok)      // If 1, EOF is OK, otherwise error
 {
-    int     cc = ' ';   /* Input Character */
-    ushort  nn;         /* Length of Destination String */
-    char   *ptr;        /* Destination Buffer Pointer */
+    // This routine reads the input stream and returns the next token. It's basically the lexical
+    // analyzer. It returns the destination buffer given as the single parameter.
 
-    if (cc == EOFC)
-    {   eofflag = true;
-        if (eofok)  return nil;
+    int     cc = ' ';   // Input Character
+    ushort  nn;         // Length of Destination String
+    char   *ptr;        // Destination Buffer Pointer
+
+    if (cc == EOFC) {
+        eofflag = true;
+        if (eofok)
+            return nullptr;
         Error ("Unexpected end-of-file.");
     }
 
     ptr = buff;
     nn  = 0;
 
-    /* Skip past comments and whitespace. */
+    // Skip past comments and whitespace.
 
-    for (;;)
-    {
-        if (cc == '>')
-        {   while (cc=ReadChar(), (cc != '\n') && (cc != '\r'))
-            {   if (cc == EOFC)
-                {   eofflag = true;
-                    if (eofok)  return nil;
+    for (;;) {
+        if (cc == '>') {
+            while (cc=ReadChar(), (cc != '\n') && (cc != '\r')) {
+                if (cc == EOFC) {
+                    eofflag = true;
+                    if (eofok)
+                        return nullptr;
                     Error ("Unexpected end-of-file.");
                 }
             }
         }
 
-        while (CTYPE(cc) == SPC)
-        {
+        while (CTYPE(cc) == SPC) {
             if (cc == '\n')  ++lcount;
 
-            if ((char)(EOFC) == (cc = ReadChar ()))
-            {   eofflag = true;
-                if (eofok)  return nil;
+            if ((char)(EOFC) == (cc = ReadChar ())) {
+                eofflag = true;
+                if (eofok)
+                    return nullptr;
                 Error ("Unexpected end-of-file.");
             }
         }
@@ -302,24 +296,23 @@ char *GetToken  (
             break;
     }
 
-    /* If the next character is a punctuation character, then just return
-    ** that character as a single token. */
+    // If the next character is a punctuation character, then just return that character as a single
+    // token.
 
-    if (CTYPE(cc) == OTH)
-    {   *ptr++ = cc;
+    if (CTYPE(cc) == OTH) {
+        *ptr++ = cc;
         *ptr   = 0;
         return buff;
     }
 
-    /* If the next character starts an alphanumeric word, then read the word.
-    ** Words begin with an alphabetic character or an underbar, and may also
-    ** contain numbers, periods and dashes in the body. */
+    // If the next character starts an alphanumeric word, then read the word. Words begin with an
+    // alphabetic character or an underbar, and may also contain numbers, periods and dashes in the
+    // body.
 
-    if (CTYPE(cc) == WRD)
-    {
-        for (;;)
-        {   if (++nn > MAXTLEN)
-            {   *ptr = 0;
+    if (CTYPE(cc) == WRD) {
+        for (;;) {
+            if (++nn > MAXTLEN) {
+                *ptr = 0;
                 Error ("Input token is too long (%s).", buff);
             }
             *ptr++ = cc;
@@ -339,22 +332,22 @@ char *GetToken  (
         if (buff[0])  return buff;
 
         eofflag = true;
-        if (eofok)  return nil;
+        if (eofok)
+            return nullptr;
         Error ("Unexpected end-of-file.");
     }
 
-    if (CTYPE(cc) == NUM)
-    {
-        boolean  eflag;    /* True After 'e' Character Is Read */
-        boolean  dflag;    /* True After '.' Character Is Read */
+    if (CTYPE(cc) == NUM) {
+        boolean  eflag;    // True After 'e' Character Is Read
+        boolean  dflag;    // True After '.' Character Is Read
 
         eflag = dflag = 0;
 
         if (cc == '.')   dflag = 1;
 
-        for (;;)
-        {   if (++nn > MAXTLEN)
-            {   *ptr = 0;
+        for (;;) {
+            if (++nn > MAXTLEN) {
+                *ptr = 0;
                 Error ("Input token is too long (%s).", buff);
             }
             *ptr++ = cc;
@@ -362,29 +355,27 @@ char *GetToken  (
             if ((char)(EOFC) == (cc = ReadChar ()))
                 break;
 
-            if (cc == '.')
-            {   if (dflag || eflag)
+            if (cc == '.') {
+                if (dflag || eflag)
                     break;
-                else
-                {   dflag = 1;
+                else {
+                    dflag = 1;
                     continue;
                 }
-            }
-            else if (cc == 'e')
-            {   if (eflag)   break;
-                else
-                {   eflag = 1;
+            } else if (cc == 'e') {
+                if (eflag)
+                    break;
+                else {
+                    eflag = 1;
                     continue;
                 }
-            }
-            else if (cc == '-')
-            {   if ((ptr[-1] | 0x20) != 'e')
+            } else if (cc == '-') {
+                if ((ptr[-1] | 0x20) != 'e')
                     break;
                 continue;
             }
 
-            if (CTYPE(cc) != NUM)
-            {
+            if (CTYPE(cc) != NUM) {
                 UnreadChar(cc);
                 break;
             }
@@ -395,55 +386,49 @@ char *GetToken  (
             return buff;
 
         eofflag = true;
-        if (eofok)  return nil;
+        if (eofok)
+            return nullptr;
         Error ("Unexpected end-of-file.");
     }
 
-    /* Unexpected character.  Print out the hexadecimal value and halt. */
+    // Unexpected character. Print out the hexadecimal value and halt.
 
     Error ("Unexpected character in input stream (0x%02x).", (int)(cc & 0xFF));
-    return nil;
+    return nullptr;
 }
 
+//==================================================================================================
 
-
-/*****************************************************************************
-This routine compares an input token with a keyword.  If the two strings match
-up to the significant length, this routine returns 1, otherwise it returns 0.
-This routine assumes that the keyword is all lowercase letters and that the
-string is uppercase or lowercase letters only.  This will be true if GetToken()
-does its job correctly.  Furthermore if the string matches the key until the
-string ends, then this function will still return 1.  That is,
-keyeq("amb", "ambient") == 1.
-*****************************************************************************/
-
-boolean  keyeq  (
-   char *string,        /* Input Token */
-   char *key)           /* First KEYSIG digits of keyword. */
+boolean keyeq (
+    char *string,  // Input Token
+    char *key)     // First KEYSIG digits of keyword.
 {
-   ushort ii;   /* String Index */
+    // This routine compares an input token with a keyword. If the two strings match up to the
+    // significant length, this routine returns 1, otherwise it returns 0. This routine assumes that
+    // the keyword is all lowercase letters and that the string is uppercase or lowercase letters
+    // only. This will be true if GetToken() does its job correctly. Furthermore if the string
+    // matches the key until the string ends, then this function will still return 1. That is,
+    // keyeq("amb", "ambient") == 1.
 
-   for (ii=0;  (ii < KEYSIG) && key[ii] && string[ii];  ++ii)
-       if (key[ii] != (string[ii] | 0x20))
-           return false;
+    ushort ii;   // String Index
 
-   return true;
+    for (ii=0;  (ii < KEYSIG) && key[ii] && string[ii];  ++ii)
+        if (key[ii] != (string[ii] | 0x20))
+            return false;
+
+    return true;
 }
 
+//==================================================================================================
 
+void DoAttributes () {
+    // This procedure processes attribute definitions. Attribute definitions consist of the keyword
+    // `attributes', followed by an attribute alias, and then the attribute fields.
 
-/*****************************************************************************
-This procedure processes attribute definitions.  Attribute definitions consist
-of the keyword `attributes', followed by an attribute alias, and then the
-attribute fields.
-*****************************************************************************/
+    AttrName *anptr;        // Attributes Alias Node Pointer
+    AttrName *newattrname;  // New Attributes Alias Node
 
-void  DoAttributes  ()
-{
-    AttrName *anptr;        /* Attributes Alias Node Pointer */
-    AttrName *newattrname;  /* New Attributes Alias Node */
-
-    /* Read in the attribute alias. */
+    // Read in the attribute alias.
 
     GetToken (token, false);
     if ((CTYPE(token[0]) != WRD) && (CTYPE(token[0]) != NUM))
@@ -451,25 +436,24 @@ void  DoAttributes  ()
 
     token[MAXATNAME] = 0;
 
-    /* Ensure that the name is not a duplicate of an earlier name. */
+    // Ensure that the name is not a duplicate of an earlier name.
 
     for (anptr = attrnamelist;  anptr;  anptr = anptr->next)
         if (strrel(anptr->name, ==, token))
             break;
 
-    if (anptr)
-    {   printf ("Warning:  Attributes \"%s\" redefined at line %lu.\n",
+    if (anptr) {
+        printf ("Warning:  Attributes \"%s\" redefined at line %lu.\n",
         token, lcount);
         newattrname = anptr;
-    }
-    else
-    {   newattrname = NEW (AttrName, 1);
+    } else {
+        newattrname = NEW (AttrName, 1);
         newattrname->next = attrnamelist;
         attrnamelist = newattrname;
         strcpy (newattrname->name, token);
     }
 
-    /* Consume the opening parenthesis of the attribute description. */
+    // Consume the opening parenthesis of the attribute description.
 
     GetToken (token, false);
 
@@ -479,20 +463,17 @@ void  DoAttributes  ()
     prevattr = newattrname->attr = ReadAttributes ();
 }
 
+//==================================================================================================
 
+void DoLight () {
+    // This routine reads in a description of a light source from the input file. At the calling
+    // point, the keyword "Light" has already been read. The new light will be added to the light
+    // list.
 
-/*****************************************************************************
-This routine reads in a description of a light source from the input file.  At
-the calling point, the keyword "Light" has already been read.  The new light
-will be added to the light list.
-*****************************************************************************/
+    static Light *prev = &DefLight;   // Previously Defined Light
+    Light *light;                     // New Light Source
 
-void  DoLight  ()
-{
-    static Light *prev = &DefLight;   /* Previously Defined Light */
-    Light *light;                     /* New Light Source */
-
-    /* Gobble up the opening parenthesis. */
+    // Gobble up the opening parenthesis.
 
     if (GetToken(token,false), token[0] != '(')
         Error ("Missing opening parenthesis for light definition.");
@@ -500,26 +481,24 @@ void  DoLight  ()
     light = NEW (Light,1);
     *light = *prev;
 
-    while (GetToken(token,false), token[0] != ')')
-    {
+    while (GetToken(token,false), token[0] != ')') {
         if (keyeq (token, "color"))
             ReadColor (token, &light->color);
-        else if (keyeq (token, "direc"))
-        {   Read4Vec (token, light->u.dir);
+        else if (keyeq (token, "direc")) {
+            Read4Vec (token, light->u.dir);
             light->type = L_DIRECTIONAL;
-        }
-        else if (keyeq (token, "posit"))
-        {   Read4Vec (token, light->u.pos);
+        } else if (keyeq (token, "posit")) {
+            Read4Vec (token, light->u.pos);
             light->type = L_POINT;
         }
         else
             Error ("Invalid light subfield (%s).", token);
     }
 
-    /* If the light is directional, then normalize the light direction. */
+    // If the light is directional, then normalize the light direction.
 
-    if (light->type == L_DIRECTIONAL)
-    {   if (! V4_Normalize (light->u.dir))
+    if (light->type == L_DIRECTIONAL) {
+        if (! V4_Normalize (light->u.dir))
             Error ("Zero light direction vector.");
     }
 
@@ -527,20 +506,17 @@ void  DoLight  ()
     lightlist = prev = light;
 }
 
+//==================================================================================================
 
+void DoSphere () {
+    // This routine reads in a description of a hyperspherical object from the input stream and adds
+    // it to the object list. The field defaults are defined by the DefSphere structure for the
+    // first sphere, and then by the previous sphere.
 
-/*****************************************************************************
-This routine reads in a description of a hyperspherical object from the input
-stream and adds it to the object list.  The field defaults are defined by the
-DefSphere structure for the first sphere, and then by the previous sphere.
-*****************************************************************************/
+    static Sphere *prev = &DefSphere;  // Previously Defined Sphere
+    Sphere *snew;                      // New Sphere
 
-void  DoSphere  ()
-{
-    static Sphere *prev = &DefSphere;  /* Previously Defined Sphere */
-    Sphere *snew;                      /* New Sphere */
-
-    /* Gobble up the opening parenthesis. */
+    // Gobble up the opening parenthesis.
 
     if (GetToken(token,false), token[0] != '(')
         Error ("Missing opening parenthesis for sphere definition.");
@@ -548,18 +524,17 @@ void  DoSphere  ()
     snew = NEW(Sphere,1);
     *snew = *prev;
 
-    while (GetToken(token,false), token[0] != ')')
-    {
-        if (keyeq(token, "attri"))
-        {   GetToken (token,false);
-            snew->info.attr = (token[0] == '(') ? ReadAttributes()
-                                                : FindAttributes(token);
-        }
-        else if (keyeq (token, "cente"))
+    while (GetToken(token,false), token[0] != ')') {
+        if (keyeq(token, "attri")) {
+            GetToken (token,false);
+            snew->info.attr = (token[0] == '(') ? ReadAttributes() : FindAttributes(token);
+        } else if (keyeq (token, "cente")) {
             Read4Vec (token, snew->center);
-        else if (keyeq (token, "radiu"))
+        } else if (keyeq (token, "radiu")) {
             ReadReal (token, &snew->radius);
-        else Error ("Invalid sphere subfield (%s).\n", token);
+        } else {
+            Error ("Invalid sphere subfield (%s).\n", token);
+        }
     }
 
     if (snew->radius < EPSILON)
@@ -574,19 +549,16 @@ void  DoSphere  ()
     objlist = (ObjInfo *)(prev = snew);
 }
 
+//==================================================================================================
 
+void DoParallelepiped () {
+    // This routine reads in a description of a 4D parallelepiped (defined by four vertices) and
+    // adds it to the object list.
 
-/*****************************************************************************
-This routine reads in a description of a 4D parallelepiped (defined by four
-vertices) and adds it to the object list.
-*****************************************************************************/
+    static Parallelepiped *prev= &DefPllp; // Previously Defined Tetrahedron
+    Parallelepiped *pnew;                  // New Parallelepiped
 
-void  DoParallelepiped ()
-{
-    static Parallelepiped *prev= &DefPllp; /* Previously Defined Tetrahedron*/
-    Parallelepiped *pnew;                  /* New Parallelepiped */
-
-    /* Gobble up the opening parenthesis. */
+    // Gobble up the opening parenthesis.
 
     if (GetToken(token,false), token[0] != '(')
         Error ("Missing opening parenthesis for parallelepiped definition.");
@@ -594,21 +566,19 @@ void  DoParallelepiped ()
     pnew = NEW (Parallelepiped,1);
     *pnew = *prev;
 
-    while (GetToken(token,false), token[0] != ')')
-    {
-        if (keyeq (token, "attri"))
-        {   GetToken (token,false);
+    while (GetToken(token,false), token[0] != ')') {
+        if (keyeq (token, "attri")) {
+            GetToken (token,false);
             pnew->info.attr = (token[0] == '(') ? ReadAttributes()
                                                 : FindAttributes(token);
-        }
-        else if (keyeq (token, "verti"))
-        {   Read4Vec (token, pnew->tp.vert[0]);
+        } else if (keyeq (token, "verti")) {
+            Read4Vec (token, pnew->tp.vert[0]);
             Read4Vec (token, pnew->tp.vert[1]);
             Read4Vec (token, pnew->tp.vert[2]);
             Read4Vec (token, pnew->tp.vert[3]);
-        }
-        else
+        } else {
             Error ("Invalid parallelepiped subfield (%s).\n", token);
+        }
     }
 
     Process_TetPar (&pnew->tp);
@@ -620,19 +590,16 @@ void  DoParallelepiped ()
     objlist = (ObjInfo *)(prev = pnew);
 }
 
+//==================================================================================================
 
+void DoTetrahedron () {
+    // This routine reads in a description of a 4D tetrahedron with four vertices and adds it to the
+    // object list.
 
-/*****************************************************************************
-This routine reads in a description of a 4D tetrahedron with four vertices and
-adds it to the object list.
-*****************************************************************************/
+    static Tetrahedron *prev = &DefTetra; // Previously Defined Tetrahedron
+    Tetrahedron *tnew;                    // New Tetrahedron
 
-void  DoTetrahedron ()
-{
-    static Tetrahedron *prev = &DefTetra; /* Previously Defined Tetrahedron*/
-    Tetrahedron *tnew;                    /* New Tetrahedron */
-
-    /* Gobble up the opening parenthesis. */
+    // Gobble up the opening parenthesis.
 
     if (GetToken(token,false), token[0] != '(')
         Error ("Missing opening parenthesis for tetrahedron definition.");
@@ -640,21 +607,18 @@ void  DoTetrahedron ()
     tnew = NEW (Tetrahedron,1);
     *tnew = *prev;
 
-    while (GetToken(token,false), token[0] != ')')
-    {
-        if (keyeq (token, "attri"))
-        {   GetToken (token,false);
-            tnew->info.attr = (token[0] == '(') ? ReadAttributes()
-                                                : FindAttributes(token);
-        }
-        else if (keyeq (token, "verti"))
-        {   Read4Vec (token, tnew->tp.vert[0]);
+    while (GetToken(token,false), token[0] != ')') {
+        if (keyeq (token, "attri")) {
+            GetToken (token,false);
+            tnew->info.attr = (token[0] == '(') ? ReadAttributes() : FindAttributes(token);
+        } else if (keyeq (token, "verti")) {
+            Read4Vec (token, tnew->tp.vert[0]);
             Read4Vec (token, tnew->tp.vert[1]);
             Read4Vec (token, tnew->tp.vert[2]);
             Read4Vec (token, tnew->tp.vert[3]);
-        }
-        else
+        } else {
             Error ("Invalid tetrahedron subfield (%s).\n", token);
+        }
     }
 
     Process_TetPar (&tnew->tp);
@@ -666,18 +630,15 @@ void  DoTetrahedron ()
     objlist = (ObjInfo *)(prev = tnew);
 }
 
+//==================================================================================================
 
+void DoTriangle () {
+    // This subroutine reads in a triangle description.
 
-/*****************************************************************************
-This subroutine reads in a triangle description.
-*****************************************************************************/
+    static Triangle *prev = &DefTriangle; // Previously Defined Triangle
+    Triangle *tnew;                       // New Triangle
 
-void  DoTriangle  ()
-{
-    static Triangle *prev = &DefTriangle; /* Previously Defined Triangle */
-    Triangle *tnew;                       /* New Triangle */
-
-    /* Gobble up the opening parenthesis. */
+    // Gobble up the opening parenthesis.
 
     if (GetToken(token,false), token[0] != '(')
         Error ("Missing opening parenthesis for triangle definition.");
@@ -685,23 +646,21 @@ void  DoTriangle  ()
     tnew = NEW (Triangle,1);
     *tnew = *prev;
 
-    while (GetToken(token,false), token[0] != ')')
-    {
-        if (keyeq (token, "attri"))
-        {   GetToken (token,false);
+    while (GetToken(token,false), token[0] != ')') {
+        if (keyeq (token, "attri")) {
+            GetToken (token,false);
             tnew->info.attr = (token[0] == '(') ? ReadAttributes()
                                                 : FindAttributes(token);
-        }
-        else if (keyeq (token, "verti"))
-        {   Read4Vec (token, tnew->vert[0]);
+        } else if (keyeq (token, "verti")) {
+            Read4Vec (token, tnew->vert[0]);
             Read4Vec (token, tnew->vert[1]);
             Read4Vec (token, tnew->vert[2]);
-        }
-        else
+        } else {
             Error ("Invalid triangle subfield (%s).\n", token);
+        }
     }
 
-    /* Compute the two vectors from vertex 0 to vertices 1 and 2. */
+    // Compute the two vectors from vertex 0 to vertices 1 and 2.
 
     V4_3Vec (tnew->vec1, =, tnew->vert[1], -, tnew->vert[0]);
     V4_3Vec (tnew->vec2, =, tnew->vert[2], -, tnew->vert[0]);
@@ -713,78 +672,77 @@ void  DoTriangle  ()
     objlist = (ObjInfo *)(prev = tnew);
 }
 
+//==================================================================================================
 
+void DoView () {
+    // This routine reads in the viewing parameters for the scene.
 
-/*****************************************************************************
-This routine reads in the viewing parameters for the scene.
-*****************************************************************************/
-
-void  DoView  ()
-{
-    /* Gobble up the opening parenthesis. */
+    // Gobble up the opening parenthesis.
 
     if (GetToken(token,false), token[0] != '(')
         Error ("Missing opening parenthesis for view definition.");
 
-    while (GetToken(token,false), token[0] != ')')
-    {
-             if (keyeq (token, "from" ))  Read4Vec (token, Vfrom);
-        else if (keyeq (token, "to"   ))  Read4Vec (token, Vto);
-        else if (keyeq (token, "up"   ))  Read4Vec (token, Vup);
-        else if (keyeq (token, "over" ))  Read4Vec (token, Vover);
-        else if (keyeq (token, "angle"))  ReadReal (token, &Vangle);
-        else Error ("Invalid view subfield (%s).", token);
-   }
+    while (GetToken(token,false), token[0] != ')') {
+        if (keyeq (token, "from"))
+            Read4Vec (token, Vfrom);
+        else if (keyeq (token, "to"))
+            Read4Vec (token, Vto);
+        else if (keyeq (token, "up"))
+            Read4Vec (token, Vup);
+        else if (keyeq (token, "over"))
+            Read4Vec (token, Vover);
+        else if (keyeq (token, "angle"))
+            ReadReal (token, &Vangle);
+        else
+            Error ("Invalid view subfield (%s).", token);
+    }
 }
 
+//==================================================================================================
 
+void Process_TetPar (TetPar *tp) {
+    // This routine initializes the physical data fields common to both the tetrahedron and
+    // parallelepiped structures.
 
-/*****************************************************************************
-This routine initializes the physical data fields common to both the
-tetrahedron and parallelepiped structures.
-*****************************************************************************/
-
-void  Process_TetPar  (TetPar *tp)
-{
-    /* Calculate the vectors from vertex 0 to vertices 1, 2, and 3. */
+    // Calculate the vectors from vertex 0 to vertices 1, 2, and 3.
 
     V4_3Vec (tp->vec1, =, tp->vert[1], -, tp->vert[0]);
     V4_3Vec (tp->vec2, =, tp->vert[2], -, tp->vert[0]);
     V4_3Vec (tp->vec3, =, tp->vert[3], -, tp->vert[0]);
 
-    /* Calculate the parallelepiped's surface normal. */
+    // Calculate the parallelepiped's surface normal.
 
     {
-        ushort  dominant1, dominant2;        /* Dominant Axes */
+        ushort dominant1, dominant2;        // Dominant Axes
 
         V4_Cross(tp->normal, tp->vec1,tp->vec2,tp->vec3);
 
         if (! V4_Normalize (tp->normal))
             Error ("Degenerate parallelepiped/tetrahedron; not 3D.");
 
-        /* Find the dominant axis of the normal vector and load up the
-        ** ax1, ax2 and ax3 fields accordingly. */
+        // Find the dominant axis of the normal vector and load up the ax1, ax2 and ax3 fields
+        // accordingly.
 
         dominant1 = (fabs(tp->normal[X]) > fabs(tp->normal[Y])) ? X : Y;
         dominant2 = (fabs(tp->normal[Z]) > fabs(tp->normal[W])) ? Z : W;
-        if (fabs(tp->normal[dominant1]) > fabs(tp->normal[dominant2]))
-        {   tp->ax1 = (dominant1 == X) ? Y : X;
+
+        if (fabs(tp->normal[dominant1]) > fabs(tp->normal[dominant2])) {
+            tp->ax1 = (dominant1 == X) ? Y : X;
             tp->ax2 = Z;
             tp->ax3 = W;
-        }
-        else
-        {   tp->ax1 = X;
+        } else {
+            tp->ax1 = X;
             tp->ax2 = Y;
             tp->ax3 = (dominant2 == Z) ? W : Z;
         }
     }
 
-    /* Calculate the hyperplane constant. */
+    // Calculate the hyperplane constant.
 
     tp->planeConst = - V4_Dot (tp->normal, tp->vert[0]);
 
-    /* Calculate the divisor for Cramer's Rule used to determine the
-    ** barycentric coordinates of intersection points.  */
+    // Calculate the divisor for Cramer's Rule used to determine the barycentric coordinates of
+    // intersection points.
 
     {
         Real  M11,M12,M13, M21,M22,M23, M31,M32,M33;
@@ -801,23 +759,17 @@ void  Process_TetPar  (TetPar *tp)
         M32 = tp->vec3[tp->ax2];
         M33 = tp->vec3[tp->ax3];
 
-        tp->CramerDiv = M11 * (M22*M33 - M23*M32)
-                      - M21 * (M12*M33 - M13*M32)
-                      + M31 * (M12*M23 - M13*M22);
+        tp->CramerDiv = M11 * (M22*M33 - M23*M32) - M21 * (M12*M33 - M13*M32) + M31 * (M12*M23 - M13*M22);
     }
 }
 
+//==================================================================================================
 
+Attributes *FindAttributes (char *name) {
+    // This function finds an attribute description with the given name and returns a pointer to the
+    // attributes node. If the name is not found, this routine aborts after flagging the error.
 
-/*****************************************************************************
-This function finds an attribute description with the given name and returns a
-pointer to the attributes node.  If the name is not found, this routine aborts
-after flagging the error.
-*****************************************************************************/
-
-Attributes  *FindAttributes  (char *name)
-{
-    AttrName *anptr;  /* Attribute Name Node Traversal Pointer */
+    AttrName *anptr;  // Attribute Name Node Traversal Pointer
 
     name[MAXATNAME] = 0;
 
@@ -825,54 +777,54 @@ Attributes  *FindAttributes  (char *name)
         if (strrel (name, ==, anptr->name))
             break;
 
-    if (!anptr) Error ("Can't find attribute definition (%s).", name);
+    if (!anptr)
+        Error ("Can't find attribute definition (%s).", name);
+
     return anptr->attr;
 }
 
+//==================================================================================================
 
+Attributes *ReadAttributes () {
+    // This routine reads in a description of object attributes, creates a new attributes node,
+    // links it into the attributes list, and returns a pointer to the new attributes node.
+    //
+    // It is assumed that the opening parenthesis has already been consumed at the time this routine
+    // is called.
 
-/*****************************************************************************
-This routine reads in a description of object attributes, creates a new
-attributes node, links it into the attributes list, and returns a pointer to
-the new attributes node.
+    Attributes *newattr;          // New Attributes
 
-It is assumed that the opening parenthesis has already been consumed at the
-time this routine is called.
-*****************************************************************************/
-
-Attributes  *ReadAttributes  ()
-{
-    Attributes *newattr;          /* New Attributes */
-
-    /* Allocate the new attributes node, load it with the most recent named
-    ** attributes node, and add it to the attributes list. */
+    // Allocate the new attributes node, load it with the most recent named attributes node, and add
+    // it to the attributes list.
 
     newattr = NEW (Attributes, 1);
     *newattr = *prevattr;
     newattr->next = attrlist;
     attrlist = newattr;
 
-    /* Clear the shortcut flags. */
+    // Clear the shortcut flags.
 
     newattr->flags &= ~(AT_AMBIENT | AT_DIFFUSE | AT_SPECULAR | AT_TRANSPAR);
 
-    /* Process each of the attributes fields. */
+    // Process each of the attributes fields.
 
-    while (GetToken(token,false), token[0] != ')')
-    {
-             if (keyeq (token, "ambie"))  ReadColor (token, &newattr->Ka);
-        else if (keyeq (token, "diffu"))  ReadColor (token, &newattr->Kd);
-        else if (keyeq (token, "specu"))  ReadColor (token, &newattr->Ks);
-        else if (keyeq (token, "trans"))  ReadColor (token, &newattr->Kt);
-        else if (keyeq (token, "shine"))  ReadReal  (token, &newattr->shine);
-
-        else if (keyeq (token, "index"))
-        {   ReadReal (token, &newattr->indexref);
+    while (GetToken(token,false), token[0] != ')') {
+        if (keyeq (token, "ambie")) {
+            ReadColor (token, &newattr->Ka);
+        } else if (keyeq (token, "diffu")) {
+            ReadColor (token, &newattr->Kd);
+        } else if (keyeq (token, "specu")) {
+            ReadColor (token, &newattr->Ks);
+        } else if (keyeq (token, "trans")) {
+            ReadColor (token, &newattr->Kt);
+        } else if (keyeq (token, "shine")) {
+            ReadReal  (token, &newattr->shine);
+        } else if (keyeq (token, "index")) {
+            ReadReal (token, &newattr->indexref);
             if (newattr->indexref <= 0.0)
-            Error ("Non-positive index of refraction.");
-        }
-        else if (keyeq (token, "refle"))
-        {   ushort  scratch;
+                Error ("Non-positive index of refraction.");
+        } else if (keyeq (token, "refle")) {
+            ushort  scratch;
             ReadUint16 (token, &scratch);
             if (scratch == 1)
                 newattr->flags |=  AT_REFLECT;
@@ -880,9 +832,9 @@ Attributes  *ReadAttributes  ()
                 newattr->flags &= ~AT_REFLECT;
             else
                 Error ("Invalid `reflect' argument; should be 0 or 1.");
-        }
-        else
+        } else {
             Error ("Invalid attributes field (%s).", token);
+        }
     }
 
     if ((newattr->Ka.r + newattr->Ka.g + newattr->Ka.b) > EPSILON)
@@ -900,16 +852,13 @@ Attributes  *ReadAttributes  ()
     return newattr;
 }
 
+//==================================================================================================
 
+void ReadColor (char *token, Color *color) {
+    // This routine reads in a color vector from the input stream and stuffs it in the location
+    // given in the parameter list.
 
-/*****************************************************************************
-This routine reads in a color vector from the input stream and stuffs it in
-the location given in the parameter list.
-*****************************************************************************/
-
-void ReadColor (char *token, Color *color)
-{
-    char inbuff[MAXTLEN+1];      /* Input Value Buffer */
+    char inbuff[MAXTLEN+1];      // Input Value Buffer
 
     GetToken (inbuff, false);
     if (CTYPE(*inbuff) != NUM)
@@ -927,16 +876,13 @@ void ReadColor (char *token, Color *color)
     color->b = atof (inbuff);
 }
 
+//==================================================================================================
 
+void ReadReal (char *token, Real *num) {
+    // This routine reads in a real-valued number from the input stream and stores it in the
+    // location given in the parameter list.
 
-/*****************************************************************************
-This routine reads in a real-valued number from the input stream and stores it
-in the location given in the parameter list.
-*****************************************************************************/
-
-void  ReadReal  (char *token, Real *num)
-{
-    char inbuff[MAXTLEN+1];      /* Input Value Buffer */
+    char inbuff[MAXTLEN+1];      // Input Value Buffer
 
     GetToken (inbuff, false);
     if (CTYPE(*inbuff) != NUM)
@@ -944,16 +890,13 @@ void  ReadReal  (char *token, Real *num)
     *num = atof (inbuff);
 }
 
+//==================================================================================================
 
+void ReadUint16 (char *token, ushort *num) {
+    // This procedure reads in a 16-bit unsigned integer from the input stream and stores it in the
+    // location given in the parameter list.
 
-/*****************************************************************************
-This procedure reads in a 16-bit unsigned integer from the input stream and
-stores it in the location given in the parameter list.
-*****************************************************************************/
-
-void  ReadUint16  (char *token, ushort *num)
-{
-    char inbuff[MAXTLEN+1];      /* Input Value Buffer */
+    char inbuff[MAXTLEN+1];      // Input Value Buffer
 
     GetToken (inbuff, false);
     if (CTYPE(*inbuff) != NUM)
@@ -961,16 +904,13 @@ void  ReadUint16  (char *token, ushort *num)
     *num = atoi (inbuff);
 }
 
+//==================================================================================================
 
+void Read4Vec (char *token, Real *vec) {
+    // This procedure reads in a 4-vector from the input stream and stores it into the specified
+    // location.
 
-/*****************************************************************************
-This procedure reads in a 4-vector from the input stream and stores it into
-the specified location.
-*****************************************************************************/
-
-void  Read4Vec  (char *token, Real *vec)
-{
-    char inbuff[MAXTLEN+1];   /* Input Value Buffer */
+    char inbuff[MAXTLEN+1];   // Input Value Buffer
 
     GetToken (inbuff, false);
     if (CTYPE(*inbuff) != NUM)
@@ -993,19 +933,15 @@ void  Read4Vec  (char *token, Real *vec)
     vec[3] = atof (inbuff);
 }
 
+//==================================================================================================
 
+void Error (char *format, ...) {
+    // This routine handles errors in the input stream. It prints out the current line number of the
+    // input stream and prints the error message and the optional printf()-like argument. After
+    // printing the message it halts execution of the raytracer.
 
-/*****************************************************************************
-This routine handles errors in the input stream.  It prints out the current
-line number of the input stream and prints the error message and the optional
-printf()-like argument.  After printing the message it halts execution of the
-raytracer.
-*****************************************************************************/
-
-void  Error  (char *format, ...)
-{
-    AttrName *attrname;   /* Attribute Name Node Pointer */
-    va_list args;         /* List of Optional Arguments */
+    AttrName *attrname;   // Attribute Name Node Pointer
+    va_list args;         // List of Optional Arguments
 
     va_start(args, format);
 
@@ -1015,14 +951,14 @@ void  Error  (char *format, ...)
 
     va_end(args);
 
-    /* Kill the attributes name list. */
+    // Kill the attributes name list.
 
-    while (attrname = attrnamelist, attrname)
-    {   attrnamelist = attrname->next;
+    while (attrname = attrnamelist, attrname) {
+        attrnamelist = attrname->next;
         DELETE (attrname);
     }
 
-    /* Halt the program. */
+    // Halt the program.
 
     Halt ("Aborting.");
 }
