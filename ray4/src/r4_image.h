@@ -26,25 +26,31 @@
 //
 // The following assumptions are made in the header structure:
 //
-//    - All fields are packed together (no space between fields).
-//    - uchar  fields are unsigned  8-bit integers.
-//    - ushort fields are unsigned 16-bit integers.
-//    - ulong  fields are unsigned 32-bit integers.
+//     - All fields are packed together (no space between fields).
+//     - uchar  fields are unsigned  8-bit integers.
+//     - ushort fields are unsigned 16-bit integers.
+//     - ulong  fields are unsigned 32-bit integers.
 //
 // The fields are as follows:
 //
-//     magic       :  Always set to 'Ray4' (0x52977934).
-//     version     :  Lower is older. Currently set to 1.
-//     bitsperpixel:  Total bits for each pixel - red, green & blue.
-//     aspect      :  Aspect ratio. To form a perfect cube with all edges of equal length, it would
-//                    be aspect[0] pixels in the X dimension, aspect[1] pixels in the Y dimension,
-//                    and aspect[2] pixels in the Z dimension.
-//     first       :  Starting corner of the image cube.
-//     last        :  Ending corner of the image cube. The dimension of the data is
-//                    (last[0]-first[0]+1) horizontally, (last[1]-first[1]+1) vertically, and
-//                    (last[2]-first[2] +1) deep.
+//     magic       : uint32    : Equal to 'Ray4' (0x52977934)
+//     version     : uint8     : Lower is older. Currently set to 1.
+//     bitsperpixel: uint8     : Total bits for each pixel - red, green & blue. Legal values are 12
+//                               or 24.
+//     aspect      : uint16[3] : Aspect ratio. To form a perfect cube with all edges of equal
+//                               length, it would be aspect[0] pixels in the X dimension, aspect[1]
+//                               pixels in the Y dimension, and aspect[2] pixels in the Z dimension.
+//     start       : uint16[3] : Starting corner of the image cube.
+//     end         : uint16[3] : Ending corner of the image cube. The dimension of the data is
+//                               (1+last[0]-first[0]) horizontally,
+//                               (1+last[1]-first[1]) vertically, and
+//                               (1+last[2]-first[2]) deep.
 //
-// The header structure size will be a multiple of longwords.
+// All uint16 and uint32 values are stored in big-endian format. That is, most significant byte
+// first, down to the least significant byte.
+//
+// Scan lines end on byte boundaries, so if the number of pixels on a scanline is odd, the last
+// nibble of the last byte of each scan line is ignored.
 //
 // After the header follows the image data. Each scanline consists of RGB triples, where each triple
 // is `bitsperpixel' long. Scanlines are stored left to right, top to bottom, back to front. All
