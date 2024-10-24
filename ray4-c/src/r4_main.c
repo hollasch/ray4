@@ -65,7 +65,9 @@ This program constructs a 4D raytraced image of the input scene file, outputing\
 a 3D image cube of pixels.\n\
 \n\
 -r<Image Resolution>\n\
-    Image resolution specified as 'X:Y:Z'.\n\
+    Image resolution specified as 'X:Y:Z'. X must be greater than zero. If Y or\n\
+    Z are omitted or set to zero, they will be set to the same value as the X\n\
+    resolution.\n\
 \n\
 -i<Input Filename>\n\
     Input filename, typically with extension '.r4'.\n\
@@ -592,14 +594,25 @@ void  ProcessArgs  (int argc, char *argv[])
             }
 
             case 'r':
-            {   if (ptr = GetField(ptr,&res[X]), (!ptr || !*ptr))
-                    Halt ("Invalid X argument for -r option.");
+            {
+                char* resArg = ptr;
 
-                if (ptr = GetField(ptr,&res[Y]), !ptr)
-                    Halt ("Invalid Y argument for -r option.");
+                ptr = GetField(ptr, &res[X]);
 
-                if (ptr = GetField(ptr,&res[Z]), !ptr)
-                    Halt ("Invalid Z argument for -r option.");
+                if (!ptr || !*ptr)
+                    res[Y] = res[Z] = res[X];
+                else
+                {
+                    ptr = GetField(ptr, &res[Y]);
+
+                    if (!ptr || !*ptr)
+                        res[Z] = res[X];
+                    else
+                        ptr = GetField(ptr, &res[Z]);
+                }
+
+                if (ptr && *ptr)
+                    Halt("Bad resolution argument to -r option (%s).", resArg);
 
                 break;
             }
@@ -630,13 +643,11 @@ void  ProcessArgs  (int argc, char *argv[])
 
     DELETE (opta);
 
-    if ((iheader.aspect[0] == 0) || (iheader.aspect[1] == 0))
-        Halt ("X and Y aspect ratios must be non-zero.");
+    if ((iheader.aspect[0] < 1) || (iheader.aspect[1] < 1) || ((iheader.aspect[2] < 1)))
+        Halt ("Aspect ratio values must be greater than zero.");
 
-    if ((res[0] == 0) || (res[1] == 0))
-        Halt ("X and Y resolution must be non-zero.");
-
-    if (res[2] == 0)  res[2] = 1;
+    if (res[0] < 1)
+        Halt ("X resolution must be greater than zero.");
 
     if (  (iheader.first[0] >  iheader.last[0])
        || (iheader.first[1] >  iheader.last[1])
