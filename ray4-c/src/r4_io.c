@@ -30,7 +30,6 @@
 #include <fcntl.h>
 
 #include "ray4.h"
-#include "r4_globals.h"
 
 
     // Local Global Variables

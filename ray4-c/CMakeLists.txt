@@ -12,7 +12,6 @@ project (ray4-c LANGUAGES C)
 
 # Source
 set ( sources_ray4_c
-  src/r4_globals.h
   src/r4_image.h
   src/ray4.h
   src/vector.h

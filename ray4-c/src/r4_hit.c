@@ -29,7 +29,6 @@
 #include <stdio.h>
 
 #include "ray4.h"
-#include "r4_globals.h"
 
 
     // Defined Constants

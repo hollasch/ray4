@@ -33,7 +33,6 @@
 
 #define DEFINE_GLOBALS
 #include "ray4.h"
-#include "r4_globals.h"
 #include "r4_image.h"
 
 
