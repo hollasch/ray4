@@ -69,18 +69,17 @@ This routine returns then next character from the input stream.  If the end of
 file is reached, it returns -1.
 *****************************************************************************/
 
-int UNREAD_NONE = -2;
-int unreadChar = -2;
+#define UNREAD_NONE -2
+static int unreadChar = UNREAD_NONE;
 
-int  ReadChar  ()
+int ReadChar ()
 {
-    int character = unreadChar;
-
     if (unreadChar == UNREAD_NONE)
-        return character;
+        return getc (instream);
 
+    int c = unreadChar;
     unreadChar = UNREAD_NONE;
-    return character;
+    return c;
 }
 
 /*****************************************************************************
@@ -89,9 +88,9 @@ something parsers often need. It cannot unread more than one character at
 a time though.
 *****************************************************************************/
 
-void UnreadChar  (int character)
+void UnreadChar (int c)
 {
-    unreadChar = character;
+    unreadChar = c;
 }
 
 
