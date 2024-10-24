@@ -53,7 +53,7 @@ following files comprise the Ray4 ray tracer:
 
 char notice[] = "\
 \n\
-ray4-c 1.0.0-alpha.1 | 2024-10-23 | https://github.com/hollasch/ray4\n\
+ray4-c 2.0.0-alpha.2 | 2024-10-24 | https://github.com/hollasch/ray4\n\
 \n";
 
 char usage[] = "\

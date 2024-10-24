@@ -38,7 +38,7 @@
 
    /***  Usage Messages  ***/
 
-static auto notice = "ray4 2.0.0-alpha.1 | 2024-10-22 | https://github.com/hollasch/ray4";
+static auto notice = "ray4 3.0.0-alpha.1 | 2024-10-22 | https://github.com/hollasch/ray4";
 
 static auto usage = R"(
 ray4:   4-Space Ray Tracer
