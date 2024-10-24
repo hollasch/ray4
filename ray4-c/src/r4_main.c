@@ -522,6 +522,11 @@ void  ProcessArgs  (int argc, char *argv[])
             opta[opti++] = argv[ii];
     }
 
+    if (optc <= 0)
+    {   print (usage);
+        exit (0);
+    }
+
     for (ii=0;  ii < optc;  ++ii)
     {
         char oc;   /* Option Character */
