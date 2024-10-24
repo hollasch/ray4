@@ -388,8 +388,7 @@ void  FireRays  ()
         V4_3Vec (Zorigin, =, Gorigin, +, Zindex*Gz);
         for (Yindex=iheader.start[Y];  Yindex <= iheader.end[Y];  ++Yindex)
         {
-            printf ("%6u %6u\r",
-            iheader.end[Z] - Zindex, iheader.end[Y] - Yindex);
+            printf ("%6u %6u\r", iheader.end[Z] - Zindex, iheader.end[Y] - Yindex);
             fflush (stdout);
 
             V4_3Vec (Yorigin, =, Zorigin, +, Yindex*Gy);
@@ -672,12 +671,54 @@ void  ProcessArgs  (int argc, char *argv[])
 
 
 /*****************************************************************************
+Integer Write Routines. These routines write out values in big-endian format.
+*****************************************************************************/
+
+void WriteInteger8(uchar value)
+{
+    WriteBlock(&value, 1);
+} 
+
+void WriteInteger16(ushort value)
+{
+    unsigned char block[2];
+    block[0] = 0xff & (value >> 8);
+    block[1] = 0xff & value;
+
+    WriteBlock(block, 2);
+}
+
+void WriteInteger32(ulong value)
+{
+    unsigned char block[4];
+    block[0] = 0xff & (value >> 24);
+    block[1] = 0xff & (value >> 16);
+    block[2] = 0xff & (value >>  8);
+    block[3] = 0xff & value;
+
+    WriteBlock(block, 4);
+}
+
+
+
+/*****************************************************************************
 Write the image header to the output stream.
 *****************************************************************************/
 
 void WriteHeader(ImageHdr* header)
 {
-    WriteBlock(header, sizeof(ImageHdr));
+    WriteInteger32(header->magic);
+    WriteInteger8(header->version);
+    WriteInteger8(header->bitsperpixel);
+
+    for (int i=0;  i < 3;  ++i)
+        WriteInteger16(header->aspect[i]);
+
+    for (int i=0;  i < 3;  ++i)
+        WriteInteger16(header->start[i]);
+
+    for (int i=0;  i < 3;  ++i)
+        WriteInteger16(header->end[i]);
 }
 
 

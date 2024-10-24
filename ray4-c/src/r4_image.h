@@ -52,6 +52,9 @@ The fields are as follows:
 All uint16 and uint32 values are stored in big-endian format. That is, most
 significant byte first, down to the least significant byte.
 
+Scan lines end on byte boundaries, so if the number of pixels on a scanline is
+odd, the last nibble of the last byte of each scan line is ignored.
+
 After the header follows the image data. Each scanline consists of RGB triples,
 where each triple is `bitsperpixel' long. Scanlines are stored left to right,
 top to bottom, back to front. All scanlines begin on even byte boundaries.
