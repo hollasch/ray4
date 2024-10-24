@@ -61,14 +61,12 @@
 #define R4_IMAGE_H
 
 
-   /***  Macro Definitions  ***/
+// Macro Definitions
 
 #define R4_IMAGE_ID   0x52617934L       // 'Ray4'
 
 
-   /*=========================*/
-   /*  Structure Definitions  */
-   /*=========================*/
+// Structure Definitions
 
 typedef struct S_IMAGEHDR   ImageHdr;
 

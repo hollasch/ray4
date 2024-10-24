@@ -20,7 +20,7 @@
 //**************************************************************************************************
 
 //==================================================================================================
-// r4_main.c
+// r4_main.cpp
 //
 // This file contains the main procedures in the Ray4 4D ray tracer.
 //==================================================================================================
@@ -36,7 +36,7 @@
 #include "r4_image.h"
 
 
-   /***  Usage Messages  ***/
+// Usage Messages
 
 static auto notice = "ray4 3.0.0-alpha.1 | 2024-10-22 | https://github.com/hollasch/ray4";
 
@@ -85,13 +85,13 @@ Examples:
 
 )";
 
-   /***  Constant Definitions  ***/
+// Constant Definitions
 
 #define MIN_SLB_COUNT 5        // Minimum Scanline Buffer Count
 #define MIN_SLB_SIZE  (5<<10)  // Minimum Scanline Buffer Size
 
 
-   /***  Function Declarations  ***/
+// Function Declarations
 
 void  ProcessArgs  (int, char**);
 char *GetField     (char*, ushort*);
@@ -101,7 +101,7 @@ void  CalcRayGrid  (void);
 void  FireRays     (void);
 
 
-   /***  File-Global Variables  ***/
+// File-Global Variables
 
 ImageHdr iheader = {       // Output Image Header
     R4_IMAGE_ID,
@@ -138,7 +138,7 @@ void main (int argc, char *argv[]) {
     // objects.
 
     if ((ambient.r + ambient.g + ambient.b) < EPSILON) {
-        ObjInfo *optr = objlist;      /* Object Pointer */
+        ObjInfo *optr = objlist;      // Object Pointer
 
         while (optr) {
             optr->flags &= ~AT_AMBIENT;
@@ -186,11 +186,11 @@ void ProcessArgs (int argc, char *argv[]) {
     // This subroutine grabs the command-line arguments and the environment variable arguments (from
     // RAY4) and sets up the raytrace parameters.
 
-    char  *ptr;     /* Scratch String Pointer */
-    char  *eptr;    /* Environment Variable Pointer */
-    int    ii;      /* Option Array Index */
-    char **opta;    /* Option Argument Array */
-    int    optc;    /* Option Argument Count */
+    char  *ptr;     // Scratch String Pointer
+    char  *eptr;    // Environment Variable Pointer
+    int    ii;      // Option Array Index
+    char **opta;    // Option Argument Array
+    int    optc;    // Option Argument Count
 
     /* If the "RAY4" environment variable is not defined, then just use the
     ** command-line options, otherwise concatenate the command-line options
@@ -240,7 +240,7 @@ void ProcessArgs (int argc, char *argv[]) {
     }
 
     for (ii=0;  ii < optc;  ++ii) {
-        char oc;   /* Option Character */
+        char oc;   // Option Character
 
         if (opta[ii][0] != '-') {
             printf ("ray4:  Unexpected argument (%s).\n", opta[ii]);
@@ -371,8 +371,13 @@ char *GetField (char *str, ushort *value) {
     // These subroutine process the command-line arguments. The first two routines get each field of
     // the resolution, aspect ratio, and scan range triples.
 
-    if (!str)   return nullptr;
-    if (!*str)  return *value=0, str;
+    if (!str)
+        return nullptr;
+
+    if (!*str) {
+        *value = 0;
+        return str;
+    }
 
     if ((*str < '0') || ('9' < *str))
         return nullptr;
@@ -414,9 +419,14 @@ char *GetRange (
     while (('0' <= *str) && (*str <= '9'))
         ++str;
 
-    if (*str == 0)    return str;
-    if (*str == ':')  return str+1;
-    if (*str != '-')  return nullptr;
+    if (*str == 0)
+        return str;
+
+    if (*str == ':')
+        return str+1;
+
+    if (*str != '-')
+        return nullptr;
 
     ++str;
     if ((*str < '0') || ('9' < *str))
@@ -435,10 +445,10 @@ void Halt (char *message, ...) {
     // This procedure replaces printf() to print out an error message, and has the side effect of
     // cleaning up before exiting (de-allocating memory, closing open files, and so on).
 
-    Attributes *aptr;   /* Attributes-List Pointer */
-    Light      *lptr;   /* Light-List Pointer */
-    ObjInfo    *optr;   /* Object-List Pointer */
-    va_list     args;   /* List of Optional Arguments */
+    Attributes *aptr;   // Attributes-List Pointer
+    Light      *lptr;   // Light-List Pointer
+    ObjInfo    *optr;   // Object-List Pointer
+    va_list     args;   // List of Optional Arguments
 
     print ("\n");
 
@@ -459,17 +469,17 @@ void Halt (char *message, ...) {
     if (outfile)   DELETE (outfile);
     if (scanbuff)  DELETE (scanbuff);
 
-    while ((lptr = lightlist)) {          /* Free the lightsource list. */
+    while ((lptr = lightlist)) {          // Free the lightsource list.
         lightlist = lightlist->next;
         DELETE (lptr);
     }
 
-    while ((optr = objlist)) {            /* Free the object list. */
+    while ((optr = objlist)) {            // Free the object list.
         objlist = objlist->next;
         DELETE (optr);
     }
 
-    while ((aptr = attrlist)) {           /* Free the attribute list. */
+    while ((aptr = attrlist)) {           // Free the attribute list.
         attrlist = attrlist->next;
         DELETE (aptr);
     }

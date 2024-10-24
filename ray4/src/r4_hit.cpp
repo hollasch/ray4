@@ -20,10 +20,10 @@
 //**************************************************************************************************
 
 //==================================================================================================
-// r4_hit.c
+// r4_hit.cpp
 //
 // This file contains intersection routines for the geometric primitives in the Ray4 4D raytracer.
-// See the r4_main.c header for more information on Ray4.
+// See the r4_main.cpp header comment for more information on Ray4.
 //==================================================================================================
 
 #include <stdio.h>
@@ -31,8 +31,6 @@
 #include "ray4.h"
 #include "r4_globals.h"
 
-
-    /*** Defined Constants ***/
 
 #define MINDIST 1e-7  // Minimum Intersection Distance (for the elimination of surface acne)
 
@@ -139,12 +137,12 @@ bool HitSphere (
 //==================================================================================================
 
 bool HitTetPar (
-    ObjInfo *objptr,     /* Sphere to Test */
-    Point4   rayO,       /* Ray Origin */
-    Vector4  rayD,       /* Ray Direction */
-    Real    *mindist,    /* Previous Minimum Distance */
-    Point4   intersect,  /* Intersection Point */
-    Vector4  normal)     /* Surface Normal @ Intersection Point */
+    ObjInfo *objptr,     // Sphere to Test
+    Point4   rayO,       // Ray Origin
+    Vector4  rayD,       // Ray Direction
+    Real    *mindist,    // Previous Minimum Distance
+    Point4   intersect,  // Intersection Point
+    Vector4  normal)     // Surface Normal @ Intersection Point
 {
     // This is the intersection function for 4D tetrahedrons and parallelepipeds. Note that if the
     // object is a tetrahedron and the conditions are met to set the intersection values, then the

@@ -20,10 +20,10 @@
 //**************************************************************************************************
 
 //==================================================================================================
-// r4_io.c
+// r4_io.cpp
 //
-// This file contains the I/O routines needed for the Ray4 4D raytracer. See the r4_main.c header
-// for more information on Ray4. This version of r4_io.c contains standard C I/O routines.
+// This file contains the I/O routines needed for the Ray4 4D raytracer. See the r4_main.cpp header
+// for more information on Ray4.
 //==================================================================================================
 
 #include <stdio.h>
@@ -37,6 +37,7 @@
 
 FILE *instream  = nullptr;  // Input Stream
 FILE *outstream = nullptr;  // Output Stream
+
 
 
 //==================================================================================================
@@ -82,7 +83,7 @@ int ReadChar () {
 //==================================================================================================
 
 void UnreadChar (int character) {
-    // This routine, together with ReaedChar allow to put back a character, which is something
+    // This routine, together with ReadChar allow to put back a character, which is something
     // parsers often need. It cannot unread more than one character at a time though.
 
     unreadChar = character;

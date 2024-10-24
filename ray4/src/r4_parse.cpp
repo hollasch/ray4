@@ -20,7 +20,7 @@
 //**************************************************************************************************
 
 //==================================================================================================
-// r4_parse.c
+// r4_parse.cpp
 //
 // This file contains procedures that are used to parse the input file and build the scene for the
 // raytrace.
@@ -35,7 +35,7 @@
 int EOFC= -1;
 
 
-    /***  Defined Constants  ***/
+// Defined Constants
 
 #define MAXTLEN    80   // Maximum Token Length in Input File
 #define KEYSIG     5    // Significant Chars of a Keyword (max 255)
@@ -50,7 +50,7 @@ int EOFC= -1;
 #define BLACK  { 0.000, 0.000, 0.000 }  // Color Black
 
 
-    /***  Function Declarations  ***/
+// Function Declarations
 
 void        DoAttributes     (void);
 void        DoLight          (void);
@@ -127,7 +127,7 @@ struct S_ATTRNAME {
 };
 
 
-   /*** Default Structures ***/
+// Default Structures
 
 Light DefLight = {
     nullptr,                     // Next Light Source
@@ -184,7 +184,7 @@ Triangle DefTriangle = {
 };
 
 
-    /*** Global Variables ***/
+// Global Variables
 
 static AttrName   *attrnamelist = nullptr;    // Attribute Name List
 static bool        eofflag = false;           // Non-Zero If EOF Input File
@@ -353,16 +353,16 @@ char *GetToken  (
                 break;
 
             if (cc == '.') {
-                if (dflag || eflag)
+                if (dflag || eflag) {
                     break;
-                else {
+                } else {
                     dflag = 1;
                     continue;
                 }
             } else if (cc == 'e') {
-                if (eflag)
+                if (eflag) {
                     break;
-                else {
+                } else {
                     eflag = 1;
                     continue;
                 }
@@ -480,9 +480,9 @@ void DoLight () {
     *light = *prev;
 
     while (GetToken(token,false), token[0] != ')') {
-        if (keyeq (token, "color"))
+        if (keyeq (token, "color")) {
             ReadColor (token, &light->color);
-        else if (keyeq (token, "direc")) {
+        } else if (keyeq (token, "direc")) {
             Read4Vec (token, light->u.dir);
             light->type = L_DIRECTIONAL;
         } else if (keyeq (token, "posit")) {
@@ -525,8 +525,7 @@ void DoSphere () {
     while (GetToken(token,false), token[0] != ')') {
         if (keyeq(token, "attri")) {
             GetToken (token,false);
-            snew->info.attr = (token[0] == '(') ? ReadAttributes()
-                                                : FindAttributes(token);
+            snew->info.attr = (token[0] == '(') ? ReadAttributes() : FindAttributes(token);
         } else if (keyeq (token, "cente")) {
             Read4Vec (token, snew->center);
         } else if (keyeq (token, "radiu")) {
@@ -568,8 +567,7 @@ void DoParallelepiped () {
     while (GetToken(token,false), token[0] != ')') {
         if (keyeq (token, "attri")) {
             GetToken (token,false);
-            pnew->info.attr = (token[0] == '(') ? ReadAttributes()
-                                                : FindAttributes(token);
+            pnew->info.attr = (token[0] == '(') ? ReadAttributes() : FindAttributes(token);
         } else if (keyeq (token, "verti")) {
             Read4Vec (token, pnew->tp.vert[0]);
             Read4Vec (token, pnew->tp.vert[1]);
@@ -609,8 +607,7 @@ void DoTetrahedron () {
     while (GetToken(token,false), token[0] != ')') {
         if (keyeq (token, "attri")) {
             GetToken (token,false);
-            tnew->info.attr = (token[0] == '(') ? ReadAttributes()
-                                                : FindAttributes(token);
+            tnew->info.attr = (token[0] == '(') ? ReadAttributes() : FindAttributes(token);
         } else if (keyeq (token, "verti")) {
             Read4Vec (token, tnew->tp.vert[0]);
             Read4Vec (token, tnew->tp.vert[1]);
@@ -649,8 +646,7 @@ void DoTriangle () {
     while (GetToken(token,false), token[0] != ')') {
         if (keyeq (token, "attri")) {
             GetToken (token,false);
-            tnew->info.attr = (token[0] == '(') ? ReadAttributes()
-                                                : FindAttributes(token);
+            tnew->info.attr = (token[0] == '(') ? ReadAttributes() : FindAttributes(token);
         } else if (keyeq (token, "verti")) {
             Read4Vec (token, tnew->vert[0]);
             Read4Vec (token, tnew->vert[1]);
@@ -683,13 +679,19 @@ void DoView () {
         Error ("Missing opening parenthesis for view definition.");
 
     while (GetToken(token,false), token[0] != ')') {
-             if (keyeq (token, "from" ))  Read4Vec (token, Vfrom);
-        else if (keyeq (token, "to"   ))  Read4Vec (token, Vto);
-        else if (keyeq (token, "up"   ))  Read4Vec (token, Vup);
-        else if (keyeq (token, "over" ))  Read4Vec (token, Vover);
-        else if (keyeq (token, "angle"))  ReadReal (token, &Vangle);
-        else Error ("Invalid view subfield (%s).", token);
-   }
+        if (keyeq (token, "from"))
+            Read4Vec (token, Vfrom);
+        else if (keyeq (token, "to"))
+            Read4Vec (token, Vto);
+        else if (keyeq (token, "up"))
+            Read4Vec (token, Vup);
+        else if (keyeq (token, "over"))
+            Read4Vec (token, Vover);
+        else if (keyeq (token, "angle"))
+            ReadReal (token, &Vangle);
+        else
+            Error ("Invalid view subfield (%s).", token);
+    }
 }
 
 //==================================================================================================
@@ -804,16 +806,20 @@ Attributes *ReadAttributes () {
     // Process each of the attributes fields.
 
     while (GetToken(token,false), token[0] != ')') {
-             if (keyeq (token, "ambie"))  ReadColor (token, &newattr->Ka);
-        else if (keyeq (token, "diffu"))  ReadColor (token, &newattr->Kd);
-        else if (keyeq (token, "specu"))  ReadColor (token, &newattr->Ks);
-        else if (keyeq (token, "trans"))  ReadColor (token, &newattr->Kt);
-        else if (keyeq (token, "shine"))  ReadReal  (token, &newattr->shine);
-
-        else if (keyeq (token, "index")) {
+        if (keyeq (token, "ambie")) {
+            ReadColor (token, &newattr->Ka);
+        } else if (keyeq (token, "diffu")) {
+            ReadColor (token, &newattr->Kd);
+        } else if (keyeq (token, "specu")) {
+            ReadColor (token, &newattr->Ks);
+        } else if (keyeq (token, "trans")) {
+            ReadColor (token, &newattr->Kt);
+        } else if (keyeq (token, "shine")) {
+            ReadReal  (token, &newattr->shine);
+        } else if (keyeq (token, "index")) {
             ReadReal (token, &newattr->indexref);
             if (newattr->indexref <= 0.0)
-            Error ("Non-positive index of refraction.");
+                Error ("Non-positive index of refraction.");
         } else if (keyeq (token, "refle")) {
             ushort  scratch;
             ReadUint16 (token, &scratch);

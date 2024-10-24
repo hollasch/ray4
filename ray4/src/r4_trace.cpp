@@ -20,7 +20,7 @@
 //**************************************************************************************************
 
 //==================================================================================================
-// r4_trace.c
+// r4_trace.cpp
 //
 // This file contains the procedures that spawn reflection and refraction rays. It also contains the
 // procedures responsible for shading and illumination.
@@ -36,24 +36,24 @@ Color black = { 0.000, 0.000, 0.000 };  // Used to zero out colors.
 //==================================================================================================
 
 void RayTrace (
-    Point4   rayO,       /* Ray Origin */
-    Vector4  rayD,       /* Ray Direction */
-    Color   *color,      /* Resulting Color */
-    ulong    level)      /* Raytrace Level */
+    Point4   rayO,   // Ray Origin
+    Vector4  rayD,   // Ray Direction
+    Color   *color,  // Resulting Color
+    ulong    level)  // Raytrace Level
 {
     // This routine is the heart of the raytracer; it takes the ray, determines which objects are
     // hit, picks the closest one, determines the appropriate shade at the surface, and then may or
     // may not fire a reflection ray and or a refraction ray.
 
-    Real        ftemp;      /* Scratch Real Value */
-    Point4      intr_out;   /* Intersection Outside The Surface */
-    Light      *lptr;       /* Light Pointer */
-    Attributes *nearattr;   /* Nearest Object's Attributes */
-    ObjInfo    *nearobj;    /* Nearest Object */
-    Point4      nearintr;   /* Nearest Object Intersection */
-    Vector4     nearnormal; /* Nearest Object Normal */
-    Real        NdotD = 0;  /* Normal dot rayD */
-    ObjInfo    *optr;       /* Object List Traversal Pointer */
+    Real        ftemp;       // Scratch Real Value
+    Point4      intr_out;    // Intersection Outside The Surface
+    Light      *lptr;        // Light Pointer
+    Attributes *nearattr;    // Nearest Object's Attributes
+    ObjInfo    *nearobj;     // Nearest Object
+    Point4      nearintr;    // Nearest Object Intersection
+    Vector4     nearnormal;  // Nearest Object Normal
+    Real        NdotD = 0;   // Normal dot rayD
+    ObjInfo    *optr;        // Object List Traversal Pointer
 
 
     ++ stats.Ncast;

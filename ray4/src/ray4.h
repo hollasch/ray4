@@ -39,7 +39,7 @@
 
 
 
-    /***  Basic Type Definitions  ***/
+// Basic Type Definitions
 
 typedef unsigned char  uchar;
 typedef unsigned short ushort;
@@ -50,12 +50,12 @@ typedef double         Real;
 #include "vector.h"
 
 
-    /***  Program Parameters  ***/
+// Program Parameters
 
 #define EPSILON 1.0e-15  // Very Small Number (Effectively Zero)
 
 
-    /***  Constant Definitions  ***/
+// Constant Definitions
 
 #define PI 3.14159265358979323846
 
@@ -76,14 +76,14 @@ typedef enum {    // Object Type ID's
 } ObjType;
 
 
-    /***  Macro Definitions  ***/
+// Macro Definitions
 
 #define strsize(s)              (strlen(s)+1)
 #define strrel(s1,op,s2)        (strcmp(s1,s2) op 0)
 #define print(s)                fputs(s,stdout)
 #define ALIMIT(array)           (sizeof(array) / sizeof(array[0]))
 #define CLAMP(value,low,high)   \
-   (((value) < (low)) ? (low) : (((value) > (high)) ? (high) : (value)))
+    (((value) < (low)) ? (low) : (((value) > (high)) ? (high) : (value)))
 
 #define  NEW(type,num)  (type *) MyAlloc((unsigned long)(num)*sizeof(type))
 #define  DELETE(addr)   MyFree ((char*)addr)
@@ -109,7 +109,7 @@ typedef enum {    // Object Type ID's
 )
 
 
-    /***  Structure Definitions  ***/
+// Structure Definitions
 
 typedef struct S_ATTRIBUTES     Attributes;
 typedef struct S_COLOR          Color;
@@ -152,7 +152,8 @@ struct S_LIGHT {
     } u;
 };
 
-        /***  Attribute Flag Definitions  ***/
+
+// Attribute Flag Definitions
 
 using AttrFlag = unsigned char;
 const AttrFlag AT_AMBIENT  = (1 << 0);  // Set if Ambient is Non-Zero
@@ -172,7 +173,8 @@ struct S_ATTRIBUTES {
     AttrFlag    flags;     // Attribute Flags
 };
 
-        /***  Info Flag Definitions  ***/
+
+// Info Flag Definitions
 
 using InfoFlag = unsigned char;
 const InfoFlag FL_GOURAUD = (1 << 0);  // Set if the Object is Gouraud Shaded
@@ -223,23 +225,22 @@ struct S_TRIANGLE {
 };
 
 
+// Function Declarations
 
-    /***  Function Declarations  ***/
-
-void     CloseInput  (void);
-void     CloseOutput (void);
-void     Halt        (char*, ...);
-bool     HitSphere   (ObjInfo*, Point4, Vector4, Real*, Point4, Vector4);
-bool     HitTetPar   (ObjInfo*, Point4, Vector4, Real*, Point4, Vector4);
-bool     HitTriangle (ObjInfo*, Point4, Vector4, Real*, Point4, Vector4);
-char    *MyAlloc     (size_t);
-void     MyFree      (void*);
-void     OpenInput   (void);
-void     OpenOutput  (void);
-void     ParseInput  (void);
-void     RayTrace    (Point4, Vector4, Color*, ulong);
-int      ReadChar    (void);
-void     UnreadChar  (int);
-void     WriteBlock  (void *block, int size);
+void  CloseInput  (void);
+void  CloseOutput (void);
+void  Halt        (char*, ...);
+bool  HitSphere   (ObjInfo*, Point4, Vector4, Real*, Point4, Vector4);
+bool  HitTetPar   (ObjInfo*, Point4, Vector4, Real*, Point4, Vector4);
+bool  HitTriangle (ObjInfo*, Point4, Vector4, Real*, Point4, Vector4);
+char *MyAlloc     (size_t);
+void  MyFree      (void*);
+void  OpenInput   (void);
+void  OpenOutput  (void);
+void  ParseInput  (void);
+void  RayTrace    (Point4, Vector4, Color*, ulong);
+int   ReadChar    (void);
+void  UnreadChar  (int);
+void  WriteBlock  (void *block, int size);
 
 #endif
