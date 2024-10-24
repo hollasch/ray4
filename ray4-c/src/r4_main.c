@@ -383,13 +383,13 @@ void  FireRays  ()
     scanptr   = scanbuff;
     eflag     = true;
 
-    for (Zindex=iheader.first[Z];  Zindex <= iheader.last[Z];  ++Zindex)
+    for (Zindex=iheader.start[Z];  Zindex <= iheader.end[Z];  ++Zindex)
     {
         V4_3Vec (Zorigin, =, Gorigin, +, Zindex*Gz);
-        for (Yindex=iheader.first[Y];  Yindex <= iheader.last[Y];  ++Yindex)
+        for (Yindex=iheader.start[Y];  Yindex <= iheader.end[Y];  ++Yindex)
         {
             printf ("%6u %6u\r",
-            iheader.last[Z] - Zindex, iheader.last[Y] - Yindex);
+            iheader.end[Z] - Zindex, iheader.end[Y] - Yindex);
             fflush (stdout);
 
             V4_3Vec (Yorigin, =, Zorigin, +, Yindex*Gy);
@@ -399,7 +399,7 @@ void  FireRays  ()
                 eflag = true;
             }
 
-            for (Xindex=iheader.first[X];  Xindex <= iheader.last[X];  ++Xindex)
+            for (Xindex=iheader.start[X];  Xindex <= iheader.end[X];  ++Xindex)
             {
                 Color    color;   /* Pixel Color */
                 Vector4  Dir;     /* Ray Direction Vector */
@@ -622,15 +622,15 @@ void  ProcessArgs  (int argc, char *argv[])
             }
 
             case 's':
-            {   ptr = GetRange(ptr,&iheader.first[0],&iheader.last[0]);
+            {   ptr = GetRange(ptr,&iheader.start[0],&iheader.end[0]);
                 if (!ptr || !*ptr)
                     Halt ("Bad X field argument to -s option.");
 
-                ptr = GetRange(ptr,&iheader.first[1],&iheader.last[1]);
+                ptr = GetRange(ptr,&iheader.start[1],&iheader.end[1]);
                 if (!ptr)
                     Halt ("Bad Y field argument to -s option.");
 
-                ptr = GetRange(ptr,&iheader.first[2],&iheader.last[2]);
+                ptr = GetRange(ptr,&iheader.start[2],&iheader.end[2]);
                 if (!ptr)
                     Halt ("Bad Z field argument to -s option.");
 
@@ -653,20 +653,31 @@ void  ProcessArgs  (int argc, char *argv[])
     if (res[0] < 1)
         Halt ("X resolution must be greater than zero.");
 
-    if (  (iheader.first[0] >  iheader.last[0])
-       || (iheader.first[1] >  iheader.last[1])
-       || (iheader.first[2] >  iheader.last[2])
-       || (iheader.first[0] >= res[0])
-       || (iheader.first[1] >= res[1])
-       || (iheader.first[2] >= res[2])
+    if (  (iheader.start[0] >  iheader.end[0])
+       || (iheader.start[1] >  iheader.end[1])
+       || (iheader.start[2] >  iheader.end[2])
+       || (iheader.start[0] >= res[0])
+       || (iheader.start[1] >= res[1])
+       || (iheader.start[2] >= res[2])
        )
     {
         Halt ("Invalid scan range given.");
     }
 
-    if (iheader.last[0] >= res[0])  iheader.last[0] = res[0]-1;
-    if (iheader.last[1] >= res[1])  iheader.last[1] = res[1]-1;
-    if (iheader.last[2] >= res[2])  iheader.last[2] = res[2]-1;
+    if (iheader.end[0] >= res[0])  iheader.end[0] = res[0]-1;
+    if (iheader.end[1] >= res[1])  iheader.end[1] = res[1]-1;
+    if (iheader.end[2] >= res[2])  iheader.end[2] = res[2]-1;
+}
+
+
+
+/*****************************************************************************
+Write the image header to the output stream.
+*****************************************************************************/
+
+void WriteHeader(ImageHdr* header)
+{
+    WriteBlock(header, sizeof(ImageHdr));
 }
 
 
@@ -701,11 +712,11 @@ void main (int argc, char *argv[])
     ** by the generated scanline data. */
 
     OpenOutput ();
-    WriteBlock ((char*)(&iheader), sizeof(iheader));
+    WriteHeader(&iheader);
 
     /* Determine the size of a single scanline. */
 
-    scanlsize = (3 * (1 + iheader.last[0] - iheader.first[0]));
+    scanlsize = (3 * (1 + iheader.end[0] - iheader.start[0]));
 
     if (iheader.bitsperpixel == 12)
     {   if (scanlsize & 1)
