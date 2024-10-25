@@ -37,64 +37,6 @@
 using Vector4 = double[4];  // 4-Vector
 
 
-// 3-Vector Macro Definitions
-
-    // NOTE:  All of the following macros are unsafe; they cannot properly handle macro arguments
-    //        that have side effects, such as post/pre increment or decrement.
-
-    // This macro yields a list of the vector components
-
-#define V3_List(V)    V[0],V[1],V[2]
-
-    // This macro provides for scalar multiplication, division, or assignment with a given 3-vector.
-
-#define V3_Scalar(V,assign,k) \
-if (1) { \
-    V[0] assign (k); \
-    V[1] assign (k); \
-    V[2] assign (k); \
-}else
-
-    // This macro provides for scalar multiplication or assignment with a given 3-vector, where each
-    // coordinate has its own scalar factor. For example: V3_3Scalar (A, /=, scale0,scale1,scale2).
-
-#define V3_3Scalar(V,assign,a,b,c) \
-if (1) { \
-    V[0] assign (a); \
-    V[1] assign (b); \
-    V[2] assign (c); \
-}else
-
-    // This macro provides for arithmetic operations of two 3-vectors.
-    // For example: V3_2Vec( A, +=, B).
-
-#define V3_2Vec(V,assign,U) \
-if (1) { \
-    V[0] assign U[0]; \
-    V[1] assign U[1]; \
-    V[2] assign U[2]; \
-}else
-
-    // The V3_3Vec macro allows for operations with two source 3-vectors and a destination 3-vector,
-    // e.g. V3_3Vec (A, +=, B, -, C).
-
-#define V3_3Vec(V,assign,A,op,B)  \
-if (1) { \
-    V[0] assign A[0] op B[0]; \
-    V[1] assign A[1] op B[1]; \
-    V[2] assign A[2] op B[2]; \
-}else
-
-    // This macro calculates the dot product of two 3-vectors.
-
-#define V3_Dot(V,U) \
-    ( (V[0]*U[0]) + (V[1]*U[1]) + (V[2]*U[2]) )
-
-    // V3_Norm calculates the norm (length) of a 3-vector.
-
-#define V3_Norm(V)   sqrt(V3_Dot(V,V))
-
-
 // 4-Vector Macro Definitions
 
     // This macro yields a list of the vector components
