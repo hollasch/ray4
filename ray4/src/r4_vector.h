@@ -35,7 +35,6 @@
 // Vector Definitions
 
 using Vector4 = double[4];  // 4-Vector
-using Point4  = Vector4;    // 4D Point (for readability)
 
 
 // 3-Vector Macro Definitions

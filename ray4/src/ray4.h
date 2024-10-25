@@ -49,6 +49,7 @@ using ushort = unsigned short;
 // Standard Ray4 Includes
 
 #include "r4_color.h"
+#include "r4_point.h"
 #include "r4_vector.h"
 
 

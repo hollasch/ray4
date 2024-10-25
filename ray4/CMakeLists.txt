@@ -15,12 +15,14 @@ set ( sources_ray4
   src/ray4.h
   src/r4_color.h
   src/r4_image.h
+  src/r4_point.h
   src/r4_vector.h
   src/r4_color.cpp
   src/r4_hit.cpp
   src/r4_io.cpp
   src/r4_main.cpp
   src/r4_parse.cpp
+  src/r4_point.cpp
   src/r4_trace.cpp
   src/r4_vector.cpp
 )
