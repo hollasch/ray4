@@ -63,29 +63,28 @@ void CloseOutput () {
 
 //==================================================================================================
 
-int UNREAD_NONE = -2;
-int unreadChar = -2;
+const int UNREAD_NONE = -2;
+static int unreadChar = -2;
 
 int ReadChar () {
     // This routine returns then next character from the input stream. If the end of file is
     // reached, it returns -1.
 
-    int character = unreadChar;
-
     if (unreadChar == UNREAD_NONE)
-        return character;
+        return getc(instream);
 
+    int c = unreadChar;
     unreadChar = UNREAD_NONE;
-    return character;
+    return c;
 }
 
 //==================================================================================================
 
-void UnreadChar (int character) {
+void UnreadChar (int c) {
     // This routine, together with ReadChar allow to put back a character, which is something
     // parsers often need. It cannot unread more than one character at a time though.
 
-    unreadChar = character;
+    unreadChar = c;
 }
 
 //==================================================================================================
