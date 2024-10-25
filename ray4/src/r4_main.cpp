@@ -37,7 +37,7 @@
 
 // Usage Messages
 
-static auto notice = "ray4 3.0.0-alpha.1 | 2024-10-22 | https://github.com/hollasch/ray4";
+static auto version = "ray4 3.0.0-alpha.2 | 2024-10-24 | https://github.com/hollasch/ray4\n";
 
 static auto usage = R"(
 ray4:   4-Space Ray Tracer
@@ -47,8 +47,14 @@ usage:  ray4-c -r<Image Resolution> -i<Input Filename> -o<Output Filename>
 This program constructs a 4D raytraced image of the input scene file, outputing
 a 3D image cube of pixels.
 
+Options may also be specified in the RAY4 environment variable. Command-line
+options will be effectively concatenated to these options, so that command-line
+options may override those in the environment variable.
+
 -r<Image Resolution>
-    Image resolution specified as 'X:Y:Z'.
+    Image resolution specified as 'X:Y:Z'. X must be greater than zero. If Y or
+    Z are omitted or set to zero, they will be set to the same value as the X
+    resolution.
 
 -i<Input Filename>
     Input filename, typically with extension '.r4'.
@@ -65,7 +71,7 @@ a 3D image cube of pixels.
 
 -b<Bits Per Pixel> (Optional)
     The output number of RGB bits per pixel. This value must be either 12 or 24.
-    By default, 24 bits per pixel.
+    By default, there are 24 bits per pixel.
 
 -s<Scan Range> (Optional)
     A subset of the full image resolution to raytrace, expressed as 'X:Y:Z'.
@@ -330,12 +336,19 @@ void ProcessArgs (int argc, char *argv[]) {
             opta[opti++] = argv[ii];
     }
 
+    if (optc <= 0) {
+        print(usage);
+        print(version);
+        exit(0);
+    }
+
     for (ii=0;  ii < optc;  ++ii) {
         char oc;   // Option Character
 
         if (opta[ii][0] != '-') {
-            printf ("ray4:  Unexpected argument (%s).\n", opta[ii]);
-            print  (usage);
+            printf("ray4:  Unexpected argument (%s).\n", opta[ii]);
+            print(usage);
+            print(version);
             exit (1);
         }
 
@@ -372,7 +385,8 @@ void ProcessArgs (int argc, char *argv[]) {
 
             case 'h':
             {
-                print (usage);
+                print(usage);
+                print(version);
                 exit (0);
                 break;
             }
@@ -423,8 +437,9 @@ void ProcessArgs (int argc, char *argv[]) {
             }
 
             default: {
-                printf ("ray4:  Unknown option (-%c).\n", oc);
-                print  (usage);
+                printf("ray4:  Unknown option (-%c).\n", oc);
+                print(usage);
+                print(version);
                 exit (1);
             }
         }
@@ -621,8 +636,6 @@ void FireRays () {
 
 void main (int argc, char *argv[]) {
     // The following is the entry procedure for the ray4 ray tracer.
-
-    print(notice);
 
     ProcessArgs(argc, argv);
 
