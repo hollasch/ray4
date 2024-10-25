@@ -34,11 +34,8 @@
 
 // Vector Definitions
 
-typedef Real Vector3 [3];  // 3-Vector
-typedef Real Vector4 [4];  // 4-Vector
-
-#define Point3 Vector3  // 3D Point (for readability)
-#define Point4 Vector4  // 4D Point (for readability)
+using Vector4 = Real[4];  // 4-Vector
+using Point4  = Vector4;  // 4D Point (for readability)
 
 
 // 3-Vector Macro Definitions

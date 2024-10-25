@@ -68,12 +68,7 @@
 
 // Structure Definitions
 
-typedef struct S_IMAGEHDR   ImageHdr;
-
-    // Note:  Keep the size of this structure a longword multiple for addressing convenience on most
-    //        architectures.
-
-struct S_IMAGEHDR {
+struct ImageHeader {
     unsigned long  magic;         // Magic Number = R4_IMAGE_ID
     unsigned char  version;       // Image File Version Number
     unsigned char  bitsperpixel;  // Number of Bits per Pixel

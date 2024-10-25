@@ -123,7 +123,7 @@ void RayTrace (
         Real     mindist;  // Nearest Object Distance
         Vector4  Refl;     // Reflection Vector
 
-        if (lptr->type == L_DIRECTIONAL) {
+        if (lptr->type == LightType::Directional) {
             V4_2Vec (ldir, =, lptr->u.dir);
             mindist = -1.0;
         } else {

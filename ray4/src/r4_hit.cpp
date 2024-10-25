@@ -153,7 +153,7 @@ bool HitTetPar (
     Real    rayT;           // Ray Equation Parameter
     TetPar *tp;             // Tetrahdron/Parallelepiped Data
 
-    if (objptr->type == O_TETRAHEDRON)
+    if (objptr->type == ObjType::Tetrahedron)
         tp = &(((Tetrahedron*)(objptr))->tp);
     else
         tp = &(((Parallelepiped*)(objptr))->tp);
@@ -257,7 +257,7 @@ bool HitTetPar (
 
     // Test the barycentric coordinates to determine if the intersection point is within the object.
 
-    if ((objptr->type == O_TETRAHEDRON) && ((Bc1 + Bc2 + Bc3) > 1.0))
+    if ((objptr->type == ObjType::Tetrahedron) && ((Bc1 + Bc2 + Bc3) > 1.0))
         return false;
 
     // At this point we know that the ray intersects the 4D object. If we're only testing for
@@ -277,7 +277,7 @@ bool HitTetPar (
     if (normal)
         V4_2Vec (normal, =, tp->normal);
 
-    if (objptr->type == O_TETRAHEDRON) {
+    if (objptr->type == ObjType::Tetrahedron) {
         ((Tetrahedron*)(objptr))->Bc1 = Bc1;
         ((Tetrahedron*)(objptr))->Bc2 = Bc2;
         ((Tetrahedron*)(objptr))->Bc3 = Bc3;

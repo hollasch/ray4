@@ -41,10 +41,10 @@
 
 // Basic Type Definitions
 
-typedef unsigned char  uchar;
-typedef unsigned short ushort;
-typedef unsigned long  ulong;
-typedef double         Real;
+using uchar  = unsigned char;
+using ulong  = unsigned long;
+using ushort = unsigned short;
+using Real  = double;
 
 
 #include "r4_vector.h"
@@ -64,13 +64,13 @@ const double radianToDegree = 180.0 / pi;
 #define Z 2
 #define W 3
 
-typedef enum {    // Object Type ID's
-    O_NONE,
-    O_SPHERE,
-    O_TETRAHEDRON,
-    O_TRIANGLE,
-    O_PARALLELEPIPED
-} ObjType;
+enum class ObjType {    // Object Type ID's
+    None,
+    Sphere,
+    Tetrahedron,
+    Triangle,
+    Parallelepiped
+};
 
 
 // Inline Utility Functions
@@ -113,40 +113,28 @@ inline double clamp (double x, double min, double max) {
 
 // Structure Definitions
 
-typedef struct S_ATTRIBUTES     Attributes;
-typedef struct S_COLOR          Color;
-typedef struct S_LIGHT          Light;
-typedef struct S_OBJINFO        ObjInfo;
-typedef struct S_PARALLELEPIPED Parallelepiped;
-typedef struct S_RAY            Ray;
-typedef struct S_SPHERE         Sphere;
-typedef struct S_STATS          Stats;
-typedef struct S_TETRAHEDRON    Tetrahedron;
-typedef struct S_TETPAR         TetPar;
-typedef struct S_TRIANGLE       Triangle;
-
-struct S_COLOR {   // Color Triple
+struct Color {   // Color Triple
     Real r, g, b;  // Each color should be in [0,1].
 };
 
-struct S_RAY {        // Ray Definition
+struct Ray {        // Ray Definition
     Point4   origin;  // Ray Origin
     Vector4  dir;     // Ray Direction
 };
 
-struct S_STATS {
+struct Stats {
     ulong  Ncast;     // Number of Rays Cast
     ulong  Nreflect;  // Number of Reflection Rays Cast
     ulong  Nrefract;  // Number of Refraction Rays Cast
     ulong  maxlevel;  // Maximum Ray Tree Level
 };
 
-typedef enum { L_POINT, L_DIRECTIONAL } LType;
+enum class LightType { Point, Directional };
 
-struct S_LIGHT {
-    Light *next;   // Next Light Source
-    Color  color;  // Light Color
-    LType  type;   // Type of Light
+struct Light {
+    Light     *next;   // Next Light Source
+    Color      color;  // Light Color
+    LightType  type;   // Type of Light
 
     union {
         Vector4 dir;  // Direction for Directional Light Source
@@ -164,7 +152,7 @@ const AttrFlag AT_SPECULAR = (1 << 2);  // Set if Specular is Non-Zero
 const AttrFlag AT_TRANSPAR = (1 << 3);  // Set if Transparency is Non-Zero
 const AttrFlag AT_REFLECT  = (1 << 4);  // Set if Object Reflects Light
 
-struct S_ATTRIBUTES {
+struct Attributes {
     Attributes *next;      // Link to Next Attributes Structure
     Color       Ka;        // Ambient Illumination Color
     Color       Kd;        // Diffuse Illumination Color
@@ -183,23 +171,23 @@ const InfoFlag FL_GOURAUD = (1 << 0);  // Set if the Object is Gouraud Shaded
 const InfoFlag FL_PHONG   = (1 << 1);  // Set if the Object is Phong Shaded
 
 
-struct S_OBJINFO {
+struct ObjInfo {
     ObjInfo    *next;       // Pointer to Next Object
     Attributes *attr;       // Object Attributes
-    uchar       type;       // Object Type
+    ObjType     type;       // Object Type
     InfoFlag    flags;      // Information Flags
     bool      (*intersect)  // Intersection Function
                 (ObjInfo*, Point4, Vector4, Real*, Point4, Vector4);
 };
 
-struct S_SPHERE {
+struct Sphere {
     ObjInfo info;    // Common Object Fields; Must Be First Field
     Point4  center;  // Sphere Center
     Real    radius;  // Sphere Radius
     Real    rsqrd;   // Sphere Radius, Squared
 };
 
-struct S_TETPAR {            // Tetrahedron/Parallelepiped Common Fields
+struct TetPar {            // Tetrahedron/Parallelepiped Common Fields
     Point4  vert[4];         // Vertices
     Vector4 vec1,vec2,vec3;  // Vectors from Vertex 0 to Vertices 1,2,3
     Vector4 normal;          // Hyperplane Normal Vector
@@ -208,18 +196,18 @@ struct S_TETPAR {            // Tetrahedron/Parallelepiped Common Fields
     Real    CramerDiv;       // Cramer's-Rule Divisor for Barycentric Coords
 };
 
-struct S_TETRAHEDRON {
+struct Tetrahedron {
     ObjInfo info;           // Common Obj Fields; Must Be First Field
     TetPar  tp;             // Tetrahedron/Parallelepiped Data
     Real    Bc1, Bc2, Bc3;  // Barycentric Coordinate Values
 };
 
-struct S_PARALLELEPIPED {
+struct Parallelepiped {
     ObjInfo info;  // Common Obj Fields; Must Be First Field
     TetPar  tp;    // Tetrahedron/Parallelepiped Data
 };
 
-struct S_TRIANGLE {
+struct Triangle {
     ObjInfo  info;        // Common Object Fields; Must Be First Field
     Point4   vert[3];     // Triangle Vertices
     Vector4  vec1, vec2;  // vector from Vertex0 to Vertices 1,2.

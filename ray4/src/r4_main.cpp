@@ -98,7 +98,7 @@ Examples:
 
 // File-Global Variables
 
-ImageHdr iheader = {       // Output Image Header
+ImageHeader iheader = {       // Output Image Header
     R4_IMAGE_ID,
     1,
     24,
@@ -506,7 +506,7 @@ void WriteInteger32(ulong value) {
 
 //==================================================================================================
 
-void WriteHeader(const ImageHdr& header) {
+void WriteHeader(const ImageHeader& header) {
     WriteInteger32(header.magic);
     WriteInteger8(header.version);
     WriteInteger8(header.bitsperpixel);

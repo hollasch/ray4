@@ -73,7 +73,7 @@ char chtype[256] = {
 #define CTYPE(a)   chtype[(unsigned char)(a)]
 
 
-typedef enum { T_OTHER, T_VEC4, T_UINT16, T_REAL, T_COLOR, T_END } VarType;
+enum class VarType { Other, Vec4, UInt16, Real, Color, End };
 
 void DoAttributes();
 void DoLight();
@@ -88,24 +88,22 @@ struct {
     VarType  vtype;
     char    *address;
 } Globals[] = {
-    { "attri", T_OTHER,  (char*)  DoAttributes    },
-    { "ambie", T_COLOR,  (char*) &ambient         },
-    { "backg", T_COLOR,  (char*) &background      },
-    { "index", T_REAL,   (char*) &global_indexref },
-    { "light", T_OTHER,  (char*)  DoLight         },
-    { "maxde", T_UINT16, (char*) &maxdepth        },
-    { "paral", T_OTHER,  (char*)  DoParallelepiped},
-    { "spher", T_OTHER,  (char*)  DoSphere        },
-    { "tetra", T_OTHER,  (char*)  DoTetrahedron   },
-    { "trian", T_OTHER,  (char*)  DoTriangle      },
-    { "view",  T_OTHER,  (char*)  DoView          },
-    { "",      T_END,    nullptr                  }
+    { "attri", VarType::Other,  (char*)  DoAttributes    },
+    { "ambie", VarType::Color,  (char*) &ambient         },
+    { "backg", VarType::Color,  (char*) &background      },
+    { "index", VarType::Real,   (char*) &global_indexref },
+    { "light", VarType::Other,  (char*)  DoLight         },
+    { "maxde", VarType::UInt16, (char*) &maxdepth        },
+    { "paral", VarType::Other,  (char*)  DoParallelepiped},
+    { "spher", VarType::Other,  (char*)  DoSphere        },
+    { "tetra", VarType::Other,  (char*)  DoTetrahedron   },
+    { "trian", VarType::Other,  (char*)  DoTriangle      },
+    { "view",  VarType::Other,  (char*)  DoView          },
+    { "",      VarType::End,    nullptr                  }
 };
 
 
-typedef struct S_ATTRNAME  AttrName;
-
-struct S_ATTRNAME {
+struct AttrName {
     AttrName   *next;               // Next Attribute Name Node
     char        name[MAXATNAME+1];  // Attribute Name
     Attributes *attr;               // Attributes
@@ -115,9 +113,9 @@ struct S_ATTRNAME {
 // Default Structures
 
 Light DefLight = {
-    nullptr,                     // Next Light Source
-    { 1.0, 1.0, 1.0 },           // Light Color
-    L_DIRECTIONAL                // Light Type
+    nullptr,                // Next Light Source
+    { 1.0, 1.0, 1.0 },      // Light Color
+    LightType::Directional  // Light Type
 };
 
 Attributes DefAttributes = {
@@ -130,41 +128,41 @@ Attributes DefAttributes = {
 
 Sphere DefSphere = {
     {
-        nullptr,   // Next Pointer
-        nullptr,   // Attributes
-        O_SPHERE,  // Object Type
-        0,         // Object Flags
-        HitSphere  // Sphere-Intersection Function
+        nullptr,          // Next Pointer
+        nullptr,          // Attributes
+        ObjType::Sphere,  // Object Type
+        0,                // Object Flags
+        HitSphere         // Sphere-Intersection Function
     }
 };
 
 Tetrahedron DefTetra = {
     {
-        nullptr,        // Next Pointer
-        nullptr,        // Attributes
-        O_TETRAHEDRON,  // Object Type
-        0,              // Object Flags
-        HitTetPar       // Tetrahedron-Intersection Function
+        nullptr,               // Next Pointer
+        nullptr,               // Attributes
+        ObjType::Tetrahedron,  // Object Type
+        0,                     // Object Flags
+        HitTetPar              // Tetrahedron-Intersection Function
     }
 };
 
 Parallelepiped DefPllp = {
     {
-        nullptr,           // Next Pointer
-        nullptr,           // Attributes
-        O_PARALLELEPIPED,  // Object Type
-        0,                 // Object Flags
-        HitTetPar          // Parallelepiped-Intersection Function
+        nullptr,                  // Next Pointer
+        nullptr,                  // Attributes
+        ObjType::Parallelepiped,  // Object Type
+        0,                        // Object Flags
+        HitTetPar                 // Parallelepiped-Intersection Function
     }
 };
 
 Triangle DefTriangle = {
     {
-        nullptr,     // Next Pointer
-        nullptr,     // Attributes
-        O_TRIANGLE,  // Object Type
-        0,           // Object Flags
-        HitTriangle  // Triangle-Intersection Function
+        nullptr,            // Next Pointer
+        nullptr,            // Attributes
+        ObjType::Triangle,  // Object Type
+        0,                  // Object Flags
+        HitTriangle         // Triangle-Intersection Function
     }
 };
 
@@ -474,28 +472,28 @@ void ParseInput () {
     bool     (*func)();   // Function Pointer
 
     while (GetToken(token, true)) {
-        for (ii=0;  Globals[ii].vtype != T_END;  ++ii) {
+        for (ii=0;  Globals[ii].vtype != VarType::End;  ++ii) {
             if (keyeq(token, Globals[ii].keyword))
                 break;
         }
 
-        if (Globals[ii].vtype == T_END)
+        if (Globals[ii].vtype == VarType::End)
             Error ("Unknown keyword (%s).", token);
 
         switch (Globals[ii].vtype) {
-            case T_COLOR:
+            case VarType::Color:
                 ReadColor (token, (Color*)(Globals[ii].address));
                 break;
 
-            case T_UINT16:
+            case VarType::UInt16:
                 ReadUint16 (token, (ushort*)(Globals[ii].address));
                 break;
 
-            case T_REAL:
+            case VarType::Real:
                 ReadReal (token, (Real*)(Globals[ii].address));
                 break;
 
-            case T_OTHER:
+            case VarType::Other:
                 func = (bool(*)())(Globals[ii].address);
                 (*func)();
                 break;
@@ -669,10 +667,10 @@ void DoLight () {
             ReadColor (token, &light->color);
         } else if (keyeq (token, "direc")) {
             Read4Vec (token, light->u.dir);
-            light->type = L_DIRECTIONAL;
+            light->type = LightType::Directional;
         } else if (keyeq (token, "posit")) {
             Read4Vec (token, light->u.pos);
-            light->type = L_POINT;
+            light->type = LightType::Point;
         } else {
             Error ("Invalid light subfield (%s).", token);
         }
@@ -680,7 +678,7 @@ void DoLight () {
 
     // If the light is directional, then normalize the light direction.
 
-    if (light->type == L_DIRECTIONAL) {
+    if (light->type == LightType::Directional) {
         if (! V4_Normalize (light->u.dir))
             Error ("Zero light direction vector.");
     }
