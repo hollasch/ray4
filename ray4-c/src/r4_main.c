@@ -578,9 +578,9 @@ void ProcessArgs (int argc, char *argv[]) {
 
                 ptr = GetField(ptr, &res[X]);
 
-                if (!ptr || !*ptr)
+                if (!ptr || !*ptr) {
                     res[Y] = res[Z] = res[X];
-                else {
+                } else {
                     ptr = GetField(ptr, &res[Y]);
 
                     if (!ptr || !*ptr)
