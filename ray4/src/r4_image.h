@@ -78,8 +78,8 @@ struct S_IMAGEHDR {
     unsigned char  version;       // Image File Version Number
     unsigned char  bitsperpixel;  // Number of Bits per Pixel
     unsigned short aspect[3];     // Aspect Ratios [X,Y,Z]
-    unsigned short first[3];      // Starting Image Pixels for [X,Y,Z]
-    unsigned short last[3];       // Ending Image Pixels for [X,Y,Z]
+    unsigned short start[3];      // Starting Image Pixels for [X,Y,Z]
+    unsigned short end[3];        // Ending Image Pixels for [X,Y,Z]
 };
 
 #endif
