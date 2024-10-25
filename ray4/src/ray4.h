@@ -92,26 +92,6 @@ inline double clamp (double x, double min, double max) {
 #define NEW(type,num)  (type *) MyAlloc((unsigned long)(num)*sizeof(type))
 #define DELETE(addr)   MyFree ((char*)addr)
 
-// Macro Definitions
-
-#define  Color_Scale(C,asn,k)   \
-(   C.r asn k,  \
-    C.g asn k,  \
-    C.b asn k   \
-)
-
-#define  Color_2Op(A,asn,B) \
-(   A.r asn B.r,        \
-    A.g asn B.g,        \
-    A.b asn B.b  \
-)
-
-#define  Color_3Op(A,asn,B,op,C) \
-(   A.r asn B.r op C.r, \
-    A.g asn B.g op C.g, \
-    A.b asn B.b op C.b  \
-)
-
 
 // Structure Definitions
 
@@ -226,7 +206,7 @@ void  MyFree      (void*);
 void  OpenInput   (void);
 void  OpenOutput  (void);
 void  ParseInput  (void);
-void  RayTrace    (Point4, Vector4, Color*, ulong);
+void  RayTrace    (Point4, Vector4, Color&, ulong);
 int   ReadChar    (void);
 void  UnreadChar  (int);
 void  WriteBlock  (void *block, int size);

@@ -19,28 +19,49 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //**************************************************************************************************
 
-#ifndef R4_COLOR_H
-#define R4_COLOR_H
+#include "ray4.h"
+#include "r4_color.h"
 
-class Color {
-  public:
-    double r, g, b;  // Each color should be in [0,1].
+inline double clamp_double(double x, double min, double max) {
+    return clamp(x, min, max);
+}
 
-    Color() = default;
-    Color(const Color&) = default;
-    ~Color() = default;
+Color& Color::operator*= (double scale) {
+    r *= scale;
+    g *= scale;
+    b *= scale;
 
-    Color(double red, double green, double blue) : r(red), g(green), b(blue) {}
+    return *this;
+}
 
-    Color& operator*= (double scale);
-    Color& operator*= (const Color& other);
-    Color& operator+= (const Color& other);
+Color& Color::operator*= (const Color& other) {
+    r *= other.r;
+    g *= other.g;
+    b *= other.b;
 
-    Color clamp(double min, double max) const;
-};
+    return *this;
+}
 
-Color operator* (double, const Color&);
-Color operator* (const Color&, double);
-Color operator* (const Color&, const Color&);
+Color& Color::operator+= (const Color& other) {
+    r += other.r;
+    g += other.g;
+    b += other.b;
 
-#endif
+    return *this;
+}
+
+Color Color::clamp(double min, double max) const {
+    return Color(clamp_double(r, min, max), clamp_double(g, min, max), clamp_double(b, min, max));
+}
+
+Color operator* (double scale, const Color& color) {
+    return Color(scale * color.r, scale * color.g, scale * color.b);
+}
+
+Color operator* (const Color& color, double scale) {
+    return scale * color;
+}
+
+Color operator* (const Color& c1, const Color& c2) {
+    return Color(c1.r * c2.r, c1.g * c2.g, c1.b * c2.b);
+}

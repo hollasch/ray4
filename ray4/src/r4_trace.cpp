@@ -28,7 +28,7 @@
 
 #include "ray4.h"
 
-Color black = { 0.000, 0.000, 0.000 };  // Used to zero out colors.
+Color black { 0, 0, 0 };  // Used to zero out colors.
 
 
 
@@ -37,7 +37,7 @@ Color black = { 0.000, 0.000, 0.000 };  // Used to zero out colors.
 void RayTrace (
     Point4   rayO,   // Ray Origin
     Vector4  rayD,   // Ray Direction
-    Color   *color,  // Resulting Color
+    Color   &color,  // Resulting Color
     ulong    level)  // Raytrace Level
 {
     // This routine is the heart of the raytracer; it takes the ray, determines which objects are
@@ -85,16 +85,16 @@ void RayTrace (
     // determine the shade at the intersection.
 
     if (!nearobj) {
-        *color = background;
+        color = background;
         return;
     }
 
     nearattr = nearobj->attr;
 
     if (nearattr->flags & AT_AMBIENT)
-        Color_3Op ((*color), =, ambient, *, nearattr->Ka);
+        color = ambient * nearattr->Ka;
     else
-        *color = black;
+        color = black;
 
     // If the object has no diffuse or specular reflection, skip this part of the code.
 
@@ -155,7 +155,7 @@ void RayTrace (
                 if (!(optr->attr->flags & AT_TRANSPAR))
                     break;
 
-                Color_2Op (lcolor, *=, optr->attr->Kt);
+                lcolor *= optr->attr->Kt;
                 mindist = minsave;
             }
         }
@@ -175,7 +175,7 @@ void RayTrace (
 
         // Add the diffuse component of the light.
 
-        Color_3Op ((*color), +=, ftemp * nearattr->Kd, *, lcolor);
+        color += ftemp * nearattr->Kd * lcolor;
 
         // If this object has no specular reflection, do next light.
 
@@ -192,7 +192,7 @@ void RayTrace (
         ftemp = V4_Dot (-rayD, Refl);
         if (ftemp > 0.0) {
             ftemp = pow (ftemp, nearattr->shine);
-            Color_3Op ((*color), +=, ftemp * nearattr->Ks, *, lcolor);
+            color += ftemp * nearattr->Ks * lcolor;
         }
     }
 
@@ -218,11 +218,11 @@ void RayTrace (
         RefrD[2] = T[2] + (ftemp * (rayD[2] - T[2]));
         RefrD[3] = T[3] + (ftemp * (rayD[3] - T[3]));
 
-        RayTrace (nearintr, RefrD, &Tcolor, level);
+        RayTrace (nearintr, RefrD, Tcolor, level);
 
-        color->r += Tcolor.r * nearattr->Kt.r;
-        color->g += Tcolor.g * nearattr->Kt.g;
-        color->b += Tcolor.b * nearattr->Kt.b;
+        color.r += Tcolor.r * nearattr->Kt.r;
+        color.g += Tcolor.g * nearattr->Kt.g;
+        color.b += Tcolor.b * nearattr->Kt.b;
     }
 
 
@@ -235,10 +235,10 @@ void RayTrace (
         ftemp = 2.0 * NdotD;
         V4_3Vec (ReflD, =, rayD, -, ftemp * nearnormal);
 
-        RayTrace (nearintr, ReflD, &Rcolor, level);
+        RayTrace (nearintr, ReflD, Rcolor, level);
 
-        color->r += Rcolor.r * nearattr->Ks.r;
-        color->g += Rcolor.g * nearattr->Ks.g;
-        color->b += Rcolor.b * nearattr->Ks.b;
+        color.r += Rcolor.r * nearattr->Ks.r;
+        color.g += Rcolor.g * nearattr->Ks.g;
+        color.b += Rcolor.b * nearattr->Ks.b;
     }
 }

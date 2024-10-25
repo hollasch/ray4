@@ -631,35 +631,31 @@ void FireRays () {
 
                 // Fire the ray.
 
-                RayTrace (Vfrom, Dir, &color, (ulong)(0));
+                RayTrace (Vfrom, Dir, color, (ulong)(0));
 
                 // Scale the resulting color to 0-255.
 
-                Color_Scale (color, *=, 256.0);
-                color.r = clamp(color.r, 0.0, 255.0);
-                color.g = clamp(color.g, 0.0, 255.0);
-                color.b = clamp(color.b, 0.0, 255.0);
+                color *= 256.0;
+                color = color.clamp(0.0, 255.0);
 
                 // Store the 24-bit RGB triple in the scanline buffer.
 
                 if (iheader.bitsperpixel == 24) {
 
-                    *scanptr++ = (uchar)(color.r);
-                    *scanptr++ = (uchar)(color.g);
-                    *scanptr++ = (uchar)(color.b);
+                    *scanptr++ = static_cast<uchar>(color.r);
+                    *scanptr++ = static_cast<uchar>(color.g);
+                    *scanptr++ = static_cast<uchar>(color.b);
 
                 } else if (eflag) {
 
-                    *scanptr++ = ((uchar)(color.r) & 0xF0)
-                               | ((uchar)(color.g) >> 4);
-                    *scanptr   = ((uchar)(color.b) & 0xF0);
+                    *scanptr++ = (static_cast<uchar>(color.r) & 0xF0) | (static_cast<uchar>(color.g) >> 4);
+                    *scanptr   = (static_cast<uchar>(color.b) & 0xF0);
                     eflag = false;
 
                 } else {
 
-                    *scanptr++ |= ((uchar)(color.r) >> 4);
-                    *scanptr++  = ((uchar)(color.g) & 0xF0)
-                                | ((uchar)(color.b) >> 4);
+                    *scanptr++ |= (static_cast<uchar>(color.r) >> 4);
+                    *scanptr++  = (static_cast<uchar>(color.g) & 0xF0) | (static_cast<uchar>(color.b) >> 4);
                     eflag = true;
                 }
             }

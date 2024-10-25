@@ -16,6 +16,7 @@ set ( sources_ray4
   src/r4_color.h
   src/r4_image.h
   src/r4_vector.h
+  src/r4_color.cpp
   src/r4_hit.cpp
   src/r4_io.cpp
   src/r4_main.cpp
