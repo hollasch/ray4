@@ -20,7 +20,7 @@
 //**************************************************************************************************
 
 //==================================================================================================
-// r4_vec.cpp
+// r4_vector.cpp
 //
 // This file contains utility routines for 4D vector operations. See the header in r4_main.c for
 // more information on Ray4.

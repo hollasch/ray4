@@ -20,7 +20,7 @@ set ( sources_ray4
   src/r4_main.cpp
   src/r4_parse.cpp
   src/r4_trace.cpp
-  src/r4_vec.cpp
+  src/r4_vector.cpp
 )
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
