@@ -46,6 +46,9 @@ using ulong  = unsigned long;
 using ushort = unsigned short;
 
 
+// Standard Ray4 Includes
+
+#include "r4_color.h"
 #include "r4_vector.h"
 
 
@@ -111,10 +114,6 @@ inline double clamp (double x, double min, double max) {
 
 
 // Structure Definitions
-
-struct Color {   // Color Triple
-    double r, g, b;  // Each color should be in [0,1].
-};
 
 struct Ray {        // Ray Definition
     Point4   origin;  // Ray Origin
