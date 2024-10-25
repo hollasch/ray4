@@ -162,7 +162,7 @@ bool HitTetPar (
 
     rayT = V4_Dot (tp->normal, rayD);
 
-    if (fabs(rayT) < EPSILON)  // If the ray is parallel to the hyperplane.
+    if (fabs(rayT) < epsilon)  // If the ray is parallel to the hyperplane.
         return false;
 
     rayT = (- tp->planeConst - V4_Dot(tp->normal,rayO)) / rayT;
@@ -325,7 +325,7 @@ bool HitTriangle (
 
     V4_Cross (vecTemp2, rayD, TRI->vec1, TRI->vec2);
     div = V4_Dot (vecTemp2, vecTemp2);
-    if (div < EPSILON)
+    if (div < epsilon)
         return false;
 
     V4_3Vec (vecTemp1, =, TRI->vert[0], -, rayO);

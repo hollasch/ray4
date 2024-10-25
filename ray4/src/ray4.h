@@ -50,17 +50,14 @@ typedef double         Real;
 #include "r4_vector.h"
 
 
-// Program Parameters
-
-#define EPSILON 1.0e-15  // Very Small Number (Effectively Zero)
-
-
 // Constant Definitions
 
-#define PI 3.14159265358979323846
+const double epsilon = 1.0e-15;  // Very Small Number (Effectively Zero)
 
-#define DegreeToRadian  (PI/180.0)
-#define RadianToDegree  (180.0/PI)
+const double pi=3.14159265358979323846;
+
+const double degreeToRadian = pi / 180.0;
+const double radianToDegree = 180.0 / pi;
 
 #define X 0
 #define Y 1

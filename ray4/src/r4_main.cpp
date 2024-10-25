@@ -535,7 +535,7 @@ void CalcRayGrid (void) {
     V4_3Vec (Los,=,Vto,-,Vfrom);
     losnorm = V4_Norm (Los);
 
-    if (losnorm < EPSILON)
+    if (losnorm < epsilon)
         Halt ("To-Point & From-Point are the same.");
     V4_Scalar (Los, /=, losnorm);
 
@@ -553,7 +553,7 @@ void CalcRayGrid (void) {
 
     // Now compute the proper scale of the grid unit vectors.
 
-    GNx = 2.0 * losnorm * tan (DegreeToRadian*Vangle/2.0);
+    GNx = 2.0 * losnorm * tan(degreeToRadian*Vangle/2.0);
 
     GNy = GNx
         * ((Real) res[Y] / (Real) res[X])
@@ -694,7 +694,7 @@ void main (int argc, char *argv[]) {
     // If the global ambient factor is zero, then clear all of the ambient factor flags in the
     // objects.
 
-    if ((ambient.r + ambient.g + ambient.b) < EPSILON) {
+    if ((ambient.r + ambient.g + ambient.b) < epsilon) {
         ObjInfo *optr = objlist;      // Object Pointer
 
         while (optr) {

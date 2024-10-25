@@ -566,16 +566,16 @@ Attributes *ReadAttributes () {
         }
     }
 
-    if ((newattr->Ka.r + newattr->Ka.g + newattr->Ka.b) > EPSILON)
+    if ((newattr->Ka.r + newattr->Ka.g + newattr->Ka.b) > epsilon)
         newattr->flags |= AT_AMBIENT;
 
-    if ((newattr->Kd.r + newattr->Kd.g + newattr->Kd.b) > EPSILON)
+    if ((newattr->Kd.r + newattr->Kd.g + newattr->Kd.b) > epsilon)
         newattr->flags |= AT_DIFFUSE;
 
-    if ((newattr->Ks.r + newattr->Ks.g + newattr->Ks.b) > EPSILON)
+    if ((newattr->Ks.r + newattr->Ks.g + newattr->Ks.b) > epsilon)
         newattr->flags |= AT_SPECULAR;
 
-    if ((newattr->Kt.r + newattr->Kt.g + newattr->Kt.b) > EPSILON)
+    if ((newattr->Kt.r + newattr->Kt.g + newattr->Kt.b) > epsilon)
         newattr->flags |= AT_TRANSPAR;
 
     return newattr;
@@ -719,7 +719,7 @@ void DoSphere () {
         }
     }
 
-    if (snew->radius < EPSILON)
+    if (snew->radius < epsilon)
         Error ("Sphere has non-positive radius.");
 
     if (!snew->info.attr)

@@ -136,7 +136,7 @@ void RayTrace (
             // normal.
 
             mindist = norm = V4_Norm (ldir);
-            if (norm < EPSILON)
+            if (norm < epsilon)
                 V4_2Vec (ldir, =, nearnormal);
             else
                 V4_Scalar (ldir, /=, norm);
