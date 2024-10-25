@@ -479,6 +479,49 @@ void ProcessArgs (int argc, char *argv[]) {
 }
 
 //==================================================================================================
+// Integer Write Routines -- These routines write out values in big-endian format.
+//==================================================================================================
+
+void WriteInteger8(uchar value) {
+    WriteBlock(&value, 1);
+}
+
+void WriteInteger16(ushort value) {
+    unsigned char block[2];
+    block[0] = 0xff & (value >> 8);
+    block[1] = 0xff & value;
+
+    WriteBlock(block, 2);
+}
+
+void WriteInteger32(ulong value) {
+    unsigned char block[4];
+    block[0] = 0xff & (value >> 24);
+    block[1] = 0xff & (value >> 16);
+    block[2] = 0xff & (value >>  8);
+    block[3] = 0xff & value;
+
+    WriteBlock(block, 4);
+}
+
+//==================================================================================================
+
+void WriteHeader(const ImageHdr& header) {
+    WriteInteger32(header.magic);
+    WriteInteger8(header.version);
+    WriteInteger8(header.bitsperpixel);
+
+    for (int i=0;  i < 3;  ++i)
+        WriteInteger16(header.aspect[i]);
+
+    for (int i=0;  i < 3;  ++i)
+        WriteInteger16(header.first[i]);
+
+    for (int i=0;  i < 3;  ++i)
+        WriteInteger16(header.last[i]);
+}
+
+//==================================================================================================
 
 void CalcRayGrid (void) {
     // This procedure calculates the ray-grid basis vectors.
@@ -563,8 +606,7 @@ void FireRays () {
     for (Zindex=iheader.first[Z];  Zindex <= iheader.last[Z];  ++Zindex) {
         V4_3Vec (Zorigin, =, Gorigin, +, Zindex*Gz);
         for (Yindex=iheader.first[Y];  Yindex <= iheader.last[Y];  ++Yindex) {
-            printf ("%6u %6u\r",
-            iheader.last[Z] - Zindex, iheader.last[Y] - Yindex);
+            printf ("%6u %6u\r", iheader.last[Z] - Zindex, iheader.last[Y] - Yindex);
             fflush (stdout);
 
             V4_3Vec (Yorigin, =, Zorigin, +, Yindex*Gy);
@@ -665,7 +707,7 @@ void main (int argc, char *argv[]) {
     // scanline data.
 
     OpenOutput();
-    WriteBlock((char*)(&iheader), sizeof(iheader));
+    WriteHeader(iheader);
 
     // Determine the size of a single scanline.
 
