@@ -545,7 +545,7 @@ void ProcessArgs (int argc, char *argv[]) {
             case 'b': {
                 iheader.bitsperpixel = atoi(ptr);
                 if ((iheader.bitsperpixel != 12) && (iheader.bitsperpixel != 24)) {
-                    printf("r4toiff:  %d bits per pixel is not supported (select 12 or 24).\n", iheader.bitsperpixel);
+                    printf("ray4:  %d bits per pixel is not supported (select 12 or 24).\n", iheader.bitsperpixel);
                     iheader.bitsperpixel = 24;
                 }
                 break;
