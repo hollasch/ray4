@@ -13,7 +13,6 @@ project (ray4 LANGUAGES CXX)
 # Source
 set ( sources_ray4
   src/ray4.h
-  src/r4_globals.h
   src/r4_image.h
   src/r4_vector.h
   src/r4_hit.cpp

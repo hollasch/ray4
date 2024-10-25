@@ -30,7 +30,6 @@
 #include <stdarg.h>
 
 #include "ray4.h"
-#include "r4_globals.h"
 
 int EOFC= -1;
 

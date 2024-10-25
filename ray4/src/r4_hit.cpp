@@ -29,7 +29,6 @@
 #include <stdio.h>
 
 #include "ray4.h"
-#include "r4_globals.h"
 
 
 #define MINDIST 1e-7  // Minimum Intersection Distance (for the elimination of surface acne)

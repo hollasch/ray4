@@ -243,4 +243,41 @@ int   ReadChar    (void);
 void  UnreadChar  (int);
 void  WriteBlock  (void *block, int size);
 
+
+// Global Variables
+
+#ifdef DEFINE_GLOBALS
+    Color       ambient         = { .0, .0, .0 };            // Ambient Light Factor
+    Attributes *attrlist        = nullptr;                   // Attributes List
+    Color       background      = { .0, .0, .0 };            // Background Color
+    Real        global_indexref = 1.00;                      // Global Index Refraction
+    char       *infile          = nullptr;                   // Input File Name
+    Light      *lightlist       = nullptr;                   // Light-Source List
+    ushort      maxdepth        = 0;                         // Maximum Recursion Depth
+    ObjInfo    *objlist         = nullptr;                   // Object List
+    char       *outfile         = nullptr;                   // Output File Name
+    Stats       stats           = { 0, 0, 0, 0 };            // Status Information
+    Real        Vangle          = 45.0;                      // Viewing Angle
+    Point4      Vfrom           = { 0.0, 0.0, 0.0, 100.0 };  // Camera Position
+    Vector4     Vover           = { 0.0, 0.0, 1.0, 0.0 };    // View Over-Vector
+    Point4      Vto             = { 0.0, 0.0, 0.0, 0.0 };    // View Target Point
+    Vector4     Vup             = { 0.0, 1.0, 0.0, 0.0 };    // View Up-Vector
+#else
+    extern Color       ambient;
+    extern Attributes *attrlist;
+    extern Color       background;
+    extern Real        global_indexref;
+    extern char       *infile;
+    extern Light      *lightlist;
+    extern ushort      maxdepth;
+    extern ObjInfo    *objlist;
+    extern char       *outfile;
+    extern Stats       stats;
+    extern Real        Vangle;
+    extern Point4      Vfrom;
+    extern Vector4     Vover;
+    extern Point4      Vto;
+    extern Vector4     Vup;
+#endif
+
 #endif
