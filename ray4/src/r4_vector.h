@@ -34,7 +34,20 @@
 
 // Vector Definitions
 
-using Vector4 = double[4];  // 4-Vector
+class Vector4 {
+  public:
+    double x, y, z, w;
+
+    Vector4() = default;
+    Vector4(const Vector4&) = default;
+    ~Vector4() = default;
+    Vector4& operator= (const Vector4 &other) = default;
+
+    Vector4(double x, double y, double z, double w) : x(x), y(y), z(z), w(w) {}
+
+    const double& operator[] (std::size_t index) const;
+          double& operator[] (std::size_t index);
+};
 
 
 // 4-Vector Macro Definitions

@@ -429,7 +429,7 @@ void ReadUint16 (char *itoken, ushort *num) {
 
 //==================================================================================================
 
-void Read4Vec (char *vtoken, double *vec) {
+void ReadVector4 (char *vtoken, Vector4 &vec) {
     // This procedure reads in a 4-vector from the input stream and stores it into the specified
     // location.
 
@@ -454,6 +454,18 @@ void Read4Vec (char *vtoken, double *vec) {
     if (CType(*inbuff) != NUM)
         Error ("Missing real number for W component of '%s'.", vtoken);
     vec[3] = atof (inbuff);
+}
+
+//==================================================================================================
+
+void ReadPoint4 (char *vtoken, Point4 &p) {
+    Vector4 v;
+    ReadVector4(vtoken, v);
+
+    p[0] = v[0];
+    p[1] = v[1];
+    p[2] = v[2];
+    p[3] = v[3];
 }
 
 //==================================================================================================
@@ -661,10 +673,10 @@ void DoLight () {
         if (keyeq (token, "color")) {
             ReadColor (token, &light->color);
         } else if (keyeq (token, "direc")) {
-            Read4Vec (token, light->u.dir);
+            ReadVector4 (token, light->u.dir);
             light->type = LightType::Directional;
         } else if (keyeq (token, "posit")) {
-            Read4Vec (token, light->u.pos);
+            ReadPoint4 (token, light->u.pos);
             light->type = LightType::Point;
         } else {
             Error ("Invalid light subfield (%s).", token);
@@ -705,7 +717,7 @@ void DoSphere () {
             GetToken (token,false);
             snew->info.attr = (token[0] == '(') ? ReadAttributes() : FindAttributes(token);
         } else if (keyeq (token, "cente")) {
-            Read4Vec (token, snew->center);
+            ReadPoint4 (token, snew->center);
         } else if (keyeq (token, "radiu")) {
             ReadReal (token, &snew->radius);
         } else {
@@ -813,10 +825,10 @@ void DoParallelepiped () {
             GetToken (token,false);
             pnew->info.attr = (token[0] == '(') ? ReadAttributes() : FindAttributes(token);
         } else if (keyeq (token, "verti")) {
-            Read4Vec (token, pnew->tp.vert[0]);
-            Read4Vec (token, pnew->tp.vert[1]);
-            Read4Vec (token, pnew->tp.vert[2]);
-            Read4Vec (token, pnew->tp.vert[3]);
+            ReadPoint4 (token, pnew->tp.vert[0]);
+            ReadPoint4 (token, pnew->tp.vert[1]);
+            ReadPoint4 (token, pnew->tp.vert[2]);
+            ReadPoint4 (token, pnew->tp.vert[3]);
         } else {
             Error ("Invalid parallelepiped subfield (%s).\n", token);
         }
@@ -853,10 +865,10 @@ void DoTetrahedron () {
             GetToken (token,false);
             tnew->info.attr = (token[0] == '(') ? ReadAttributes() : FindAttributes(token);
         } else if (keyeq (token, "verti")) {
-            Read4Vec (token, tnew->tp.vert[0]);
-            Read4Vec (token, tnew->tp.vert[1]);
-            Read4Vec (token, tnew->tp.vert[2]);
-            Read4Vec (token, tnew->tp.vert[3]);
+            ReadPoint4 (token, tnew->tp.vert[0]);
+            ReadPoint4 (token, tnew->tp.vert[1]);
+            ReadPoint4 (token, tnew->tp.vert[2]);
+            ReadPoint4 (token, tnew->tp.vert[3]);
         } else {
             Error ("Invalid tetrahedron subfield (%s).\n", token);
         }
@@ -892,9 +904,9 @@ void DoTriangle () {
             GetToken (token,false);
             tnew->info.attr = (token[0] == '(') ? ReadAttributes() : FindAttributes(token);
         } else if (keyeq (token, "verti")) {
-            Read4Vec (token, tnew->vert[0]);
-            Read4Vec (token, tnew->vert[1]);
-            Read4Vec (token, tnew->vert[2]);
+            ReadPoint4 (token, tnew->vert[0]);
+            ReadPoint4 (token, tnew->vert[1]);
+            ReadPoint4 (token, tnew->vert[2]);
         } else {
             Error ("Invalid triangle subfield (%s).\n", token);
         }
@@ -924,13 +936,13 @@ void DoView () {
 
     while (GetToken(token,false), token[0] != ')') {
         if (keyeq (token, "from"))
-            Read4Vec (token, Vfrom);
+            ReadPoint4 (token, Vfrom);
         else if (keyeq (token, "to"))
-            Read4Vec (token, Vto);
+            ReadPoint4 (token, Vto);
         else if (keyeq (token, "up"))
-            Read4Vec (token, Vup);
+            ReadVector4 (token, Vup);
         else if (keyeq (token, "over"))
-            Read4Vec (token, Vover);
+            ReadVector4 (token, Vover);
         else if (keyeq (token, "angle"))
             ReadReal (token, &Vangle);
         else

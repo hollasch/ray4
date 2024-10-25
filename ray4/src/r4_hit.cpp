@@ -46,8 +46,8 @@
 //     rayO    (Point4  ):  Ray Origin
 //     rayD    (Vector4 ):  Ray Direction (Must Be A Unit Vector)
 //     mindist (double* ):  Closest Intersection Distance So Far
-//     intr    (Point4  ):  Intersection Point
-//     normal  (Vector4 ):  Surface Normal at Intersection Point
+//     intr    (Point4* ):  Intersection Point
+//     normal  (Vector4*):  Surface Normal at Intersection Point
 //
 // If the ray does not intersect the object, the intersection function returns false and does not
 // alter `mindist', `intr' or `normal'.
@@ -79,8 +79,8 @@ bool HitSphere (
     Point4   rayO,      // Ray Origin
     Vector4  rayD,      // Ray Direction
     double  *mindist,   // Previous Minimum Distance
-    Point4   intr,      // Intersection Point
-    Vector4  normal)    // Surface Normal @ Intersection Point
+    Point4  *intr,      // Intersection Point
+    Vector4 *normal)    // Surface Normal @ Intersection Point
 {
     // This is the intersection function for hyperspheres.
 
@@ -121,13 +121,13 @@ bool HitSphere (
     *mindist = t1;
 
     if (intr)
-        V4_3Vec (intr, =, rayO, +, t1*rayD);
+        V4_3Vec ((*intr), =, rayO, +, t1*rayD);
 
     if (normal) {
-        normal[0] = (intr[0] - SPHERE->center[0]) / SPHERE->radius;
-        normal[1] = (intr[1] - SPHERE->center[1]) / SPHERE->radius;
-        normal[2] = (intr[2] - SPHERE->center[2]) / SPHERE->radius;
-        normal[3] = (intr[3] - SPHERE->center[3]) / SPHERE->radius;
+        (*normal)[0] = ((*intr)[0] - SPHERE->center[0]) / SPHERE->radius;
+        (*normal)[1] = ((*intr)[1] - SPHERE->center[1]) / SPHERE->radius;
+        (*normal)[2] = ((*intr)[2] - SPHERE->center[2]) / SPHERE->radius;
+        (*normal)[3] = ((*intr)[3] - SPHERE->center[3]) / SPHERE->radius;
     }
 
     return true;
@@ -140,8 +140,8 @@ bool HitTetPar (
     Point4   rayO,       // Ray Origin
     Vector4  rayD,       // Ray Direction
     double  *mindist,    // Previous Minimum Distance
-    Point4   intersect,  // Intersection Point
-    Vector4  normal)     // Surface Normal @ Intersection Point
+    Point4  *intersect,  // Intersection Point
+    Vector4 *normal)     // Surface Normal @ Intersection Point
 {
     // This is the intersection function for 4D tetrahedrons and parallelepipeds. Note that if the
     // object is a tetrahedron and the conditions are met to set the intersection values, then the
@@ -272,10 +272,10 @@ bool HitTetPar (
     *mindist = rayT;
 
     if (intersect)
-        V4_2Vec (intersect, =, intr);
+        V4_2Vec ((*intersect), =, intr);
 
     if (normal)
-        V4_2Vec (normal, =, tp->normal);
+        V4_2Vec ((*normal), =, tp->normal);
 
     if (objptr->type == ObjType::Tetrahedron) {
         ((Tetrahedron*)(objptr))->Bc1 = Bc1;
@@ -293,8 +293,8 @@ bool HitTriangle (
     Point4   rayO,       // Ray Origin
     Vector4  rayD,       // Ray Direction
     double  *mindist,    // Previous Minimum Distance
-    Point4   intersect,  // Intersection Point
-    Vector4  normal)     // Surface Normal @ Intersection Point
+    Point4  *intersect,  // Intersection Point
+    Vector4 *normal)     // Surface Normal @ Intersection Point
 {
     // This is the intersection routine for 2D triangles in 4-space. If the ray intersects triangle
     // and the conditions are met to set the intersection specifics, then the barycentric
@@ -323,6 +323,7 @@ bool HitTriangle (
     // V0 a vertex of the triangle, vec1 is the vector from V0 to another vertex, and vec2 is the
     // vector from V0 to the other vertex.
 
+    vecTemp2 = Vector4(0,0,0,0);
     V4_Cross (vecTemp2, rayD, TRI->vec1, TRI->vec2);
     div = V4_Dot (vecTemp2, vecTemp2);
     if (div < epsilon)
@@ -356,9 +357,10 @@ bool HitTriangle (
     // computationally).
 
     {
-        Vector4  Vtemp;      // Temporary Vector
+        Vector4 Vtemp{0,0,0,0};  // Temporary Vector
 
         V4_Cross (Vtemp,    rayD,TRI->vec1,TRI->vec2);
+        _normal = Vector4(0,0,0,0);
         V4_Cross (_normal, Vtemp,TRI->vec1,TRI->vec2);
     }
 
@@ -442,8 +444,8 @@ bool HitTriangle (
 
     *mindist = rayT;
 
-    V4_2Vec (intersect, =, intr);
-    V4_2Vec (normal,    =, _normal);
+    V4_2Vec ((*intersect), =, intr);
+    V4_2Vec ((*normal),    =, _normal);
 
     return true;
 }

@@ -32,6 +32,30 @@
 
 //==================================================================================================
 
+const double& Vector4::operator[] (std::size_t index) const {
+    if (index <= 0)
+        return x;
+    if (index <= 1)
+        return y;
+    if (index <= 2)
+        return z;
+    return w;
+}
+
+//==================================================================================================
+
+double& Vector4::operator[] (std::size_t index) {
+    if (index <= 0)
+        return x;
+    if (index <= 1)
+        return y;
+    if (index <= 2)
+        return z;
+    return w;
+}
+
+//==================================================================================================
+
 short V4_Normalize (Vector4 V) {
     // This function attempts to normalize a 4-vector. If the vector is not shorter than some
     // epsilon, it will normalize the vector and return 1. If the vector is shorter than the

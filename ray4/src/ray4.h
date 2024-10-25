@@ -34,6 +34,7 @@
 #ifndef RAY_H
 #define RAY_H
 
+#include <cstddef>
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -110,7 +111,8 @@ struct Stats {
 
 enum class LightType { Point, Directional };
 
-struct Light {
+class Light {
+  public:
     Light     *next;   // Next Light Source
     Color      color;  // Light Color
     LightType  type;   // Type of Light
@@ -156,7 +158,7 @@ struct ObjInfo {
     ObjType     type;       // Object Type
     InfoFlag    flags;      // Information Flags
     bool      (*intersect)  // Intersection Function
-                (ObjInfo*, Point4, Vector4, double*, Point4, Vector4);
+                (ObjInfo*, Point4, Vector4, double*, Point4*, Vector4*);
 };
 
 struct Sphere {
@@ -199,9 +201,9 @@ struct Triangle {
 void  CloseInput  (void);
 void  CloseOutput (void);
 void  Halt        (char*, ...);
-bool  HitSphere   (ObjInfo*, Point4, Vector4, double*, Point4, Vector4);
-bool  HitTetPar   (ObjInfo*, Point4, Vector4, double*, Point4, Vector4);
-bool  HitTriangle (ObjInfo*, Point4, Vector4, double*, Point4, Vector4);
+bool  HitSphere   (ObjInfo*, Point4, Vector4, double*, Point4*, Vector4*);
+bool  HitTetPar   (ObjInfo*, Point4, Vector4, double*, Point4*, Vector4*);
+bool  HitTriangle (ObjInfo*, Point4, Vector4, double*, Point4*, Vector4*);
 char *MyAlloc     (size_t);
 void  MyFree      (void*);
 void  OpenInput   (void);

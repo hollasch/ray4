@@ -44,15 +44,15 @@ void RayTrace (
     // hit, picks the closest one, determines the appropriate shade at the surface, and then may or
     // may not fire a reflection ray and or a refraction ray.
 
-    double      ftemp;       // Scratch Real Value
-    Point4      intr_out;    // Intersection Outside The Surface
-    Light      *lptr;        // Light Pointer
-    Attributes *nearattr;    // Nearest Object's Attributes
-    ObjInfo    *nearobj;     // Nearest Object
-    Point4      nearintr;    // Nearest Object Intersection
-    Vector4     nearnormal;  // Nearest Object Normal
-    double      NdotD = 0;   // Normal dot rayD
-    ObjInfo    *optr;        // Object List Traversal Pointer
+    double      ftemp;              // Scratch Real Value
+    Point4      intr_out;           // Intersection Outside The Surface
+    Light      *lptr;               // Light Pointer
+    Attributes *nearattr;           // Nearest Object's Attributes
+    ObjInfo    *nearobj;            // Nearest Object
+    Point4      nearintr{0,0,0,0};  // Nearest Object Intersection
+    Vector4     nearnormal;         // Nearest Object Normal
+    double      NdotD = 0;          // Normal dot rayD
+    ObjInfo    *optr;               // Object List Traversal Pointer
 
 
     ++ stats.Ncast;
@@ -76,7 +76,7 @@ void RayTrace (
 
         for (optr = objlist;  optr;  optr = optr->next) {
             if ((*optr->intersect)
-                (optr, rayO,rayD, &mindist, nearintr,nearnormal))
+                (optr, rayO,rayD, &mindist, &nearintr, &nearnormal))
             nearobj = optr;
         }
     }
