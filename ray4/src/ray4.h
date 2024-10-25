@@ -73,19 +73,24 @@ typedef enum {    // Object Type ID's
 } ObjType;
 
 
+// Inline Utility Functions
+
+inline void print (const char* str) {
+    fputs(str, stdout);
+}
+
+inline double clamp (double x, double min, double max) {
+    if (x < min)
+        return min;
+    if (x > max)
+        return max;
+    return x;
+}
+
+#define NEW(type,num)  (type *) MyAlloc((unsigned long)(num)*sizeof(type))
+#define DELETE(addr)   MyFree ((char*)addr)
+
 // Macro Definitions
-
-#define strsize(s)              (strlen(s)+1)
-#define strrel(s1,op,s2)        (strcmp(s1,s2) op 0)
-#define print(s)                fputs(s,stdout)
-#define ALIMIT(array)           (sizeof(array) / sizeof(array[0]))
-#define CLAMP(value,low,high)   \
-    (((value) < (low)) ? (low) : (((value) > (high)) ? (high) : (value)))
-
-#define  NEW(type,num)  (type *) MyAlloc((unsigned long)(num)*sizeof(type))
-#define  DELETE(addr)   MyFree ((char*)addr)
-
-#define  Color_List(C)  C.r,C.g,C.b
 
 #define  Color_Scale(C,asn,k)   \
 (   C.r asn k,  \

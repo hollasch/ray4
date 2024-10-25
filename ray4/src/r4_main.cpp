@@ -394,7 +394,7 @@ void ProcessArgs (int argc, char *argv[]) {
             case 'i': {
                 if (infile)
                     DELETE(infile);
-                infile = NEW (char, strsize(ptr));
+                infile = NEW (char, strlen(ptr) + 1);
                 strcpy (infile, ptr);
                 break;
             }
@@ -402,7 +402,7 @@ void ProcessArgs (int argc, char *argv[]) {
             case 'o': {
                 if (outfile)
                     DELETE(outfile);
-                outfile = NEW (char, strsize(ptr));
+                outfile = NEW (char, strlen(ptr) + 1);
                 strcpy (outfile, ptr);
                 break;
             }
@@ -636,9 +636,9 @@ void FireRays () {
                 // Scale the resulting color to 0-255.
 
                 Color_Scale (color, *=, 256.0);
-                color.r = CLAMP (color.r, 0.0, 255.0);
-                color.g = CLAMP (color.g, 0.0, 255.0);
-                color.b = CLAMP (color.b, 0.0, 255.0);
+                color.r = clamp(color.r, 0.0, 255.0);
+                color.g = clamp(color.g, 0.0, 255.0);
+                color.b = clamp(color.b, 0.0, 255.0);
 
                 // Store the 24-bit RGB triple in the scanline buffer.
 

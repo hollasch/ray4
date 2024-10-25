@@ -73,7 +73,7 @@ char chtype[256] = {
 #define CTYPE(a)   chtype[(unsigned char)(a)]
 
 
-typedef enum { T_OTHER, T_VEC4, T_UINT16, T_REAL, T_COLOR } VarType;
+typedef enum { T_OTHER, T_VEC4, T_UINT16, T_REAL, T_COLOR, T_END } VarType;
 
 void DoAttributes();
 void DoLight();
@@ -98,7 +98,8 @@ struct {
     { "spher", T_OTHER,  (char*)  DoSphere        },
     { "tetra", T_OTHER,  (char*)  DoTetrahedron   },
     { "trian", T_OTHER,  (char*)  DoTriangle      },
-    { "view",  T_OTHER,  (char*)  DoView          }
+    { "view",  T_OTHER,  (char*)  DoView          },
+    { "",      T_END,    nullptr                  }
 };
 
 
@@ -190,9 +191,9 @@ void Error (char *format, ...) {
 
     va_start(args, format);
 
-    printf ("Input Error [Line %lu]:  ", lcount);
+    printf("Input Error [Line %lu]:  ", lcount);
     vprintf (format, args);
-    print  ("\n");
+    print("\n");
 
     va_end(args);
 
@@ -473,12 +474,12 @@ void ParseInput () {
     bool     (*func)();   // Function Pointer
 
     while (GetToken(token, true)) {
-        for (ii=0;  ii < ALIMIT(Globals);  ++ii) {
+        for (ii=0;  Globals[ii].vtype != T_END;  ++ii) {
             if (keyeq(token, Globals[ii].keyword))
                 break;
         }
 
-        if (ii >= ALIMIT(Globals))
+        if (Globals[ii].vtype == T_END)
             Error ("Unknown keyword (%s).", token);
 
         switch (Globals[ii].vtype) {
@@ -592,7 +593,7 @@ Attributes *FindAttributes (char *name) {
     name[MAXATNAME] = 0;
 
     for (anptr=attrnamelist;  anptr;  anptr=anptr->next)
-        if (strrel (name, ==, anptr->name))
+        if (strcmp(name, anptr->name) == 0)
             break;
 
     if (!anptr)
@@ -621,7 +622,7 @@ void DoAttributes () {
     // Ensure that the name is not a duplicate of an earlier name.
 
     for (anptr = attrnamelist;  anptr;  anptr = anptr->next)
-        if (strrel(anptr->name, ==, token))
+        if (strcmp(anptr->name, token) == 0)
             break;
 
     if (anptr) {
