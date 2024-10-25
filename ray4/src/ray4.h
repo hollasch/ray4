@@ -44,7 +44,6 @@
 using uchar  = unsigned char;
 using ulong  = unsigned long;
 using ushort = unsigned short;
-using Real  = double;
 
 
 #include "r4_vector.h"
@@ -114,7 +113,7 @@ inline double clamp (double x, double min, double max) {
 // Structure Definitions
 
 struct Color {   // Color Triple
-    Real r, g, b;  // Each color should be in [0,1].
+    double r, g, b;  // Each color should be in [0,1].
 };
 
 struct Ray {        // Ray Definition
@@ -158,8 +157,8 @@ struct Attributes {
     Color       Kd;        // Diffuse Illumination Color
     Color       Ks;        // Specular Illumination Color
     Color       Kt;        // Transparent Illumination Color
-    Real        shine;     // Phong Specular Reflection Factor
-    Real        indexref;  // Index of Refraction
+    double      shine;     // Phong Specular Reflection Factor
+    double      indexref;  // Index of Refraction
     AttrFlag    flags;     // Attribute Flags
 };
 
@@ -177,14 +176,14 @@ struct ObjInfo {
     ObjType     type;       // Object Type
     InfoFlag    flags;      // Information Flags
     bool      (*intersect)  // Intersection Function
-                (ObjInfo*, Point4, Vector4, Real*, Point4, Vector4);
+                (ObjInfo*, Point4, Vector4, double*, Point4, Vector4);
 };
 
 struct Sphere {
     ObjInfo info;    // Common Object Fields; Must Be First Field
     Point4  center;  // Sphere Center
-    Real    radius;  // Sphere Radius
-    Real    rsqrd;   // Sphere Radius, Squared
+    double  radius;  // Sphere Radius
+    double  rsqrd;   // Sphere Radius, Squared
 };
 
 struct TetPar {            // Tetrahedron/Parallelepiped Common Fields
@@ -192,14 +191,14 @@ struct TetPar {            // Tetrahedron/Parallelepiped Common Fields
     Vector4 vec1,vec2,vec3;  // Vectors from Vertex 0 to Vertices 1,2,3
     Vector4 normal;          // Hyperplane Normal Vector
     uchar   ax1, ax2, ax3;   // Non-Dominant Normal Vector Axes
-    Real    planeConst;      // Hyperplane Constant
-    Real    CramerDiv;       // Cramer's-Rule Divisor for Barycentric Coords
+    double  planeConst;      // Hyperplane Constant
+    double  CramerDiv;       // Cramer's-Rule Divisor for Barycentric Coords
 };
 
 struct Tetrahedron {
     ObjInfo info;           // Common Obj Fields; Must Be First Field
     TetPar  tp;             // Tetrahedron/Parallelepiped Data
-    Real    Bc1, Bc2, Bc3;  // Barycentric Coordinate Values
+    double  Bc1, Bc2, Bc3;  // Barycentric Coordinate Values
 };
 
 struct Parallelepiped {
@@ -211,7 +210,7 @@ struct Triangle {
     ObjInfo  info;        // Common Object Fields; Must Be First Field
     Point4   vert[3];     // Triangle Vertices
     Vector4  vec1, vec2;  // vector from Vertex0 to Vertices 1,2.
-    Real     Bc1, Bc2;    // Barycentric Coordinate Values
+    double   Bc1, Bc2;    // Barycentric Coordinate Values
 };
 
 
@@ -220,9 +219,9 @@ struct Triangle {
 void  CloseInput  (void);
 void  CloseOutput (void);
 void  Halt        (char*, ...);
-bool  HitSphere   (ObjInfo*, Point4, Vector4, Real*, Point4, Vector4);
-bool  HitTetPar   (ObjInfo*, Point4, Vector4, Real*, Point4, Vector4);
-bool  HitTriangle (ObjInfo*, Point4, Vector4, Real*, Point4, Vector4);
+bool  HitSphere   (ObjInfo*, Point4, Vector4, double*, Point4, Vector4);
+bool  HitTetPar   (ObjInfo*, Point4, Vector4, double*, Point4, Vector4);
+bool  HitTriangle (ObjInfo*, Point4, Vector4, double*, Point4, Vector4);
 char *MyAlloc     (size_t);
 void  MyFree      (void*);
 void  OpenInput   (void);
@@ -240,14 +239,14 @@ void  WriteBlock  (void *block, int size);
     Color       ambient         = { .0, .0, .0 };            // Ambient Light Factor
     Attributes *attrlist        = nullptr;                   // Attributes List
     Color       background      = { .0, .0, .0 };            // Background Color
-    Real        global_indexref = 1.00;                      // Global Index Refraction
+    double      global_indexref = 1.00;                      // Global Index Refraction
     char       *infile          = nullptr;                   // Input File Name
     Light      *lightlist       = nullptr;                   // Light-Source List
     ushort      maxdepth        = 0;                         // Maximum Recursion Depth
     ObjInfo    *objlist         = nullptr;                   // Object List
     char       *outfile         = nullptr;                   // Output File Name
     Stats       stats           = { 0, 0, 0, 0 };            // Status Information
-    Real        Vangle          = 45.0;                      // Viewing Angle
+    double      Vangle          = 45.0;                      // Viewing Angle
     Point4      Vfrom           = { 0.0, 0.0, 0.0, 100.0 };  // Camera Position
     Vector4     Vover           = { 0.0, 0.0, 1.0, 0.0 };    // View Over-Vector
     Point4      Vto             = { 0.0, 0.0, 0.0, 0.0 };    // View Target Point
@@ -256,14 +255,14 @@ void  WriteBlock  (void *block, int size);
     extern Color       ambient;
     extern Attributes *attrlist;
     extern Color       background;
-    extern Real        global_indexref;
+    extern double      global_indexref;
     extern char       *infile;
     extern Light      *lightlist;
     extern ushort      maxdepth;
     extern ObjInfo    *objlist;
     extern char       *outfile;
     extern Stats       stats;
-    extern Real        Vangle;
+    extern double      Vangle;
     extern Point4      Vfrom;
     extern Vector4     Vover;
     extern Point4      Vto;

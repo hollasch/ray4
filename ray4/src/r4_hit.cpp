@@ -45,7 +45,7 @@
 //     objptr  (ObjInfo*):  Pointer to the Object Structure
 //     rayO    (Point4  ):  Ray Origin
 //     rayD    (Vector4 ):  Ray Direction (Must Be A Unit Vector)
-//     mindist (Real* ):    Closest Intersection Distance So Far
+//     mindist (double* ):  Closest Intersection Distance So Far
 //     intr    (Point4  ):  Intersection Point
 //     normal  (Vector4 ):  Surface Normal at Intersection Point
 //
@@ -78,7 +78,7 @@ bool HitSphere (
     ObjInfo *objptr,    // Sphere to Test
     Point4   rayO,      // Ray Origin
     Vector4  rayD,      // Ray Direction
-    Real    *mindist,   // Previous Minimum Distance
+    double  *mindist,   // Previous Minimum Distance
     Point4   intr,      // Intersection Point
     Vector4  normal)    // Surface Normal @ Intersection Point
 {
@@ -86,10 +86,10 @@ bool HitSphere (
 
 #   define SPHERE  ((Sphere*)(objptr))   // Target Sphere
 
-    Real    bb;     // Quadratic Equation Parameter
+    double  bb;     // Quadratic Equation Parameter
     Vector4 cdir;   // Direction from Sphere Center to Eye
-    Real    rad;    // Radical Value
-    Real    t1,t2;  // Intersection Ray Parameters
+    double  rad;    // Radical Value
+    double  t1,t2;  // Intersection Ray Parameters
 
     V4_3Vec (cdir, =, SPHERE->center, -, rayO);
 
@@ -139,7 +139,7 @@ bool HitTetPar (
     ObjInfo *objptr,     // Sphere to Test
     Point4   rayO,       // Ray Origin
     Vector4  rayD,       // Ray Direction
-    Real    *mindist,    // Previous Minimum Distance
+    double  *mindist,    // Previous Minimum Distance
     Point4   intersect,  // Intersection Point
     Vector4  normal)     // Surface Normal @ Intersection Point
 {
@@ -148,9 +148,9 @@ bool HitTetPar (
     // barycentric coordinates of the tetrahedron will also be set. These values may be used later
     // for Phong or Gouraud shading.
 
-    Real    Bc1,Bc2,Bc3;    // Intersection Barycentric Coordinates
+    double  Bc1,Bc2,Bc3;    // Intersection Barycentric Coordinates
     Point4  intr;           // Intersection Point
-    Real    rayT;           // Ray Equation Parameter
+    double  rayT;           // Ray Equation Parameter
     TetPar *tp;             // Tetrahdron/Parallelepiped Data
 
     if (objptr->type == ObjType::Tetrahedron)
@@ -202,13 +202,13 @@ bool HitTetPar (
     //             +-             -+            +-             -+
 
     {
-        Real M01,M02,M03, M11,M12,M13,  // Matrix Values
-             M21,M22,M23, M31,M32,M33;
+        double M01,M02,M03, M11,M12,M13,  // Matrix Values
+               M21,M22,M23, M31,M32,M33;
 
         // Intermediate Values
 
-        Real M22M33_M23M32, M02M33_M03M32, M12M03_M13M02,
-             M12M33_M13M32, M12M23_M13M22, M02M23_M03M22;
+        double M22M33_M23M32, M02M33_M03M32, M12M03_M13M02,
+               M12M33_M13M32, M12M23_M13M22, M02M23_M03M22;
 
         M01 = intr[tp->ax1] - tp->vert[0][tp->ax1];
         M02 = intr[tp->ax2] - tp->vert[0][tp->ax2];
@@ -292,7 +292,7 @@ bool HitTriangle (
     ObjInfo *objptr,     // Sphere to Test
     Point4   rayO,       // Ray Origin
     Vector4  rayD,       // Ray Direction
-    Real    *mindist,    // Previous Minimum Distance
+    double  *mindist,    // Previous Minimum Distance
     Point4   intersect,  // Intersection Point
     Vector4  normal)     // Surface Normal @ Intersection Point
 {
@@ -304,10 +304,10 @@ bool HitTriangle (
 #   define TRI  ((Triangle*)(objptr))
 
     int     ax1, ax2;            // Dominant Axes, Tri. Projection
-    Real    div;                 // Intersection Equation Divisor
+    double  div;                 // Intersection Equation Divisor
     Point4  intr;                // Ray/Plane Intersection Point
     Vector4 _normal;             // Internal Normal Vector
-    Real    rayT;                // Ray Equation Real Parameter
+    double  rayT;                // Ray Equation Real Parameter
     Vector4 vecTemp1, vecTemp2;  // Temporary Vectors
 
     // The following segment calculates the intersection point (if one exists) with the ray and the
@@ -412,8 +412,8 @@ bool HitTriangle (
     // coordinates for vertex 0 is (1-Bc1-Bc2).
 
     {
-        Real  cramer_div;    // Cramer's Rule Divisor
-        Real  I1, I2;        // Matrix Entries
+        double cramer_div;  // Cramer's Rule Divisor
+        double I1, I2;      // Matrix Entries
 
         I1  = intr[ax1] - TRI->vert[0][ax1];
         I2  = intr[ax2] - TRI->vert[0][ax2];

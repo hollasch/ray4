@@ -526,9 +526,9 @@ void WriteHeader(const ImageHeader& header) {
 void CalcRayGrid (void) {
     // This procedure calculates the ray-grid basis vectors.
 
-    Real    GNx, GNy, GNz;  // Ray-Grid Vector Norms
+    double  GNx, GNy, GNz;  // Ray-Grid Vector Norms
     Vector4 Los;            // Line-of-Sight Vector
-    Real    losnorm;        // Line-of-Sight-Vector Norm
+    double  losnorm;        // Line-of-Sight-Vector Norm
 
     // Get the normalized line-of-sight vector.
 
@@ -556,12 +556,12 @@ void CalcRayGrid (void) {
     GNx = 2.0 * losnorm * tan(degreeToRadian*Vangle/2.0);
 
     GNy = GNx
-        * ((Real) res[Y] / (Real) res[X])
-        * ((Real)iheader.aspect[Y]/ (Real)iheader.aspect[X]);
+        * ((double) res[Y] / (double) res[X])
+        * ((double)iheader.aspect[Y]/ (double)iheader.aspect[X]);
 
     GNz = GNx
-        * ((Real) res[Z] / (Real) res[X])
-        * ((Real)iheader.aspect[Z]/ (Real)iheader.aspect[X]);
+        * ((double) res[Z] / (double) res[X])
+        * ((double)iheader.aspect[Z]/ (double)iheader.aspect[X]);
 
     // Scale each grid basis vector.
 
@@ -620,7 +620,7 @@ void FireRays () {
                 Color    color;   // Pixel Color
                 Vector4  Dir;     // Ray Direction Vector
                 Point4   Gpoint;  // Current Grid Point
-                Real     norm;    // Vector Norm Value
+                double   norm;    // Vector Norm Value
 
                 // Calculate the unit ViewFrom-RayDirection vector.
 

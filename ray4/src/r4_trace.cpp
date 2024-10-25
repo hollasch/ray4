@@ -44,14 +44,14 @@ void RayTrace (
     // hit, picks the closest one, determines the appropriate shade at the surface, and then may or
     // may not fire a reflection ray and or a refraction ray.
 
-    Real        ftemp;       // Scratch Real Value
+    double      ftemp;       // Scratch Real Value
     Point4      intr_out;    // Intersection Outside The Surface
     Light      *lptr;        // Light Pointer
     Attributes *nearattr;    // Nearest Object's Attributes
     ObjInfo    *nearobj;     // Nearest Object
     Point4      nearintr;    // Nearest Object Intersection
     Vector4     nearnormal;  // Nearest Object Normal
-    Real        NdotD = 0;   // Normal dot rayD
+    double      NdotD = 0;   // Normal dot rayD
     ObjInfo    *optr;        // Object List Traversal Pointer
 
 
@@ -69,7 +69,7 @@ void RayTrace (
     // Find the nearest object intersection.
 
     {
-        Real  mindist;  // Nearest Object Distance
+        double mindist;  // Nearest Object Distance
 
         mindist = -1.0;
         nearobj = nullptr;
@@ -120,14 +120,14 @@ void RayTrace (
     for (lptr=lightlist;  lptr;  lptr=lptr->next) {
         Color    lcolor;   // Light Color
         Vector4  ldir;     // Light Direction
-        Real     mindist;  // Nearest Object Distance
+        double   mindist;  // Nearest Object Distance
         Vector4  Refl;     // Reflection Vector
 
         if (lptr->type == LightType::Directional) {
             V4_2Vec (ldir, =, lptr->u.dir);
             mindist = -1.0;
         } else {
-            Real norm;  // Vector Norm
+            double norm;  // Vector Norm
 
             V4_3Vec (ldir, =, lptr->u.pos, -, intr_out);
 
@@ -149,7 +149,7 @@ void RayTrace (
         lcolor = lptr->color;
 
         for (optr=objlist;  optr;  optr=optr->next) {
-            Real minsave=mindist;  // Nearest Object Distance (saved)
+            double minsave=mindist;  // Nearest Object Distance (saved)
 
             if ((*optr->intersect)(optr, intr_out, ldir, &mindist, nullptr, nullptr)) {
                 if (!(optr->attr->flags & AT_TRANSPAR))

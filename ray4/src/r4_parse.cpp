@@ -401,7 +401,7 @@ void ReadColor (char *ctoken, Color *color) {
 
 //==================================================================================================
 
-void ReadReal (char *ctoken, Real *num) {
+void ReadReal (char *ctoken, double *num) {
     // This routine reads in a real-valued number from the input stream and stores it in the
     // location given in the parameter list.
 
@@ -429,7 +429,7 @@ void ReadUint16 (char *itoken, ushort *num) {
 
 //==================================================================================================
 
-void Read4Vec (char *vtoken, Real *vec) {
+void Read4Vec (char *vtoken, double *vec) {
     // This procedure reads in a 4-vector from the input stream and stores it into the specified
     // location.
 
@@ -485,7 +485,7 @@ void ParseInput () {
                 break;
 
             case VarType::Real:
-                ReadReal (token, (Real*)(Globals[ii].address));
+                ReadReal (token, (double*)(Globals[ii].address));
                 break;
 
             case VarType::Other:
@@ -771,7 +771,7 @@ void Process_TetPar (TetPar *tp) {
     // intersection points.
 
     {
-        Real  M11,M12,M13, M21,M22,M23, M31,M32,M33;
+        double M11,M12,M13, M21,M22,M23, M31,M32,M33;
 
         M11 = tp->vec1[tp->ax1];
         M12 = tp->vec1[tp->ax2];

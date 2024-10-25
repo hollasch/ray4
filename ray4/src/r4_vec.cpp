@@ -58,7 +58,7 @@ void V4_Cross (
 {
     // This routine calculates the 4D cross product of the two 4-vectors.
 
-    Real     A, B, C, D, E, F;  // Intermediate Values
+    double   A, B, C, D, E, F;  // Intermediate Values
     Vector4  temp;              // Intermediate Vector
 
     A = (v[0] * w[1]) - (v[1] * w[0]);
