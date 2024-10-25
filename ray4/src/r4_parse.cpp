@@ -31,22 +31,22 @@
 
 #include "ray4.h"
 
-int EOFC= -1;
+const int EOFC = -1;
 
 
 // Defined Constants
 
-#define MAXTLEN    80   // Maximum Token Length in Input File
-#define KEYSIG     5    // Significant Chars of a Keyword (max 255)
-#define MAXATNAME  15   // Maximum Attribute Name Length
+const int MAXTLEN   = 80;  // Maximum Token Length in Input File
+const int KEYSIG    = 5;   // Significant Chars of a Keyword (max 255)
+const int MAXATNAME = 15;  // Maximum Attribute Name Length
 
-#define ERR ((char)(0))  // Erroneous Character
-#define SPC ((char)(1))  // Whitespace Character
-#define WRD ((char)(2))  // Keyword Character
-#define NUM ((char)(3))  // Number Character
-#define OTH ((char)(4))  // Other Character
+const char ERR = 0;  // Erroneous Character
+const char SPC = 1;  // Whitespace Character
+const char WRD = 2;  // Keyword Character
+const char NUM = 3;  // Number Character
+const char OTH = 4;  // Other Character
 
-#define BLACK  { 0.000, 0.000, 0.000 }  // Color Black
+const Color BLACK = { 0.000, 0.000, 0.000 };
 
     // The following array is used to determine character types.
 
@@ -58,19 +58,14 @@ char chtype[256] = {
     OTH,WRD,WRD,WRD, WRD,WRD,WRD,WRD, WRD,WRD,WRD,WRD, WRD,WRD,WRD,WRD,  // 4X
     WRD,WRD,WRD,WRD, WRD,WRD,WRD,WRD, WRD,WRD,WRD,SPC, OTH,SPC,OTH,WRD,  // 5X
     OTH,WRD,WRD,WRD, WRD,WRD,WRD,WRD, WRD,WRD,WRD,WRD, WRD,WRD,WRD,WRD,  // 6X
-    WRD,WRD,WRD,WRD, WRD,WRD,WRD,WRD, WRD,WRD,WRD,SPC, OTH,SPC,OTH,OTH,  // 7X
-
-    ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR,  // 8X
-    ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR,  // 9X
-    ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR,  // AX
-    ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR,  // BX
-    ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR,  // CX
-    ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR,  // DX
-    ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR,  // EX
-    ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR, ERR,ERR,ERR,ERR   // FX
+    WRD,WRD,WRD,WRD, WRD,WRD,WRD,WRD, WRD,WRD,WRD,SPC, OTH,SPC,OTH,OTH   // 7X
 };
 
-#define CTYPE(a)   chtype[(unsigned char)(a)]
+inline char CType (int c) {
+    if (0 <= c && c <= 0x7f)
+        return chtype[c];
+    return ERR;
+}
 
 
 enum class VarType { Other, Vec4, UInt16, Real, Color, End };
@@ -244,7 +239,7 @@ char *GetToken  (
             }
         }
 
-        while (CTYPE(cc) == SPC) {
+        while (CType(cc) == SPC) {
             if (cc == '\n')  ++lcount;
 
             if ((char)(EOFC) == (cc = ReadChar ())) {
@@ -262,7 +257,7 @@ char *GetToken  (
     // If the next character is a punctuation character, then just return that character as a single
     // token.
 
-    if (CTYPE(cc) == OTH) {
+    if (CType(cc) == OTH) {
         *ptr++ = static_cast<char>(cc);
         *ptr   = 0;
         return buff;
@@ -272,7 +267,7 @@ char *GetToken  (
     // alphabetic character or an underbar, and may also contain numbers, periods and dashes in the
     // body.
 
-    if (CTYPE(cc) == WRD) {
+    if (CType(cc) == WRD) {
         for (;;) {
             if (++nn > MAXTLEN) {
                 *ptr = 0;
@@ -282,7 +277,7 @@ char *GetToken  (
 
             cc = ReadChar ();
 
-            if ((cc == EOFC) || ((CTYPE(cc) != WRD) && (CTYPE(cc) != NUM))) {
+            if ((cc == EOFC) || ((CType(cc) != WRD) && (CType(cc) != NUM))) {
                 UnreadChar(cc);
                 break;
             }
@@ -299,7 +294,7 @@ char *GetToken  (
         Error ("Unexpected end-of-file.");
     }
 
-    if (CTYPE(cc) == NUM) {
+    if (CType(cc) == NUM) {
         bool eflag = false;  // True After 'e' Character Is Read
         bool dflag = false;  // True After '.' Character Is Read
 
@@ -335,7 +330,7 @@ char *GetToken  (
                 continue;
             }
 
-            if (CTYPE(cc) != NUM) {
+            if (CType(cc) != NUM) {
                 UnreadChar(cc);
                 break;
             }
@@ -389,17 +384,17 @@ void ReadColor (char *ctoken, Color *color) {
     char inbuff[MAXTLEN+1];  // Input Value Buffer
 
     GetToken (inbuff, false);
-    if (CTYPE(*inbuff) != NUM)
+    if (CType(*inbuff) != NUM)
         Error ("Missing real number for red component of '%s'.", ctoken);
     color->r = atof (inbuff);
 
     GetToken (inbuff, false);
-    if (CTYPE(*inbuff) != NUM)
+    if (CType(*inbuff) != NUM)
         Error ("Missing real number for green component of '%s'.", ctoken);
     color->g = atof (inbuff);
 
     GetToken (inbuff, false);
-    if (CTYPE(*inbuff) != NUM)
+    if (CType(*inbuff) != NUM)
         Error ("Missing real number for blue component of '%s'.", ctoken);
     color->b = atof (inbuff);
 }
@@ -413,7 +408,7 @@ void ReadReal (char *ctoken, Real *num) {
     char inbuff[MAXTLEN+1];  // Input Value Buffer
 
     GetToken (inbuff, false);
-    if (CTYPE(*inbuff) != NUM)
+    if (CType(*inbuff) != NUM)
         Error ("Missing real number argument for '%s'.", ctoken);
     *num = atof (inbuff);
 }
@@ -427,7 +422,7 @@ void ReadUint16 (char *itoken, ushort *num) {
     char inbuff[MAXTLEN+1];  // Input Value Buffer
 
     GetToken (inbuff, false);
-    if (CTYPE(*inbuff) != NUM)
+    if (CType(*inbuff) != NUM)
         Error ("Missing integer argument for '%s'.", itoken);
     *num = static_cast<ushort>(atoi (inbuff));
 }
@@ -441,22 +436,22 @@ void Read4Vec (char *vtoken, Real *vec) {
     char inbuff[MAXTLEN+1];  // Input Value Buffer
 
     GetToken (inbuff, false);
-    if (CTYPE(*inbuff) != NUM)
+    if (CType(*inbuff) != NUM)
         Error ("Missing real number for X component of '%s'.", vtoken);
     vec[0] = atof (inbuff);
 
     GetToken (inbuff, false);
-    if (CTYPE(*inbuff) != NUM)
+    if (CType(*inbuff) != NUM)
         Error ("Missing real number for Y component of '%s'.", vtoken);
     vec[1] = atof (inbuff);
 
     GetToken (inbuff, false);
-    if (CTYPE(*inbuff) != NUM)
+    if (CType(*inbuff) != NUM)
         Error ("Missing real number for Z component of '%s'.", vtoken);
     vec[2] = atof (inbuff);
 
     GetToken (inbuff, false);
-    if (CTYPE(*inbuff) != NUM)
+    if (CType(*inbuff) != NUM)
         Error ("Missing real number for W component of '%s'.", vtoken);
     vec[3] = atof (inbuff);
 }
@@ -612,7 +607,7 @@ void DoAttributes () {
     // Read in the attribute alias.
 
     GetToken (token, false);
-    if ((CTYPE(token[0]) != WRD) && (CTYPE(token[0]) != NUM))
+    if ((CType(token[0]) != WRD) && (CType(token[0]) != NUM))
         Error ("Invalid attribute name (%s)\n", token);
 
     token[MAXATNAME] = 0;
