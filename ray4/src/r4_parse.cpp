@@ -49,29 +49,6 @@ int EOFC= -1;
 
 #define BLACK  { 0.000, 0.000, 0.000 }  // Color Black
 
-
-// Function Declarations
-
-void        DoAttributes     (void);
-void        DoLight          (void);
-void        DoSphere         (void);
-void        DoTetrahedron    (void);
-void        DoParallelepiped (void);
-void        DoTriangle       (void);
-void        DoView           (void);
-void        Error            (char *, ...);
-Attributes *FindAttributes   (char *);
-char       *GetToken         (char *, bool);
-bool        keyeq            (char *, char *);
-void        ParseInput       (void);
-void        Process_TetPar   (TetPar *);
-Attributes *ReadAttributes   (void);
-void        ReadColor        (char *, Color *);
-void        ReadReal         (char *, Real *);
-void        ReadUint16       (char *, ushort *);
-void        Read4Vec         (char *, Real*);
-
-
     // The following array is used to determine character types.
 
 char chtype[256] = {
@@ -98,6 +75,14 @@ char chtype[256] = {
 
 
 typedef enum { T_OTHER, T_VEC4, T_UINT16, T_REAL, T_COLOR } VarType;
+
+void DoAttributes();
+void DoLight();
+void DoParallelepiped();
+void DoSphere();
+void DoTetrahedron();
+void DoTriangle();
+void DoView();
 
 struct {
     char     keyword[KEYSIG+1];
@@ -196,52 +181,32 @@ static char        token[MAXTLEN+1];          // Input Token
 
 //==================================================================================================
 
-void ParseInput () {
-    // This routine parses the input scene description, and sets up the global raytrace variables
-    // and the object lists.
+void Error (char *format, ...) {
+    // This routine handles errors in the input stream. It prints out the current line number of the
+    // input stream and prints the error message and the optional printf()-like argument. After
+    // printing the message it halts execution of the raytracer.
 
-    AttrName  *attrname;  // Attribute Name Node Pointer
-    ushort     ii;        // Scratch Index Value
-    bool     (*func)();   // Function Pointer
+    AttrName *attrname;  // Attribute Name Node Pointer
+    va_list args;        // List of Optional Arguments
 
-    while (GetToken(token, true)) {
-        for (ii=0;  ii < ALIMIT(Globals);  ++ii) {
-            if (keyeq(token, Globals[ii].keyword))
-                break;
-        }
+    va_start(args, format);
 
-        if (ii >= ALIMIT(Globals))
-            Error ("Unknown keyword (%s).", token);
+    printf ("Input Error [Line %lu]:  ", lcount);
+    vprintf (format, args);
+    print  ("\n");
 
-        switch (Globals[ii].vtype) {
-            case T_COLOR:
-                ReadColor (token, (Color*)(Globals[ii].address));
-                break;
+    va_end(args);
 
-            case T_UINT16:
-                ReadUint16 (token, (ushort*)(Globals[ii].address));
-                break;
+    // Kill the attributes name list.
 
-            case T_REAL:
-                ReadReal (token, (Real*)(Globals[ii].address));
-                break;
-
-            case T_OTHER:
-                func = (bool(*)())(Globals[ii].address);
-                (*func)();
-                break;
-
-            default:
-                Halt ("Internal Error (Globals vtype switch).");
-        }
-    }
-
-    // Kill the attributes alias list.
-
-    while (attrname=attrnamelist, attrname) {
+    while (attrname = attrnamelist, attrname) {
         attrnamelist = attrname->next;
         DELETE (attrname);
     }
+
+    // Halt the program.
+
+    Halt ("Aborting.");
 }
 
 //==================================================================================================
@@ -419,6 +384,226 @@ bool keyeq (
 
 //==================================================================================================
 
+void ReadColor (char *ctoken, Color *color) {
+    // This routine reads in a color vector from the input stream and stuffs it in the location
+    // given in the parameter list.
+
+    char inbuff[MAXTLEN+1];  // Input Value Buffer
+
+    GetToken (inbuff, false);
+    if (CTYPE(*inbuff) != NUM)
+        Error ("Missing real number for red component of '%s'.", ctoken);
+    color->r = atof (inbuff);
+
+    GetToken (inbuff, false);
+    if (CTYPE(*inbuff) != NUM)
+        Error ("Missing real number for green component of '%s'.", ctoken);
+    color->g = atof (inbuff);
+
+    GetToken (inbuff, false);
+    if (CTYPE(*inbuff) != NUM)
+        Error ("Missing real number for blue component of '%s'.", ctoken);
+    color->b = atof (inbuff);
+}
+
+//==================================================================================================
+
+void ReadReal (char *ctoken, Real *num) {
+    // This routine reads in a real-valued number from the input stream and stores it in the
+    // location given in the parameter list.
+
+    char inbuff[MAXTLEN+1];  // Input Value Buffer
+
+    GetToken (inbuff, false);
+    if (CTYPE(*inbuff) != NUM)
+        Error ("Missing real number argument for '%s'.", ctoken);
+    *num = atof (inbuff);
+}
+
+//==================================================================================================
+
+void ReadUint16 (char *itoken, ushort *num) {
+    // This procedure reads in a 16-bit unsigned integer from the input stream and stores it in the
+    // location given in the parameter list.
+
+    char inbuff[MAXTLEN+1];  // Input Value Buffer
+
+    GetToken (inbuff, false);
+    if (CTYPE(*inbuff) != NUM)
+        Error ("Missing integer argument for '%s'.", itoken);
+    *num = static_cast<ushort>(atoi (inbuff));
+}
+
+//==================================================================================================
+
+void Read4Vec (char *vtoken, Real *vec) {
+    // This procedure reads in a 4-vector from the input stream and stores it into the specified
+    // location.
+
+    char inbuff[MAXTLEN+1];  // Input Value Buffer
+
+    GetToken (inbuff, false);
+    if (CTYPE(*inbuff) != NUM)
+        Error ("Missing real number for X component of '%s'.", vtoken);
+    vec[0] = atof (inbuff);
+
+    GetToken (inbuff, false);
+    if (CTYPE(*inbuff) != NUM)
+        Error ("Missing real number for Y component of '%s'.", vtoken);
+    vec[1] = atof (inbuff);
+
+    GetToken (inbuff, false);
+    if (CTYPE(*inbuff) != NUM)
+        Error ("Missing real number for Z component of '%s'.", vtoken);
+    vec[2] = atof (inbuff);
+
+    GetToken (inbuff, false);
+    if (CTYPE(*inbuff) != NUM)
+        Error ("Missing real number for W component of '%s'.", vtoken);
+    vec[3] = atof (inbuff);
+}
+
+//==================================================================================================
+
+void ParseInput () {
+    // This routine parses the input scene description, and sets up the global raytrace variables
+    // and the object lists.
+
+    AttrName  *attrname;  // Attribute Name Node Pointer
+    ushort     ii;        // Scratch Index Value
+    bool     (*func)();   // Function Pointer
+
+    while (GetToken(token, true)) {
+        for (ii=0;  ii < ALIMIT(Globals);  ++ii) {
+            if (keyeq(token, Globals[ii].keyword))
+                break;
+        }
+
+        if (ii >= ALIMIT(Globals))
+            Error ("Unknown keyword (%s).", token);
+
+        switch (Globals[ii].vtype) {
+            case T_COLOR:
+                ReadColor (token, (Color*)(Globals[ii].address));
+                break;
+
+            case T_UINT16:
+                ReadUint16 (token, (ushort*)(Globals[ii].address));
+                break;
+
+            case T_REAL:
+                ReadReal (token, (Real*)(Globals[ii].address));
+                break;
+
+            case T_OTHER:
+                func = (bool(*)())(Globals[ii].address);
+                (*func)();
+                break;
+
+            default:
+                Halt ("Internal Error (Globals vtype switch).");
+        }
+    }
+
+    // Kill the attributes alias list.
+
+    while (attrname=attrnamelist, attrname) {
+        attrnamelist = attrname->next;
+        DELETE (attrname);
+    }
+}
+
+//==================================================================================================
+
+Attributes *ReadAttributes () {
+    // This routine reads in a description of object attributes, creates a new attributes node,
+    // links it into the attributes list, and returns a pointer to the new attributes node.
+    //
+    // It is assumed that the opening parenthesis has already been consumed at the time this routine
+    // is called.
+
+    Attributes *newattr;  // New Attributes
+
+    // Allocate the new attributes node, load it with the most recent named attributes node, and add
+    // it to the attributes list.
+
+    newattr = NEW (Attributes, 1);
+    *newattr = *prevattr;
+    newattr->next = attrlist;
+    attrlist = newattr;
+
+    // Clear the shortcut flags.
+
+    newattr->flags &= ~(AT_AMBIENT | AT_DIFFUSE | AT_SPECULAR | AT_TRANSPAR);
+
+    // Process each of the attributes fields.
+
+    while (GetToken(token,false), token[0] != ')') {
+        if (keyeq (token, "ambie")) {
+            ReadColor (token, &newattr->Ka);
+        } else if (keyeq (token, "diffu")) {
+            ReadColor (token, &newattr->Kd);
+        } else if (keyeq (token, "specu")) {
+            ReadColor (token, &newattr->Ks);
+        } else if (keyeq (token, "trans")) {
+            ReadColor (token, &newattr->Kt);
+        } else if (keyeq (token, "shine")) {
+            ReadReal  (token, &newattr->shine);
+        } else if (keyeq (token, "index")) {
+            ReadReal (token, &newattr->indexref);
+            if (newattr->indexref <= 0.0)
+                Error ("Non-positive index of refraction.");
+        } else if (keyeq (token, "refle")) {
+            ushort  scratch;
+            ReadUint16 (token, &scratch);
+            if (scratch == 1)
+                newattr->flags |=  AT_REFLECT;
+            else if (scratch == 0)
+                newattr->flags &= ~AT_REFLECT;
+            else
+                Error ("Invalid `reflect' argument; should be 0 or 1.");
+        } else {
+            Error ("Invalid attributes field (%s).", token);
+        }
+    }
+
+    if ((newattr->Ka.r + newattr->Ka.g + newattr->Ka.b) > EPSILON)
+        newattr->flags |= AT_AMBIENT;
+
+    if ((newattr->Kd.r + newattr->Kd.g + newattr->Kd.b) > EPSILON)
+        newattr->flags |= AT_DIFFUSE;
+
+    if ((newattr->Ks.r + newattr->Ks.g + newattr->Ks.b) > EPSILON)
+        newattr->flags |= AT_SPECULAR;
+
+    if ((newattr->Kt.r + newattr->Kt.g + newattr->Kt.b) > EPSILON)
+        newattr->flags |= AT_TRANSPAR;
+
+    return newattr;
+}
+
+//==================================================================================================
+
+Attributes *FindAttributes (char *name) {
+    // This function finds an attribute description with the given name and returns a pointer to the
+    // attributes node. If the name is not found, this routine aborts after flagging the error.
+
+    AttrName *anptr;  // Attribute Name Node Traversal Pointer
+
+    name[MAXATNAME] = 0;
+
+    for (anptr=attrnamelist;  anptr;  anptr=anptr->next)
+        if (strrel (name, ==, anptr->name))
+            break;
+
+    if (!anptr)
+        Error ("Can't find attribute definition (%s).", name);
+
+    return anptr->attr;
+}
+
+//==================================================================================================
+
 void DoAttributes () {
     // This procedure processes attribute definitions. Attribute definitions consist of the keyword
     // `attributes', followed by an attribute alias, and then the attribute fields.
@@ -545,6 +730,72 @@ void DoSphere () {
 
     snew->info.next = objlist;
     objlist = (ObjInfo *)(prev = snew);
+}
+
+//==================================================================================================
+
+void Process_TetPar (TetPar *tp) {
+    // This routine initializes the physical data fields common to both the tetrahedron and
+    // parallelepiped structures.
+
+    // Calculate the vectors from vertex 0 to vertices 1, 2, and 3.
+
+    V4_3Vec (tp->vec1, =, tp->vert[1], -, tp->vert[0]);
+    V4_3Vec (tp->vec2, =, tp->vert[2], -, tp->vert[0]);
+    V4_3Vec (tp->vec3, =, tp->vert[3], -, tp->vert[0]);
+
+    // Calculate the parallelepiped's surface normal.
+
+    {
+        ushort  dominant1, dominant2;  // Dominant Axes
+
+        V4_Cross(tp->normal, tp->vec1,tp->vec2,tp->vec3);
+
+        if (! V4_Normalize (tp->normal))
+            Error ("Degenerate parallelepiped/tetrahedron; not 3D.");
+
+        // Find the dominant axis of the normal vector and load up the ax1, ax2 and ax3 fields
+        // accordingly.
+
+        dominant1 = (fabs(tp->normal[X]) > fabs(tp->normal[Y])) ? X : Y;
+        dominant2 = (fabs(tp->normal[Z]) > fabs(tp->normal[W])) ? Z : W;
+        if (fabs(tp->normal[dominant1]) > fabs(tp->normal[dominant2])) {
+            tp->ax1 = (dominant1 == X) ? Y : X;
+            tp->ax2 = Z;
+            tp->ax3 = W;
+        } else {
+            tp->ax1 = X;
+            tp->ax2 = Y;
+            tp->ax3 = (dominant2 == Z) ? W : Z;
+        }
+    }
+
+    // Calculate the hyperplane constant.
+
+    tp->planeConst = - V4_Dot (tp->normal, tp->vert[0]);
+
+    // Calculate the divisor for Cramer's Rule used to determine the barycentric coordinates of
+    // intersection points.
+
+    {
+        Real  M11,M12,M13, M21,M22,M23, M31,M32,M33;
+
+        M11 = tp->vec1[tp->ax1];
+        M12 = tp->vec1[tp->ax2];
+        M13 = tp->vec1[tp->ax3];
+
+        M21 = tp->vec2[tp->ax1];
+        M22 = tp->vec2[tp->ax2];
+        M23 = tp->vec2[tp->ax3];
+
+        M31 = tp->vec3[tp->ax1];
+        M32 = tp->vec3[tp->ax2];
+        M33 = tp->vec3[tp->ax3];
+
+        tp->CramerDiv = M11 * (M22*M33 - M23*M32)
+                      - M21 * (M12*M33 - M13*M32)
+                      + M31 * (M12*M23 - M13*M22);
+    }
 }
 
 //==================================================================================================
@@ -694,268 +945,3 @@ void DoView () {
     }
 }
 
-//==================================================================================================
-
-void Process_TetPar (TetPar *tp) {
-    // This routine initializes the physical data fields common to both the tetrahedron and
-    // parallelepiped structures.
-
-    // Calculate the vectors from vertex 0 to vertices 1, 2, and 3.
-
-    V4_3Vec (tp->vec1, =, tp->vert[1], -, tp->vert[0]);
-    V4_3Vec (tp->vec2, =, tp->vert[2], -, tp->vert[0]);
-    V4_3Vec (tp->vec3, =, tp->vert[3], -, tp->vert[0]);
-
-    // Calculate the parallelepiped's surface normal.
-
-    {
-        ushort  dominant1, dominant2;  // Dominant Axes
-
-        V4_Cross(tp->normal, tp->vec1,tp->vec2,tp->vec3);
-
-        if (! V4_Normalize (tp->normal))
-            Error ("Degenerate parallelepiped/tetrahedron; not 3D.");
-
-        // Find the dominant axis of the normal vector and load up the ax1, ax2 and ax3 fields
-        // accordingly.
-
-        dominant1 = (fabs(tp->normal[X]) > fabs(tp->normal[Y])) ? X : Y;
-        dominant2 = (fabs(tp->normal[Z]) > fabs(tp->normal[W])) ? Z : W;
-        if (fabs(tp->normal[dominant1]) > fabs(tp->normal[dominant2])) {
-            tp->ax1 = (dominant1 == X) ? Y : X;
-            tp->ax2 = Z;
-            tp->ax3 = W;
-        } else {
-            tp->ax1 = X;
-            tp->ax2 = Y;
-            tp->ax3 = (dominant2 == Z) ? W : Z;
-        }
-    }
-
-    // Calculate the hyperplane constant.
-
-    tp->planeConst = - V4_Dot (tp->normal, tp->vert[0]);
-
-    // Calculate the divisor for Cramer's Rule used to determine the barycentric coordinates of
-    // intersection points.
-
-    {
-        Real  M11,M12,M13, M21,M22,M23, M31,M32,M33;
-
-        M11 = tp->vec1[tp->ax1];
-        M12 = tp->vec1[tp->ax2];
-        M13 = tp->vec1[tp->ax3];
-
-        M21 = tp->vec2[tp->ax1];
-        M22 = tp->vec2[tp->ax2];
-        M23 = tp->vec2[tp->ax3];
-
-        M31 = tp->vec3[tp->ax1];
-        M32 = tp->vec3[tp->ax2];
-        M33 = tp->vec3[tp->ax3];
-
-        tp->CramerDiv = M11 * (M22*M33 - M23*M32)
-                      - M21 * (M12*M33 - M13*M32)
-                      + M31 * (M12*M23 - M13*M22);
-    }
-}
-
-//==================================================================================================
-
-Attributes *FindAttributes (char *name) {
-    // This function finds an attribute description with the given name and returns a pointer to the
-    // attributes node. If the name is not found, this routine aborts after flagging the error.
-
-    AttrName *anptr;  // Attribute Name Node Traversal Pointer
-
-    name[MAXATNAME] = 0;
-
-    for (anptr=attrnamelist;  anptr;  anptr=anptr->next)
-        if (strrel (name, ==, anptr->name))
-            break;
-
-    if (!anptr)
-        Error ("Can't find attribute definition (%s).", name);
-
-    return anptr->attr;
-}
-
-//==================================================================================================
-
-Attributes *ReadAttributes () {
-    // This routine reads in a description of object attributes, creates a new attributes node,
-    // links it into the attributes list, and returns a pointer to the new attributes node.
-    //
-    // It is assumed that the opening parenthesis has already been consumed at the time this routine
-    // is called.
-
-    Attributes *newattr;  // New Attributes
-
-    // Allocate the new attributes node, load it with the most recent named attributes node, and add
-    // it to the attributes list.
-
-    newattr = NEW (Attributes, 1);
-    *newattr = *prevattr;
-    newattr->next = attrlist;
-    attrlist = newattr;
-
-    // Clear the shortcut flags.
-
-    newattr->flags &= ~(AT_AMBIENT | AT_DIFFUSE | AT_SPECULAR | AT_TRANSPAR);
-
-    // Process each of the attributes fields.
-
-    while (GetToken(token,false), token[0] != ')') {
-        if (keyeq (token, "ambie")) {
-            ReadColor (token, &newattr->Ka);
-        } else if (keyeq (token, "diffu")) {
-            ReadColor (token, &newattr->Kd);
-        } else if (keyeq (token, "specu")) {
-            ReadColor (token, &newattr->Ks);
-        } else if (keyeq (token, "trans")) {
-            ReadColor (token, &newattr->Kt);
-        } else if (keyeq (token, "shine")) {
-            ReadReal  (token, &newattr->shine);
-        } else if (keyeq (token, "index")) {
-            ReadReal (token, &newattr->indexref);
-            if (newattr->indexref <= 0.0)
-                Error ("Non-positive index of refraction.");
-        } else if (keyeq (token, "refle")) {
-            ushort  scratch;
-            ReadUint16 (token, &scratch);
-            if (scratch == 1)
-                newattr->flags |=  AT_REFLECT;
-            else if (scratch == 0)
-                newattr->flags &= ~AT_REFLECT;
-            else
-                Error ("Invalid `reflect' argument; should be 0 or 1.");
-        } else {
-            Error ("Invalid attributes field (%s).", token);
-        }
-    }
-
-    if ((newattr->Ka.r + newattr->Ka.g + newattr->Ka.b) > EPSILON)
-        newattr->flags |= AT_AMBIENT;
-
-    if ((newattr->Kd.r + newattr->Kd.g + newattr->Kd.b) > EPSILON)
-        newattr->flags |= AT_DIFFUSE;
-
-    if ((newattr->Ks.r + newattr->Ks.g + newattr->Ks.b) > EPSILON)
-        newattr->flags |= AT_SPECULAR;
-
-    if ((newattr->Kt.r + newattr->Kt.g + newattr->Kt.b) > EPSILON)
-        newattr->flags |= AT_TRANSPAR;
-
-    return newattr;
-}
-
-//==================================================================================================
-
-void ReadColor (char *ctoken, Color *color) {
-    // This routine reads in a color vector from the input stream and stuffs it in the location
-    // given in the parameter list.
-
-    char inbuff[MAXTLEN+1];  // Input Value Buffer
-
-    GetToken (inbuff, false);
-    if (CTYPE(*inbuff) != NUM)
-        Error ("Missing real number for red component of '%s'.", ctoken);
-    color->r = atof (inbuff);
-
-    GetToken (inbuff, false);
-    if (CTYPE(*inbuff) != NUM)
-        Error ("Missing real number for green component of '%s'.", ctoken);
-    color->g = atof (inbuff);
-
-    GetToken (inbuff, false);
-    if (CTYPE(*inbuff) != NUM)
-        Error ("Missing real number for blue component of '%s'.", ctoken);
-    color->b = atof (inbuff);
-}
-
-//==================================================================================================
-
-void ReadReal (char *ctoken, Real *num) {
-    // This routine reads in a real-valued number from the input stream and stores it in the
-    // location given in the parameter list.
-
-    char inbuff[MAXTLEN+1];  // Input Value Buffer
-
-    GetToken (inbuff, false);
-    if (CTYPE(*inbuff) != NUM)
-        Error ("Missing real number argument for '%s'.", ctoken);
-    *num = atof (inbuff);
-}
-
-//==================================================================================================
-
-void ReadUint16 (char *itoken, ushort *num) {
-    // This procedure reads in a 16-bit unsigned integer from the input stream and stores it in the
-    // location given in the parameter list.
-
-    char inbuff[MAXTLEN+1];  // Input Value Buffer
-
-    GetToken (inbuff, false);
-    if (CTYPE(*inbuff) != NUM)
-        Error ("Missing integer argument for '%s'.", itoken);
-    *num = static_cast<ushort>(atoi (inbuff));
-}
-
-//==================================================================================================
-
-void Read4Vec (char *vtoken, Real *vec) {
-    // This procedure reads in a 4-vector from the input stream and stores it into the specified
-    // location.
-
-    char inbuff[MAXTLEN+1];  // Input Value Buffer
-
-    GetToken (inbuff, false);
-    if (CTYPE(*inbuff) != NUM)
-        Error ("Missing real number for X component of '%s'.", vtoken);
-    vec[0] = atof (inbuff);
-
-    GetToken (inbuff, false);
-    if (CTYPE(*inbuff) != NUM)
-        Error ("Missing real number for Y component of '%s'.", vtoken);
-    vec[1] = atof (inbuff);
-
-    GetToken (inbuff, false);
-    if (CTYPE(*inbuff) != NUM)
-        Error ("Missing real number for Z component of '%s'.", vtoken);
-    vec[2] = atof (inbuff);
-
-    GetToken (inbuff, false);
-    if (CTYPE(*inbuff) != NUM)
-        Error ("Missing real number for W component of '%s'.", vtoken);
-    vec[3] = atof (inbuff);
-}
-
-//==================================================================================================
-
-void Error (char *format, ...) {
-    // This routine handles errors in the input stream. It prints out the current line number of the
-    // input stream and prints the error message and the optional printf()-like argument. After
-    // printing the message it halts execution of the raytracer.
-
-    AttrName *attrname;  // Attribute Name Node Pointer
-    va_list args;        // List of Optional Arguments
-
-    va_start(args, format);
-
-    printf ("Input Error [Line %lu]:  ", lcount);
-    vprintf (format, args);
-    print  ("\n");
-
-    va_end(args);
-
-    // Kill the attributes name list.
-
-    while (attrname = attrnamelist, attrname) {
-        attrnamelist = attrname->next;
-        DELETE (attrname);
-    }
-
-    // Halt the program.
-
-    Halt ("Aborting.");
-}
