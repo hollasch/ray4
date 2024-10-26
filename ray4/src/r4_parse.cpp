@@ -173,7 +173,6 @@ static char        token[MAXTLEN+1];          // Input Token
 
 
 //==================================================================================================
-
 void Error (char *format, ...) {
     // This routine handles errors in the input stream. It prints out the current line number of the
     // input stream and prints the error message and the optional printf()-like argument. After
@@ -203,7 +202,6 @@ void Error (char *format, ...) {
 }
 
 //==================================================================================================
-
 char *GetToken  (
     char *buff,   // Token Buffer
     bool  eofok)  // If 1, EOF is OK, otherwise error
@@ -354,7 +352,6 @@ char *GetToken  (
 }
 
 //==================================================================================================
-
 bool keyeq (
     char *string,  // Input Token
     char *key)     // First KEYSIG digits of keyword.
@@ -376,7 +373,6 @@ bool keyeq (
 }
 
 //==================================================================================================
-
 void ReadColor (char *ctoken, Color *color) {
     // This routine reads in a color vector from the input stream and stuffs it in the location
     // given in the parameter list.
@@ -400,7 +396,6 @@ void ReadColor (char *ctoken, Color *color) {
 }
 
 //==================================================================================================
-
 void ReadReal (char *ctoken, double *num) {
     // This routine reads in a real-valued number from the input stream and stores it in the
     // location given in the parameter list.
@@ -414,7 +409,6 @@ void ReadReal (char *ctoken, double *num) {
 }
 
 //==================================================================================================
-
 void ReadUint16 (char *itoken, ushort *num) {
     // This procedure reads in a 16-bit unsigned integer from the input stream and stores it in the
     // location given in the parameter list.
@@ -428,7 +422,6 @@ void ReadUint16 (char *itoken, ushort *num) {
 }
 
 //==================================================================================================
-
 void ReadVector4 (char *vtoken, Vector4 &vec) {
     // This procedure reads in a 4-vector from the input stream and stores it into the specified
     // location.
@@ -457,7 +450,6 @@ void ReadVector4 (char *vtoken, Vector4 &vec) {
 }
 
 //==================================================================================================
-
 void ReadPoint4 (char *vtoken, Point4 &p) {
     Vector4 v;
     ReadVector4(vtoken, v);
@@ -469,7 +461,6 @@ void ReadPoint4 (char *vtoken, Point4 &p) {
 }
 
 //==================================================================================================
-
 void ParseInput () {
     // This routine parses the input scene description, and sets up the global raytrace variables
     // and the object lists.
@@ -519,7 +510,6 @@ void ParseInput () {
 }
 
 //==================================================================================================
-
 Attributes *ReadAttributes () {
     // This routine reads in a description of object attributes, creates a new attributes node,
     // links it into the attributes list, and returns a pointer to the new attributes node.
@@ -588,7 +578,6 @@ Attributes *ReadAttributes () {
 }
 
 //==================================================================================================
-
 Attributes *FindAttributes (char *name) {
     // This function finds an attribute description with the given name and returns a pointer to the
     // attributes node. If the name is not found, this routine aborts after flagging the error.
@@ -608,7 +597,6 @@ Attributes *FindAttributes (char *name) {
 }
 
 //==================================================================================================
-
 void DoAttributes () {
     // This procedure processes attribute definitions. Attribute definitions consist of the keyword
     // `attributes', followed by an attribute alias, and then the attribute fields.
@@ -652,7 +640,6 @@ void DoAttributes () {
 }
 
 //==================================================================================================
-
 void DoLight () {
     // This routine reads in a description of a light source from the input file. At the calling
     // point, the keyword "Light" has already been read. The new light will be added to the light
@@ -695,7 +682,6 @@ void DoLight () {
 }
 
 //==================================================================================================
-
 void DoSphere () {
     // This routine reads in a description of a hyperspherical object from the input stream and adds
     // it to the object list. The field defaults are defined by the DefSphere structure for the
@@ -738,7 +724,6 @@ void DoSphere () {
 }
 
 //==================================================================================================
-
 void Process_TetPar (TetPar *tp) {
     // This routine initializes the physical data fields common to both the tetrahedron and
     // parallelepiped structures.
@@ -804,7 +789,6 @@ void Process_TetPar (TetPar *tp) {
 }
 
 //==================================================================================================
-
 void DoParallelepiped () {
     // This routine reads in a description of a 4D parallelepiped (defined by four vertices) and
     // adds it to the object list.
@@ -844,7 +828,6 @@ void DoParallelepiped () {
 }
 
 //==================================================================================================
-
 void DoTetrahedron () {
     // This routine reads in a description of a 4D tetrahedron with four vertices and adds it to the
     // object list.
@@ -884,7 +867,6 @@ void DoTetrahedron () {
 }
 
 //==================================================================================================
-
 void DoTriangle () {
     // This subroutine reads in a triangle description.
 
@@ -925,7 +907,6 @@ void DoTriangle () {
 }
 
 //==================================================================================================
-
 void DoView () {
     // This routine reads in the viewing parameters for the scene.
 

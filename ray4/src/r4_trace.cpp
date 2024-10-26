@@ -33,7 +33,6 @@ Color black { 0, 0, 0 };  // Used to zero out colors.
 
 
 //==================================================================================================
-
 void RayTrace (
     Point4   rayO,   // Ray Origin
     Vector4  rayD,   // Ray Direction

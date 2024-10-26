@@ -31,7 +31,6 @@
 
 
 //==================================================================================================
-
 const double& Vector4::operator[] (std::size_t index) const {
     if (index <= 0)
         return x;
@@ -43,7 +42,6 @@ const double& Vector4::operator[] (std::size_t index) const {
 }
 
 //==================================================================================================
-
 double& Vector4::operator[] (std::size_t index) {
     if (index <= 0)
         return x;
@@ -55,7 +53,6 @@ double& Vector4::operator[] (std::size_t index) {
 }
 
 //==================================================================================================
-
 short V4_Normalize (Vector4 V) {
     // This function attempts to normalize a 4-vector. If the vector is not shorter than some
     // epsilon, it will normalize the vector and return 1. If the vector is shorter than the
@@ -73,7 +70,6 @@ short V4_Normalize (Vector4 V) {
 }
 
 //==================================================================================================
-
 void V4_Cross (
     Vector4  result,  // Result Vector
     Vector4  u,       // Source Vectors

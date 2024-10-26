@@ -40,7 +40,6 @@ FILE *outstream = nullptr;  // Output Stream
 
 
 //==================================================================================================
-
 void CloseInput () {
     // Closes the input stream.
 
@@ -51,7 +50,6 @@ void CloseInput () {
 }
 
 //==================================================================================================
-
 void CloseOutput () {
     // Closes the output stream.
 
@@ -62,9 +60,8 @@ void CloseOutput () {
 }
 
 //==================================================================================================
-
 const int UNREAD_NONE = -2;
-static int unreadChar = -2;
+static int unreadChar = UNREAD_NONE;
 
 int ReadChar () {
     // This routine returns then next character from the input stream. If the end of file is
@@ -79,7 +76,6 @@ int ReadChar () {
 }
 
 //==================================================================================================
-
 void UnreadChar (int c) {
     // This routine, together with ReadChar allow to put back a character, which is something
     // parsers often need. It cannot unread more than one character at a time though.
@@ -88,7 +84,6 @@ void UnreadChar (int c) {
 }
 
 //==================================================================================================
-
 void OpenInput () {
     // This subroutine opens the input file. If no filename was given in the command-line arguments,
     // we'll use the standard input stream.
@@ -100,7 +95,6 @@ void OpenInput () {
 }
 
 //==================================================================================================
-
 void OpenOutput () {
     // This subroutine opens the output file.
 
@@ -113,7 +107,6 @@ void OpenOutput () {
 }
 
 //==================================================================================================
-
 void WriteBlock (
     void *buff,  // Source Buffer
     int   num)   // Number of Bytes to Write

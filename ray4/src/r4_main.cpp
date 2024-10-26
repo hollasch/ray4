@@ -118,7 +118,6 @@ time_t   StartTime;         // Timestamp
 
 
 //==================================================================================================
-
 char *MyAlloc (size_t size) {
     // This routine allocates memory using the system malloc() function. If the malloc() call fails
     // to allocate the memory, this routine halts the program with an "out of memory" message.
@@ -132,13 +131,11 @@ char *MyAlloc (size_t size) {
 }
 
 //==================================================================================================
-
 void MyFree (void *addr) {
     free (addr);
 }
 
 //==================================================================================================
-
 void Halt (char *message, ...) {
     // This procedure replaces printf() to print out an error message, and has the side effect of
     // cleaning up before exiting (de-allocating memory, closing open files, and so on).
@@ -204,7 +201,6 @@ void Halt (char *message, ...) {
 }
 
 //==================================================================================================
-
 char *GetField (char *str, ushort *value) {
     // These subroutine process the command-line arguments. The first two routines get each field of
     // the resolution, aspect ratio, and scan range triples.
@@ -229,7 +225,6 @@ char *GetField (char *str, ushort *value) {
 }
 
 //==================================================================================================
-
 char *GetRange (
     char   *str,    // Source String
     ushort *val1,   // First Destination Value of Range
@@ -278,7 +273,6 @@ char *GetRange (
 }
 
 //==================================================================================================
-
 void ProcessArgs (int argc, char *argv[]) {
     // This subroutine grabs the command-line arguments and the environment variable arguments (from
     // RAY4) and sets up the raytrace parameters.
@@ -505,7 +499,6 @@ void WriteInteger32(ulong value) {
 }
 
 //==================================================================================================
-
 void WriteHeader(const ImageHeader& header) {
     WriteInteger32(header.magic);
     WriteInteger8(header.version);
@@ -522,7 +515,6 @@ void WriteHeader(const ImageHeader& header) {
 }
 
 //==================================================================================================
-
 void CalcRayGrid (void) {
     // This procedure calculates the ray-grid basis vectors.
 
@@ -589,7 +581,6 @@ void CalcRayGrid (void) {
 }
 
 //==================================================================================================
-
 void FireRays () {
     // This is the main routine that fires the rays through the ray grid and into the 4D scene.
 
@@ -678,7 +669,6 @@ void FireRays () {
 }
 
 //==================================================================================================
-
 void main (int argc, char *argv[]) {
     // The following is the entry procedure for the ray4 ray tracer.
 

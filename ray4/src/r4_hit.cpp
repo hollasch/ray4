@@ -134,7 +134,6 @@ bool HitSphere (
 }
 
 //==================================================================================================
-
 bool HitTetPar (
     ObjInfo *objptr,     // Sphere to Test
     Point4   rayO,       // Ray Origin
@@ -287,7 +286,6 @@ bool HitTetPar (
 }
 
 //==================================================================================================
-
 bool HitTriangle (
     ObjInfo *objptr,     // Sphere to Test
     Point4   rayO,       // Ray Origin
