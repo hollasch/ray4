@@ -154,9 +154,9 @@ bool HitTetPar (
     TetPar *tp;             // Tetrahdron/Parallelepiped Data
 
     if (objptr->type == ObjType::Tetrahedron)
-        tp = &(((Tetrahedron*)(objptr))->tp);
+        tp = &((reinterpret_cast<Tetrahedron*>(objptr))->tp);
     else
-        tp = &(((Parallelepiped*)(objptr))->tp);
+        tp = &((reinterpret_cast<Parallelepiped*>(objptr))->tp);
 
     // Find the ray parameter to intersect the hyperplane.
 
@@ -233,14 +233,14 @@ bool HitTetPar (
         M12M23_M13M22 = (M12 * M23) - (M13 * M22);
         M02M23_M03M22 = (M02 * M23) - (M03 * M22);
 
-        Bc1 = (  (M01*M22M33_M23M32)
+        Bc1 = ( (M01*M22M33_M23M32)
               - (M21*M02M33_M03M32)
               + (M31*M02M23_M03M22)) / tp->CramerDiv;
 
         if ((Bc1 < 0.0) || (Bc1 > 1.0))
             return false;
 
-        Bc2 = (  (M11*M02M33_M03M32)
+        Bc2 = ( (M11*M02M33_M03M32)
               - (M01*M12M33_M13M32)
               + (M31*M12M03_M13M02)) / tp->CramerDiv;
 
@@ -248,8 +248,8 @@ bool HitTetPar (
             return false;
 
         Bc3 = (- (M11*M02M23_M03M22)
-              - (M21*M12M03_M13M02)
-              + (M01*M12M23_M13M22)) / tp->CramerDiv;
+               - (M21*M12M03_M13M02)
+               + (M01*M12M23_M13M22)) / tp->CramerDiv;
 
         if ((Bc3 < 0.0) || (Bc3 > 1.0))
             return false;

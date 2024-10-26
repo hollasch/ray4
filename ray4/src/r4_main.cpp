@@ -631,7 +631,7 @@ void FireRays () {
 
                 // Fire the ray.
 
-                RayTrace (Vfrom, Dir, color, (ulong)(0));
+                RayTrace (Vfrom, Dir, color, 0);
 
                 // Scale the resulting color to 0-255.
 

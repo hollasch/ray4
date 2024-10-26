@@ -185,7 +185,7 @@ void Error (char *format, ...) {
     va_start(args, format);
 
     printf("Input Error [Line %lu]:  ", lcount);
-    vprintf (format, args);
+    vprintf(format, args);
     print("\n");
 
     va_end(args);
@@ -242,7 +242,7 @@ char *GetToken  (
         while (CType(cc) == SPC) {
             if (cc == '\n')  ++lcount;
 
-            if ((char)(EOFC) == (cc = ReadChar ())) {
+            if (EOFC == (cc = ReadChar ())) {
                 eofflag = true;
                 if (eofok)
                     return nullptr;
@@ -307,7 +307,7 @@ char *GetToken  (
             }
             *ptr++ = static_cast<char>(cc);
 
-            if ((char)(EOFC) == (cc = ReadChar ()))
+            if (EOFC == (cc = ReadChar ()))
                 break;
 
             if (cc == '.') {
@@ -349,7 +349,7 @@ char *GetToken  (
 
     // Unexpected character. Print out the hexadecimal value and halt.
 
-    Error ("Unexpected character in input stream (0x%02x).", (int)(cc & 0xFF));
+    Error ("Unexpected character in input stream (0x%02x).", static_cast<int>(cc & 0xFF));
     return nullptr;
 }
 
@@ -489,19 +489,19 @@ void ParseInput () {
 
         switch (Globals[ii].vtype) {
             case VarType::Color:
-                ReadColor (token, (Color*)(Globals[ii].address));
+                ReadColor (token, reinterpret_cast<Color*>(Globals[ii].address));
                 break;
 
             case VarType::UInt16:
-                ReadUint16 (token, (ushort*)(Globals[ii].address));
+                ReadUint16 (token, reinterpret_cast<ushort*>(Globals[ii].address));
                 break;
 
             case VarType::Real:
-                ReadReal (token, (double*)(Globals[ii].address));
+                ReadReal (token, reinterpret_cast<double*>(Globals[ii].address));
                 break;
 
             case VarType::Other:
-                func = (bool(*)())(Globals[ii].address);
+                func = reinterpret_cast<bool(*)()>(Globals[ii].address);
                 (*func)();
                 break;
 
@@ -734,7 +734,7 @@ void DoSphere () {
     snew->rsqrd = snew->radius * snew->radius;
 
     snew->info.next = objlist;
-    objlist = (ObjInfo *)(prev = snew);
+    objlist = reinterpret_cast<ObjInfo *>(prev = snew);
 }
 
 //==================================================================================================
@@ -840,7 +840,7 @@ void DoParallelepiped () {
         Error ("Missing attributes for parallelepiped description.");
 
     pnew->info.next = objlist;
-    objlist = (ObjInfo *)(prev = pnew);
+    objlist = reinterpret_cast<ObjInfo *>(prev = pnew);
 }
 
 //==================================================================================================
@@ -880,7 +880,7 @@ void DoTetrahedron () {
         Error ("Missing attributes for tetrahedron description.");
 
     tnew->info.next = objlist;
-    objlist = (ObjInfo *)(prev = tnew);
+    objlist = reinterpret_cast<ObjInfo *>(prev = tnew);
 }
 
 //==================================================================================================
@@ -921,7 +921,7 @@ void DoTriangle () {
         Error ("Missing attributes for triangle description.");
 
     tnew->info.next = objlist;
-    objlist = (ObjInfo *)(prev = tnew);
+    objlist = reinterpret_cast<ObjInfo *>(prev = tnew);
 }
 
 //==================================================================================================
