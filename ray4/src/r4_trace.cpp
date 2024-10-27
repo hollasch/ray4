@@ -63,7 +63,7 @@ void RayTrace (
     // Move the ray origin a bit along the ray direction to eliminate surface acne, where
     // floating-point roundoff erroneously puts the point inside a surface.
 
-    V4_3Vec (rayO, =, rayO, +, 1e-10 * rayD);
+    rayO = rayO + (1e-10 * rayD);
 
     // Find the nearest object intersection.
 
@@ -102,17 +102,17 @@ void RayTrace (
 
     // If we're looking at the object from `behind' (or inside), then flip the normal vector.
 
-    NdotD = V4_Dot (nearnormal, rayD);
+    NdotD = dot(nearnormal, rayD);
 
     if (NdotD > 0.0) {
-        V4_2Vec (nearnormal, =, -nearnormal);
+        nearnormal = -nearnormal;
         NdotD = -NdotD;
     }
 
     // To avoid surface acne, move the intersection point just outside the object surface to prevent
     // that same surface from erroneously shadowing itself.
 
-    V4_3Vec (intr_out, =, nearintr, +, 1e-10 * nearnormal);
+    intr_out = nearintr + (1e-10 * nearnormal);
 
     // Add illumation to the point from all visible lights.
 
@@ -123,22 +123,22 @@ void RayTrace (
         Vector4  Refl;     // Reflection Vector
 
         if (lptr->type == LightType::Directional) {
-            V4_2Vec (ldir, =, lptr->u.dir);
+            ldir = lptr->u.dir;
             mindist = -1.0;
         } else {
             double norm;  // Vector Norm
 
-            V4_3Vec (ldir, =, lptr->u.pos, -, intr_out);
+            ldir = lptr->u.pos - intr_out;
 
             // Normalize the light-direction vector. If the (point) light source is VERY close to
             // the intersection point, then just set the light-direction vector to the surface
             // normal.
 
-            mindist = norm = V4_Norm (ldir);
+            mindist = norm = ldir.norm();
             if (norm < epsilon)
-                V4_2Vec (ldir, =, nearnormal);
+                ldir = nearnormal;
             else
-                V4_Scalar (ldir, /=, norm);
+                ldir /= norm;
         }
 
         // Determine if the light is obscurred by any other object. If the light is obscurred by a
@@ -168,7 +168,7 @@ void RayTrace (
 
         // If surface normal is turned from light, skip this light.
 
-        ftemp = V4_Dot (nearnormal, ldir);
+        ftemp = dot(nearnormal, ldir);
         if (ftemp <= 0.0)
             continue;
 
@@ -183,12 +183,12 @@ void RayTrace (
         // Calculate the light reflection vector.
 
         ftemp *= 2.0;
-        V4_3Vec (Refl, =, -ldir, +, ftemp * nearnormal);
+        Refl = -ldir + (ftemp * nearnormal);
 
         // Calculate the cosine of the sight & reflection vectors, raised to the Phong power, for
         // the specular reflection.
 
-        ftemp = V4_Dot (-rayD, Refl);
+        ftemp = dot(-rayD, Refl);
         if (ftemp > 0.0) {
             ftemp = pow (ftemp, nearattr->shine);
             color += ftemp * nearattr->Ks * lcolor;
@@ -209,7 +209,7 @@ void RayTrace (
         Vector4 T;       // Temporary Vector
         Color   Tcolor;  // Transparent Color
 
-        V4_2Vec (T, =, NdotD * nearnormal);
+        T = NdotD * nearnormal;
         ftemp = global_indexref / nearattr->indexref;
 
         RefrD[0] = T[0] + (ftemp * (rayD[0] - T[0]));
@@ -232,7 +232,7 @@ void RayTrace (
         Vector4 ReflD;   // Reflection Direction Vector
 
         ftemp = 2.0 * NdotD;
-        V4_3Vec (ReflD, =, rayD, -, ftemp * nearnormal);
+        ReflD = rayD - (ftemp * nearnormal);
 
         RayTrace (nearintr, ReflD, Rcolor, level);
 

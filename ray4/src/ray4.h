@@ -34,6 +34,7 @@
 #ifndef RAY_H
 #define RAY_H
 
+#include <cmath>
 #include <cstddef>
 #include <stdlib.h>
 #include <stdio.h>

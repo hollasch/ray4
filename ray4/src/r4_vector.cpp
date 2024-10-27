@@ -26,7 +26,9 @@
 // more information on Ray4.
 //==================================================================================================
 
-#include "ray4.h"
+#include "r4_vector.h"
+
+#include <cmath>
 
 
 
@@ -53,45 +55,93 @@ double& Vector4::operator[] (std::size_t index) {
 }
 
 //==================================================================================================
-short V4_Normalize (Vector4 V) {
-    // This function attempts to normalize a 4-vector. If the vector is not shorter than some
-    // epsilon, it will normalize the vector and return 1. If the vector is shorter than the
-    // epsilon, it does not alter the vector and returns 0.
-
-    double norm;  // Norm of the Vector
-
-    norm = V4_Dot (V,V);
-
-    if (norm < 1e-30) return 0;
-
-    V4_Scalar (V, /=, sqrt(norm));
-
-    return 1;
+Vector4 Vector4::operator- () const {
+    return Vector4(-x, -y, -z, -w);
 }
 
 //==================================================================================================
-void V4_Cross (
-    Vector4  result,  // Result Vector
-    Vector4  u,       // Source Vectors
-    Vector4  v,
-    Vector4  w)
-{
-    // This routine calculates the 4D cross product of the two 4-vectors.
+Vector4 Vector4::operator+ (const Vector4& other) const {
+    return Vector4(x+other.x, y+other.y, z+other.z, w+other.w);
+}
 
-    double   A, B, C, D, E, F;  // Intermediate Values
-    Vector4  temp;              // Intermediate Vector
+//==================================================================================================
+Vector4 Vector4::operator- (const Vector4& other) const {
+    return Vector4(x-other.x, y-other.y, z-other.z, w-other.w);
+}
 
-    A = (v[0] * w[1]) - (v[1] * w[0]);
-    B = (v[0] * w[2]) - (v[2] * w[0]);
-    C = (v[0] * w[3]) - (v[3] * w[0]);
-    D = (v[1] * w[2]) - (v[2] * w[1]);
-    E = (v[1] * w[3]) - (v[3] * w[1]);
-    F = (v[2] * w[3]) - (v[3] * w[2]);
+//==================================================================================================
+Vector4& Vector4::operator*= (double scale) {
+    x *= scale;
+    y *= scale;
+    z *= scale;
+    w *= scale;
+    return *this;
+}
 
-    temp[0] =   (u[1] * F) - (u[2] * E) + (u[3] * D);
-    temp[1] = - (u[0] * F) + (u[2] * C) - (u[3] * B);
-    temp[2] =   (u[0] * E) - (u[1] * C) + (u[3] * A);
-    temp[3] = - (u[0] * D) + (u[1] * B) - (u[2] * A);
+//==================================================================================================
+Vector4& Vector4::operator/= (double divisor) {
+    *this *= 1/divisor;
+    return *this;
+}
 
-    V4_2Vec (result,=,temp);
+//==================================================================================================
+double Vector4::normSquared () const {
+    return x*x + y*y + z*z + w*w;
+}
+
+//==================================================================================================
+double Vector4::norm () const {
+    return std::sqrt(normSquared());
+}
+
+//==================================================================================================
+bool Vector4::normalize () {
+    // This function attempts to normalize the 4-vector. If the vector is larger than some
+    // epsilon, it will normalize the vector, otherwise it will leave it unchanged.
+
+    const auto zeroLengthThreshold = 1.0e-15;
+
+    auto vecNormSquared = normSquared();
+
+    if (vecNormSquared < zeroLengthThreshold)
+        return false;
+
+    *this /= sqrt(vecNormSquared);
+    return true;
+}
+
+//==================================================================================================
+Vector4 operator* (double s, const Vector4& v) {
+    return Vector4(s*v.x, s*v.y, s*v.z, s*v.w);
+}
+
+//==================================================================================================
+Vector4 operator* (const Vector4& v, double s) {
+    return s * v;
+}
+
+//==================================================================================================
+double dot(const Vector4& a, const Vector4& b) {
+    return (a.x * b.x) + (a.y * b.y) + (a.z * b.z) + (a.w * b.w);
+}
+
+//==================================================================================================
+Vector4 cross(const Vector4& u, const Vector4& v,const Vector4& w) {
+    // This routine calculates the 4D cross product of three 4-vectors.
+
+    double A, B, C, D, E, F;  // Intermediate Values
+
+    A = (v.x * w.y) - (v.y * w.x);
+    B = (v.x * w.z) - (v.z * w.x);
+    C = (v.x * w.w) - (v.w * w.x);
+    D = (v.y * w.z) - (v.z * w.y);
+    E = (v.y * w.w) - (v.w * w.y);
+    F = (v.z * w.w) - (v.w * w.z);
+
+    return {
+          (u.y * F) - (u.z * E) + (u.w * D),
+        - (u.x * F) + (u.z * C) - (u.w * B),
+          (u.x * E) - (u.y * C) + (u.w * A),
+        - (u.x * D) + (u.y * B) - (u.z * A)
+    };
 }

@@ -518,48 +518,43 @@ void WriteHeader(const ImageHeader& header) {
 void CalcRayGrid (void) {
     // This procedure calculates the ray-grid basis vectors.
 
-    double  GNx, GNy, GNz;  // Ray-Grid Vector Norms
-    Vector4 Los;            // Line-of-Sight Vector
-    double  losnorm;        // Line-of-Sight-Vector Norm
-
     // Get the normalized line-of-sight vector.
 
-    V4_3Vec (Los,=,Vto,-,Vfrom);
-    losnorm = V4_Norm (Los);
+    auto lineOfSight = Vto - Vfrom;
+    double lineOfSightNorm = lineOfSight.norm();
 
-    if (losnorm < epsilon)
+    if (!lineOfSight.normalize())
         Halt ("To-Point & From-Point are the same.");
-    V4_Scalar (Los, /=, losnorm);
 
     // Generate the normalized ray-grid basis vectors.
 
-    V4_Cross (Gz, Vover,Vup,Los);
-    if (! V4_Normalize(Gz))
+    Gz = cross(Vover, Vup, lineOfSight);
+    if (!Gz.normalize())
         Halt ("Line-of-sight, Up vector and Over vector aren't orthogonal.");
 
-    V4_Cross (Gy, Gz,Los,Vover);
-    if (! V4_Normalize(Gy))
+    Gy = cross(Gz, lineOfSight, Vover);
+    if (!Gy.normalize())
         Halt ("Orthogonality problem while generating GRIDy.");
 
-    V4_Cross (Gx, Gy,Gz,Los);      // Gy, Gz & Los are all unit vectors.
+    Gx = cross(Gy, Gz, lineOfSight);  // Gy, Gz & lineOfSight are all unit vectors.
 
     // Now compute the proper scale of the grid unit vectors.
 
-    GNx = 2.0 * losnorm * tan(degreeToRadian*Vangle/2.0);
+    double GNx = 2.0 * lineOfSightNorm * tan(degreeToRadian*Vangle/2.0);
 
-    GNy = GNx
-        * ((double) res[Y] / (double) res[X])
-        * ((double)iheader.aspect[Y]/ (double)iheader.aspect[X]);
+    double GNy = GNx
+               * ((double) res[Y] / (double) res[X])
+               * ((double)iheader.aspect[Y]/ (double)iheader.aspect[X]);
 
-    GNz = GNx
-        * ((double) res[Z] / (double) res[X])
-        * ((double)iheader.aspect[Z]/ (double)iheader.aspect[X]);
+    double GNz = GNx
+               * ((double) res[Z] / (double) res[X])
+               * ((double)iheader.aspect[Z]/ (double)iheader.aspect[X]);
 
     // Scale each grid basis vector.
 
-    V4_Scalar (Gx, *=, GNx);
-    V4_Scalar (Gy, *=, GNy);
-    V4_Scalar (Gz, *=, GNz);
+    Gx *= GNx;
+    Gy *= GNy;
+    Gz *= GNz;
 
     // Find the ray-grid origin point.
 
@@ -570,9 +565,9 @@ void CalcRayGrid (void) {
 
     // Finally, scale the grid basis vectors down by the corresponding resolutions.
 
-    V4_Scalar (Gx, /=, res[X]);
-    V4_Scalar (Gy, /=, res[Y]);
-    V4_Scalar (Gz, /=, res[Z]);
+    Gx /= res[X];
+    Gy /= res[Y];
+    Gz /= res[Z];
 
     Gorigin[0] += (Gx[0]/2.0) + (Gy[0]/2.0) + (Gz[0]/2.0);
     Gorigin[1] += (Gx[1]/2.0) + (Gy[1]/2.0) + (Gz[1]/2.0);
@@ -595,12 +590,12 @@ void FireRays () {
     eflag     = true;
 
     for (Zindex=iheader.start[Z];  Zindex <= iheader.end[Z];  ++Zindex) {
-        V4_3Vec (Zorigin, =, Gorigin, +, Zindex*Gz);
+        Zorigin = Gorigin + (Zindex*Gz);
         for (Yindex=iheader.start[Y];  Yindex <= iheader.end[Y];  ++Yindex) {
             printf ("%6u %6u\r", iheader.end[Z] - Zindex, iheader.end[Y] - Yindex);
             fflush (stdout);
 
-            V4_3Vec (Yorigin, =, Zorigin, +, Yindex*Gy);
+            Yorigin = Zorigin + (Yindex*Gy);
 
             if (!eflag) {
                 ++scanptr;
@@ -615,10 +610,10 @@ void FireRays () {
 
                 // Calculate the unit ViewFrom-RayDirection vector.
 
-                V4_3Vec (Gpoint, =, Yorigin, +, Xindex*Gx);
-                V4_3Vec (Dir, =, Gpoint, -, Vfrom);
-                norm = V4_Norm (Dir);
-                V4_Scalar (Dir, /=, norm);
+                Gpoint = Yorigin + (Xindex*Gx);
+                Dir = Gpoint - Vfrom;
+                norm = Dir.norm();
+                Dir /= norm;
 
                 // Fire the ray.
 

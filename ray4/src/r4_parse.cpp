@@ -673,7 +673,7 @@ void DoLight () {
     // If the light is directional, then normalize the light direction.
 
     if (light->type == LightType::Directional) {
-        if (! V4_Normalize (light->u.dir))
+        if (!light->u.dir.normalize())
             Error ("Zero light direction vector.");
     }
 
@@ -730,18 +730,18 @@ void Process_TetPar (TetPar *tp) {
 
     // Calculate the vectors from vertex 0 to vertices 1, 2, and 3.
 
-    V4_3Vec (tp->vec1, =, tp->vert[1], -, tp->vert[0]);
-    V4_3Vec (tp->vec2, =, tp->vert[2], -, tp->vert[0]);
-    V4_3Vec (tp->vec3, =, tp->vert[3], -, tp->vert[0]);
+    tp->vec1 = tp->vert[1] - tp->vert[0];
+    tp->vec2 = tp->vert[2] - tp->vert[0];
+    tp->vec3 = tp->vert[3] - tp->vert[0];
 
     // Calculate the parallelepiped's surface normal.
 
     {
         ushort  dominant1, dominant2;  // Dominant Axes
 
-        V4_Cross(tp->normal, tp->vec1,tp->vec2,tp->vec3);
+        tp->normal = cross(tp->vec1, tp->vec2, tp->vec3);
 
-        if (! V4_Normalize (tp->normal))
+        if (!tp->normal.normalize())
             Error ("Degenerate parallelepiped/tetrahedron; not 3D.");
 
         // Find the dominant axis of the normal vector and load up the ax1, ax2 and ax3 fields
@@ -762,7 +762,7 @@ void Process_TetPar (TetPar *tp) {
 
     // Calculate the hyperplane constant.
 
-    tp->planeConst = - V4_Dot (tp->normal, tp->vert[0]);
+    tp->planeConst = - dot(tp->normal, tp->vert[0].toVector());
 
     // Calculate the divisor for Cramer's Rule used to determine the barycentric coordinates of
     // intersection points.
@@ -896,8 +896,8 @@ void DoTriangle () {
 
     // Compute the two vectors from vertex 0 to vertices 1 and 2.
 
-    V4_3Vec (tnew->vec1, =, tnew->vert[1], -, tnew->vert[0]);
-    V4_3Vec (tnew->vec2, =, tnew->vert[2], -, tnew->vert[0]);
+    tnew->vec1 = tnew->vert[1] - tnew->vert[0];
+    tnew->vec2 = tnew->vert[2] - tnew->vert[0];
 
     if (!tnew->info.attr)
         Error ("Missing attributes for triangle description.");

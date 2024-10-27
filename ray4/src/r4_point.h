@@ -18,8 +18,41 @@
 //  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //**************************************************************************************************
+#ifndef R4_POINT_H
+#define R4_POINT_H
 
+#include <cstddef>
 #include "r4_vector.h"
 
 
-using Point4 = Vector4;
+class Point4 {
+    // Represents a four-dimensional point.
+
+  public:
+    double x, y, z, w;
+
+    Point4() = default;
+    Point4(const Point4&) = default;
+    ~Point4() = default;
+    Point4& operator= (const Point4 &other) = default;
+
+    Point4(double x, double y, double z, double w) : x(x), y(y), z(z), w(w) {}
+
+    // Returns the vector from the origin to the point. In other words, the vector with all
+    // coordinates equal to the point coordinates.
+    Vector4 toVector() const;
+
+    const double& operator[] (std::size_t index) const;
+          double& operator[] (std::size_t index);
+
+    Point4 operator- () const;
+    Vector4 operator- (const Point4&) const;
+    Point4 operator+ (const Vector4&) const;
+    Point4& operator*= (double scale);
+    Point4& operator/= (double divisor);
+};
+
+Point4 operator* (double s, const Point4& v);
+Point4 operator* (const Point4& v, double s);
+
+#endif

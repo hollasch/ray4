@@ -91,10 +91,10 @@ bool HitSphere (
     double  rad;    // Radical Value
     double  t1,t2;  // Intersection Ray Parameters
 
-    V4_3Vec (cdir, =, SPHERE->center, -, rayO);
+    cdir = SPHERE->center - rayO;
 
-    bb  = V4_Dot(cdir, rayD);
-    rad = (bb * bb) - V4_Dot(cdir,cdir) + SPHERE->rsqrd;
+    bb  = dot(cdir, rayD);
+    rad = (bb * bb) - dot(cdir, cdir) + SPHERE->rsqrd;
 
     if (rad < 0.0)
         return false;
@@ -121,7 +121,7 @@ bool HitSphere (
     *mindist = t1;
 
     if (intr)
-        V4_3Vec ((*intr), =, rayO, +, t1*rayD);
+        (*intr) = rayO + t1*rayD;
 
     if (normal) {
         (*normal)[0] = ((*intr)[0] - SPHERE->center[0]) / SPHERE->radius;
@@ -159,12 +159,12 @@ bool HitTetPar (
 
     // Find the ray parameter to intersect the hyperplane.
 
-    rayT = V4_Dot (tp->normal, rayD);
+    rayT = dot(tp->normal, rayD);
 
     if (fabs(rayT) < epsilon)  // If the ray is parallel to the hyperplane.
         return false;
 
-    rayT = (- tp->planeConst - V4_Dot(tp->normal,rayO)) / rayT;
+    rayT = (-tp->planeConst - dot(tp->normal, rayO.toVector())) / rayT;
 
     if (rayT < 0.0)      // If the object is behind the ray.
         return false;
@@ -175,7 +175,7 @@ bool HitTetPar (
     if (mindist && (*mindist > 0) && ((rayT < MINDIST) || (rayT > *mindist)))
         return false;
 
-    V4_3Vec (intr, =, rayO, +, rayT * rayD);
+    intr = rayO + (rayT * rayD);
 
     // Now we need to find the barycentric coordinates of the 4D object to determine if the
     // ray/hyperplane intersection point is inside of the 4D object. To simplify the process,
@@ -271,10 +271,10 @@ bool HitTetPar (
     *mindist = rayT;
 
     if (intersect)
-        V4_2Vec ((*intersect), =, intr);
+        (*intersect) = intr;
 
     if (normal)
-        V4_2Vec ((*normal), =, tp->normal);
+        (*normal) = tp->normal;
 
     if (objptr->type == ObjType::Tetrahedron) {
         ((Tetrahedron*)(objptr))->Bc1 = Bc1;
@@ -301,12 +301,11 @@ bool HitTriangle (
 
 #   define TRI  ((Triangle*)(objptr))
 
-    int     ax1, ax2;            // Dominant Axes, Tri. Projection
-    double  div;                 // Intersection Equation Divisor
-    Point4  intr;                // Ray/Plane Intersection Point
-    Vector4 _normal;             // Internal Normal Vector
-    double  rayT;                // Ray Equation Real Parameter
-    Vector4 vecTemp1, vecTemp2;  // Temporary Vectors
+    int     ax1, ax2;  // Dominant Axes, Tri. Projection
+    double  div;       // Intersection Equation Divisor
+    Point4  intr;      // Ray/Plane Intersection Point
+    Vector4 _normal;   // Internal Normal Vector
+    double  rayT;      // Ray Equation Real Parameter
 
     // The following segment calculates the intersection point (if one exists) with the ray and the
     // plane containing the polygon. The equation for this is as follows:
@@ -321,16 +320,14 @@ bool HitTriangle (
     // V0 a vertex of the triangle, vec1 is the vector from V0 to another vertex, and vec2 is the
     // vector from V0 to the other vertex.
 
-    vecTemp2 = Vector4(0,0,0,0);
-    V4_Cross (vecTemp2, rayD, TRI->vec1, TRI->vec2);
-    div = V4_Dot (vecTemp2, vecTemp2);
+    auto vecTemp2 = cross(rayD, TRI->vec1, TRI->vec2);
+    div = vecTemp2.normSquared();
     if (div < epsilon)
         return false;
 
-    V4_3Vec (vecTemp1, =, TRI->vert[0], -, rayO);
-    V4_Cross (vecTemp1, vecTemp1, TRI->vec1, TRI->vec2);
+    auto vecTemp1 = cross(TRI->vert[0] - rayO, TRI->vec1, TRI->vec2);
 
-    rayT = V4_Dot (vecTemp1, vecTemp2) / div;
+    rayT = dot(vecTemp1, vecTemp2) / div;
 
     // If the intersection point is behind the ray, then no intersection.
 
@@ -344,7 +341,7 @@ bool HitTriangle (
     if (mindist && (*mindist > 0) && ((rayT < MINDIST) || (rayT > *mindist)))
         return false;
 
-    V4_3Vec (intr, =, rayO, +, rayT * rayD);
+    intr = rayO + (rayT * rayD);
 
     // Compute the triangle normal vector. Since the triangle is embedded in 2-space, we've got an
     // extra degree of freedom floating around, so we need to do some jazz to pin it down. To do
@@ -355,11 +352,8 @@ bool HitTriangle (
     // computationally).
 
     {
-        Vector4 Vtemp{0,0,0,0};  // Temporary Vector
-
-        V4_Cross (Vtemp,    rayD,TRI->vec1,TRI->vec2);
-        _normal = Vector4(0,0,0,0);
-        V4_Cross (_normal, Vtemp,TRI->vec1,TRI->vec2);
+        auto Vtemp = cross(rayD, TRI->vec1, TRI->vec2);
+        _normal = cross(Vtemp, TRI->vec1, TRI->vec2);
     }
 
     // In order to find the barycentric coordinates of the intersection point in the triangle, we
@@ -442,8 +436,8 @@ bool HitTriangle (
 
     *mindist = rayT;
 
-    V4_2Vec ((*intersect), =, intr);
-    V4_2Vec ((*normal),    =, _normal);
+    (*intersect) = intr;
+    (*normal)    = _normal;
 
     return true;
 }

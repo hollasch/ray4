@@ -19,3 +19,83 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //**************************************************************************************************
 
+#include "r4_point.h"
+
+
+
+//==================================================================================================
+Vector4 Point4::toVector () const {
+    return {x, y, z, w};
+}
+
+//==================================================================================================
+const double& Point4::operator[] (std::size_t index) const {
+    if (index <= 0)
+        return x;
+    if (index <= 1)
+        return y;
+    if (index <= 2)
+        return z;
+    return w;
+}
+
+//==================================================================================================
+double& Point4::operator[] (std::size_t index) {
+    if (index <= 0)
+        return x;
+    if (index <= 1)
+        return y;
+    if (index <= 2)
+        return z;
+    return w;
+}
+
+//==================================================================================================
+Point4 Point4::operator- () const {
+    return {-x, -y, -z, -w};
+}
+
+//==================================================================================================
+Vector4 Point4::operator- (const Point4& other) const {
+    return {
+        x - other.x,
+        y - other.y,
+        z - other.z,
+        w - other.w
+    };
+}
+
+//==================================================================================================
+Point4 Point4::operator+ (const Vector4& v) const {
+    return {
+        x + v.x,
+        y + v.y,
+        z + v.z,
+        w + v.w
+    };
+}
+
+//==================================================================================================
+Point4& Point4::operator*= (double scale) {
+    x *= scale;
+    y *= scale;
+    z *= scale;
+    w *= scale;
+    return *this;
+}
+
+//==================================================================================================
+Point4& Point4::operator/= (double divisor) {
+    *this *= 1/divisor;
+    return *this;
+}
+
+//==================================================================================================
+Point4 operator* (double s, const Point4& v) {
+    return { s*v.x, s*v.y, s*v.z, s*v.w };
+}
+
+//==================================================================================================
+Point4 operator* (const Point4& v, double s) {
+    return s * v;
+}
