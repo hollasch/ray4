@@ -1,7 +1,4 @@
-
-// Requires C++20
-// #include <format>
-
+#include <format>
 #include <string>
 #include <catch2/catch_test_macros.hpp>
 #include "r4_color.h"
@@ -9,9 +6,6 @@
 #include "r4_point.h"
 
 namespace Catch {
-// Need C++20 for the following
-
-#if 0
     // Color to String
     template<> struct StringMaker<Color> {
         static std::string convert(Color const& value) {
@@ -32,7 +26,6 @@ namespace Catch {
             return std::format("Point4<{}, {}, {}, {}>", value.x, value.y, value.z, value.w);
         }
     };
-#endif
 }
 
 TEST_CASE("Color tests", "[color]") {
