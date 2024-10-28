@@ -40,6 +40,9 @@ class Vector4 {
     const double& operator[] (std::size_t index) const;
           double& operator[] (std::size_t index);
 
+    bool operator== (const Vector4& other) const;
+    bool operator!= (const Vector4& other) const;
+
     Vector4 operator- () const;
     Vector4 operator- (const Vector4& other) const;
     Vector4 operator+ (const Vector4& other) const;

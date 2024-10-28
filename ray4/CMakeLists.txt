@@ -8,6 +8,11 @@ set (CMAKE_CXX_STANDARD          11)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
 set (CMAKE_CXX_EXTENSIONS        OFF)
 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    add_compile_options("/W4")      # Enable level-4 warnings
+    add_compile_options("/wd 4996") # This function or variable may be unsafe. Consider using XXX instead.
+endif()
+
 project (ray4 LANGUAGES CXX)
 
 # Source
@@ -27,9 +32,23 @@ set ( sources_ray4
   src/r4_vector.cpp
 )
 
-if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    add_compile_options("/W4")      # Enable level-4 warnings
-    add_compile_options("/wd 4996") # This function or variable may be unsafe. Consider using XXX instead.
-endif()
-
 add_executable (ray4 ${sources_ray4})
+
+Include(FetchContent)
+
+FetchContent_Declare(
+  Catch2
+  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+  GIT_TAG        v3.7.1 # or a later release
+)
+
+FetchContent_MakeAvailable(Catch2)
+
+add_executable(tests
+    src/test.cpp
+    src/r4_color.cpp
+    src/r4_vector.cpp
+    src/r4_point.cpp
+)
+
+target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)

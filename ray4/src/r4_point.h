@@ -42,6 +42,9 @@ class Point4 {
     // coordinates equal to the point coordinates.
     Vector4 toVector() const;
 
+    bool operator== (const Point4& other) const;
+    bool operator!= (const Point4& other) const;
+
     const double& operator[] (std::size_t index) const;
           double& operator[] (std::size_t index);
 

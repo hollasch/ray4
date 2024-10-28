@@ -30,6 +30,16 @@ inline double clamp_double(double x, double min, double max) {
 }
 
 //==================================================================================================
+bool Color::operator== (const Color& other) const {
+    return r == other.r && g == other.g && b == other.b;
+}
+
+//==================================================================================================
+bool Color::operator!= (const Color& other) const {
+    return !(*this == other);
+}
+
+//==================================================================================================
 Color& Color::operator*= (double scale) {
     r *= scale;
     g *= scale;

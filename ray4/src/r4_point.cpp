@@ -29,6 +29,16 @@ Vector4 Point4::toVector () const {
 }
 
 //==================================================================================================
+bool Point4::operator== (const Point4& other) const {
+    return x == other.x && y == other.y && z == other.z && w == other.w;
+}
+
+//==================================================================================================
+bool Point4::operator!= (const Point4& other) const {
+    return !(*this == other);
+}
+
+//==================================================================================================
 const double& Point4::operator[] (std::size_t index) const {
     if (index <= 0)
         return x;

@@ -55,6 +55,16 @@ double& Vector4::operator[] (std::size_t index) {
 }
 
 //==================================================================================================
+bool Vector4::operator== (const Vector4& other) const {
+    return x == other.x && y == other.y && z == other.z && w == other.w;
+}
+
+//==================================================================================================
+bool Vector4::operator!= (const Vector4& other) const {
+    return !(*this == other);
+}
+
+//==================================================================================================
 Vector4 Vector4::operator- () const {
     return Vector4(-x, -y, -z, -w);
 }

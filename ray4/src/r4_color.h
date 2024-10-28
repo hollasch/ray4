@@ -32,6 +32,9 @@ class Color {
 
     Color(double red, double green, double blue) : r(red), g(green), b(blue) {}
 
+    bool operator== (const Color& other) const;
+    bool operator!= (const Color& other) const;
+
     Color& operator*= (double scale);
     Color& operator*= (const Color& other);
     Color& operator+= (const Color& other);
