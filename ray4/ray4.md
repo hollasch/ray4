@@ -24,18 +24,13 @@ In this document, lines that denote example input file lines will be preceeded w
 
 Target Platforms
 -----------------
-The ray4 program should run on any platform that supports floating point math and Unix file I/O
+The `ray4` program should run on any platform that supports floating point math and Unix file I/O
 operations. The ray4 program reads in the ASCII description file and generates the resulting image
 cube file.
 
-Included with the ray4 program are display programs: one for the Amiga microcomputer and one for
-platforms that support the Silicon Graphics GL language. These display programs allow for the
-display of slices of the image cube, either one at a time or several in a tiled display.
-Volume-rendering programs have not been written for the 4D raytracer yet.
 
-
-Input File Guidelines
-----------------------
+Ray4 Scene File Format
+-----------------------
 The input file is an ASCII with a fairly free format. In other words, whitespace characters separate
 tokens and may occur anywhere in the file. Whitespace characters include tab, linefeed, vertical
 tab, formfeed, carriage return, space, comma, open & close square brackets, and open & close curly
@@ -84,8 +79,7 @@ In addition to these directives there are the following global parameters:
     MaxDepth        <Integer [0,65535]>
 
 
-Global Parameters
-------------------
+### Global Parameters
 The global parameters have the following syntax:
 
     Ambient     <RGB>
@@ -95,8 +89,7 @@ The global parameters have the following syntax:
 The "ambient" parameter specifies the global ambient coefficient.
 
 
-Viewing Specification
-----------------------
+### Viewing Specification
 The viewing parameters are specified with the "view" directive:
 
     View
@@ -132,8 +125,7 @@ Here's an example 4D view:
 Note that the braces and commas are really just whitespace, but are added for readability.
 
 
-Lighting Parameters
---------------------
+### Lighting Parameters
 Ray4 supports two types of 4D lighting: directional and point source. The directional type is
 equivalent to a point light source at an infinite distance.
 
@@ -158,8 +150,7 @@ The subfields for the light directive are "position"/"direction" and "color", fo
     )
 
 
-Object Definitions
--------------------
+### Object Definitions
 The current version of the raytracer implements four different fundamental 4D objects:
 
   - 4-spheres,
@@ -170,7 +161,7 @@ The current version of the raytracer implements four different fundamental 4D ob
 All objects are defined with object directives that specify the geometrical paramters and give the
 attributes that specify how the object is to be rendered.
 
-### 4-Spheres
+#### 4-Spheres
 4-spheres are similar to their 3D counterparts, and were chosen because they were extremely easy to
 implement. They also yield a good amount of insight into several aspects of 4-space raytracing.
 
@@ -182,7 +173,7 @@ The 4-sphere is defined with the "sphere" directive:
         radius  1.0              > Radius 1.0
     )
 
-### 4-Tetrahedrons
+#### 4-Tetrahedrons
 4-tetrahedrons are basically like 3-tetrahedrons except that the vertices reside in 4-space. A
 useful analogy is to consider a triangle, which is fundamentally a 2-space object, that is allowed
 to reside in 3-space.
@@ -208,7 +199,7 @@ Note that the intersection routine finds the barycentric coordinate of the ray-t
 intersection point, so future additions of Gouraud and Phong shading would be relatively easy to
 implement.
 
-### 4-Parallelepipeds
+#### 4-Parallelepipeds
 The 4-parallelepiped is an easy addition to the 4D raytracer since the only difference in the
 intersection routines between the 4-tetrahedron and the 4-parallelepiped lies in the range of the
 barycentric coordinates of the ray-object intersection point.
@@ -238,7 +229,7 @@ The object definition for a 4-parallelepiped looks identical to the one for the 
 Note that the above description defines a solid unit cube in 3-space that has one vertex at the
 origin.
 
-### 4-Planes
+#### 4-Planes
 The infinite hyperplane is defined by a point on the plane and the plane normal vector:
 
     Plane
@@ -248,8 +239,7 @@ The infinite hyperplane is defined by a point on the plane and the plane normal 
     )
 
 
-Object Attributes
-------------------
+### Object Attributes
 In this raytracer, the object rendering attributes are stored separately from their geometrical
 descriptions. This method has the advantage that large groups of commonly rendered objects need not
 duplicate storage to describe the same rendering attributes.
@@ -296,8 +286,7 @@ The following is an example of immediate attributes definition:
     )
 
 
-Inheritance
-------------
+### Inheritance
 For both object and attribute definitions, any subfield may be omitted from the definition
 directive. Fields which are omitted are assigned default values based on the previous definition of
 the same type of directive.
@@ -337,9 +326,9 @@ For example:
                                       > from S1 definition.
     plane  ( attributes ( ... ) )     > Inherits geometry from P2,
                                       > attribute values from A3.
-    attributes A4 ( )      > Inherits values from the attributes
-                           > definition (immediate mode) in the
-                           > previous plane definition.
+    attributes A4 ( )                 > Inherits values from the attributes
+                                      > definition (immediate mode) in the
+                                      > previous plane definition.
 
 
 Lighting Model
@@ -370,7 +359,7 @@ and also allows for greater ambient lighting control.
 The current version of ray4 does not implement distance attenuation of light.
 
 
-Display Device Parameters
+Ray4 Command-Line Options
 --------------------------
 As you may have noticed, the scene description file does not specify in any way the size, resolution
 or other aspects of the final image. This allows for a more generic scene description so that image
@@ -430,45 +419,10 @@ in the Z direction with a resolution of 100:100:1000, then you'd need to specify
 
 Output File Format
 -------------------
-The output file is in two parts: an information header and the image cube data. The information
-header has the following C structure definition:
-
-    typedef struct S_IMAGEHDR   ImageHdr;
-
-    struct S_IMAGEHDR
-    {  unsigned long   magic;        /* Magic Number */
-       unsigned char   version;      /* Image File Version Number */
-       unsigned char   bitsperpixel; /* Number of Bits per Pixel */
-       unsigned short  aspect[3];    /* Aspect Ratios [X,Y,Z] */
-       unsigned short  first[3];     /* Start Voxels for [X,Y,Z] */
-       unsigned short  last[3];      /* End   Voxels for [X,Y,Z] */
-    };
-
-This structure assumes that `short's are sixteen bits in size. The fields are as follows:
-
-  - `magic` -- Always set to 'Ray4' (0x52977934).
-  - `version` -- Lower is older. Currently set to 1.
-  - `bitsperpixel` -- Total bits for each pixel - red, green & blue.
-  - `aspect` -- Aspect ratio.
-  - `first` -- Starting voxel of the image cube (X,Y,Z).
-  - `last` -- Ending voxel of the image cube (X,Y,Z). The dimension of the data is
-    (last[0]-first[0]+1) horizontally, (last[1]-first[1]+1) vertically, and (last[2]-first[2] deep.
-
-The header structure size will be a multiple of longwords. After the header follows the image data.
-Each scanline consists of RGB triples, where each triple is `bitsperpixel` long. Scanlines are
-stored left to right, top to bottom, "front" to "back". All scanlines begin on even byte boundaries.
-
-
-Image Cube Display
--------------------
-In order to display the resulting image cube, you can use either the `r4toiff` or `r4tosgi` tools.
-The `r4toiff` program takes the image and displays it on an Amiga microcomputer, and has the option
-of storing the image as an Interchange File Format image file. The `r4tosgi' tool displays the image
-cube on a platform that supports the Silicon Graphics GL (Graphics Language) library.
-
-For information on the command-line options for these tools, enter the toolname without arguments
-for a help listing.
+See [_Ray4 Image File Format_][image-format] for information about the format of the 3D image cube
+result of a `ray4` ray traced image.
 
 
 
+[image-format]: ./ray4-image-format.md
 [thesis]: https://hollasch.github.io/ray4/Four-Space_Visualization_of_4D_Objects.html
