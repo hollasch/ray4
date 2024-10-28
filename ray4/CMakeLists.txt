@@ -45,7 +45,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(Catch2)
 
 add_executable(tests
-    src/test.cpp
+    src/r4_test.cpp
     src/r4_color.cpp
     src/r4_vector.cpp
     src/r4_point.cpp
