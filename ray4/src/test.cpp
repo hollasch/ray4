@@ -137,6 +137,8 @@ TEST_CASE("Vector tests", "[vector4]") {
     }
 
     SECTION("Vector scalar division") {
+        CHECK(Vector4(2,4,6,8) / 2 == Vector4(1,2,3,4));
+
         auto v = Vector4(2,4,6,8);
         v /= 2;
         CHECK(v == Vector4(1,2,3,4));
@@ -209,6 +211,18 @@ TEST_CASE("Point tests", "[point4]") {
         REQUIRE(Point4(1,2,3,4) != Point4(1,2,3,0));
     }
 
+    SECTION("Point plus equals vector") {
+        auto p = Point4(1,2,3,4);
+        p += Vector4(2,3,4,5);
+        CHECK(p == Point4(3,5,7,9));
+    }
+
+    SECTION("Point minus equals vector") {
+        auto p = Point4(3,5,7,9);
+        p -= Vector4(2,3,4,5);
+        CHECK(p == Point4(1,2,3,4));
+    }
+
     SECTION("Point to vector") {
         CHECK(Point4(1,2,3,4).toVector() == Vector4(1,2,3,4));
     }
@@ -220,5 +234,9 @@ TEST_CASE("Point tests", "[point4]") {
     SECTION("Point-vector addition") {
         CHECK(Point4(10,10,10,10) + Vector4(4,5,6,7) == Point4(14,15,16,17));
         CHECK(Vector4(4,5,6,7) + Point4(10,10,10,10) == Point4(14,15,16,17));
+    }
+
+    SECTION("Point-vector subtraction") {
+        CHECK(Point4(10,10,10,10) - Vector4(4,5,6,7) == Point4(6,5,4,3));
     }
 }

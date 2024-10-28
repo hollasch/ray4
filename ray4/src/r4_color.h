@@ -35,16 +35,19 @@ class Color {
     bool operator== (const Color& other) const;
     bool operator!= (const Color& other) const;
 
-    Color& operator*= (double scale);
-    Color& operator*= (const Color& other);
-    Color& operator+= (const Color& other);
+    Color& operator*= (double);
+    Color& operator*= (const Color&);
+    Color& operator+= (const Color&);
+
+    Color operator* (double) const;
+    Color operator* (const Color&) const;
 
     // Clamps each color component to the range [min,max].
     Color clamp(double min, double max) const;
 };
 
-Color operator* (double, const Color&);
-Color operator* (const Color&, double);
-Color operator* (const Color&, const Color&);
+inline Color operator* (double d, const Color& c) {
+    return c * d;
+}
 
 #endif

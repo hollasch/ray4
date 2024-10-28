@@ -43,11 +43,14 @@ class Vector4 {
     bool operator== (const Vector4& other) const;
     bool operator!= (const Vector4& other) const;
 
+    Vector4& operator*= (double scale);
+    Vector4& operator/= (double divisor);
+
     Vector4 operator- () const;
     Vector4 operator+ (const Vector4& other) const;
     Vector4 operator- (const Vector4& other) const;
-    Vector4& operator*= (double scale);
-    Vector4& operator/= (double divisor);
+    Vector4 operator* (double scale) const;
+    Vector4 operator/ (double divisor) const;
 
     // If the vector length is longer than a certain tolerance, the vector is resized to a length of
     // one, and the function returns true. Otherwise, the vector is considered to have a length of
@@ -58,8 +61,9 @@ class Vector4 {
     double norm() const;
 };
 
-Vector4 operator* (double s, const Vector4& v);
-Vector4 operator* (const Vector4& v, double s);
+inline Vector4 operator* (double s, const Vector4& v) {
+    return v * s;
+}
 
 double  dot   (const Vector4&, const Vector4&);
 Vector4 cross (const Vector4&, const Vector4&, const Vector4&);

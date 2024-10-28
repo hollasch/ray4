@@ -123,12 +123,8 @@ bool HitSphere (
     if (intr)
         (*intr) = rayO + t1*rayD;
 
-    if (normal) {
-        (*normal)[0] = ((*intr)[0] - sphere.center[0]) / sphere.radius;
-        (*normal)[1] = ((*intr)[1] - sphere.center[1]) / sphere.radius;
-        (*normal)[2] = ((*intr)[2] - sphere.center[2]) / sphere.radius;
-        (*normal)[3] = ((*intr)[3] - sphere.center[3]) / sphere.radius;
-    }
+    if (normal)
+        *normal = (*intr - sphere.center) / sphere.radius;
 
     return true;
 }

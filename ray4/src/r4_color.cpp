@@ -44,7 +44,6 @@ Color& Color::operator*= (double scale) {
     r *= scale;
     g *= scale;
     b *= scale;
-
     return *this;
 }
 
@@ -53,7 +52,6 @@ Color& Color::operator*= (const Color& other) {
     r *= other.r;
     g *= other.g;
     b *= other.b;
-
     return *this;
 }
 
@@ -62,26 +60,20 @@ Color& Color::operator+= (const Color& other) {
     r += other.r;
     g += other.g;
     b += other.b;
-
     return *this;
+}
+
+//==================================================================================================
+Color Color::operator* (double scale) const {
+    return {scale * r, scale * g, scale * b};
+}
+
+//==================================================================================================
+Color Color::operator* (const Color& other) const {
+    return {r * other.r, g * other.g, b * other.b};
 }
 
 //==================================================================================================
 Color Color::clamp(double min, double max) const {
     return Color(clamp_double(r, min, max), clamp_double(g, min, max), clamp_double(b, min, max));
-}
-
-//==================================================================================================
-Color operator* (double scale, const Color& color) {
-    return Color(scale * color.r, scale * color.g, scale * color.b);
-}
-
-//==================================================================================================
-Color operator* (const Color& color, double scale) {
-    return scale * color;
-}
-
-//==================================================================================================
-Color operator* (const Color& c1, const Color& c2) {
-    return Color(c1.r * c2.r, c1.g * c2.g, c1.b * c2.b);
 }

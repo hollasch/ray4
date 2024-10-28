@@ -116,10 +116,8 @@ void RayTrace (
     // Add illumation to the point from all visible lights.
 
     for (lptr=lightlist;  lptr;  lptr=lptr->next) {
-        Color    lcolor;   // Light Color
-        Vector4  ldir;     // Light Direction
-        double   mindist;  // Nearest Object Distance
-        Vector4  Refl;     // Reflection Vector
+        Vector4 ldir;     // Light Direction
+        double  mindist;  // Nearest Object Distance
 
         if (lptr->type == LightType::Directional) {
             ldir = lptr->u.dir;
@@ -144,7 +142,7 @@ void RayTrace (
         // transparent object, then ignore refraction, but color the light we're receiving based on
         // the object's transparent color.
 
-        lcolor = lptr->color;
+        auto lcolor = lptr->color;  // Light Color
 
         for (optr=objlist;  optr;  optr=optr->next) {
             double minsave=mindist;  // Nearest Object Distance (saved)
@@ -182,7 +180,7 @@ void RayTrace (
         // Calculate the light reflection vector.
 
         ftemp *= 2.0;
-        Refl = -ldir + (ftemp * nearnormal);
+        Vector4 Refl = -ldir + (ftemp * nearnormal);  // Reflection Vector
 
         // Calculate the cosine of the sight & reflection vectors, raised to the Phong power, for
         // the specular reflection.
@@ -204,39 +202,26 @@ void RayTrace (
     // Find the contribution from the refraction vector, if applicable.
 
     if (nearattr->flags & AT_TRANSPAR) {
-        Vector4 RefrD;   // Refracted Direction Vector
-        Vector4 T;       // Temporary Vector
-        Color   Tcolor;  // Transparent Color
-
-        T = NdotD * nearnormal;
+        Vector4 T = NdotD * nearnormal;
         ftemp = global_indexref / nearattr->indexref;
 
-        RefrD[0] = T[0] + (ftemp * (rayD[0] - T[0]));
-        RefrD[1] = T[1] + (ftemp * (rayD[1] - T[1]));
-        RefrD[2] = T[2] + (ftemp * (rayD[2] - T[2]));
-        RefrD[3] = T[3] + (ftemp * (rayD[3] - T[3]));
+        Vector4 RefrD = T + (ftemp * (rayD - T));  // Refracted Direction Vector
 
+        Color Tcolor;  // Transparent Color
         RayTrace (nearintr, RefrD, Tcolor, level);
 
-        color.r += Tcolor.r * nearattr->Kt.r;
-        color.g += Tcolor.g * nearattr->Kt.g;
-        color.b += Tcolor.b * nearattr->Kt.b;
+        color += nearattr->Kt * Tcolor;
     }
-
 
     // Find the contribution from the reflection vector, if applicable.
 
     if (nearattr->flags & AT_REFLECT) {
-        Color   Rcolor;  // Reflected Color
-        Vector4 ReflD;   // Reflection Direction Vector
-
         ftemp = 2.0 * NdotD;
-        ReflD = rayD - (ftemp * nearnormal);
+        Vector4 ReflD = rayD - (ftemp * nearnormal);
 
+        Color Rcolor;  // Reflected Color
         RayTrace (nearintr, ReflD, Rcolor, level);
 
-        color.r += Rcolor.r * nearattr->Ks.r;
-        color.g += Rcolor.g * nearattr->Ks.g;
-        color.b += Rcolor.b * nearattr->Ks.b;
+        color += nearattr->Ks * Rcolor;
     }
 }

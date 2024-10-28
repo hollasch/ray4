@@ -44,12 +44,16 @@ class Point4 {
     const double& operator[] (std::size_t index) const;
           double& operator[] (std::size_t index);
 
+    Point4& operator+= (const Vector4&);
+    Point4& operator-= (const Vector4&);
+
     // Returns the vector from the origin to the point. In other words, the vector with all
     // coordinates equal to the point coordinates.
     Vector4 toVector() const;
 
     Vector4 operator- (const Point4&) const;
     Point4 operator+ (const Vector4&) const;
+    Point4 operator- (const Vector4&) const;
 };
 
 inline Point4 operator+ (const Vector4& v, const Point4& p) {

@@ -56,26 +56,39 @@ double& Point4::operator[] (std::size_t index) {
 }
 
 //==================================================================================================
+Point4& Point4::operator+= (const Vector4& v) {
+    x += v.x;
+    y += v.y;
+    z += v.z;
+    w += v.w;
+    return *this;
+}
+
+//==================================================================================================
+Point4& Point4::operator-= (const Vector4& v) {
+    x -= v.x;
+    y -= v.y;
+    z -= v.z;
+    w -= v.w;
+    return *this;
+}
+
+//==================================================================================================
 Vector4 Point4::toVector () const {
     return {x, y, z, w};
 }
 
 //==================================================================================================
 Vector4 Point4::operator- (const Point4& other) const {
-    return {
-        x - other.x,
-        y - other.y,
-        z - other.z,
-        w - other.w
-    };
+    return { x - other.x, y - other.y, z - other.z, w - other.w };
 }
 
 //==================================================================================================
 Point4 Point4::operator+ (const Vector4& v) const {
-    return {
-        x + v.x,
-        y + v.y,
-        z + v.z,
-        w + v.w
-    };
+    return { x + v.x, y + v.y, z + v.z, w + v.w };
+}
+
+//==================================================================================================
+Point4 Point4::operator- (const Vector4& v) const {
+    return { x - v.x, y - v.y, z - v.z, w - v.w };
 }

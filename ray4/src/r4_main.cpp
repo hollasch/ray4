@@ -558,10 +558,7 @@ void CalcRayGrid (void) {
 
     // Find the ray-grid origin point.
 
-    Gorigin[0] = Vto[0] - (Gx[0]/2.0) - (Gy[0]/2.0) - (Gz[0]/2.0);
-    Gorigin[1] = Vto[1] - (Gx[1]/2.0) - (Gy[1]/2.0) - (Gz[1]/2.0);
-    Gorigin[2] = Vto[2] - (Gx[2]/2.0) - (Gy[2]/2.0) - (Gz[2]/2.0);
-    Gorigin[3] = Vto[3] - (Gx[3]/2.0) - (Gy[3]/2.0) - (Gz[3]/2.0);
+    Gorigin = Vto - (Gx/2) - (Gy/2) - (Gz/2);
 
     // Finally, scale the grid basis vectors down by the corresponding resolutions.
 
@@ -569,10 +566,7 @@ void CalcRayGrid (void) {
     Gy /= res[Y];
     Gz /= res[Z];
 
-    Gorigin[0] += (Gx[0]/2.0) + (Gy[0]/2.0) + (Gz[0]/2.0);
-    Gorigin[1] += (Gx[1]/2.0) + (Gy[1]/2.0) + (Gz[1]/2.0);
-    Gorigin[2] += (Gx[2]/2.0) + (Gy[2]/2.0) + (Gz[2]/2.0);
-    Gorigin[3] += (Gx[3]/2.0) + (Gy[3]/2.0) + (Gz[3]/2.0);
+    Gorigin += (Gx/2) + (Gy/2) + (Gz/2);
 }
 
 //==================================================================================================

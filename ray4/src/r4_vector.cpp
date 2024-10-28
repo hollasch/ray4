@@ -66,17 +66,27 @@ bool Vector4::operator!= (const Vector4& other) const {
 
 //==================================================================================================
 Vector4 Vector4::operator- () const {
-    return Vector4(-x, -y, -z, -w);
+    return {-x, -y, -z, -w};
 }
 
 //==================================================================================================
 Vector4 Vector4::operator+ (const Vector4& other) const {
-    return Vector4(x+other.x, y+other.y, z+other.z, w+other.w);
+    return {x+other.x, y+other.y, z+other.z, w+other.w};
 }
 
 //==================================================================================================
 Vector4 Vector4::operator- (const Vector4& other) const {
-    return Vector4(x-other.x, y-other.y, z-other.z, w-other.w);
+    return {x-other.x, y-other.y, z-other.z, w-other.w};
+}
+
+//==================================================================================================
+Vector4 Vector4::operator* (double s) const {
+    return {s*x, s*y, s*z, s*w};
+}
+
+//==================================================================================================
+Vector4 Vector4::operator/ (double d) const {
+    return {x/d, y/d, z/d, w/d};
 }
 
 //==================================================================================================
@@ -118,16 +128,6 @@ bool Vector4::normalize () {
 
     *this /= sqrt(vecNormSquared);
     return true;
-}
-
-//==================================================================================================
-Vector4 operator* (double s, const Vector4& v) {
-    return Vector4(s*v.x, s*v.y, s*v.z, s*v.w);
-}
-
-//==================================================================================================
-Vector4 operator* (const Vector4& v, double s) {
-    return s * v;
 }
 
 //==================================================================================================
