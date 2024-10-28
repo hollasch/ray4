@@ -84,17 +84,17 @@ bool HitSphere (
 {
     // This is the intersection function for hyperspheres.
 
-#   define SPHERE  ((Sphere*)(objptr))   // Target Sphere
+    const auto& sphere = *reinterpret_cast<Sphere*>(objptr);
 
     double  bb;     // Quadratic Equation Parameter
     Vector4 cdir;   // Direction from Sphere Center to Eye
     double  rad;    // Radical Value
     double  t1,t2;  // Intersection Ray Parameters
 
-    cdir = SPHERE->center - rayO;
+    cdir = sphere.center - rayO;
 
     bb  = dot(cdir, rayD);
-    rad = (bb * bb) - dot(cdir, cdir) + SPHERE->rsqrd;
+    rad = (bb * bb) - dot(cdir, cdir) + sphere.rsqrd;
 
     if (rad < 0.0)
         return false;
@@ -124,10 +124,10 @@ bool HitSphere (
         (*intr) = rayO + t1*rayD;
 
     if (normal) {
-        (*normal)[0] = ((*intr)[0] - SPHERE->center[0]) / SPHERE->radius;
-        (*normal)[1] = ((*intr)[1] - SPHERE->center[1]) / SPHERE->radius;
-        (*normal)[2] = ((*intr)[2] - SPHERE->center[2]) / SPHERE->radius;
-        (*normal)[3] = ((*intr)[3] - SPHERE->center[3]) / SPHERE->radius;
+        (*normal)[0] = ((*intr)[0] - sphere.center[0]) / sphere.radius;
+        (*normal)[1] = ((*intr)[1] - sphere.center[1]) / sphere.radius;
+        (*normal)[2] = ((*intr)[2] - sphere.center[2]) / sphere.radius;
+        (*normal)[3] = ((*intr)[3] - sphere.center[3]) / sphere.radius;
     }
 
     return true;

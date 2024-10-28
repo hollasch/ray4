@@ -53,7 +53,6 @@ void RayTrace (
     double      NdotD = 0;          // Normal dot rayD
     ObjInfo    *optr;               // Object List Traversal Pointer
 
-
     ++ stats.Ncast;
     ++ level;
 

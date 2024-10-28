@@ -173,7 +173,7 @@ static char        token[MAXTLEN+1];          // Input Token
 
 
 //==================================================================================================
-void Error (char *format, ...) {
+void Error (const char *format, ...) {
     // This routine handles errors in the input stream. It prints out the current line number of the
     // input stream and prints the error message and the optional printf()-like argument. After
     // printing the message it halts execution of the raytracer.
@@ -353,8 +353,8 @@ char *GetToken  (
 
 //==================================================================================================
 bool keyeq (
-    char *string,  // Input Token
-    char *key)     // First KEYSIG digits of keyword.
+    const char *string,  // Input Token
+    const char *key)     // First KEYSIG digits of keyword.
 {
     // This routine compares an input token with a keyword. If the two strings match up to the
     // significant length, this routine returns 1, otherwise it returns 0. This routine assumes that

@@ -201,7 +201,7 @@ struct Triangle {
 
 void  CloseInput  (void);
 void  CloseOutput (void);
-void  Halt        (char*, ...);
+void  Halt        (const char*, ...);
 bool  HitSphere   (ObjInfo*, Point4, Vector4, double*, Point4*, Vector4*);
 bool  HitTetPar   (ObjInfo*, Point4, Vector4, double*, Point4*, Vector4*);
 bool  HitTriangle (ObjInfo*, Point4, Vector4, double*, Point4*, Vector4*);

@@ -136,7 +136,7 @@ void MyFree (void *addr) {
 }
 
 //==================================================================================================
-void Halt (char *message, ...) {
+void Halt (const char *message, ...) {
     // This procedure replaces printf() to print out an error message, and has the side effect of
     // cleaning up before exiting (de-allocating memory, closing open files, and so on).
 
@@ -216,7 +216,7 @@ char *GetField (char *str, ushort *value) {
     if ((*str < '0') || ('9' < *str))
         return nullptr;
 
-    *value = static_cast<ushort>(atoi (str));
+    *value = static_cast<ushort>(atoi(str));
 
     while (('0' <= *str) && (*str <= '9'))
         ++str;
@@ -664,7 +664,7 @@ void FireRays () {
 }
 
 //==================================================================================================
-void main (int argc, char *argv[]) {
+int main (int argc, char *argv[]) {
     // The following is the entry procedure for the ray4 ray tracer.
 
     ProcessArgs(argc, argv);
