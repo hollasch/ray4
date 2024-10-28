@@ -38,24 +38,22 @@ class Point4 {
 
     Point4(double x, double y, double z, double w) : x(x), y(y), z(z), w(w) {}
 
-    // Returns the vector from the origin to the point. In other words, the vector with all
-    // coordinates equal to the point coordinates.
-    Vector4 toVector() const;
-
     bool operator== (const Point4& other) const;
     bool operator!= (const Point4& other) const;
 
     const double& operator[] (std::size_t index) const;
           double& operator[] (std::size_t index);
 
-    Point4 operator- () const;
+    // Returns the vector from the origin to the point. In other words, the vector with all
+    // coordinates equal to the point coordinates.
+    Vector4 toVector() const;
+
     Vector4 operator- (const Point4&) const;
     Point4 operator+ (const Vector4&) const;
-    Point4& operator*= (double scale);
-    Point4& operator/= (double divisor);
 };
 
-Point4 operator* (double s, const Point4& v);
-Point4 operator* (const Point4& v, double s);
+inline Point4 operator+ (const Vector4& v, const Point4& p) {
+    return p + v;
+}
 
 #endif

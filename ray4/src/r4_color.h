@@ -39,6 +39,7 @@ class Color {
     Color& operator*= (const Color& other);
     Color& operator+= (const Color& other);
 
+    // Clamps each color component to the range [min,max].
     Color clamp(double min, double max) const;
 };
 

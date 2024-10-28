@@ -44,8 +44,8 @@ class Vector4 {
     bool operator!= (const Vector4& other) const;
 
     Vector4 operator- () const;
-    Vector4 operator- (const Vector4& other) const;
     Vector4 operator+ (const Vector4& other) const;
+    Vector4 operator- (const Vector4& other) const;
     Vector4& operator*= (double scale);
     Vector4& operator/= (double divisor);
 
