@@ -15,7 +15,7 @@ Data Types
 The following data types are used in the file format:
 
   | Type    | Size in Bytes | Description
-  |---------|---------------|------------------------------------------------
+  |---------|---------------|-------------------------------------------------
   | uint8   | 1             | unsigned integer, 8 bits
   | uint16  | 2             | unsigned integer, 16 bits
   | uint32  | 4             | unsigned integer, 32 bits
@@ -43,10 +43,10 @@ following format:
 
 The following pixel types are supported:
 
-    | Value | Meaning
-    |-------|------------------------------------------
-    |  0x00 | RGB unsigned integers, 0 to maximum value
-    |  0x01 | RGB floating-point values, [0, 1]
+  | Value | Meaning
+  |-------|-------------------------------------------
+  |  0x00 | RGB unsigned integers, 0 to maximum value
+  |  0x01 | RGB floating-point values, [0, 1]
 
 The supported number of bits per pixel are:
 
