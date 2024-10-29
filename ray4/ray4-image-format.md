@@ -15,7 +15,7 @@ Data Types
 The following data types are used in the file format:
 
   | Type    | Size in Bytes | Description
-  |---------|---------------|---------------------------------------------------------------------
+  |---------|---------------|------------------------------------------------
   | uint8   | 1             | unsigned integer, 8 bits
   | uint16  | 2             | unsigned integer, 16 bits
   | uint32  | 4             | unsigned integer, 32 bits
@@ -23,6 +23,55 @@ The following data types are used in the file format:
   | float64 | 8             | IEEE 754 floating-point value, double-precision
 
 Note that all values are written in big-endian (most significant bits first).
+
+
+
+Ray4 Image File Format v2
+--------------------------
+
+### Image Header
+An image file is split into two parts: the header and the image cube data. The file header has the
+following format:
+
+    struct ImageHeader {
+       uint32 magic = 0x52617934;  // Magic Number = 'Ray4'
+       uint8  version = 2;         // Image File Version Number
+       uint8  pixelType;
+       uint16 bitsPerPixel;        // Number of Bits per Pixel
+       uint16 resolution[3];       // Image resolution Rx, Ry, Rz
+    }
+
+The following pixel types are supported:
+
+    | Value | Meaning
+    |-------|------------------------------------------
+    |  0x00 | RGB unsigned integers, 0 to maximum value
+    |  0x01 | RGB floating-point values, [0, 1]
+
+The supported number of bits per pixel are:
+
+  - Pixel Type 0x00: 24
+  - Pixel Type 0x01: 96 (single-precision RGB), 192 (double-precision RGB)
+
+### Image Data
+Image data follows the image header.
+
+Since much of a 3D image cube will likely be the background color, planes, lines and pixels are all
+run-length encoded to conserve space.
+
+The very first bit of image data is a single pixel of the background color.
+
+Image data is ordered front-to-back, top-to-bottom, left-to-right.
+
+Following the background pixel color are Rz image planes. Each plane starts with a single unsigned
+byte. A value of 0x00 indicates a regular plane composed of Ry pixel lines. A value of 0x01
+indicates a plane composed entirely of Rx × Ry background color pixels.
+
+Each pixel line starts with a single byte, just as the image plane. A value of 0x00 indicates a
+regular pixel line, and a value of 0x01 indicates a line of Rx pixels of background color.
+
+_Note: come up with a way to run-length encode pixel spans within a line._
+
 
 
 Ray4 Image File Format v1
