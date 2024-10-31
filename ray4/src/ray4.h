@@ -48,13 +48,6 @@ using ulong  = unsigned long;
 using ushort = unsigned short;
 
 
-// Standard Ray4 Includes
-
-#include "r4_color.h"
-#include "r4_point.h"
-#include "r4_vector.h"
-
-
 // Constant Definitions
 
 const double epsilon = 1.0e-15;  // Very Small Number (Effectively Zero)
@@ -92,16 +85,23 @@ inline double clamp (double x, double min, double max) {
     return x;
 }
 
+inline double lerp (double a, double b, double t) {
+    return a + t*(b - a);
+}
+
 #define NEW(type,num)  (type *) MyAlloc((unsigned long)(num)*sizeof(type))
 #define DELETE(addr)   MyFree ((char*)addr)
 
 
-// Structure Definitions
+// Standard Ray4 Includes
 
-struct Ray {        // Ray Definition
-    Point4   origin;  // Ray Origin
-    Vector4  dir;     // Ray Direction
-};
+#include "r4_color.h"
+#include "r4_point.h"
+#include "r4_ray.h"
+#include "r4_vector.h"
+
+
+// Structure Definitions
 
 struct Stats {
     ulong  Ncast;     // Number of Rays Cast
@@ -159,7 +159,7 @@ struct ObjInfo {
     ObjType     type;       // Object Type
     InfoFlag    flags;      // Information Flags
     bool      (*intersect)  // Intersection Function
-                (ObjInfo*, Point4, Vector4, double*, Point4*, Vector4*);
+                (ObjInfo*, const Ray4&, double*, Point4*, Vector4*);
 };
 
 struct Sphere {
@@ -202,15 +202,15 @@ struct Triangle {
 void  CloseInput  (void);
 void  CloseOutput (void);
 void  Halt        (const char*, ...);
-bool  HitSphere   (ObjInfo*, Point4, Vector4, double*, Point4*, Vector4*);
-bool  HitTetPar   (ObjInfo*, Point4, Vector4, double*, Point4*, Vector4*);
-bool  HitTriangle (ObjInfo*, Point4, Vector4, double*, Point4*, Vector4*);
+bool  HitSphere   (ObjInfo*, const Ray4&, double*, Point4*, Vector4*);
+bool  HitTetPar   (ObjInfo*, const Ray4&, double*, Point4*, Vector4*);
+bool  HitTriangle (ObjInfo*, const Ray4&, double*, Point4*, Vector4*);
 char *MyAlloc     (size_t);
 void  MyFree      (void*);
 void  OpenInput   (void);
 void  OpenOutput  (void);
 void  ParseInput  (void);
-void  RayTrace    (Point4, Vector4, Color&, ulong);
+void  RayTrace    (const Ray4&, Color&, ulong);
 int   ReadChar    (void);
 void  UnreadChar  (int);
 void  WriteBlock  (void *block, int size);

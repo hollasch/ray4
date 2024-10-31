@@ -598,20 +598,20 @@ void FireRays () {
 
             for (Xindex=iheader.start[X];  Xindex <= iheader.end[X];  ++Xindex) {
                 Color    color;   // Pixel Color
-                Vector4  Dir;     // Ray Direction Vector
+                Vector4  dir;     // Ray Direction Vector
                 Point4   Gpoint;  // Current Grid Point
                 double   norm;    // Vector Norm Value
 
                 // Calculate the unit ViewFrom-RayDirection vector.
 
                 Gpoint = Yorigin + (Xindex*Gx);
-                Dir = Gpoint - Vfrom;
-                norm = Dir.norm();
-                Dir /= norm;
+                dir = Gpoint - Vfrom;
+                norm = dir.norm();
+                dir /= norm;
 
                 // Fire the ray.
 
-                RayTrace (Vfrom, Dir, color, 0);
+                RayTrace (Ray4(Vfrom, dir), color, 0);
 
                 // Scale the resulting color to 0-255.
 

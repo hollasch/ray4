@@ -42,12 +42,11 @@
 //
 // The functions take the following parameter list:
 //
-//     objptr  (ObjInfo*):  Pointer to the Object Structure
-//     rayO    (Point4  ):  Ray Origin
-//     rayD    (Vector4 ):  Ray Direction (Must Be A Unit Vector)
-//     mindist (double* ):  Closest Intersection Distance So Far
-//     intr    (Point4* ):  Intersection Point
-//     normal  (Vector4*):  Surface Normal at Intersection Point
+//     ObjInfo* objptr : Pointer to the Object Structure
+//     Ray4     ray    : Ray Origin
+//     double  *mindist: Closest Intersection Distance So Far
+//     Point4  *intr   : Intersection Point
+//     Vector4 *normal : Surface Normal at Intersection Point
 //
 // If the ray does not intersect the object, the intersection function returns false and does not
 // alter `mindist', `intr' or `normal'.
@@ -75,12 +74,11 @@
 
 
 bool HitSphere (
-    ObjInfo *objptr,    // Sphere to Test
-    Point4   rayO,      // Ray Origin
-    Vector4  rayD,      // Ray Direction
-    double  *mindist,   // Previous Minimum Distance
-    Point4  *intr,      // Intersection Point
-    Vector4 *normal)    // Surface Normal @ Intersection Point
+    ObjInfo    *objptr,    // Sphere to Test
+    const Ray4 &ray,       // Trace Ray
+    double     *mindist,   // Previous Minimum Distance
+    Point4     *intr,      // Intersection Point
+    Vector4    *normal)    // Surface Normal @ Intersection Point
 {
     // This is the intersection function for hyperspheres.
 
@@ -91,9 +89,9 @@ bool HitSphere (
     double  rad;    // Radical Value
     double  t1,t2;  // Intersection Ray Parameters
 
-    cdir = sphere.center - rayO;
+    cdir = sphere.center - ray.origin;
 
-    bb  = dot(cdir, rayD);
+    bb  = dot(cdir, ray.direction);
     rad = (bb * bb) - dot(cdir, cdir) + sphere.rsqrd;
 
     if (rad < 0.0)
@@ -121,7 +119,7 @@ bool HitSphere (
     *mindist = t1;
 
     if (intr)
-        (*intr) = rayO + t1*rayD;
+        (*intr) = ray(t1);
 
     if (normal)
         *normal = (*intr - sphere.center) / sphere.radius;
@@ -131,12 +129,11 @@ bool HitSphere (
 
 //==================================================================================================
 bool HitTetPar (
-    ObjInfo *objptr,     // Sphere to Test
-    Point4   rayO,       // Ray Origin
-    Vector4  rayD,       // Ray Direction
-    double  *mindist,    // Previous Minimum Distance
-    Point4  *intersect,  // Intersection Point
-    Vector4 *normal)     // Surface Normal @ Intersection Point
+    ObjInfo    *objptr,     // Sphere to Test
+    const Ray4 &ray,       // Trace Ray
+    double     *mindist,    // Previous Minimum Distance
+    Point4     *intersect,  // Intersection Point
+    Vector4    *normal)     // Surface Normal @ Intersection Point
 {
     // This is the intersection function for 4D tetrahedrons and parallelepipeds. Note that if the
     // object is a tetrahedron and the conditions are met to set the intersection values, then the
@@ -155,12 +152,12 @@ bool HitTetPar (
 
     // Find the ray parameter to intersect the hyperplane.
 
-    rayT = dot(tp->normal, rayD);
+    rayT = dot(tp->normal, ray.direction);
 
     if (fabs(rayT) < epsilon)  // If the ray is parallel to the hyperplane.
         return false;
 
-    rayT = (-tp->planeConst - dot(tp->normal, rayO.toVector())) / rayT;
+    rayT = (-tp->planeConst - dot(tp->normal, ray.origin.toVector())) / rayT;
 
     if (rayT < 0.0)      // If the object is behind the ray.
         return false;
@@ -171,7 +168,7 @@ bool HitTetPar (
     if (mindist && (*mindist > 0) && ((rayT < MINDIST) || (rayT > *mindist)))
         return false;
 
-    intr = rayO + (rayT * rayD);
+    intr = ray(rayT);
 
     // Now we need to find the barycentric coordinates of the 4D object to determine if the
     // ray/hyperplane intersection point is inside of the 4D object. To simplify the process,
@@ -283,12 +280,11 @@ bool HitTetPar (
 
 //==================================================================================================
 bool HitTriangle (
-    ObjInfo *objptr,     // Sphere to Test
-    Point4   rayO,       // Ray Origin
-    Vector4  rayD,       // Ray Direction
-    double  *mindist,    // Previous Minimum Distance
-    Point4  *intersect,  // Intersection Point
-    Vector4 *normal)     // Surface Normal @ Intersection Point
+    ObjInfo    *objptr,     // Sphere to Test
+    const Ray4 &ray,       // Trace Ray
+    double     *mindist,    // Previous Minimum Distance
+    Point4     *intersect,  // Intersection Point
+    Vector4    *normal)     // Surface Normal @ Intersection Point
 {
     // This is the intersection routine for 2D triangles in 4-space. If the ray intersects triangle
     // and the conditions are met to set the intersection specifics, then the barycentric
@@ -316,12 +312,12 @@ bool HitTriangle (
     // V0 a vertex of the triangle, vec1 is the vector from V0 to another vertex, and vec2 is the
     // vector from V0 to the other vertex.
 
-    auto vecTemp2 = cross(rayD, TRI->vec1, TRI->vec2);
+    auto vecTemp2 = cross(ray.direction, TRI->vec1, TRI->vec2);
     div = vecTemp2.normSquared();
     if (div < epsilon)
         return false;
 
-    auto vecTemp1 = cross(TRI->vert[0] - rayO, TRI->vec1, TRI->vec2);
+    auto vecTemp1 = cross(TRI->vert[0] - ray.origin, TRI->vec1, TRI->vec2);
 
     rayT = dot(vecTemp1, vecTemp2) / div;
 
@@ -337,7 +333,7 @@ bool HitTriangle (
     if (mindist && (*mindist > 0) && ((rayT < MINDIST) || (rayT > *mindist)))
         return false;
 
-    intr = rayO + (rayT * rayD);
+    intr = ray(rayT);
 
     // Compute the triangle normal vector. Since the triangle is embedded in 2-space, we've got an
     // extra degree of freedom floating around, so we need to do some jazz to pin it down. To do
@@ -348,7 +344,7 @@ bool HitTriangle (
     // computationally).
 
     {
-        auto Vtemp = cross(rayD, TRI->vec1, TRI->vec2);
+        auto Vtemp = cross(ray.direction, TRI->vec1, TRI->vec2);
         _normal = cross(Vtemp, TRI->vec1, TRI->vec2);
     }
 

@@ -4,6 +4,7 @@
 #include "r4_color.h"
 #include "r4_vector.h"
 #include "r4_point.h"
+#include "r4_ray.h"
 
 namespace Catch {
     // Color to String
@@ -238,5 +239,27 @@ TEST_CASE("Point tests", "[point4]") {
 
     SECTION("Point-vector subtraction") {
         CHECK(Point4(10,10,10,10) - Vector4(4,5,6,7) == Point4(6,5,4,3));
+    }
+}
+
+//==================================================================================================
+TEST_CASE("Ray tests", "[ray]") {
+    SECTION("Ray equality") {
+        REQUIRE(Ray4(Point4(1,2,3,4),Vector4(6,7,8,9)) == Ray4(Point4(1,2,3,4),Vector4(6,7,8,9)));
+        REQUIRE_FALSE(Ray4(Point4(1,2,3,4),Vector4(6,7,8,9)) == Ray4(Point4(1,2,3,4),Vector4(0,7,8,9)));
+        REQUIRE_FALSE(Ray4(Point4(1,2,3,4),Vector4(6,7,8,9)) == Ray4(Point4(0,2,3,4),Vector4(6,7,8,9)));
+
+        REQUIRE(Ray4(Point4(1,2,3,4),Vector4(6,7,8,9)) != Ray4(Point4(1,2,3,4),Vector4(0,7,8,9)));
+        REQUIRE(Ray4(Point4(1,2,3,4),Vector4(6,7,8,9)) != Ray4(Point4(0,2,3,4),Vector4(6,7,8,9)));
+        REQUIRE_FALSE(Ray4(Point4(1,2,3,4),Vector4(6,7,8,9)) != Ray4(Point4(1,2,3,4),Vector4(6,7,8,9)));
+    }
+
+    SECTION("Ray evaluation") {
+        Ray4 r {Point4(0,0,0,0), Vector4(1,2,3,4)};
+
+        CHECK(r( 0.0) == Point4(0,0,0,0));
+        CHECK(r( 1.0) == Point4(1,2,3,4));
+        CHECK(r( 2.0) == Point4(2,4,6,8));
+        CHECK(r(-1.0) == Point4(-1,-2,-3,-4));
     }
 }

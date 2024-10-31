@@ -21,6 +21,7 @@ set ( sources_ray4
   src/r4_color.h
   src/r4_image.h
   src/r4_point.h
+  src/r4_ray.h
   src/r4_vector.h
   src/r4_color.cpp
   src/r4_hit.cpp
@@ -28,6 +29,7 @@ set ( sources_ray4
   src/r4_main.cpp
   src/r4_parse.cpp
   src/r4_point.cpp
+  src/r4_ray.cpp
   src/r4_trace.cpp
   src/r4_vector.cpp
 )
@@ -47,8 +49,9 @@ FetchContent_MakeAvailable(Catch2)
 add_executable(tests
     src/r4_test.cpp
     src/r4_color.cpp
-    src/r4_vector.cpp
     src/r4_point.cpp
+    src/r4_ray.cpp
+    src/r4_vector.cpp
 )
 
 target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)

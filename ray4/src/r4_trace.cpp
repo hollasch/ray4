@@ -34,10 +34,9 @@ Color black { 0, 0, 0 };  // Used to zero out colors.
 
 //==================================================================================================
 void RayTrace (
-    Point4   rayO,   // Ray Origin
-    Vector4  rayD,   // Ray Direction
-    Color   &color,  // Resulting Color
-    ulong    level)  // Raytrace Level
+    const Ray4 &rayIn,  // Trace Ray
+    Color      &color,  // Resulting Color
+    ulong       level)  // Raytrace Level
 {
     // This routine is the heart of the raytracer; it takes the ray, determines which objects are
     // hit, picks the closest one, determines the appropriate shade at the surface, and then may or
@@ -50,7 +49,7 @@ void RayTrace (
     ObjInfo    *nearobj;            // Nearest Object
     Point4      nearintr{0,0,0,0};  // Nearest Object Intersection
     Vector4     nearnormal;         // Nearest Object Normal
-    double      NdotD = 0;          // Normal dot rayD
+    double      NdotD = 0;          // Normal dot ray direction
     ObjInfo    *optr;               // Object List Traversal Pointer
 
     ++ stats.Ncast;
@@ -62,7 +61,8 @@ void RayTrace (
     // Move the ray origin a bit along the ray direction to eliminate surface acne, where
     // floating-point roundoff erroneously puts the point inside a surface.
 
-    rayO = rayO + (1e-10 * rayD);
+    Ray4 ray = rayIn;
+    ray.origin = ray(1e-10);
 
     // Find the nearest object intersection.
 
@@ -73,9 +73,8 @@ void RayTrace (
         nearobj = nullptr;
 
         for (optr = objlist;  optr;  optr = optr->next) {
-            if ((*optr->intersect)
-                (optr, rayO,rayD, &mindist, &nearintr, &nearnormal))
-            nearobj = optr;
+            if ((*optr->intersect)(optr, ray, &mindist, &nearintr, &nearnormal))
+                nearobj = optr;
         }
     }
 
@@ -101,7 +100,7 @@ void RayTrace (
 
     // If we're looking at the object from `behind' (or inside), then flip the normal vector.
 
-    NdotD = dot(nearnormal, rayD);
+    NdotD = dot(nearnormal, ray.direction);
 
     if (NdotD > 0.0) {
         nearnormal = -nearnormal;
@@ -147,7 +146,7 @@ void RayTrace (
         for (optr=objlist;  optr;  optr=optr->next) {
             double minsave=mindist;  // Nearest Object Distance (saved)
 
-            if ((*optr->intersect)(optr, intr_out, ldir, &mindist, nullptr, nullptr)) {
+            if ((*optr->intersect)(optr, Ray4(intr_out, ldir), &mindist, nullptr, nullptr)) {
                 if (!(optr->attr->flags & AT_TRANSPAR))
                     break;
 
@@ -185,7 +184,7 @@ void RayTrace (
         // Calculate the cosine of the sight & reflection vectors, raised to the Phong power, for
         // the specular reflection.
 
-        ftemp = dot(-rayD, Refl);
+        ftemp = dot(-ray.direction, Refl);
         if (ftemp > 0.0) {
             ftemp = pow (ftemp, nearattr->shine);
             color += ftemp * nearattr->Ks * lcolor;
@@ -205,10 +204,10 @@ void RayTrace (
         Vector4 T = NdotD * nearnormal;
         ftemp = global_indexref / nearattr->indexref;
 
-        Vector4 RefrD = T + (ftemp * (rayD - T));  // Refracted Direction Vector
+        Vector4 RefrD = T + (ftemp * (ray.direction - T));  // Refracted Direction Vector
 
         Color Tcolor;  // Transparent Color
-        RayTrace (nearintr, RefrD, Tcolor, level);
+        RayTrace (Ray4(nearintr, RefrD), Tcolor, level);
 
         color += nearattr->Kt * Tcolor;
     }
@@ -217,10 +216,10 @@ void RayTrace (
 
     if (nearattr->flags & AT_REFLECT) {
         ftemp = 2.0 * NdotD;
-        Vector4 ReflD = rayD - (ftemp * nearnormal);
+        Vector4 ReflD = ray.direction - (ftemp * nearnormal);
 
         Color Rcolor;  // Reflected Color
-        RayTrace (nearintr, ReflD, Rcolor, level);
+        RayTrace (Ray4(nearintr, ReflD), Rcolor, level);
 
         color += nearattr->Ks * Rcolor;
     }
