@@ -35,41 +35,42 @@
 
 
 
-//==================================================================================================
-// All intersection functions must behave in the same manner, since they are called as
-// object-oriented functions that behave generically for different objects. Each function takes the
-// same parameters and returns a boolean value. Operation of each function is as follows:
-//
-// The functions take the following parameter list:
-//
-//     ObjInfo* objptr : Pointer to the Object Structure
-//     Ray4     ray    : Ray Origin
-//     double  *mindist: Closest Intersection Distance So Far
-//     Point4  *intr   : Intersection Point
-//     Vector4 *normal : Surface Normal at Intersection Point
-//
-// If the ray does not intersect the object, the intersection function returns false and does not
-// alter `mindist', `intr' or `normal'.
-//
-// If the mindist parameter is null, then it's assumed that the calling program is not interested in
-// the specifics of the intersection; it's only interested in whether the ray intersects the object
-// (as in shadow testing). In this case, if the ray does intersect the object, the function
-// immediately returns true, but does not alter the `mindist', `intr' or `normal' parameters.
-//
-// If the ray intersects the object, the intersection function returns true and the `mindist',
-// `intr' and `normal' parameters are all set according to the intersection point if the following
-// are true:
-//
-//     1) The initial `mindist' value is -1, or
-//     2) The intersection point is a positive (albeit small) epsilon distance along the ray and is
-//        closer than the initial `mindist' value.
-//
-// If these conditions are not met, then even if the ray intersects the object, the intersection
-// function returns false.
-//
-// Note that these routines still behave properly if either the `intr' or `normal' parameters are
-// null.
-//==================================================================================================
+    //==============================================================================================
+    // All intersection functions must behave in the same manner, since they are called as
+    // object-oriented functions that behave generically for different objects. Each function takes
+    // the same parameters and returns a boolean value. Operation of each function is as follows:
+    //
+    // The functions take the following parameter list:
+    //
+    //     ObjInfo* objptr : Pointer to the Object Structure
+    //     Ray4     ray    : Ray Origin
+    //     double  *mindist: Closest Intersection Distance So Far
+    //     Point4  *intr   : Intersection Point
+    //     Vector4 *normal : Surface Normal at Intersection Point
+    //
+    // If the ray does not intersect the object, the intersection function returns false and does
+    // not alter `mindist', `intr' or `normal'.
+    //
+    // If the mindist parameter is null, then it's assumed that the calling program is not
+    // interested in the specifics of the intersection; it's only interested in whether the ray
+    // intersects the object (as in shadow testing). In this case, if the ray does intersect the
+    // object, the function immediately returns true, but does not alter the `mindist', `intr' or
+    // `normal' parameters.
+    //
+    // If the ray intersects the object, the intersection function returns true and the `mindist',
+    // `intr' and `normal' parameters are all set according to the intersection point if the
+    // following are true:
+    //
+    //     1) The initial `mindist' value is -1, or
+    //     2) The intersection point is a positive (albeit small) epsilon distance along the ray and
+    //        is closer than the initial `mindist' value.
+    //
+    // If these conditions are not met, then even if the ray intersects the object, the intersection
+    // function returns false.
+    //
+    // Note that these routines still behave properly if either the `intr' or `normal' parameters
+    // are null.
+    //==============================================================================================
 
 
 
@@ -126,8 +127,8 @@ bool HitSphere (
 
     return true;
 }
+//__________________________________________________________________________________________________
 
-//==================================================================================================
 bool HitTetPar (
     ObjInfo    *objptr,     // Sphere to Test
     const Ray4 &ray,       // Trace Ray
@@ -278,7 +279,8 @@ bool HitTetPar (
     return true;
 }
 
-//==================================================================================================
+//__________________________________________________________________________________________________
+
 bool HitTriangle (
     ObjInfo    *objptr,     // Sphere to Test
     const Ray4 &ray,       // Trace Ray

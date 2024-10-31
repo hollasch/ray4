@@ -39,7 +39,8 @@ FILE *outstream = nullptr;  // Output Stream
 
 
 
-//==================================================================================================
+//__________________________________________________________________________________________________
+
 void CloseInput () {
     // Closes the input stream.
 
@@ -48,8 +49,8 @@ void CloseInput () {
     fclose (instream);
     instream = nullptr;
 }
+//__________________________________________________________________________________________________
 
-//==================================================================================================
 void CloseOutput () {
     // Closes the output stream.
 
@@ -58,8 +59,8 @@ void CloseOutput () {
     fclose (outstream);
     outstream = nullptr;
 }
+//__________________________________________________________________________________________________
 
-//==================================================================================================
 const int UNREAD_NONE = -2;
 static int unreadChar = UNREAD_NONE;
 
@@ -74,16 +75,16 @@ int ReadChar () {
     unreadChar = UNREAD_NONE;
     return c;
 }
+//__________________________________________________________________________________________________
 
-//==================================================================================================
 void UnreadChar (int c) {
     // This routine, together with ReadChar allow to put back a character, which is something
     // parsers often need. It cannot unread more than one character at a time though.
 
     unreadChar = c;
 }
+//__________________________________________________________________________________________________
 
-//==================================================================================================
 void OpenInput () {
     // This subroutine opens the input file. If no filename was given in the command-line arguments,
     // we'll use the standard input stream.
@@ -93,8 +94,8 @@ void OpenInput () {
     else if (! (instream = fopen (infile, "r")))
         Halt ("Open failed on input file (%s).", infile);
 }
+//__________________________________________________________________________________________________
 
-//==================================================================================================
 void OpenOutput () {
     // This subroutine opens the output file.
 
@@ -106,7 +107,7 @@ void OpenOutput () {
         Halt ("Open failed on output file (%s).", outfile);
 }
 
-//==================================================================================================
+//__________________________________________________________________________________________________
 void WriteBlock (
     void *buff,  // Source Buffer
     int   num)   // Number of Bytes to Write
