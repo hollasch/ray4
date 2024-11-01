@@ -85,22 +85,18 @@ bool HitSphere (
 
     const auto& sphere = *reinterpret_cast<Sphere*>(objptr);
 
-    double  bb;     // Quadratic Equation Parameter
-    Vector4 cdir;   // Direction from Sphere Center to Eye
-    double  rad;    // Radical Value
-    double  t1,t2;  // Intersection Ray Parameters
+    Vector4 cdir = sphere.center - ray.origin;   // Direction from Sphere Center to Eye
 
-    cdir = sphere.center - ray.origin;
-
-    bb  = dot(cdir, ray.direction);
-    rad = (bb * bb) - dot(cdir, cdir) + sphere.rsqrd;
+    double bb  = dot(cdir, ray.direction);                    // Quadratic Equation Parameter
+    double rad = (bb * bb) - dot(cdir, cdir) + sphere.rsqrd;  // Radical Value
 
     if (rad < 0.0)
         return false;
 
+    // Compute the ray intersection parameters
     rad = sqrt(rad);
-    t2 = bb - rad;
-    t1 = bb + rad;
+    double t1 = bb + rad;
+    double t2 = bb - rad;
 
     if ((t1 < 0.0) || ((t2 > 0.0) && (t2 < t1)))
         t1 = t2;
@@ -141,10 +137,7 @@ bool HitTetPar (
     // barycentric coordinates of the tetrahedron will also be set. These values may be used later
     // for Phong or Gouraud shading.
 
-    double  Bc1,Bc2,Bc3;    // Intersection Barycentric Coordinates
-    Point4  intr;           // Intersection Point
-    double  rayT;           // Ray Equation Parameter
-    TetPar *tp;             // Tetrahdron/Parallelepiped Data
+    TetPar *tp;  // Tetrahdron/Parallelepiped Data
 
     if (objptr->type == ObjType::Tetrahedron)
         tp = &((reinterpret_cast<Tetrahedron*>(objptr))->tp);
@@ -153,7 +146,7 @@ bool HitTetPar (
 
     // Find the ray parameter to intersect the hyperplane.
 
-    rayT = dot(tp->normal, ray.direction);
+    double rayT = dot(tp->normal, ray.direction);  // Ray Equation Parameter
 
     if (fabs(rayT) < epsilon)  // If the ray is parallel to the hyperplane.
         return false;
@@ -169,7 +162,7 @@ bool HitTetPar (
     if (mindist && (*mindist > 0) && ((rayT < MINDIST) || (rayT > *mindist)))
         return false;
 
-    intr = ray(rayT);
+    Point4 intr = ray(rayT);  // Intersection Point
 
     // Now we need to find the barycentric coordinates of the 4D object to determine if the
     // ray/hyperplane intersection point is inside of the 4D object. To simplify the process,
@@ -194,56 +187,42 @@ bool HitTetPar (
     //             |V2[ax3]-V0[ax3]|            |V3[ax3]-V0[ax3]|
     //             +-             -+            +-             -+
 
+    double Bc1,Bc2,Bc3;  // Intersection Barycentric Coordinates
     {
-        double M01,M02,M03, M11,M12,M13,  // Matrix Values
-               M21,M22,M23, M31,M32,M33;
-
         // Intermediate Values
 
-        double M22M33_M23M32, M02M33_M03M32, M12M03_M13M02,
-               M12M33_M13M32, M12M23_M13M22, M02M23_M03M22;
+        double M01 = intr[tp->ax1] - tp->vert[0][tp->ax1];
+        double M02 = intr[tp->ax2] - tp->vert[0][tp->ax2];
+        double M03 = intr[tp->ax3] - tp->vert[0][tp->ax3];
 
-        M01 = intr[tp->ax1] - tp->vert[0][tp->ax1];
-        M02 = intr[tp->ax2] - tp->vert[0][tp->ax2];
-        M03 = intr[tp->ax3] - tp->vert[0][tp->ax3];
+        double M11 = tp->vec1[tp->ax1];
+        double M12 = tp->vec1[tp->ax2];
+        double M13 = tp->vec1[tp->ax3];
 
-        M11 = tp->vec1[tp->ax1];
-        M12 = tp->vec1[tp->ax2];
-        M13 = tp->vec1[tp->ax3];
+        double M21 = tp->vec2[tp->ax1];
+        double M22 = tp->vec2[tp->ax2];
+        double M23 = tp->vec2[tp->ax3];
 
-        M21 = tp->vec2[tp->ax1];
-        M22 = tp->vec2[tp->ax2];
-        M23 = tp->vec2[tp->ax3];
+        double M31 = tp->vec3[tp->ax1];
+        double M32 = tp->vec3[tp->ax2];
+        double M33 = tp->vec3[tp->ax3];
 
-        M31 = tp->vec3[tp->ax1];
-        M32 = tp->vec3[tp->ax2];
-        M33 = tp->vec3[tp->ax3];
+        double M22M33_M23M32 = (M22 * M33) - (M23 * M32);
+        double M02M33_M03M32 = (M02 * M33) - (M03 * M32);
+        double M12M03_M13M02 = (M12 * M03) - (M13 * M02);
+        double M12M33_M13M32 = (M12 * M33) - (M13 * M32);
+        double M12M23_M13M22 = (M12 * M23) - (M13 * M22);
+        double M02M23_M03M22 = (M02 * M23) - (M03 * M22);
 
-        M22M33_M23M32 = (M22 * M33) - (M23 * M32);
-        M02M33_M03M32 = (M02 * M33) - (M03 * M32);
-        M12M03_M13M02 = (M12 * M03) - (M13 * M02);
-        M12M33_M13M32 = (M12 * M33) - (M13 * M32);
-        M12M23_M13M22 = (M12 * M23) - (M13 * M22);
-        M02M23_M03M22 = (M02 * M23) - (M03 * M22);
-
-        Bc1 = ( (M01*M22M33_M23M32)
-              - (M21*M02M33_M03M32)
-              + (M31*M02M23_M03M22)) / tp->CramerDiv;
-
+        Bc1 = ((M01*M22M33_M23M32) - (M21*M02M33_M03M32) + (M31*M02M23_M03M22)) / tp->CramerDiv;
         if ((Bc1 < 0.0) || (Bc1 > 1.0))
             return false;
 
-        Bc2 = ( (M11*M02M33_M03M32)
-              - (M01*M12M33_M13M32)
-              + (M31*M12M03_M13M02)) / tp->CramerDiv;
-
+        Bc2 = ((M11*M02M33_M03M32) - (M01*M12M33_M13M32) + (M31*M12M03_M13M02)) / tp->CramerDiv;
         if ((Bc2 < 0.0) || (Bc2 > 1.0))
             return false;
 
-        Bc3 = (- (M11*M02M23_M03M22)
-               - (M21*M12M03_M13M02)
-               + (M01*M12M23_M13M22)) / tp->CramerDiv;
-
+        Bc3 = (- (M11*M02M23_M03M22) - (M21*M12M03_M13M02) + (M01*M12M23_M13M22)) / tp->CramerDiv;
         if ((Bc3 < 0.0) || (Bc3 > 1.0))
             return false;
     }
@@ -293,13 +272,7 @@ bool HitTriangle (
     // coordinates of the triangle will also be set according to the intersection point. These
     // values will be used by the shading routines for Phong or Gouraud shading.
 
-#   define TRI  ((Triangle*)(objptr))
-
-    int     ax1, ax2;  // Dominant Axes, Tri. Projection
-    double  div;       // Intersection Equation Divisor
-    Point4  intr;      // Ray/Plane Intersection Point
-    Vector4 _normal;   // Internal Normal Vector
-    double  rayT;      // Ray Equation Real Parameter
+    auto &tri = *reinterpret_cast<Triangle*>(objptr);
 
     // The following segment calculates the intersection point (if one exists) with the ray and the
     // plane containing the polygon. The equation for this is as follows:
@@ -314,14 +287,14 @@ bool HitTriangle (
     // V0 a vertex of the triangle, vec1 is the vector from V0 to another vertex, and vec2 is the
     // vector from V0 to the other vertex.
 
-    auto vecTemp2 = cross(ray.direction, TRI->vec1, TRI->vec2);
-    div = vecTemp2.normSquared();
+    auto vecTemp2 = cross(ray.direction, tri.vec1, tri.vec2);
+    double div = vecTemp2.normSquared();  // Intersection Equation Divisor
     if (div < epsilon)
         return false;
 
-    auto vecTemp1 = cross(TRI->vert[0] - ray.origin, TRI->vec1, TRI->vec2);
+    auto vecTemp1 = cross(tri.vert[0] - ray.origin, tri.vec1, tri.vec2);
 
-    rayT = dot(vecTemp1, vecTemp2) / div;
+    double rayT = dot(vecTemp1, vecTemp2) / div;  // Ray Equation Real Parameter
 
     // If the intersection point is behind the ray, then no intersection.
 
@@ -335,7 +308,7 @@ bool HitTriangle (
     if (mindist && (*mindist > 0) && ((rayT < MINDIST) || (rayT > *mindist)))
         return false;
 
-    intr = ray(rayT);
+    Point4 intr = ray(rayT);  // Ray/Plane Intersection Point
 
     // Compute the triangle normal vector. Since the triangle is embedded in 2-space, we've got an
     // extra degree of freedom floating around, so we need to do some jazz to pin it down. To do
@@ -345,9 +318,10 @@ bool HitTriangle (
     // It turns out that this is fairly simple to do (although 4D cross products are quite expensive
     // computationally).
 
+    Vector4 _normal;  // Internal Normal Vector
     {
-        auto Vtemp = cross(ray.direction, TRI->vec1, TRI->vec2);
-        _normal = cross(Vtemp, TRI->vec1, TRI->vec2);
+        auto Vtemp = cross(ray.direction, tri.vec1, tri.vec2);
+        _normal = cross(Vtemp, tri.vec1, tri.vec2);
     }
 
     // In order to find the barycentric coordinates of the intersection point in the triangle, we
@@ -355,6 +329,7 @@ bool HitTriangle (
     // then be projected to the plane spanned by the two minor axes without fear of "collapsing" the
     // triangle in the process.
 
+    int ax1, ax2;  // Dominant Axes, tri. Projection
     if (fabs(_normal[0]) < fabs(_normal[1])) {      // X, Y
         ax1 = 0;
         ax2 = 1;
@@ -403,19 +378,19 @@ bool HitTriangle (
         double cramer_div;  // Cramer's Rule Divisor
         double I1, I2;      // Matrix Entries
 
-        I1  = intr[ax1] - TRI->vert[0][ax1];
-        I2  = intr[ax2] - TRI->vert[0][ax2];
-        cramer_div = (TRI->vec1[ax1] * TRI->vec2[ax2])
-                   - (TRI->vec1[ax2] * TRI->vec2[ax1]);
+        I1  = intr[ax1] - tri.vert[0][ax1];
+        I2  = intr[ax2] - tri.vert[0][ax2];
+        cramer_div = (tri.vec1[ax1] * tri.vec2[ax2])
+                   - (tri.vec1[ax2] * tri.vec2[ax1]);
 
-        TRI->Bc1 = ((I1 * TRI->vec2[ax2]) - (I2 * TRI->vec2[ax1])) / cramer_div;
+        tri.Bc1 = ((I1 * tri.vec2[ax2]) - (I2 * tri.vec2[ax1])) / cramer_div;
 
-        if ((TRI->Bc1 < 0.0) || (TRI->Bc1 > 1.0))
+        if ((tri.Bc1 < 0.0) || (tri.Bc1 > 1.0))
             return false;
 
-        TRI->Bc2 = ((TRI->vec1[ax1] * I2) - (TRI->vec1[ax2] * I1)) / cramer_div;
+        tri.Bc2 = ((tri.vec1[ax1] * I2) - (tri.vec1[ax2] * I1)) / cramer_div;
 
-        if ((TRI->Bc2 <0.0) || (TRI->Bc2 >1.0) || ((TRI->Bc1+TRI->Bc2) >1.0))
+        if ((tri.Bc2 <0.0) || (tri.Bc2 >1.0) || ((tri.Bc1+tri.Bc2) >1.0))
             return false;
     }
 

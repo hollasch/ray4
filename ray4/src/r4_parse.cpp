@@ -178,8 +178,7 @@ void Error (const char *format, ...) {
     // input stream and prints the error message and the optional printf()-like argument. After
     // printing the message it halts execution of the raytracer.
 
-    AttrName *attrname;  // Attribute Name Node Pointer
-    va_list args;        // List of Optional Arguments
+    va_list args;  // List of Optional Arguments
 
     va_start(args, format);
 
@@ -191,6 +190,7 @@ void Error (const char *format, ...) {
 
     // Kill the attributes name list.
 
+    AttrName *attrname;  // Attribute Name Node Pointer
     while (attrname = attrnamelist, attrname) {
         attrnamelist = attrname->next;
         DELETE (attrname);
@@ -209,9 +209,7 @@ char *GetToken  (
     // This routine reads the input stream and returns the next token. It's basically the lexical
     // analyzer. It returns the destination buffer given as the single parameter.
 
-    int     cc = ' ';  // Input Character
-    ushort  nn;        // Length of Destination String
-    char   *ptr;       // Destination Buffer Pointer
+    int cc = ' ';  // Input Character
 
     if (cc == EOFC) {
         eofflag = true;
@@ -220,8 +218,8 @@ char *GetToken  (
         Error ("Unexpected end-of-file.");
     }
 
-    ptr = buff;
-    nn  = 0;
+    char   *ptr = buff;  // Destination Buffer Pointer
+    ushort  nn  = 0;     // Length of Destination String
 
     // Skip past comments and whitespace.
 
@@ -363,10 +361,8 @@ bool keyeq (
     // matches the key until the string ends, then this function will still return 1. That is,
     // keyeq("amb", "ambient") == 1.
 
-    ushort ii;   // String Index
-
-    for (ii=0;  (ii < KEYSIG) && key[ii] && string[ii];  ++ii)
-        if (key[ii] != (string[ii] | 0x20))
+    for (auto i=0;  (i < KEYSIG) && key[i] && string[i];  ++i)
+        if (key[i] != (string[i] | 0x20))
             return false;
 
     return true;
@@ -465,34 +461,33 @@ void ParseInput () {
     // This routine parses the input scene description, and sets up the global raytrace variables
     // and the object lists.
 
-    AttrName  *attrname;  // Attribute Name Node Pointer
-    ushort     ii;        // Scratch Index Value
-    bool     (*func)();   // Function Pointer
-
     while (GetToken(token, true)) {
-        for (ii=0;  Globals[ii].vtype != VarType::End;  ++ii) {
-            if (keyeq(token, Globals[ii].keyword))
+        int i;
+
+        for (i=0;  Globals[i].vtype != VarType::End;  ++i) {
+            if (keyeq(token, Globals[i].keyword))
                 break;
         }
 
-        if (Globals[ii].vtype == VarType::End)
+        if (Globals[i].vtype == VarType::End)
             Error ("Unknown keyword (%s).", token);
 
-        switch (Globals[ii].vtype) {
+        switch (Globals[i].vtype) {
             case VarType::Color:
-                ReadColor (token, reinterpret_cast<Color*>(Globals[ii].address));
+                ReadColor (token, reinterpret_cast<Color*>(Globals[i].address));
                 break;
 
             case VarType::UInt16:
-                ReadUint16 (token, reinterpret_cast<ushort*>(Globals[ii].address));
+                ReadUint16 (token, reinterpret_cast<ushort*>(Globals[i].address));
                 break;
 
             case VarType::Real:
-                ReadReal (token, reinterpret_cast<double*>(Globals[ii].address));
+                ReadReal (token, reinterpret_cast<double*>(Globals[i].address));
                 break;
 
             case VarType::Other:
-                func = reinterpret_cast<bool(*)()>(Globals[ii].address);
+                bool (*func)();  // Function Pointer
+                func = reinterpret_cast<bool(*)()>(Globals[i].address);
                 (*func)();
                 break;
 
@@ -503,6 +498,7 @@ void ParseInput () {
 
     // Kill the attributes alias list.
 
+    AttrName *attrname;  // Attribute Name Node Pointer
     while (attrname=attrnamelist, attrname) {
         attrnamelist = attrname->next;
         DELETE (attrname);
@@ -517,12 +513,10 @@ Attributes *ReadAttributes () {
     // It is assumed that the opening parenthesis has already been consumed at the time this routine
     // is called.
 
-    Attributes *newattr;  // New Attributes
-
     // Allocate the new attributes node, load it with the most recent named attributes node, and add
     // it to the attributes list.
 
-    newattr = NEW (Attributes, 1);
+    Attributes *newattr = NEW (Attributes, 1);  // New Attributes
     *newattr = *prevattr;
     newattr->next = attrlist;
     attrlist = newattr;
@@ -582,10 +576,9 @@ Attributes *FindAttributes (char *name) {
     // This function finds an attribute description with the given name and returns a pointer to the
     // attributes node. If the name is not found, this routine aborts after flagging the error.
 
-    AttrName *anptr;  // Attribute Name Node Traversal Pointer
-
     name[MAXATNAME] = 0;
 
+    AttrName *anptr;  // Attribute Name Node Traversal Pointer
     for (anptr=attrnamelist;  anptr;  anptr=anptr->next)
         if (strcmp(name, anptr->name) == 0)
             break;
@@ -601,9 +594,6 @@ void DoAttributes () {
     // This procedure processes attribute definitions. Attribute definitions consist of the keyword
     // `attributes', followed by an attribute alias, and then the attribute fields.
 
-    AttrName *anptr;        // Attributes Alias Node Pointer
-    AttrName *newattrname;  // New Attributes Alias Node
-
     // Read in the attribute alias.
 
     GetToken (token, false);
@@ -614,10 +604,12 @@ void DoAttributes () {
 
     // Ensure that the name is not a duplicate of an earlier name.
 
+    AttrName *anptr;  // Attributes Alias Node Pointer
     for (anptr = attrnamelist;  anptr;  anptr = anptr->next)
         if (strcmp(anptr->name, token) == 0)
             break;
 
+    AttrName *newattrname;  // New Attributes Alias Node
     if (anptr) {
         printf ("Warning:  Attributes \"%s\" redefined at line %lu.\n",
         token, lcount);
@@ -646,14 +638,13 @@ void DoLight () {
     // list.
 
     static Light *prev = &DefLight;  // Previously Defined Light
-    Light *light;                    // New Light Source
 
     // Gobble up the opening parenthesis.
 
     if (GetToken(token,false), token[0] != '(')
         Error ("Missing opening parenthesis for light definition.");
 
-    light = NEW (Light,1);
+    Light *light = NEW (Light,1);
     *light = *prev;
 
     while (GetToken(token,false), token[0] != ')') {
@@ -688,14 +679,13 @@ void DoSphere () {
     // first sphere, and then by the previous sphere.
 
     static Sphere *prev = &DefSphere;  // Previously Defined Sphere
-    Sphere *snew;                      // New Sphere
 
     // Gobble up the opening parenthesis.
 
     if (GetToken(token,false), token[0] != '(')
         Error ("Missing opening parenthesis for sphere definition.");
 
-    snew = NEW(Sphere,1);
+    Sphere *snew = NEW(Sphere,1);
     *snew = *prev;
 
     while (GetToken(token,false), token[0] != ')') {
@@ -737,8 +727,6 @@ void Process_TetPar (TetPar *tp) {
     // Calculate the parallelepiped's surface normal.
 
     {
-        ushort  dominant1, dominant2;  // Dominant Axes
-
         tp->normal = cross(tp->vec1, tp->vec2, tp->vec3);
 
         if (!tp->normal.normalize())
@@ -747,8 +735,8 @@ void Process_TetPar (TetPar *tp) {
         // Find the dominant axis of the normal vector and load up the ax1, ax2 and ax3 fields
         // accordingly.
 
-        dominant1 = (fabs(tp->normal[X]) > fabs(tp->normal[Y])) ? X : Y;
-        dominant2 = (fabs(tp->normal[Z]) > fabs(tp->normal[W])) ? Z : W;
+        auto dominant1 = (fabs(tp->normal[X]) > fabs(tp->normal[Y])) ? X : Y;
+        auto dominant2 = (fabs(tp->normal[Z]) > fabs(tp->normal[W])) ? Z : W;
         if (fabs(tp->normal[dominant1]) > fabs(tp->normal[dominant2])) {
             tp->ax1 = (dominant1 == X) ? Y : X;
             tp->ax2 = Z;
@@ -768,19 +756,17 @@ void Process_TetPar (TetPar *tp) {
     // intersection points.
 
     {
-        double M11,M12,M13, M21,M22,M23, M31,M32,M33;
+        double M11 = tp->vec1[tp->ax1];
+        double M12 = tp->vec1[tp->ax2];
+        double M13 = tp->vec1[tp->ax3];
 
-        M11 = tp->vec1[tp->ax1];
-        M12 = tp->vec1[tp->ax2];
-        M13 = tp->vec1[tp->ax3];
+        double M21 = tp->vec2[tp->ax1];
+        double M22 = tp->vec2[tp->ax2];
+        double M23 = tp->vec2[tp->ax3];
 
-        M21 = tp->vec2[tp->ax1];
-        M22 = tp->vec2[tp->ax2];
-        M23 = tp->vec2[tp->ax3];
-
-        M31 = tp->vec3[tp->ax1];
-        M32 = tp->vec3[tp->ax2];
-        M33 = tp->vec3[tp->ax3];
+        double M31 = tp->vec3[tp->ax1];
+        double M32 = tp->vec3[tp->ax2];
+        double M33 = tp->vec3[tp->ax3];
 
         tp->CramerDiv = M11 * (M22*M33 - M23*M32)
                       - M21 * (M12*M33 - M13*M32)
@@ -794,14 +780,13 @@ void DoParallelepiped () {
     // adds it to the object list.
 
     static Parallelepiped *prev= &DefPllp;  // Previously Defined Tetrahedron
-    Parallelepiped *pnew;                   // New Parallelepiped
 
     // Gobble up the opening parenthesis.
 
     if (GetToken(token,false), token[0] != '(')
         Error ("Missing opening parenthesis for parallelepiped definition.");
 
-    pnew = NEW (Parallelepiped,1);
+    Parallelepiped *pnew = NEW (Parallelepiped,1);
     *pnew = *prev;
 
     while (GetToken(token,false), token[0] != ')') {
@@ -833,14 +818,13 @@ void DoTetrahedron () {
     // object list.
 
     static Tetrahedron *prev = &DefTetra;  // Previously Defined Tetrahedron
-    Tetrahedron *tnew;                     // New Tetrahedron
 
     // Gobble up the opening parenthesis.
 
     if (GetToken(token,false), token[0] != '(')
         Error ("Missing opening parenthesis for tetrahedron definition.");
 
-    tnew = NEW (Tetrahedron,1);
+    Tetrahedron *tnew = NEW (Tetrahedron,1);  // New Tetrahedron
     *tnew = *prev;
 
     while (GetToken(token,false), token[0] != ')') {
@@ -871,14 +855,13 @@ void DoTriangle () {
     // This subroutine reads in a triangle description.
 
     static Triangle *prev = &DefTriangle;  // Previously Defined Triangle
-    Triangle *tnew;                        // New Triangle
 
     // Gobble up the opening parenthesis.
 
     if (GetToken(token,false), token[0] != '(')
         Error ("Missing opening parenthesis for triangle definition.");
 
-    tnew = NEW (Triangle,1);
+    Triangle *tnew = NEW (Triangle,1);
     *tnew = *prev;
 
     while (GetToken(token,false), token[0] != ')') {

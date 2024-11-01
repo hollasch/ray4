@@ -141,10 +141,7 @@ void Halt (const char *message, ...) {
     // This procedure replaces printf() to print out an error message, and has the side effect of
     // cleaning up before exiting (de-allocating memory, closing open files, and so on).
 
-    Attributes *aptr;   // Attributes-List Pointer
-    Light      *lptr;   // Light-List Pointer
-    ObjInfo    *optr;   // Object-List Pointer
-    va_list     args;   // List of Optional Arguments
+    va_list args;  // List of Optional Arguments
 
     print ("\n");
 
@@ -165,16 +162,19 @@ void Halt (const char *message, ...) {
     if (outfile)   DELETE (outfile);
     if (scanbuff)  DELETE (scanbuff);
 
+    Light *lptr;  // Light-List Pointer
     while ((lptr = lightlist)) {          // Free the lightsource list.
         lightlist = lightlist->next;
         DELETE (lptr);
     }
 
+    ObjInfo *optr;  // Object-List Pointer
     while ((optr = objlist)) {            // Free the object list.
         objlist = objlist->next;
         DELETE (optr);
     }
 
+    Attributes *aptr;  // Attributes-List Pointer
     while ((aptr = attrlist)) {           // Free the attribute list.
         attrlist = attrlist->next;
         DELETE (aptr);
@@ -280,7 +280,6 @@ void ProcessArgs (int argc, char *argv[]) {
 
     char  *ptr;     // Scratch String Pointer
     char  *eptr;    // Environment Variable Pointer
-    int    ii;      // Option Array Index
     char **opta;    // Option Argument Array
     int    optc;    // Option Argument Count
 
@@ -291,8 +290,8 @@ void ProcessArgs (int argc, char *argv[]) {
     if (!(eptr = getenv ("RAY4"))) {
         optc = argc - 1;
         opta = NEW (char*, optc);
-        for (ii=0;  ii < optc;  ++ii)
-            opta[ii] = argv[ii+1];
+        for (auto i=0;  i < optc;  ++i)
+            opta[i] = argv[i+1];
     } else {
         int opti;   // Option Index
 
@@ -327,8 +326,8 @@ void ProcessArgs (int argc, char *argv[]) {
                 *ptr++ = 0;
         }
 
-        for (ii=1;  ii < argc;  ++ii)
-            opta[opti++] = argv[ii];
+        for (auto i=1;  i < argc;  ++i)
+            opta[opti++] = argv[i];
     }
 
     if (optc <= 0) {
@@ -337,22 +336,22 @@ void ProcessArgs (int argc, char *argv[]) {
         exit(0);
     }
 
-    for (ii=0;  ii < optc;  ++ii) {
+    for (auto i=0;  i < optc;  ++i) {
         char oc;   // Option Character
 
-        if (opta[ii][0] != '-') {
-            printf("ray4:  Unexpected argument (%s).\n", opta[ii]);
+        if (opta[i][0] != '-') {
+            printf("ray4:  Unexpected argument (%s).\n", opta[i]);
             print(usage);
             print(version);
             exit (1);
         }
 
-        oc = opta[ii][1];
+        oc = opta[i][1];
 
-        if (opta[ii][2])
-            ptr = opta[ii]+2;
+        if (opta[i][2])
+            ptr = opta[i]+2;
         else
-            ptr = opta[++ii];
+            ptr = opta[++i];
 
         switch (oc) {
 
@@ -521,8 +520,8 @@ void CalcRayGrid (void) {
 
     // Get the normalized line-of-sight vector.
 
-    auto lineOfSight = Vto - Vfrom;
-    double lineOfSightNorm = lineOfSight.norm();
+    Vector4 lineOfSight = Vto - Vfrom;
+    double  lineOfSightNorm = lineOfSight.norm();
 
     if (!lineOfSight.normalize())
         Halt ("To-Point & From-Point are the same.");
@@ -574,30 +573,24 @@ void CalcRayGrid (void) {
 void FireRays () {
     // This is the main routine that fires the rays through the ray grid and into the 4D scene.
 
-    bool    eflag;                   // Even RGB Boundary Flag
-    ulong   scancount;               // Scanline Counter
-    char   *scanptr;                 // Scanline Buffer Pointer
-    ushort  Xindex, Yindex, Zindex;  // Ray-Grid Loop Indices */
-    Point4  Yorigin, Zorigin;        // Ray-Grid Axis Origins
+    ulong  scancount = 0;       // Scanline Counter
+    char  *scanptr = scanbuff;  // Scanline Buffer Pointer
+    bool   eflag   = true;      // Even RGB Boundary Flag
 
-    scancount = 0;
-    scanptr   = scanbuff;
-    eflag     = true;
-
-    for (Zindex=iheader.start[Z];  Zindex <= iheader.end[Z];  ++Zindex) {
-        Zorigin = Gorigin + (Zindex*Gz);
-        for (Yindex=iheader.start[Y];  Yindex <= iheader.end[Y];  ++Yindex) {
+    for (auto Zindex = iheader.start[Z];  Zindex <= iheader.end[Z];  ++Zindex) {
+        Point4 Zorigin = Gorigin + (Zindex*Gz);
+        for (auto Yindex = iheader.start[Y];  Yindex <= iheader.end[Y];  ++Yindex) {
             printf ("%6u %6u\r", iheader.end[Z] - Zindex, iheader.end[Y] - Yindex);
             fflush (stdout);
 
-            Yorigin = Zorigin + (Yindex*Gy);
+            Point4 Yorigin = Zorigin + (Yindex*Gy);
 
             if (!eflag) {
                 ++scanptr;
                 eflag = true;
             }
 
-            for (Xindex=iheader.start[X];  Xindex <= iheader.end[X];  ++Xindex) {
+            for (auto Xindex = iheader.start[X];  Xindex <= iheader.end[X];  ++Xindex) {
                 Color    color;   // Pixel Color
                 Vector4  dir;     // Ray Direction Vector
                 Point4   Gpoint;  // Current Grid Point

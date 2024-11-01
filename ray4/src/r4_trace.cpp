@@ -42,16 +42,6 @@ void RayTrace (
     // hit, picks the closest one, determines the appropriate shade at the surface, and then may or
     // may not fire a reflection ray and or a refraction ray.
 
-    double      ftemp;              // Scratch Real Value
-    Point4      intr_out;           // Intersection Outside The Surface
-    Light      *lptr;               // Light Pointer
-    Attributes *nearattr;           // Nearest Object's Attributes
-    ObjInfo    *nearobj;            // Nearest Object
-    Point4      nearintr{0,0,0,0};  // Nearest Object Intersection
-    Vector4     nearnormal;         // Nearest Object Normal
-    double      NdotD = 0;          // Normal dot ray direction
-    ObjInfo    *optr;               // Object List Traversal Pointer
-
     ++ stats.Ncast;
     ++ level;
 
@@ -66,11 +56,15 @@ void RayTrace (
 
     // Find the nearest object intersection.
 
+    ObjInfo *nearobj = nullptr;  // Nearest Object
+    Point4   nearintr{0,0,0,0};  // Nearest Object Intersection
+    Vector4  nearnormal;         // Nearest Object Normal
+    ObjInfo *optr = nullptr;     // Object List Traversal Pointer
+
     {
         double mindist;  // Nearest Object Distance
 
         mindist = -1.0;
-        nearobj = nullptr;
 
         for (optr = objlist;  optr;  optr = optr->next) {
             if ((*optr->intersect)(optr, ray, &mindist, &nearintr, &nearnormal))
@@ -86,7 +80,7 @@ void RayTrace (
         return;
     }
 
-    nearattr = nearobj->attr;
+    auto nearattr = nearobj->attr;  // Nearest Object's Attributes
 
     if (nearattr->flags & AT_AMBIENT)
         color = ambient * nearattr->Ka;
@@ -94,6 +88,8 @@ void RayTrace (
         color = black;
 
     // If the object has no diffuse or specular reflection, skip this part of the code.
+
+    double NdotD = 0;  // Normal dot ray direction
 
     if (!(nearattr->flags & (AT_DIFFUSE | AT_SPECULAR)))
         goto REFTRAN;
@@ -110,21 +106,21 @@ void RayTrace (
     // To avoid surface acne, move the intersection point just outside the object surface to prevent
     // that same surface from erroneously shadowing itself.
 
-    intr_out = nearintr + (1e-10 * nearnormal);
+    Point4 intr_out = nearintr + (1e-10 * nearnormal);  // Intersection Outside The Surface
 
     // Add illumation to the point from all visible lights.
 
-    for (lptr=lightlist;  lptr;  lptr=lptr->next) {
+    for (auto *light = lightlist;  light;  light=light->next) {
         Vector4 ldir;     // Light Direction
         double  mindist;  // Nearest Object Distance
 
-        if (lptr->type == LightType::Directional) {
-            ldir = lptr->u.dir;
+        if (light->type == LightType::Directional) {
+            ldir = light->u.dir;
             mindist = -1.0;
         } else {
             double norm;  // Vector Norm
 
-            ldir = lptr->u.pos - intr_out;
+            ldir = light->u.pos - intr_out;
 
             // Normalize the light-direction vector. If the (point) light source is VERY close to
             // the intersection point, then just set the light-direction vector to the surface
@@ -141,7 +137,7 @@ void RayTrace (
         // transparent object, then ignore refraction, but color the light we're receiving based on
         // the object's transparent color.
 
-        auto lcolor = lptr->color;  // Light Color
+        auto lcolor = light->color;  // Light Color
 
         for (optr=objlist;  optr;  optr=optr->next) {
             double minsave=mindist;  // Nearest Object Distance (saved)
@@ -164,7 +160,7 @@ void RayTrace (
 
         // If surface normal is turned from light, skip this light.
 
-        ftemp = dot(nearnormal, ldir);
+        double ftemp = dot(nearnormal, ldir);  // Scratch Real Value
         if (ftemp <= 0.0)
             continue;
 
@@ -202,7 +198,7 @@ void RayTrace (
 
     if (nearattr->flags & AT_TRANSPAR) {
         Vector4 T = NdotD * nearnormal;
-        ftemp = global_indexref / nearattr->indexref;
+        double ftemp = global_indexref / nearattr->indexref;
 
         Vector4 RefrD = T + (ftemp * (ray.direction - T));  // Refracted Direction Vector
 
@@ -215,7 +211,7 @@ void RayTrace (
     // Find the contribution from the reflection vector, if applicable.
 
     if (nearattr->flags & AT_REFLECT) {
-        ftemp = 2.0 * NdotD;
+        double ftemp = 2.0 * NdotD;
         Vector4 ReflD = ray.direction - (ftemp * nearnormal);
 
         Color Rcolor;  // Reflected Color
