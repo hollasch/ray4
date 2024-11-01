@@ -14,6 +14,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 endif()
 
 project (ray4 LANGUAGES CXX)
+project (image4 LANGUAGES CXX)
 
 # Source
 set ( sources_ray4
@@ -35,6 +36,12 @@ set ( sources_ray4
 )
 
 add_executable (ray4 ${sources_ray4})
+add_executable (image4 src/image4.cpp src/r4_image.h)
+
+
+#---------------------------------------------------------------------------------------------------
+# Catch2 Unit Tests
+#---------------------------------------------------------------------------------------------------
 
 Include(FetchContent)
 
