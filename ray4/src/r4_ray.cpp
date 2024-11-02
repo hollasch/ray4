@@ -21,16 +21,20 @@
 
 #include "ray4.h"
 
+
+
 //__________________________________________________________________________________________________
 
 bool Ray4::operator== (const Ray4& other) const {
     return origin == other.origin && direction == other.direction;
 }
+
 //__________________________________________________________________________________________________
 
 bool Ray4::operator!= (const Ray4& other) const {
     return !(*this == other);
 }
+
 //__________________________________________________________________________________________________
 
 Point4 Ray4::operator() (double t) const {

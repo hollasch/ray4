@@ -25,6 +25,9 @@
 #include "r4_point.h"
 
 
+
+//__________________________________________________________________________________________________
+
 class Ray4 {
     // A ray (with origin and direction) in four-dimensional space.
 

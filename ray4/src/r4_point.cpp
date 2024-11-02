@@ -22,16 +22,19 @@
 #include "r4_point.h"
 
 
+
 //__________________________________________________________________________________________________
 
 bool Point4::operator== (const Point4& other) const {
     return x == other.x && y == other.y && z == other.z && w == other.w;
 }
+
 //__________________________________________________________________________________________________
 
 bool Point4::operator!= (const Point4& other) const {
     return !(*this == other);
 }
+
 //__________________________________________________________________________________________________
 
 const double& Point4::operator[] (std::size_t index) const {
@@ -43,6 +46,7 @@ const double& Point4::operator[] (std::size_t index) const {
         return z;
     return w;
 }
+
 //__________________________________________________________________________________________________
 
 double& Point4::operator[] (std::size_t index) {
@@ -54,6 +58,7 @@ double& Point4::operator[] (std::size_t index) {
         return z;
     return w;
 }
+
 //__________________________________________________________________________________________________
 
 Point4& Point4::operator+= (const Vector4& v) {
@@ -63,6 +68,7 @@ Point4& Point4::operator+= (const Vector4& v) {
     w += v.w;
     return *this;
 }
+
 //__________________________________________________________________________________________________
 
 Point4& Point4::operator-= (const Vector4& v) {
@@ -72,21 +78,25 @@ Point4& Point4::operator-= (const Vector4& v) {
     w -= v.w;
     return *this;
 }
+
 //__________________________________________________________________________________________________
 
 Vector4 Point4::toVector () const {
     return {x, y, z, w};
 }
+
 //__________________________________________________________________________________________________
 
 Vector4 Point4::operator- (const Point4& other) const {
     return { x - other.x, y - other.y, z - other.z, w - other.w };
 }
+
 //__________________________________________________________________________________________________
 
 Point4 Point4::operator+ (const Vector4& v) const {
     return { x + v.x, y + v.y, z + v.z, w + v.w };
 }
+
 //__________________________________________________________________________________________________
 
 Point4 Point4::operator- (const Vector4& v) const {

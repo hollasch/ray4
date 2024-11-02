@@ -22,6 +22,7 @@
 #ifndef R4_COLOR_H
 #define R4_COLOR_H
 
+
 class Color {
   public:
     double r, g, b;  // Each color should be in [0,1].
@@ -45,6 +46,7 @@ class Color {
     // Clamps each color component to the range [min,max].
     Color clamp(double min, double max) const;
 };
+
 
 inline Color operator* (double d, const Color& c) {
     return c * d;

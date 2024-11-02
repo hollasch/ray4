@@ -35,6 +35,7 @@
 #include "r4_image.h"
 
 
+//__________________________________________________________________________________________________
 // Usage Messages
 
 static auto version = "ray4 3.0.0-alpha.2 | 2024-10-24 | https://github.com/hollasch/ray4\n";
@@ -117,8 +118,6 @@ time_t   StartTime;         // Timestamp
 
 
 
-//__________________________________________________________________________________________________
-
 char *MyAlloc (size_t size) {
     // This routine allocates memory using the system malloc() function. If the malloc() call fails
     // to allocate the memory, this routine halts the program with an "out of memory" message.
@@ -130,11 +129,13 @@ char *MyAlloc (size_t size) {
 
     return block;
 }
+
 //__________________________________________________________________________________________________
 
 void MyFree (void *addr) {
     free (addr);
 }
+
 //__________________________________________________________________________________________________
 
 void Halt (const char *message, ...) {
@@ -200,6 +201,7 @@ void Halt (const char *message, ...) {
 
     exit ((!message) ? 0 : 1);
 }
+
 //__________________________________________________________________________________________________
 
 char *GetField (char *str, ushort *value) {
@@ -224,6 +226,7 @@ char *GetField (char *str, ushort *value) {
 
     return (*str == ':') ? (str+1) : str;
 }
+
 //__________________________________________________________________________________________________
 
 char *GetRange (
@@ -272,6 +275,7 @@ char *GetRange (
 
     return (*str == ':') ? (str+1) : str;
 }
+
 //__________________________________________________________________________________________________
 
 void ProcessArgs (int argc, char *argv[]) {
@@ -497,6 +501,7 @@ void WriteInteger32(ulong value) {
 
     WriteBlock(block, 4);
 }
+
 //__________________________________________________________________________________________________
 
 void WriteHeader(const ImageHeader& header) {
@@ -513,6 +518,7 @@ void WriteHeader(const ImageHeader& header) {
     for (int i=0;  i < 3;  ++i)
         WriteInteger16(header.end[i]);
 }
+
 //__________________________________________________________________________________________________
 
 void CalcRayGrid (void) {
@@ -568,6 +574,7 @@ void CalcRayGrid (void) {
 
     Gorigin += (Gx/2) + (Gy/2) + (Gz/2);
 }
+
 //__________________________________________________________________________________________________
 
 void FireRays () {
@@ -650,6 +657,7 @@ void FireRays () {
     if (scancount != 0)
         WriteBlock (scanbuff, scanlsize * scancount);
 }
+
 //__________________________________________________________________________________________________
 
 int main (int argc, char *argv[]) {

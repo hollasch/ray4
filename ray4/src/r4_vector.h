@@ -24,6 +24,9 @@
 #include <cstddef>
 
 
+
+//__________________________________________________________________________________________________
+
 class Vector4 {
     // Represents a four-dimenisonal vector.
 
@@ -60,6 +63,7 @@ class Vector4 {
     double normSquared() const;
     double norm() const;
 };
+
 
 inline Vector4 operator* (double s, const Vector4& v) {
     return v * s;

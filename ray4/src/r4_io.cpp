@@ -49,6 +49,7 @@ void CloseInput () {
     fclose (instream);
     instream = nullptr;
 }
+
 //__________________________________________________________________________________________________
 
 void CloseOutput () {
@@ -59,6 +60,7 @@ void CloseOutput () {
     fclose (outstream);
     outstream = nullptr;
 }
+
 //__________________________________________________________________________________________________
 
 const int UNREAD_NONE = -2;
@@ -75,6 +77,7 @@ int ReadChar () {
     unreadChar = UNREAD_NONE;
     return c;
 }
+
 //__________________________________________________________________________________________________
 
 void UnreadChar (int c) {
@@ -83,6 +86,7 @@ void UnreadChar (int c) {
 
     unreadChar = c;
 }
+
 //__________________________________________________________________________________________________
 
 void OpenInput () {
@@ -94,6 +98,7 @@ void OpenInput () {
     else if (! (instream = fopen (infile, "r")))
         Halt ("Open failed on input file (%s).", infile);
 }
+
 //__________________________________________________________________________________________________
 
 void OpenOutput () {
@@ -108,6 +113,7 @@ void OpenOutput () {
 }
 
 //__________________________________________________________________________________________________
+
 void WriteBlock (
     void *buff,  // Source Buffer
     int   num)   // Number of Bytes to Write

@@ -25,6 +25,9 @@
 #include "r4_vector.h"
 
 
+
+//__________________________________________________________________________________________________
+
 class Point4 {
     // Represents a four-dimensional point.
 
@@ -55,6 +58,7 @@ class Point4 {
     Point4 operator+ (const Vector4&) const;
     Point4 operator- (const Vector4&) const;
 };
+
 
 inline Point4 operator+ (const Vector4& v, const Point4& p) {
     return p + v;

@@ -171,6 +171,7 @@ static Attributes *prevattr= &DefAttributes;  // Previously Named Attribute
 static char        token[MAXTLEN+1];          // Input Token
 
 
+
 //__________________________________________________________________________________________________
 
 void Error (const char *format, ...) {
@@ -200,6 +201,7 @@ void Error (const char *format, ...) {
 
     Halt ("Aborting.");
 }
+
 //__________________________________________________________________________________________________
 
 char *GetToken  (
@@ -348,6 +350,7 @@ char *GetToken  (
     Error ("Unexpected character in input stream (0x%02x).", static_cast<int>(cc & 0xFF));
     return nullptr;
 }
+
 //__________________________________________________________________________________________________
 
 bool keyeq (
@@ -367,6 +370,7 @@ bool keyeq (
 
     return true;
 }
+
 //__________________________________________________________________________________________________
 
 void ReadColor (char *ctoken, Color *color) {
@@ -390,6 +394,7 @@ void ReadColor (char *ctoken, Color *color) {
         Error ("Missing real number for blue component of '%s'.", ctoken);
     color->b = atof (inbuff);
 }
+
 //__________________________________________________________________________________________________
 
 void ReadReal (char *ctoken, double *num) {
@@ -403,6 +408,7 @@ void ReadReal (char *ctoken, double *num) {
         Error ("Missing real number argument for '%s'.", ctoken);
     *num = atof (inbuff);
 }
+
 //__________________________________________________________________________________________________
 
 void ReadUint16 (char *itoken, ushort *num) {
@@ -416,6 +422,7 @@ void ReadUint16 (char *itoken, ushort *num) {
         Error ("Missing integer argument for '%s'.", itoken);
     *num = static_cast<ushort>(atoi (inbuff));
 }
+
 //__________________________________________________________________________________________________
 
 void ReadVector4 (char *vtoken, Vector4 &vec) {
@@ -444,6 +451,7 @@ void ReadVector4 (char *vtoken, Vector4 &vec) {
         Error ("Missing real number for W component of '%s'.", vtoken);
     vec[3] = atof (inbuff);
 }
+
 //__________________________________________________________________________________________________
 
 void ReadPoint4 (char *vtoken, Point4 &p) {
@@ -455,6 +463,7 @@ void ReadPoint4 (char *vtoken, Point4 &p) {
     p[2] = v[2];
     p[3] = v[3];
 }
+
 //__________________________________________________________________________________________________
 
 void ParseInput () {
@@ -504,6 +513,7 @@ void ParseInput () {
         DELETE (attrname);
     }
 }
+
 //__________________________________________________________________________________________________
 
 Attributes *ReadAttributes () {
@@ -570,6 +580,7 @@ Attributes *ReadAttributes () {
 
     return newattr;
 }
+
 //__________________________________________________________________________________________________
 
 Attributes *FindAttributes (char *name) {
@@ -588,6 +599,7 @@ Attributes *FindAttributes (char *name) {
 
     return anptr->attr;
 }
+
 //__________________________________________________________________________________________________
 
 void DoAttributes () {
@@ -630,6 +642,7 @@ void DoAttributes () {
 
     prevattr = newattrname->attr = ReadAttributes ();
 }
+
 //__________________________________________________________________________________________________
 
 void DoLight () {
@@ -671,6 +684,7 @@ void DoLight () {
     light->next = lightlist;
     lightlist = prev = light;
 }
+
 //__________________________________________________________________________________________________
 
 void DoSphere () {
@@ -712,6 +726,7 @@ void DoSphere () {
     snew->info.next = objlist;
     objlist = reinterpret_cast<ObjInfo *>(prev = snew);
 }
+
 //__________________________________________________________________________________________________
 
 void Process_TetPar (TetPar *tp) {
@@ -773,6 +788,7 @@ void Process_TetPar (TetPar *tp) {
                       + M31 * (M12*M23 - M13*M22);
     }
 }
+
 //__________________________________________________________________________________________________
 
 void DoParallelepiped () {
@@ -811,6 +827,7 @@ void DoParallelepiped () {
     pnew->info.next = objlist;
     objlist = reinterpret_cast<ObjInfo *>(prev = pnew);
 }
+
 //__________________________________________________________________________________________________
 
 void DoTetrahedron () {
@@ -849,6 +866,7 @@ void DoTetrahedron () {
     tnew->info.next = objlist;
     objlist = reinterpret_cast<ObjInfo *>(prev = tnew);
 }
+
 //__________________________________________________________________________________________________
 
 void DoTriangle () {
@@ -888,6 +906,7 @@ void DoTriangle () {
     tnew->info.next = objlist;
     objlist = reinterpret_cast<ObjInfo *>(prev = tnew);
 }
+
 //__________________________________________________________________________________________________
 
 void DoView () {

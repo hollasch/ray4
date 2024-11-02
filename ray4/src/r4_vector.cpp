@@ -31,6 +31,7 @@
 #include <cmath>
 
 
+
 //__________________________________________________________________________________________________
 
 const double& Vector4::operator[] (std::size_t index) const {
@@ -42,6 +43,7 @@ const double& Vector4::operator[] (std::size_t index) const {
         return z;
     return w;
 }
+
 //__________________________________________________________________________________________________
 
 double& Vector4::operator[] (std::size_t index) {
@@ -53,41 +55,49 @@ double& Vector4::operator[] (std::size_t index) {
         return z;
     return w;
 }
+
 //__________________________________________________________________________________________________
 
 bool Vector4::operator== (const Vector4& other) const {
     return x == other.x && y == other.y && z == other.z && w == other.w;
 }
+
 //__________________________________________________________________________________________________
 
 bool Vector4::operator!= (const Vector4& other) const {
     return !(*this == other);
 }
+
 //__________________________________________________________________________________________________
 
 Vector4 Vector4::operator- () const {
     return {-x, -y, -z, -w};
 }
+
 //__________________________________________________________________________________________________
 
 Vector4 Vector4::operator+ (const Vector4& other) const {
     return {x+other.x, y+other.y, z+other.z, w+other.w};
 }
+
 //__________________________________________________________________________________________________
 
 Vector4 Vector4::operator- (const Vector4& other) const {
     return {x-other.x, y-other.y, z-other.z, w-other.w};
 }
+
 //__________________________________________________________________________________________________
 
 Vector4 Vector4::operator* (double s) const {
     return {s*x, s*y, s*z, s*w};
 }
+
 //__________________________________________________________________________________________________
 
 Vector4 Vector4::operator/ (double d) const {
     return {x/d, y/d, z/d, w/d};
 }
+
 //__________________________________________________________________________________________________
 
 Vector4& Vector4::operator*= (double scale) {
@@ -97,22 +107,26 @@ Vector4& Vector4::operator*= (double scale) {
     w *= scale;
     return *this;
 }
+
 //__________________________________________________________________________________________________
 
 Vector4& Vector4::operator/= (double divisor) {
     *this *= 1/divisor;
     return *this;
 }
+
 //__________________________________________________________________________________________________
 
 double Vector4::normSquared () const {
     return x*x + y*y + z*z + w*w;
 }
+
 //__________________________________________________________________________________________________
 
 double Vector4::norm () const {
     return std::sqrt(normSquared());
 }
+
 //__________________________________________________________________________________________________
 
 bool Vector4::normalize () {
@@ -129,11 +143,13 @@ bool Vector4::normalize () {
     *this /= sqrt(vecNormSquared);
     return true;
 }
+
 //__________________________________________________________________________________________________
 
 double dot(const Vector4& a, const Vector4& b) {
     return (a.x * b.x) + (a.y * b.y) + (a.z * b.z) + (a.w * b.w);
 }
+
 //__________________________________________________________________________________________________
 
 Vector4 cross(const Vector4& u, const Vector4& v,const Vector4& w) {
