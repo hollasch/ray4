@@ -27,18 +27,19 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
 
-//==================================================================================================
+//__________________________________________________________________________________________________
 // Information Text Definitions
 
 static auto version = L"image4 0.0.0 | 2024-10-31 | https://github.com/hollasch/ray4/tree/master/image4";
 
 static auto usage = LR"(
 image4: 3D image manipulation tool for ray4 ray tracer
-usage:  image4 [-h | --help] <-i|--image <imageFile>> [-o|--output <outputImageFile>]
+usage:  image4 [-h | --help] <-i|--image|--input <imageFile>> [-o|--output <outputImageFile>]
                [-s|--slice <start>[-<end>][x<stepSize>]] [-c|--crop <minX>,<minY>-<maxX>,<maxY>]
                [--query] [--tiled <pixelWidth>[x<horizontalCount>]]
 
@@ -49,12 +50,12 @@ options.
 -h, --help
     Print usage and version information.
 
--i, --image <imageFile>
+-i, --input <imageFile>, --image <imageFile>
     Required argument unless the help option is given. The input image file is produced by the
     `ray4` 4D ray tracer, either the original image cube format, or the newer (2024 and after)
     format.
 
---query
+-q, --query
     If provided, print information about the image cube file instead of generating output images.
 
 -o, --output <outputImageFile>
@@ -71,11 +72,7 @@ options.
     whole range ('--slice x5'), offset to end of cube ('--slice 20x5'), and stepped range
     ('--slice 20-80x10').
 
--c, --crop <minX>,<minY>-<maxX>,<maxY>
-    Output images may be optionally cropped to the specified region. If specified, all images will
-    be similarly cropped.
-
---tiled <pixelWidth>[x<horizontalCount>]
+-t, --tiled <pixelWidth>[x<horizontalCount>]
     Generates a contact sheet of thumbnail images. If only a pixel width is specified, then the
     output image will be that many pixels wide, and slices will be sized to match the X:Y aspect
     ratio of the image cube. For example, with an image cube that is 200x100x50, and given a tiled
@@ -84,37 +81,311 @@ options.
     slices, the target is a sqrt(N) x sqrt(N) grid.
         If a horizontalCount is specified, then each row will have the specified number of
     thumbnails, sized to fit, with as tall a result as needed to display all slices.
+
+-c, --crop <xMin>,<yMin>-<xMax>,<yMax>
+    Output images may be optionally cropped to the specified region. If specified, all images will
+    be similarly cropped.
 )";
 
+//__________________________________________________________________________________________________
 
-//==================================================================================================
 struct Parameters {
-    bool    printHelp {false};
-    wstring imageCubeFilename;
-    bool    printFileInfo {false};
-    wstring outputFilepattern;
-    int     sliceStart{0};
-    int     sliceEnd{-1};
-    int     sliceStep{1};
-    int     cropXMin{0};
-    int     cropXMax{-1};
-    int     cropYMin{0};
-    int     cropYMax{-1};
-    bool    showTiled{false};
-    int     tiledPixelWidth{0};
-    int     tiledHorizontalCount{0};
+    bool    printHelp{false};         // Print help and version information.
+    wstring imageCubeFilename;        // Input image cube file name
+    bool    printFileInfo{false};     // Print information about the image cube file.
+    wstring outputFilePattern;        // Output image file name pattern
+    int     sliceStart{0};            // First slice to output
+    int     sliceEnd{-1};             // Last output slice. -1 indicates last slice
+    int     sliceStep{1};             // Step size between slices
+    bool    showTiled{false};         // Generate a tiled contact sheet of thumbnails.
+    int     tiledPixelWidth{0};       // Width in pixels of tiled contact sheet
+    int     tiledHorizontalCount{0};  // Number of thumbnails per row in tiled contact sheet
+    int     cropXMin{0};              // Minimum X coordinate for cropped output images
+    int     cropXMax{-1};             // Maximum X coordinate for cropped output images
+    int     cropYMin{0};              // Minimum Y coordinate for cropped output images 
+    int     cropYMax{-1};             // Maximum Y coordinate for cropped output images
 };
 
+//__________________________________________________________________________________________________
 
-//==================================================================================================
-int main() {
+enum class OptionType {
+    Help,
+    ImageFilename,
+    Query,
+    OutputFilename,
+    Slice,
+    Tiled,
+    Crop,
+    Unrecognized
+};
+
+struct OptionInfo {
+    // A description of a single command-line option.
+
+    OptionType type;
+    wchar_t    singleLetter;  // Single dash letter
+    wstring    longName;      // Double dash string
+    bool       takesValue;    // If true, takes option value
+};
+
+static vector<OptionInfo> optionInfo = {
+    {OptionType::Unrecognized,   0,    L"",       false},
+    {OptionType::Help,           L'h', L"help",   false},
+    {OptionType::ImageFilename,  L'i', L"input",  true},
+    {OptionType::ImageFilename,  L'i', L"image",  true},
+    {OptionType::Query,          L'q', L"query",  false},
+    {OptionType::OutputFilename, L'o', L"output", true},
+    {OptionType::Slice,          L's', L"slice",  true},
+    {OptionType::Tiled,          L't', L"tiled",  true},
+    {OptionType::Crop,           L'c', L"crop",   true},
+};
+
+//__________________________________________________________________________________________________
+
+const OptionInfo& getOptionInfo(wchar_t *arg) {
+    // Given a command-line option, return the corresponding OptionInfo structure.
+
+    if (arg[0] == L'/' && arg[1] == L'?')
+        return optionInfo[1];
+
+    if (arg[0] != L'-')
+        return optionInfo[0];
+
+    if (arg[1] == L'-') {
+        for (const auto& option : optionInfo)
+            if (_wcsicmp(option.longName.c_str(), arg + 2) == 0)
+                return option;
+    }
+
+    for (const auto& option : optionInfo)
+        if (option.singleLetter == arg[1])
+            return option;
+
+    return optionInfo[0];
+}
+
+//__________________________________________________________________________________________________
+
+std::pair<wchar_t*, int> readInteger (wchar_t* str) {
+    // Reads the integer from the string. Returns a pair containing the pointer to the remainder of
+    // the string, and the integer value.
+
+    auto *ptr = str;
+    bool negate = *ptr == L'-';
+    if (negate) ++ptr;
+
+    int value = 0;
+    for (; isdigit(*ptr);  ++ptr)
+        value = (10 * value) + (*ptr - L'0');
+
+    return { ptr, negate ? -value : value };
+}
+
+//__________________________________________________________________________________________________
+
+bool parseOptionValueSlice (Parameters &params, wchar_t* value) {
+    // Parse the --slice option string. Format is '<start>[-<end>][x<stepSize>]'.
+
+    const auto optionValue = value;
+
+    if (!isdigit(*value)) {
+        wcerr << "image4: Invalid slice start (" << optionValue << ").\n";
+        return false;
+    }
+
+    std::tie(value, params.sliceStart) = readInteger(value);
+
+    if (*value == '-') {
+        ++value;
+        if (!isdigit(*value)) {
+            wcerr << "image4: Invalid slice end (" << optionValue << ").\n";
+            return false;
+        }
+        std::tie(value, params.sliceEnd) = readInteger(value);
+    }
+
+    if (*value == 'x') {
+        ++value;
+        if (!isdigit(*value)) {
+            wcerr << "image4: Invalid slice step (" << optionValue << ").\n";
+            return false;
+        }
+        std::tie(value, params.sliceStep) = readInteger(value);
+    }
+
+    if (*value) {
+        wcerr << "image4: Invalid slice option value (" << optionValue << ").\n";
+        return false;
+    }
+
+    return true;
+}
+
+//__________________________________________________________________________________________________
+
+bool parseOptionValueTiled (Parameters &params, wchar_t* value) {
+    // Parse the --tiled option string. Format is '<pixelWidth>[x<horizontalCount]'.
+
+    const auto optionValue = value;
+
+    if (!isdigit(*value)) {
+        wcerr << "image4: Invalid tiled pixel width (" << optionValue << ").\n";
+        return false;
+    }
+
+    std::tie(value, params.tiledPixelWidth) = readInteger(value);
+
+    if (*value == 'x') {
+        ++value;
+        if (!isdigit(*value)) {
+            wcerr << "image4: Invalid tiled horizontal count (" << optionValue << ").\n";
+            return false;
+        }
+        std::tie(value, params.tiledHorizontalCount) = readInteger(value);
+    }
+
+    if (*value) {
+        wcerr << "image4: Invalid tiled option value (" << optionValue << ").\n";
+        return false;
+    }
+
+    return true;
+}
+
+//__________________________________________________________________________________________________
+
+bool parseOptionValueCrop (Parameters &params, wchar_t* value) {
+    // Parse the --crop option string. Format is '<xMin>,<yMin>-<xMax>,<yMax>'.
+
+    const auto optionValue = value;
+
+    if (!isdigit(*value)) {
+        wcerr << "image4: Invalid crop X minimum (" << optionValue << ").\n";
+        return false;
+    }
+    std::tie(value, params.cropXMin) = readInteger(value);
+
+    if (*value != ',' || !isdigit(*++value)) {
+        wcerr << "image4: Invalid crop option value (" << optionValue << ").\n";
+        return false;
+    }
+    std::tie(value, params.cropYMin) = readInteger(value);
+
+    if (*value != '-' || !isdigit(*++value)) {
+        wcerr << "image4: Invalid crop option value (" << optionValue << ").\n";
+        return false;
+    }
+    std::tie(value, params.cropXMax) = readInteger(value);
+
+    if (*value != ',' || !isdigit(*++value)) {
+        wcerr << "image4: Invalid crop option value (" << optionValue << ").\n";
+        return false;
+    }
+    std::tie(value, params.cropYMax) = readInteger(value);
+
+    if (*value) {
+        wcerr << "image4: Invalid tiled option value (" << optionValue << ").\n";
+        return false;
+    }
+
+    return true;
+}
+
+//__________________________________________________________________________________________________
+
+bool processParameters (Parameters &params, int argc, wchar_t *argv[]) {
+    // Process the command-line options and load results into the given Parameters object. Returns
+    // true on success, false on error.
+
+    for (auto argi = 1;  argi < argc;  ++argi) {
+        auto *arg = argv[argi];
+        auto optionInfo = getOptionInfo(arg);
+        wchar_t *optionValue = nullptr;
+
+        if (optionInfo.takesValue) {
+            if (arg[1] != '-' && arg[2] != 0) {  // Single letter option joined with argument value.
+                optionValue = arg + 2;
+            } else {
+                // Option value is next argument.
+                if ((argi + 1) == argc) {
+                    wcerr << "image4: Missing argument for (" << arg << ").\n";
+                    return false;
+                }
+                optionValue = argv[++argi];
+            }
+        }
+
+        if (optionInfo.type == OptionType::Unrecognized) {
+            wcerr << "image4: Unrecognized command argument: (" << arg << ").\n";
+            return false;
+        }
+
+        switch (optionInfo.type) {
+            default:
+            case OptionType::Unrecognized:
+                wcerr << "image4: Unrecognized command argument: (" << arg << ").\n";
+                return false;
+
+            case OptionType::Help:
+                params.printHelp = true;
+                break;
+
+            case OptionType::ImageFilename:
+                params.imageCubeFilename = optionValue;
+                break;
+
+            case OptionType::Query:
+                params.printFileInfo = true;
+                break;
+
+            case OptionType::OutputFilename:
+                params.outputFilePattern = optionValue;
+                break;
+
+            case OptionType::Slice:
+                if (!parseOptionValueSlice(params, optionValue))
+                    return false;
+                break;
+
+            case OptionType::Tiled:
+                if (!parseOptionValueTiled(params, optionValue))
+                    return false;
+                break;
+
+            case OptionType::Crop:
+                if (!parseOptionValueCrop(params, optionValue))
+                    return false;
+                break;
+        }
+    }
+
+    return true;
+}
+
+//__________________________________________________________________________________________________
+
+int wmain(int argc, wchar_t *argv[]) {
     Parameters params;
 
-    wcout << "Command-line parameters:\n";
+    if (!processParameters(params, argc, argv))
+        return 1;
+
+    if (params.printHelp) {
+        wcout << usage;
+        wcout << version;
+        return 0;
+    }
+
+    if (params.imageCubeFilename.empty()) {
+        wcerr << "image4: Missing input image file name.\n";
+        return 1;
+    }
+
+    wcout << "\nCommand-line parameters:\n";
     wcout << "    printHelp: " << (params.printHelp ? "true\n" : "false\n");
     wcout << "    imageCubeFilename: '" << params.imageCubeFilename << "'\n";
     wcout << "    printFileInfo: " << (params.printFileInfo ? "true\n" : "false\n");
-    wcout << "    outputFilepattern: '" << params.outputFilepattern << "'\n";
+    wcout << "    outputFilePattern: '" << params.outputFilePattern << "'\n";
     wcout << "    slice: " << params.sliceStart << " - " << params.sliceEnd << " x " << params.sliceStep << '\n';
     wcout << "    crop: " << params.cropXMin << ',' << params.cropYMin
                           << " - " << params.cropXMax << ',' << params.cropYMax << '\n';
