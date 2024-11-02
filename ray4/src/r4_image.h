@@ -68,9 +68,9 @@
 
 // Structure Definitions
 
-struct ImageHeader {
+struct ImageHeader_1 {
     unsigned long  magic;         // Magic Number = R4_IMAGE_ID
-    unsigned char  version;       // Image File Version Number
+    unsigned char  version;       // Image File Version Number = 1
     unsigned char  bitsperpixel;  // Number of Bits per Pixel
     unsigned short aspect[3];     // Aspect Ratios [X,Y,Z]
     unsigned short start[3];      // Starting Image Pixels for [X,Y,Z]

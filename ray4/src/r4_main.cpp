@@ -34,6 +34,8 @@
 #include "ray4.h"
 #include "r4_image.h"
 
+using ImageHeader = ImageHeader_1;
+
 
 //__________________________________________________________________________________________________
 // Usage Messages
