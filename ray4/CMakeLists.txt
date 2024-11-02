@@ -14,7 +14,6 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 endif()
 
 project (ray4 LANGUAGES CXX)
-project (image4 LANGUAGES CXX)
 
 # Source
 set ( sources_ray4
