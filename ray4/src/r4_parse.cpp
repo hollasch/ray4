@@ -750,16 +750,16 @@ void Process_TetPar (TetPar *tp) {
         // Find the dominant axis of the normal vector and load up the ax1, ax2 and ax3 fields
         // accordingly.
 
-        auto dominant1 = (fabs(tp->normal[X]) > fabs(tp->normal[Y])) ? X : Y;
-        auto dominant2 = (fabs(tp->normal[Z]) > fabs(tp->normal[W])) ? Z : W;
+        int dominant1 = (fabs(tp->normal.x) > fabs(tp->normal.y)) ? 0 : 1;
+        int dominant2 = (fabs(tp->normal.z) > fabs(tp->normal.w)) ? 2 : 3;
         if (fabs(tp->normal[dominant1]) > fabs(tp->normal[dominant2])) {
-            tp->ax1 = (dominant1 == X) ? Y : X;
-            tp->ax2 = Z;
-            tp->ax3 = W;
+            tp->ax1 = (dominant1 == 0) ? 1 : 0;
+            tp->ax2 = 2;
+            tp->ax3 = 3;
         } else {
-            tp->ax1 = X;
-            tp->ax2 = Y;
-            tp->ax3 = (dominant2 == Z) ? W : Z;
+            tp->ax1 = 0;
+            tp->ax2 = 1;
+            tp->ax3 = (dominant2 == 2) ? 3 : 2;
         }
     }
 

@@ -112,7 +112,7 @@ ImageHeader iheader = {       // Output Image Header
 
 Vector4  Gx,  Gy,  Gz;      // Ray-Grid Basis Vectors
 Point4   Gorigin;           // Ray-Grid Origin Point
-ushort   res[3] = {0,0,0};  // Full Output Image Resolution
+int      res[3] = {0,0,0};  // Full Output Image Resolution
 ulong    scanlsize;         // Scanline Size
 ulong    slbuff_count;      // Number of Lines in Scanline Buffer
 char    *scanbuff;          // Scanline Buffer
@@ -206,7 +206,7 @@ void Halt (const char *message, ...) {
 
 //__________________________________________________________________________________________________
 
-char *GetField (char *str, ushort *value) {
+char *GetField (char *str, int &value) {
     // These subroutine process the command-line arguments. The first two routines get each field of
     // the resolution, aspect ratio, and scan range triples.
 
@@ -214,14 +214,14 @@ char *GetField (char *str, ushort *value) {
         return nullptr;
 
     if (!*str) {
-        *value = 0;
+        value = 0;
         return str;
     }
 
     if ((*str < '0') || ('9' < *str))
         return nullptr;
 
-    *value = static_cast<ushort>(atoi(str));
+    value = static_cast<ushort>(atoi(str));
 
     while (('0' <= *str) && (*str <= '9'))
         ++str;
@@ -232,28 +232,28 @@ char *GetField (char *str, ushort *value) {
 //__________________________________________________________________________________________________
 
 char *GetRange (
-    char   *str,    // Source String
-    ushort *val1,   // First Destination Value of Range
-    ushort *val2)   // Second Destination Value of Range
+    char *str,    // Source String
+    int  &val1,   // First Destination Value of Range
+    int  &val2)   // Second Destination Value of Range
 {
     if (!str)
         return nullptr;
 
     if (!*str) {
-        *val1 = *val2 = 0;
+        val1 = val2 = 0;
         return str;
     }
 
     if (*str == '_') {
-        *val1 = 0;
-        *val2 = 0xFFFF;
+        val1 = 0;
+        val2 = 0xFFFF;
         return (str[1] == ':') ? (str+2) : (str+1);
     }
 
     if ((*str < '0') || ('9' < *str))
         return nullptr;
 
-    *val1 = *val2 = static_cast<ushort>(atoi (str));
+    val1 = val2 = static_cast<ushort>(atoi (str));
 
     while (('0' <= *str) && (*str <= '9'))
         ++str;
@@ -271,7 +271,7 @@ char *GetRange (
     if ((*str < '0') || ('9' < *str))
         return nullptr;
 
-    *val2 = static_cast<ushort>(atoi (str));
+    val2 = static_cast<ushort>(atoi (str));
     while (('0' <= *str) && (*str <= '9'))
         ++str;
 
@@ -362,14 +362,19 @@ void ProcessArgs (int argc, char *argv[]) {
         switch (oc) {
 
             case 'a': {
-                if (ptr = GetField(ptr,&iheader.aspect[0]), (!ptr || !*ptr))
+                int aspect[3];
+                if (ptr = GetField(ptr,aspect[0]), (!ptr || !*ptr))
                     Halt ("Invalid X argument for -a option.");
 
-                if (ptr = GetField(ptr,&iheader.aspect[1]), !ptr)
+                if (ptr = GetField(ptr,aspect[1]), !ptr)
                     Halt ("Invalid Y argument for -a option.");
 
-                if (ptr = GetField(ptr,&iheader.aspect[2]), !ptr)
+                if (ptr = GetField(ptr,aspect[2]), !ptr)
                     Halt ("Invalid Z argument for -a option.");
+
+                iheader.aspect[0] = aspect[0];
+                iheader.aspect[1] = aspect[1];
+                iheader.aspect[2] = aspect[2];
 
                 break;
             }
@@ -410,37 +415,54 @@ void ProcessArgs (int argc, char *argv[]) {
             case 'r': {
                 char* resArg = ptr;
 
-                ptr = GetField(ptr, &res[X]);
+                int resValues[3];
+
+                ptr = GetField(ptr, resValues[0]);
 
                 if (!ptr || !*ptr) {
-                    res[Y] = res[Z] = res[X];
+                    resValues[1] = resValues[2] = resValues[0];
                 } else {
-                    ptr = GetField(ptr, &res[Y]);
+                    ptr = GetField(ptr, resValues[1]);
 
                     if (!ptr || !*ptr)
-                        res[Z] = res[X];
+                        resValues[2] = resValues[0];
                     else
-                        ptr = GetField(ptr, &res[Z]);
+                        ptr = GetField(ptr, resValues[2]);
                 }
 
                 if (ptr && *ptr)
                     Halt("Bad resolution argument to -r option (%s).", resArg);
 
+                res[0] = resValues[0];
+                res[1] = resValues[1];
+                res[2] = resValues[2];
+
                 break;
             }
 
             case 's': {
-                ptr = GetRange(ptr,&iheader.start[0],&iheader.end[0]);
+                int rangeStart[3];
+                int rangeEnd[3];
+
+                ptr = GetRange(ptr,rangeStart[0],rangeEnd[0]);
                 if (!ptr || !*ptr)
                     Halt ("Bad X field argument to -s option.");
 
-                ptr = GetRange(ptr,&iheader.start[1],&iheader.end[1]);
+                ptr = GetRange(ptr,rangeStart[1],rangeEnd[1]);
                 if (!ptr)
                     Halt ("Bad Y field argument to -s option.");
 
-                ptr = GetRange(ptr,&iheader.start[2],&iheader.end[2]);
+                ptr = GetRange(ptr,rangeStart[2],rangeEnd[2]);
                 if (!ptr)
                     Halt ("Bad Z field argument to -s option.");
+
+                iheader.start[0] = rangeStart[0];
+                iheader.start[1] = rangeStart[1];
+                iheader.start[2] = rangeStart[2];
+
+                iheader.end[0] = rangeEnd[0];
+                iheader.end[1] = rangeEnd[1];
+                iheader.end[2] = rangeEnd[2];
 
                 break;
             }
@@ -551,12 +573,12 @@ void CalcRayGrid (void) {
     double GNx = 2.0 * lineOfSightNorm * tan(degreeToRadian*Vangle/2.0);
 
     double GNy = GNx
-               * ((double) res[Y] / (double) res[X])
-               * ((double)iheader.aspect[Y]/ (double)iheader.aspect[X]);
+               * ((double) res[1] / (double) res[0])
+               * ((double)iheader.aspect[1]/ (double)iheader.aspect[0]);
 
     double GNz = GNx
-               * ((double) res[Z] / (double) res[X])
-               * ((double)iheader.aspect[Z]/ (double)iheader.aspect[X]);
+               * ((double) res[2] / (double) res[0])
+               * ((double)iheader.aspect[2]/ (double)iheader.aspect[0]);
 
     // Scale each grid basis vector.
 
@@ -570,9 +592,9 @@ void CalcRayGrid (void) {
 
     // Finally, scale the grid basis vectors down by the corresponding resolutions.
 
-    Gx /= res[X];
-    Gy /= res[Y];
-    Gz /= res[Z];
+    Gx /= res[0];
+    Gy /= res[1];
+    Gz /= res[2];
 
     Gorigin += (Gx/2) + (Gy/2) + (Gz/2);
 }
@@ -586,10 +608,10 @@ void FireRays () {
     char  *scanptr = scanbuff;  // Scanline Buffer Pointer
     bool   eflag   = true;      // Even RGB Boundary Flag
 
-    for (auto Zindex = iheader.start[Z];  Zindex <= iheader.end[Z];  ++Zindex) {
+    for (auto Zindex = iheader.start[2];  Zindex <= iheader.end[2];  ++Zindex) {
         Point4 Zorigin = Gorigin + (Zindex*Gz);
-        for (auto Yindex = iheader.start[Y];  Yindex <= iheader.end[Y];  ++Yindex) {
-            printf ("%6u %6u\r", iheader.end[Z] - Zindex, iheader.end[Y] - Yindex);
+        for (auto Yindex = iheader.start[1];  Yindex <= iheader.end[1];  ++Yindex) {
+            printf ("%6u %6u\r", iheader.end[2] - Zindex, iheader.end[1] - Yindex);
             fflush (stdout);
 
             Point4 Yorigin = Zorigin + (Yindex*Gy);
@@ -599,7 +621,7 @@ void FireRays () {
                 eflag = true;
             }
 
-            for (auto Xindex = iheader.start[X];  Xindex <= iheader.end[X];  ++Xindex) {
+            for (auto Xindex = iheader.start[0];  Xindex <= iheader.end[0];  ++Xindex) {
                 Color    color;   // Pixel Color
                 Vector4  dir;     // Ray Direction Vector
                 Point4   Gpoint;  // Current Grid Point
