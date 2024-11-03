@@ -205,6 +205,7 @@ void RayTrace (
 
         Color Tcolor;  // Transparent Color
         RayTrace (Ray4(nearintr, RefrD), Tcolor, level);
+        ++stats.Nrefract;
 
         color += nearattr->Kt * Tcolor;
     }
@@ -217,6 +218,7 @@ void RayTrace (
 
         Color Rcolor;  // Reflected Color
         RayTrace (Ray4(nearintr, ReflD), Rcolor, level);
+        ++stats.Nreflect;
 
         color += nearattr->Ks * Rcolor;
     }
