@@ -47,9 +47,9 @@ usage:  image4 [-h|--help] [-v|--version]
                [-t|--tiled <pixelWidth>[x<horizontalCount>]]
                [-c|--crop <minX>,<minY>-<maxX>,<maxY>]
 
-This tool reads a 3D image cube produced by the ray4 4D ray tracer, and either reports information
-about the file, or generates one or more images from that image cube, depending on the command line
-options.
+This tool reads a 3D image cube produced by the ray4 4D ray tracer, and either
+reports information about the file, or generates one or more images from that
+image cube, depending on the command line options.
 
 -v, --version
     Print version information and exit.
@@ -58,40 +58,46 @@ options.
     Print usage + version information and exit.
 
 -i, --input <imageFile>, --image <imageFile>
-    Required argument unless the help option is given. The input image file is produced by the
-    `ray4` 4D ray tracer, either the original image cube format, or the newer (2024 and after)
-    format.
+    Required argument unless the help option is given. The input image file is
+    produced by the `ray4` 4D ray tracer, either the original image cube format,
+    or the newer (2024 and after) format.
 
 -q, --query
-    If provided, print information about the image cube file instead of generating output images.
+    If provided, print information about the image cube file instead of
+    generating output images.
 
 -o, --output <outputImageFile>
-    Required to produce one or more output image files. This file will be overwritten if it already
-    exists. The output image file may contain the substring `##` (exactly two consecutive hash
-    characters), which will be replaced with the slice index. If the output file name does not
-    contain this substring, the slice index will be appended to the end if more than one slice is
-    requested.
+    Required to produce one or more output image files. This file will be
+    overwritten if it already exists. The output image file may contain the
+    substring `##` (exactly two consecutive hash characters), which will be
+    replaced with the slice index. If the output file name does not contain this
+    substring, the slice index will be appended to the end if more than one
+    slice is requested.
 
 -s, --slice <start>[-<end>][x<stepSize>]
-    Optional. If unspecified, all slices will be generated. If one number is given, then that slice
-    will be output. If a range is specified (such as '--start 5-10'), then all slices in that range
-    will be generated. A step size may be included by appending an 'x' and a number. This works for
-    whole range ('--slice x5'), offset to end of cube ('--slice 20x5'), and stepped range
-    ('--slice 20-80x10').
+    Optional. If unspecified, all slices will be generated. If one number is
+    given, then that slice will be output. If a range is specified (such as
+    '--start 5-10'), then all slices in that range will be generated. A step
+    size may be included by appending an 'x' and a number. This works for whole
+    range ('--slice x5'), offset to end of cube ('--slice 20x5'), and stepped
+    range ('--slice 20-80x10').
 
 -t, --tiled <pixelWidth>[x<horizontalCount>]
-    Generates a contact sheet of thumbnail images. If only a pixel width is specified, then the
-    output image will be that many pixels wide, and slices will be sized to match the X:Y aspect
-    ratio of the image cube. For example, with an image cube that is 200x100x50, and given a tiled
-    target of 2000 pixels horizontally, the generated contact sheet will have 64 tiles, 8 thumbnails
-    wide by 7 thumbnails, with the bottom row only having two thumbnails. In other words, given N
-    slices, the target is a sqrt(N) x sqrt(N) grid.
-        If a horizontalCount is specified, then each row will have the specified number of
-    thumbnails, sized to fit, with as tall a result as needed to display all slices.
+    Generates a contact sheet of thumbnail images. If only a pixel width is
+    specified, then the output image will be that many pixels wide, and slices
+    will be sized to match the X:Y aspect ratio of the image cube. For example,
+    with an image cube that is 200x100x50, and given a tiled target of 2000
+    pixels horizontally, the generated contact sheet will have 64 tiles, 8
+    thumbnails wide by 7 thumbnails, with the bottom row only having two
+    thumbnails. In other words, given N slices, the target is a sqrt(N) x
+    sqrt(N) grid.
+        If a horizontalCount is specified, then each row will have the specified
+    number of thumbnails, sized to fit, with as tall a result as needed to
+    display all slices.
 
 -c, --crop <xMin>,<yMin>-<xMax>,<yMax>
-    Output images may be optionally cropped to the specified region. If specified, all images will
-    be similarly cropped.
+    Output images may be optionally cropped to the specified region. If
+    specified, all images will be similarly cropped.
 
 )";
 
