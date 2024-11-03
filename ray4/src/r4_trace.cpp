@@ -37,7 +37,7 @@ Color black { 0, 0, 0 };  // Used to zero out colors.
 void RayTrace (
     const Ray4 &rayIn,  // Trace Ray
     Color      &color,  // Resulting Color
-    ulong       level)  // Raytrace Level
+    int         level)  // Raytrace Level
 {
     // This routine is the heart of the raytracer; it takes the ray, determines which objects are
     // hit, picks the closest one, determines the appropriate shade at the surface, and then may or

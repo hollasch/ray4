@@ -166,7 +166,7 @@ Triangle DefTriangle = {
 
 static AttrName   *attrnamelist = nullptr;    // Attribute Name List
 static bool        eofflag = false;           // Non-Zero If EOF Input File
-static ulong       lcount = 1;                // Input Line Counter
+static long        lcount = 1;                // Input Line Counter
 static Attributes *prevattr= &DefAttributes;  // Previously Named Attribute
 static char        token[MAXTLEN+1];          // Input Token
 
@@ -183,7 +183,7 @@ void Error (const char *format, ...) {
 
     va_start(args, format);
 
-    printf("Input Error [Line %lu]:  ", lcount);
+    printf("Input Error [Line %l]:  ", lcount);
     vprintf(format, args);
     print("\n");
 
@@ -221,7 +221,7 @@ char *GetToken  (
     }
 
     char   *ptr = buff;  // Destination Buffer Pointer
-    ushort  nn  = 0;     // Length of Destination String
+    int     nn  = 0;     // Length of Destination String
 
     // Skip past comments and whitespace.
 
@@ -411,7 +411,7 @@ void ReadReal (char *ctoken, double *num) {
 
 //__________________________________________________________________________________________________
 
-void ReadUint16 (char *itoken, ushort *num) {
+void ReadUint16 (char *itoken, uint16_t *num) {
     // This procedure reads in a 16-bit unsigned integer from the input stream and stores it in the
     // location given in the parameter list.
 
@@ -420,7 +420,7 @@ void ReadUint16 (char *itoken, ushort *num) {
     GetToken (inbuff, false);
     if (CType(*inbuff) != NUM)
         Error ("Missing integer argument for '%s'.", itoken);
-    *num = static_cast<ushort>(atoi (inbuff));
+    *num = static_cast<uint16_t>(atoi(inbuff));
 }
 
 //__________________________________________________________________________________________________
@@ -487,7 +487,7 @@ void ParseInput () {
                 break;
 
             case VarType::UInt16:
-                ReadUint16 (token, reinterpret_cast<ushort*>(Globals[i].address));
+                ReadUint16 (token, reinterpret_cast<uint16_t*>(Globals[i].address));
                 break;
 
             case VarType::Real:
@@ -553,7 +553,7 @@ Attributes *ReadAttributes () {
             if (newattr->indexref <= 0.0)
                 Error ("Non-positive index of refraction.");
         } else if (keyeq (token, "refle")) {
-            ushort  scratch;
+            uint16_t scratch;
             ReadUint16 (token, &scratch);
             if (scratch == 1)
                 newattr->flags |=  AT_REFLECT;
@@ -623,8 +623,7 @@ void DoAttributes () {
 
     AttrName *newattrname;  // New Attributes Alias Node
     if (anptr) {
-        printf ("Warning:  Attributes \"%s\" redefined at line %lu.\n",
-        token, lcount);
+        printf ("Warning:  Attributes \"%s\" redefined at line %l.\n", token, lcount);
         newattrname = anptr;
     } else {
         newattrname = NEW (AttrName, 1);

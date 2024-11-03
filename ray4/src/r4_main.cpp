@@ -113,8 +113,8 @@ ImageHeader iheader = {       // Output Image Header
 Vector4  Gx,  Gy,  Gz;      // Ray-Grid Basis Vectors
 Point4   Gorigin;           // Ray-Grid Origin Point
 int      res[3] = {0,0,0};  // Full Output Image Resolution
-ulong    scanlsize;         // Scanline Size
-ulong    slbuff_count;      // Number of Lines in Scanline Buffer
+long     scanlsize;          // Scanline Size
+long     slbuff_count;      // Number of Lines in Scanline Buffer
 char    *scanbuff;          // Scanline Buffer
 time_t   StartTime;         // Timestamp
 
@@ -221,7 +221,7 @@ char *GetField (char *str, int &value) {
     if ((*str < '0') || ('9' < *str))
         return nullptr;
 
-    value = static_cast<ushort>(atoi(str));
+    value = atoi(str);
 
     while (('0' <= *str) && (*str <= '9'))
         ++str;
@@ -253,7 +253,7 @@ char *GetRange (
     if ((*str < '0') || ('9' < *str))
         return nullptr;
 
-    val1 = val2 = static_cast<ushort>(atoi (str));
+    val1 = val2 = atoi(str);
 
     while (('0' <= *str) && (*str <= '9'))
         ++str;
@@ -271,7 +271,7 @@ char *GetRange (
     if ((*str < '0') || ('9' < *str))
         return nullptr;
 
-    val2 = static_cast<ushort>(atoi (str));
+    val2 = atoi(str);
     while (('0' <= *str) && (*str <= '9'))
         ++str;
 
@@ -504,20 +504,20 @@ void ProcessArgs (int argc, char *argv[]) {
 // Integer Write Routines -- These routines write out values in big-endian format.
 //==================================================================================================
 
-void WriteInteger8(uchar value) {
+void WriteUInteger8(uint8_t value) {
     WriteBlock(&value, 1);
 }
 
-void WriteInteger16(ushort value) {
-    unsigned char block[2];
+void WriteUInteger16(uint16_t value) {
+    uint8_t block[2];
     block[0] = 0xff & (value >> 8);
     block[1] = 0xff & value;
 
     WriteBlock(block, 2);
 }
 
-void WriteInteger32(ulong value) {
-    unsigned char block[4];
+void WriteUInteger32(uint32_t value) {
+    uint8_t block[4];
     block[0] = 0xff & (value >> 24);
     block[1] = 0xff & (value >> 16);
     block[2] = 0xff & (value >>  8);
@@ -529,18 +529,18 @@ void WriteInteger32(ulong value) {
 //__________________________________________________________________________________________________
 
 void WriteHeader(const ImageHeader& header) {
-    WriteInteger32(header.magic);
-    WriteInteger8(header.version);
-    WriteInteger8(header.bitsperpixel);
+    WriteUInteger32(header.magic);
+    WriteUInteger8(header.version);
+    WriteUInteger8(header.bitsperpixel);
 
     for (int i=0;  i < 3;  ++i)
-        WriteInteger16(header.aspect[i]);
+        WriteUInteger16(header.aspect[i]);
 
     for (int i=0;  i < 3;  ++i)
-        WriteInteger16(header.start[i]);
+        WriteUInteger16(header.start[i]);
 
     for (int i=0;  i < 3;  ++i)
-        WriteInteger16(header.end[i]);
+        WriteUInteger16(header.end[i]);
 }
 
 //__________________________________________________________________________________________________
@@ -604,7 +604,7 @@ void CalcRayGrid (void) {
 void FireRays () {
     // This is the main routine that fires the rays through the ray grid and into the 4D scene.
 
-    ulong  scancount = 0;       // Scanline Counter
+    long   scancount = 0;       // Scanline Counter
     char  *scanptr = scanbuff;  // Scanline Buffer Pointer
     bool   eflag   = true;      // Even RGB Boundary Flag
 
@@ -647,20 +647,20 @@ void FireRays () {
 
                 if (iheader.bitsperpixel == 24) {
 
-                    *scanptr++ = static_cast<uchar>(color.r);
-                    *scanptr++ = static_cast<uchar>(color.g);
-                    *scanptr++ = static_cast<uchar>(color.b);
+                    *scanptr++ = static_cast<uint8_t>(color.r);
+                    *scanptr++ = static_cast<uint8_t>(color.g);
+                    *scanptr++ = static_cast<uint8_t>(color.b);
 
                 } else if (eflag) {
 
-                    *scanptr++ = (static_cast<uchar>(color.r) & 0xF0) | (static_cast<uchar>(color.g) >> 4);
-                    *scanptr   = (static_cast<uchar>(color.b) & 0xF0);
+                    *scanptr++ = (static_cast<uint8_t>(color.r) & 0xF0) | (static_cast<uint8_t>(color.g) >> 4);
+                    *scanptr   = (static_cast<uint8_t>(color.b) & 0xF0);
                     eflag = false;
 
                 } else {
 
-                    *scanptr++ |= (static_cast<uchar>(color.r) >> 4);
-                    *scanptr++  = (static_cast<uchar>(color.g) & 0xF0) | (static_cast<uchar>(color.b) >> 4);
+                    *scanptr++ |= (static_cast<uint8_t>(color.r) >> 4);
+                    *scanptr++  = (static_cast<uint8_t>(color.g) & 0xF0) | (static_cast<uint8_t>(color.b) >> 4);
                     eflag = true;
                 }
             }

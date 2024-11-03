@@ -41,13 +41,6 @@
 
 
 
-// Basic Type Definitions
-
-using uchar  = unsigned char;
-using ulong  = unsigned long;
-using ushort = unsigned short;
-
-
 // Constant Definitions
 
 const double epsilon = 1.0e-15;  // Very Small Number (Effectively Zero)
@@ -99,10 +92,10 @@ inline double lerp (double a, double b, double t) {
 // Structure Definitions
 
 struct Stats {
-    ulong  Ncast;     // Number of Rays Cast
-    ulong  Nreflect;  // Number of Reflection Rays Cast
-    ulong  Nrefract;  // Number of Refraction Rays Cast
-    ulong  maxlevel;  // Maximum Ray Tree Level
+    long  Ncast;     // Number of Rays Cast
+    long  Nreflect;  // Number of Reflection Rays Cast
+    long  Nrefract;  // Number of Refraction Rays Cast
+    long  maxlevel;  // Maximum Ray Tree Level
 };
 
 enum class LightType { Point, Directional };
@@ -168,7 +161,7 @@ struct TetPar {            // Tetrahedron/Parallelepiped Common Fields
     Point4  vert[4];         // Vertices
     Vector4 vec1,vec2,vec3;  // Vectors from Vertex 0 to Vertices 1,2,3
     Vector4 normal;          // Hyperplane Normal Vector
-    uchar   ax1, ax2, ax3;   // Non-Dominant Normal Vector Axes
+    uint8_t ax1, ax2, ax3;   // Non-Dominant Normal Vector Axes
     double  planeConst;      // Hyperplane Constant
     double  CramerDiv;       // Cramer's-Rule Divisor for Barycentric Coords
 };
@@ -205,7 +198,7 @@ void  MyFree      (void*);
 void  OpenInput   (void);
 void  OpenOutput  (void);
 void  ParseInput  (void);
-void  RayTrace    (const Ray4&, Color&, ulong);
+void  RayTrace    (const Ray4&, Color&, int);
 int   ReadChar    (void);
 void  UnreadChar  (int);
 void  WriteBlock  (void *block, int size);
@@ -220,7 +213,7 @@ void  WriteBlock  (void *block, int size);
     double      global_indexref = 1.00;                      // Global Index Refraction
     char       *infile          = nullptr;                   // Input File Name
     Light      *lightlist       = nullptr;                   // Light-Source List
-    ushort      maxdepth        = 0;                         // Maximum Recursion Depth
+    int         maxdepth        = 0;                         // Maximum Recursion Depth
     ObjInfo    *objlist         = nullptr;                   // Object List
     char       *outfile         = nullptr;                   // Output File Name
     Stats       stats           = { 0, 0, 0, 0 };            // Status Information
@@ -236,7 +229,7 @@ void  WriteBlock  (void *block, int size);
     extern double      global_indexref;
     extern char       *infile;
     extern Light      *lightlist;
-    extern ushort      maxdepth;
+    extern int         maxdepth;
     extern ObjInfo    *objlist;
     extern char       *outfile;
     extern Stats       stats;
