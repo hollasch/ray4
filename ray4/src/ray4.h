@@ -107,9 +107,9 @@ class Light {
     LightType  type;   // Type of Light
 
     union {
-        Vector4 dir;  // Direction for Directional Light Source
-        Point4  pos;  // Position for Point Light Source
-    } u;
+        Vector4 direction;  // Direction for Directional Light Source
+        Point4  position;   // Position for Point Light Source
+    };
 };
 
 

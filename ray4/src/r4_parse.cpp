@@ -663,10 +663,10 @@ void DoLight () {
         if (keyeq (token, "color")) {
             ReadColor (token, &light->color);
         } else if (keyeq (token, "direc")) {
-            ReadVector4 (token, light->u.dir);
+            ReadVector4 (token, light->direction);
             light->type = LightType::Directional;
         } else if (keyeq (token, "posit")) {
-            ReadPoint4 (token, light->u.pos);
+            ReadPoint4 (token, light->position);
             light->type = LightType::Point;
         } else {
             Error ("Invalid light subfield (%s).", token);
@@ -676,7 +676,7 @@ void DoLight () {
     // If the light is directional, then normalize the light direction.
 
     if (light->type == LightType::Directional) {
-        if (!light->u.dir.normalize())
+        if (!light->direction.normalize())
             Error ("Zero light direction vector.");
     }
 

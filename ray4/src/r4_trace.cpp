@@ -116,12 +116,12 @@ void RayTrace (
         double  mindist;  // Nearest Object Distance
 
         if (light->type == LightType::Directional) {
-            ldir = light->u.dir;
+            ldir = light->direction;
             mindist = -1.0;
         } else {
             double norm;  // Vector Norm
 
-            ldir = light->u.pos - intr_out;
+            ldir = light->position - intr_out;
 
             // Normalize the light-direction vector. If the (point) light source is VERY close to
             // the intersection point, then just set the light-direction vector to the surface
