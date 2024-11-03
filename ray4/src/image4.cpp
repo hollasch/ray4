@@ -35,20 +35,27 @@ using namespace std;
 //__________________________________________________________________________________________________
 // Information Text Definitions
 
-static auto version = L"image4 0.0.0 | 2024-10-31 | https://github.com/hollasch/ray4/tree/master/image4";
+static auto version = L"image4 0.0.1 | 2024-11-03 | https://github.com/hollasch/ray4/tree/master/image4\n";
 
 static auto usage = LR"(
 image4: 3D image manipulation tool for ray4 ray tracer
-usage:  image4 [-h | --help] <-i|--image|--input <imageFile>> [-o|--output <outputImageFile>]
-               [-s|--slice <start>[-<end>][x<stepSize>]] [-c|--crop <minX>,<minY>-<maxX>,<maxY>]
-               [--query] [--tiled <pixelWidth>[x<horizontalCount>]]
+usage:  image4 [-h|--help] [-v|--version]
+               <-i|--image|--input <imageFile>>
+               [-q|--query]
+               [-o|--output <outputImageFile>]
+               [-s|--slice <start>[-<end>][x<stepSize>]]
+               [-t|--tiled <pixelWidth>[x<horizontalCount>]]
+               [-c|--crop <minX>,<minY>-<maxX>,<maxY>]
 
 This tool reads a 3D image cube produced by the ray4 4D ray tracer, and either reports information
 about the file, or generates one or more images from that image cube, depending on the command line
 options.
 
+-v, --version
+    Print version information and exit.
+
 -h, --help
-    Print usage and version information.
+    Print usage + version information and exit.
 
 -i, --input <imageFile>, --image <imageFile>
     Required argument unless the help option is given. The input image file is produced by the
@@ -85,12 +92,14 @@ options.
 -c, --crop <xMin>,<yMin>-<xMax>,<yMax>
     Output images may be optionally cropped to the specified region. If specified, all images will
     be similarly cropped.
+
 )";
 
 //__________________________________________________________________________________________________
 
 struct Parameters {
-    bool    printHelp{false};         // Print help and version information.
+    bool    printHelp{false};         // Print help + version information and exit.
+    bool    printVersion{false};      // Print version information and exit.
     wstring imageCubeFilename;        // Input image cube file name
     bool    printFileInfo{false};     // Print information about the image cube file.
     wstring outputFilePattern;        // Output image file name pattern
@@ -110,6 +119,7 @@ struct Parameters {
 
 enum class OptionType {
     Help,
+    Version,
     ImageFilename,
     Query,
     OutputFilename,
@@ -129,15 +139,16 @@ struct OptionInfo {
 };
 
 static vector<OptionInfo> optionInfo = {
-    {OptionType::Unrecognized,   0,    L"",       false},
-    {OptionType::Help,           L'h', L"help",   false},
-    {OptionType::ImageFilename,  L'i', L"input",  true},
-    {OptionType::ImageFilename,  L'i', L"image",  true},
-    {OptionType::Query,          L'q', L"query",  false},
-    {OptionType::OutputFilename, L'o', L"output", true},
-    {OptionType::Slice,          L's', L"slice",  true},
-    {OptionType::Tiled,          L't', L"tiled",  true},
-    {OptionType::Crop,           L'c', L"crop",   true},
+    {OptionType::Unrecognized,   0,    L"",        false},
+    {OptionType::Help,           L'h', L"help",    false},
+    {OptionType::Version,        L'v', L"version", false},
+    {OptionType::ImageFilename,  L'i', L"input",   true},
+    {OptionType::ImageFilename,  L'i', L"image",   true},
+    {OptionType::Query,          L'q', L"query",   false},
+    {OptionType::OutputFilename, L'o', L"output",  true},
+    {OptionType::Slice,          L's', L"slice",   true},
+    {OptionType::Tiled,          L't', L"tiled",   true},
+    {OptionType::Crop,           L'c', L"crop",    true},
 };
 
 //__________________________________________________________________________________________________
@@ -330,6 +341,10 @@ bool processParameters (Parameters &params, int argc, wchar_t *argv[]) {
                 params.printHelp = true;
                 break;
 
+            case OptionType::Version:
+                params.printVersion = true;
+                break;
+
             case OptionType::ImageFilename:
                 params.imageCubeFilename = optionValue;
                 break;
@@ -370,8 +385,10 @@ int wmain(int argc, wchar_t *argv[]) {
     if (!processParameters(params, argc, argv))
         return 1;
 
-    if (params.printHelp) {
+    if (params.printHelp)
         wcout << usage;
+
+    if (params.printHelp || params.printVersion) {
         wcout << version;
         return 0;
     }
