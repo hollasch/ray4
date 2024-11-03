@@ -207,37 +207,43 @@ void  WriteBlock  (void *block, int size);
 // Global Variables
 
 #ifdef DEFINE_GLOBALS
-    Color       ambient         = { .0, .0, .0 };            // Ambient Light Factor
-    Attributes *attrlist        = nullptr;                   // Attributes List
-    Color       background      = { .0, .0, .0 };            // Background Color
-    double      global_indexref = 1.00;                      // Global Index Refraction
-    char       *infile          = nullptr;                   // Input File Name
-    Light      *lightlist       = nullptr;                   // Light-Source List
-    int         maxdepth        = 0;                         // Maximum Recursion Depth
-    ObjInfo    *objlist         = nullptr;                   // Object List
-    char       *outfile         = nullptr;                   // Output File Name
-    Stats       stats           = { 0, 0, 0, 0 };            // Status Information
-    double      Vangle          = 45.0;                      // Viewing Angle
-    Point4      Vfrom           = { 0.0, 0.0, 0.0, 100.0 };  // Camera Position
-    Vector4     Vover           = { 0.0, 0.0, 1.0, 0.0 };    // View Over-Vector
-    Point4      Vto             = { 0.0, 0.0, 0.0, 0.0 };    // View Target Point
-    Vector4     Vup             = { 0.0, 1.0, 0.0, 0.0 };    // View Up-Vector
+    char *infile  = nullptr;  // Input File Name
+    char *outfile = nullptr;  // Output File Name
+
+    Attributes *attrlist  = nullptr;  // Attributes List
+    Light      *lightlist = nullptr;  // Light-Source List
+    ObjInfo    *objlist   = nullptr;  // Object List
+
+    Stats stats = { 0, 0, 0, 0 };  // Status Information
+
+    Color   ambient         { .0, .0, .0 };            // Ambient Light Factor
+    Color   background      { .0, .0, .0 };            // Background Color
+    Point4  Vfrom           { 0.0, 0.0, 0.0, 100.0 };  // Camera Position
+    Point4  Vto             { 0.0, 0.0, 0.0, 0.0 };    // View Target Point
+    Vector4 Vover           { 0.0, 0.0, 1.0, 0.0 };    // View Over-Vector
+    Vector4 Vup             { 0.0, 1.0, 0.0, 0.0 };    // View Up-Vector
+    double  Vangle          { 45.0 };                  // Viewing Angle
+    double  global_indexref { 1.00 };                  // Global Index Refraction
+    int     maxdepth        { 0 };                     // Maximum Recursion Depth
 #else
-    extern Color       ambient;
+    extern char *infile;
+    extern char *outfile;
+
     extern Attributes *attrlist;
-    extern Color       background;
-    extern double      global_indexref;
-    extern char       *infile;
     extern Light      *lightlist;
-    extern int         maxdepth;
     extern ObjInfo    *objlist;
-    extern char       *outfile;
-    extern Stats       stats;
-    extern double      Vangle;
-    extern Point4      Vfrom;
-    extern Vector4     Vover;
-    extern Point4      Vto;
-    extern Vector4     Vup;
+
+    extern Stats stats;
+
+    extern Color   ambient;
+    extern Color   background;
+    extern double  global_indexref;
+    extern int     maxdepth;
+    extern double  Vangle;
+    extern Point4  Vfrom;
+    extern Vector4 Vover;
+    extern Point4  Vto;
+    extern Vector4 Vup;
 #endif
 
 #endif
