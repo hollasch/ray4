@@ -34,10 +34,15 @@
 #ifndef RAY_H
 #define RAY_H
 
+#include <stdio.h>
+#include <stdlib.h>
+
 #include <cmath>
 #include <cstddef>
-#include <stdlib.h>
-#include <stdio.h>
+#include <iostream>
+#include <string>
+
+using namespace std;
 
 
 
@@ -187,19 +192,19 @@ struct Triangle {
 
 // Function Declarations
 
-void  CloseInput  (void);
-void  CloseOutput (void);
+void  CloseInput  ();
+void  CloseOutput ();
 void  Halt        (const char*, ...);
 bool  HitSphere   (ObjInfo*, const Ray4&, double*, Point4*, Vector4*);
 bool  HitTetPar   (ObjInfo*, const Ray4&, double*, Point4*, Vector4*);
 bool  HitTriangle (ObjInfo*, const Ray4&, double*, Point4*, Vector4*);
 char *MyAlloc     (size_t);
 void  MyFree      (void*);
-void  OpenInput   (void);
-void  OpenOutput  (void);
-void  ParseInput  (void);
+void  OpenInput   (const char* fileName);
+void  OpenOutput  (const char* fileName);
+void  ParseInput  ();
 void  RayTrace    (const Ray4&, Color&, int);
-int   ReadChar    (void);
+int   ReadChar    ();
 void  UnreadChar  (int);
 void  WriteBlock  (void *block, int size);
 

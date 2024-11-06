@@ -25,14 +25,15 @@
 // This file contains the main procedures in the Ray4 4D ray tracer.
 //==================================================================================================
 
-#include <time.h>
-#include <memory.h>
-#include <string.h>
-#include <stdarg.h>
-
 #define  DEFINE_GLOBALS
 #include "ray4.h"
 #include "r4_image.h"
+
+#include <time.h>
+#include <stdarg.h>
+
+#include <codecvt>
+#include <vector>
 
 using ImageHeader = ImageHeader_1;
 
@@ -40,12 +41,16 @@ using ImageHeader = ImageHeader_1;
 //__________________________________________________________________________________________________
 // Usage Messages
 
-static auto version = "ray4 3.0.0-alpha.2 | 2024-10-24 | https://github.com/hollasch/ray4\n";
+static auto version = "ray4 3.0.0-alpha.3 | 2024-11-05 | https://github.com/hollasch/ray4\n";
 
 static auto usage = R"(
 ray4:   4-Space Ray Tracer
-usage:  ray4-c -r<Image Resolution> -i<Input Filename> -o<Output Filename>
-                [-h] [-a<Aspect Ratio>] [-b<Bits Per Pixel>] [-s<Scan Range>]
+usage:  ray4 [-h|/?|--help] [-v|--version]
+             [-i|--input|--scene <Scene File Name>]
+             [-o|--output|--image <Image File Name>]
+             [-r|--resolution <Image Resolution>]
+             [-b|--bitsPerPixel <Bits Per Pixel>]
+             [-s|--slice <Slice Plane>]
 
 This program constructs a 4D raytraced image of the input scene file, outputing
 a 3D image cube of pixels.
@@ -54,45 +59,89 @@ Options may also be specified in the RAY4 environment variable. Command-line
 options will be effectively concatenated to these options, so that command-line
 options may override those in the environment variable.
 
--r<Image Resolution>
+-h, --help
+    Print help + version information and exit.
+
+-v, --version
+    Print version information and exit.
+
+-i, --input, --scene <Input File Name> (Required)
+    Input filename, typically with extension '.r4'.
+
+-o, --output, --image <Output File Name> (Required)
+    Output 3D image cube filename, typically with extension '.icube'.
+
+-r, --resolution <Image Resolution> (Required)
     Image resolution specified as 'X:Y:Z'. X must be greater than zero. If Y or
     Z are omitted or set to zero, they will be set to the same value as the X
     resolution.
 
--i<Input Filename>
-    Input filename, typically with extension '.r4'.
-
--o<Output Filename>
-    Output 3D image cube filename, typically with extension '.icube'.
-
--h
-    Print help information.
-
--a<Aspect Ratio> (Optional)
-    The 3D image aspect ratio, specified as 'X:Y:Z'. X and Y must be non-zero.
-    By default, the pixel aspect ratio is 1:1:1.
-
--b<Bits Per Pixel> (Optional)
+-b, --bitsPerPixel <Bits Per Pixel>
     The output number of RGB bits per pixel. This value must be either 12 or 24.
     By default, there are 24 bits per pixel.
 
--s<Scan Range> (Optional)
-    A subset of the full image resolution to raytrace, expressed as 'X:Y:Z'.
-    Each component may be a single number, a range of numbers (expressed as
-    'S-E', where S is the scan start, and E is the scan end, inclusive), or the
-    special value '_', which indicates the entire resolution for that dimension.
-    Unspecified values are interpreted as zero. By default, the full resolution
-    is scanned (equivalent to '_:_:_').
+-s, --slice <Slice Plane>
+    By default, all image planes in the full Z resolution are traced. This
+    option allows you to specify a single plane to output. For example, if the
+    Z resolution is 100, then any value in the range [0, 99] is acceptable.
 
 Examples:
-    ray4-c -r128:128:128 <scene.r4 -o scene.icube
+    ray4 -r 128:128:128 -i scene.r4 -o scene.icube
 
-    ray4-c -b12 -a2:1:2 -r256:256:256 -s_:_:_ <MyFile.r4 -omy.icube
+    ray4 -b12 -r256:256:256 -iMyFile.r4 -omy.icube
 
-    ray4-c -a 1:1 -r 1024:768 -s 0-1023:0-767 -iSphere4 -os2.icube
+    ray4 --resolution 1024:768 --slice 1023 --scene Sphere4 --image s2.icube
 
 )";
 
+//__________________________________________________________________________________________________
+// Program Parameters
+
+struct Parameters {
+    bool    printHelp       { false };       // Print Help Information & Exit
+    bool    printVersion    { false };       // Print Help Information & Exit
+    wstring sceneFileName   { };             // Input Ray4 Scene File Name
+    wstring imageFileName   { };             // Output Image File Name
+    int     bitsPerPixel    { 24 };          // Number of Bits Per Pixel
+    int     resolution[3]   { -1, -1, -1 };  // Output Image Resolution
+    int     slice           { -1 };          // Image Slice Plane (-1 -> all)
+};
+
+enum class OptionType {
+    Help,
+    Version,
+    SceneFileName,
+    ImageFileName,
+    Resolution,
+    BitsPerPixel,
+    Slice,
+    Unrecognized,
+};
+
+struct OptionInfo {
+    // A description of a single command-line option.
+
+    OptionType type;
+    wstring    singleLetter;  // Single dash letter
+    wstring    longName;      // Double dash string
+    bool       takesValue;    // If true, takes option value
+};
+
+static vector<OptionInfo> optionInfo = {
+    {OptionType::Unrecognized,   L"",   L"",               false},
+    {OptionType::Help,           L"/?", L"--help",         false},
+    {OptionType::Help,           L"-h", L"--help",         false},
+    {OptionType::Version,        L"-v", L"--version",      false},
+    {OptionType::SceneFileName,  L"-i", L"--input",        true},
+    {OptionType::SceneFileName,  L"-i", L"--scene",        true},
+    {OptionType::ImageFileName,  L"-o", L"--output",       true},
+    {OptionType::ImageFileName,  L"-o", L"--image",        true},
+    {OptionType::Resolution,     L"-r", L"--resolution",   true},
+    {OptionType::BitsPerPixel,   L"-b", L"--bitsPerPixel", true},
+    {OptionType::Slice,          L"-s", L"--slice",        true},
+};
+
+//__________________________________________________________________________________________________
 // Constant Definitions
 
 #define MIN_SLB_COUNT 5        // Minimum Scanline Buffer Count
@@ -101,24 +150,16 @@ Examples:
 
 // File-Global Variables
 
-ImageHeader iheader = {       // Output Image Header
-    R4_IMAGE_ID,
-    1,
-    24,
-    {1, 1, 1},
-    {0, 0, 0},
-    {0xffff, 0xffff, 0xffff}
-};
-
-Vector4  Gx,  Gy,  Gz;      // Ray-Grid Basis Vectors
-Point4   Gorigin;           // Ray-Grid Origin Point
-int      res[3] = {0,0,0};  // Full Output Image Resolution
-long     scanlsize;          // Scanline Size
-long     slbuff_count;      // Number of Lines in Scanline Buffer
-char    *scanbuff;          // Scanline Buffer
-time_t   StartTime;         // Timestamp
+    Vector4  Gx,  Gy,  Gz;      // Ray-Grid Basis Vectors
+    Point4   Gorigin;           // Ray-Grid Origin Point
+    int      res[3] = {0,0,0};  // Full Output Image Resolution
+    long     scanlsize;         // Scanline Size
+    long     slbuff_count;      // Number of Lines in Scanline Buffer
+    char    *scanbuff;          // Scanline Buffer
+    time_t   StartTime;         // Timestamp
 
 
+//__________________________________________________________________________________________________
 
 char *MyAlloc (size_t size) {
     // This routine allocates memory using the system malloc() function. If the malloc() call fails
@@ -161,9 +202,8 @@ void Halt (const char *message, ...) {
     CloseInput ();
     CloseOutput();
 
-    if (infile)    DELETE (infile);
-    if (outfile)   DELETE (outfile);
-    if (scanbuff)  DELETE (scanbuff);
+    if (scanbuff)
+        DELETE (scanbuff);
 
     Light *lptr;  // Light-List Pointer
     while ((lptr = lightlist)) {          // Free the lightsource list.
@@ -231,273 +271,187 @@ char *GetField (char *str, int &value) {
 
 //__________________________________________________________________________________________________
 
-char *GetRange (
-    char *str,    // Source String
-    int  &val1,   // First Destination Value of Range
-    int  &val2)   // Second Destination Value of Range
-{
-    if (!str)
-        return nullptr;
+void parseOptionResolution (Parameters &params, const wstring& value) {
+    // Parses the 1-3 resolution values from the given string and stores them in the given
+    // Parameters. The input value is of the form "X:Y:Z", where Y and Z may be omitted. The input
+    // value may not end in a colon. Missing resolutions are set to -1. On any failure, all three
+    // resolutions are set to -1.
 
-    if (!*str) {
-        val1 = val2 = 0;
-        return str;
+    params.resolution[0] = params.resolution[1] = params.resolution[2] = -1;
+
+    const wchar_t* ptr = value.c_str();
+
+    // Loop through the X, Y, and Z resolution values.
+
+    for (auto resIndex = 0;  resIndex < 3;  ++resIndex, ++ptr) {
+        if (!*ptr || *ptr < '0' || '9' < *ptr) break;
+
+        // Scan in the resolution value.
+        params.resolution[resIndex] = 0;
+        while (*ptr && '0' <= *ptr && *ptr <= '9') {
+            params.resolution[resIndex] = (10 * params.resolution[resIndex]) + (*ptr - L'0');
+            ++ptr;
+        }
+
+        // After reading in a field, the only legal options are end of string/fields, or a colon to
+        // separate the next field.
+
+        if (!*ptr)
+            return;
+
+        if (*ptr != L':')
+            break;
     }
 
-    if (*str == '_') {
-        val1 = 0;
-        val2 = 0xFFFF;
-        return (str[1] == ':') ? (str+2) : (str+1);
+    wcerr << "ray4: Invalid resolution argument: (" << value << ").\n";
+    params.resolution[0] = params.resolution[1] = params.resolution[2] = -1;
+    return;
+}        
+
+//__________________________________________________________________________________________________
+
+const OptionInfo& getOptionInfo(const wstring& arg) {
+    // Given a command-line option, return the corresponding OptionInfo structure.
+
+    if (arg == L"/?")
+        return optionInfo[1];
+
+    for (auto i = 0;  i < optionInfo.size();  ++i) {
+        if (optionInfo[i].type == OptionType::Unrecognized) continue;
+        if (arg == optionInfo[i].longName || arg.starts_with(optionInfo[i].singleLetter))
+            return optionInfo[i];
     }
 
-    if ((*str < '0') || ('9' < *str))
-        return nullptr;
-
-    val1 = val2 = atoi(str);
-
-    while (('0' <= *str) && (*str <= '9'))
-        ++str;
-
-    if (*str == 0)
-        return str;
-
-    if (*str == ':')
-        return str+1;
-
-    if (*str != '-')
-        return nullptr;
-
-    ++str;
-    if ((*str < '0') || ('9' < *str))
-        return nullptr;
-
-    val2 = atoi(str);
-    while (('0' <= *str) && (*str <= '9'))
-        ++str;
-
-    return (*str == ':') ? (str+1) : str;
+    return optionInfo[0];
 }
 
 //__________________________________________________________________________________________________
 
-void ProcessArgs (int argc, char *argv[]) {
-    // This subroutine grabs the command-line arguments and the environment variable arguments (from
-    // RAY4) and sets up the raytrace parameters.
+bool processParameters (Parameters &params, int argc, wchar_t *argv[]) {
+    // Process the RAY4 environment variable plus command-line options and load results into the
+    // given Parameters object. Returns true on success, false on error.
 
-    char  *ptr;     // Scratch String Pointer
-    char  *eptr;    // Environment Variable Pointer
-    char **opta;    // Option Argument Array
-    int    optc;    // Option Argument Count
+    vector<wstring> args;
 
-    /* If the "RAY4" environment variable is not defined, then just use the
-    ** command-line options, otherwise concatenate the command-line options
-    ** to the options defined in the RAY4 environment variable. */
+    // Gather arguments from the RAY4 environment variable.
 
-    if (!(eptr = getenv ("RAY4"))) {
-        optc = argc - 1;
-        opta = NEW (char*, optc);
-        for (auto i=0;  i < optc;  ++i)
-            opta[i] = argv[i+1];
-    } else {
-        int opti;   // Option Index
-
-#       define SPACE(c)   ((c == ' ') || (c == '\t'))
-
-        for (optc=0, ptr=eptr;  *ptr;  ) {
-            while (SPACE(*ptr))
-                ++ptr;
-            if (!*ptr)
-                break;
-            ++optc;
-            while (++ptr, *ptr && !SPACE(*ptr))
-                continue;
-        }
-
-        optc += argc - 1;
-        opta = NEW (char*, optc);
-
-        for (opti=0, ptr=eptr;  *ptr;  ) {
-            while (SPACE(*ptr))
-                ++ptr;
-
-            if (!*ptr)
-                break;
-
-            opta[opti++] = ptr;
-
-            while (++ptr, *ptr && !SPACE(*ptr))
-                continue;
-
-            if (*ptr)
-                *ptr++ = 0;
-        }
-
-        for (auto i=1;  i < argc;  ++i)
-            opta[opti++] = argv[i];
+    wstring arg;  // Current Argument String
+    char *envVar = getenv("RAY4");
+    while (envVar && *envVar) {
+        arg.clear();
+        while (*envVar && isspace(*envVar)) ++envVar;           // Skip whitespace.
+        while (*envVar && !isspace(*envVar)) arg += *envVar++;  // Copy argument string.
+        if (!arg.empty()) args.push_back(arg);
     }
 
-    if (optc <= 0) {
-        print(usage);
-        print(version);
-        exit(0);
+    // Add arguments from the command line.
+
+    for (auto argi = 1; argi < argc; ++argi)
+        args.push_back(argv[argi]);
+
+    if (args.empty()) {
+        params.printHelp = true;
+        return true;
     }
 
-    for (auto i=0;  i < optc;  ++i) {
-        char oc;   // Option Character
+    for (auto argi = 0; argi < args.size(); ++argi) {
+        auto arg = args[argi];
+        auto optionInfo = getOptionInfo(arg);
+        wstring optionValue;
 
-        if (opta[i][0] != '-') {
-            printf("ray4:  Unexpected argument (%s).\n", opta[i]);
-            print(usage);
-            print(version);
-            exit (1);
-        }
+        // Get option value if expected.
 
-        oc = opta[i][1];
-
-        if (opta[i][2])
-            ptr = opta[i]+2;
-        else
-            ptr = opta[++i];
-
-        switch (oc) {
-
-            case 'a': {
-                int aspect[3];
-                if (ptr = GetField(ptr,aspect[0]), (!ptr || !*ptr))
-                    Halt ("Invalid X argument for -a option.");
-
-                if (ptr = GetField(ptr,aspect[1]), !ptr)
-                    Halt ("Invalid Y argument for -a option.");
-
-                if (ptr = GetField(ptr,aspect[2]), !ptr)
-                    Halt ("Invalid Z argument for -a option.");
-
-                iheader.aspect[0] = aspect[0];
-                iheader.aspect[1] = aspect[1];
-                iheader.aspect[2] = aspect[2];
-
-                break;
-            }
-
-            case 'b': {
-                iheader.bitsperpixel = static_cast<unsigned char>(atoi (ptr));
-                if ((iheader.bitsperpixel != 12) && (iheader.bitsperpixel != 24)) {
-                    printf ("ray4:  %d bits per pixel is not supported (select 12 or 24).\n", iheader.bitsperpixel);
-                    iheader.bitsperpixel = 24;
-                }
-                break;
-            }
-
-            case 'h':
-            {
-                print(usage);
-                print(version);
-                exit (0);
-                break;
-            }
-
-            case 'i': {
-                if (infile)
-                    DELETE(infile);
-                infile = NEW (char, strlen(ptr) + 1);
-                strcpy (infile, ptr);
-                break;
-            }
-
-            case 'o': {
-                if (outfile)
-                    DELETE(outfile);
-                outfile = NEW (char, strlen(ptr) + 1);
-                strcpy (outfile, ptr);
-                break;
-            }
-
-            case 'r': {
-                char* resArg = ptr;
-
-                int resValues[3];
-
-                ptr = GetField(ptr, resValues[0]);
-
-                if (!ptr || !*ptr) {
-                    resValues[1] = resValues[2] = resValues[0];
+        if (optionInfo.takesValue) {
+            if (arg[1] != '-' && arg[2] != 0) {  // Single letter option joined with argument value.
+                optionValue = arg.substr(2);
+            } else {
+                // Option value is next argument.
+                ++argi;
+                if (argi < args.size()) {
+                    optionValue = args[argi];
                 } else {
-                    ptr = GetField(ptr, resValues[1]);
-
-                    if (!ptr || !*ptr)
-                        resValues[2] = resValues[0];
-                    else
-                        ptr = GetField(ptr, resValues[2]);
+                    wcerr << "ray4: Missing argument for (" << arg << ").\n";
+                    return false;
                 }
+            }
+        }
 
-                if (ptr && *ptr)
-                    Halt("Bad resolution argument to -r option (%s).", resArg);
+        if (optionInfo.type == OptionType::Unrecognized) {
+            wcerr << "ray4: Unrecognized command argument: (" << arg << ").\n";
+            return false;
+        }
 
-                res[0] = resValues[0];
-                res[1] = resValues[1];
-                res[2] = resValues[2];
+        switch (optionInfo.type) {
+            default:
+            case OptionType::Unrecognized:
+                wcerr << "ray4: Unrecognized command argument: (" << arg << ").\n";
+                return false;
 
+            case OptionType::Help:
+                params.printHelp = true;
                 break;
-            }
 
-            case 's': {
-                int rangeStart[3];
-                int rangeEnd[3];
-
-                ptr = GetRange(ptr,rangeStart[0],rangeEnd[0]);
-                if (!ptr || !*ptr)
-                    Halt ("Bad X field argument to -s option.");
-
-                ptr = GetRange(ptr,rangeStart[1],rangeEnd[1]);
-                if (!ptr)
-                    Halt ("Bad Y field argument to -s option.");
-
-                ptr = GetRange(ptr,rangeStart[2],rangeEnd[2]);
-                if (!ptr)
-                    Halt ("Bad Z field argument to -s option.");
-
-                iheader.start[0] = rangeStart[0];
-                iheader.start[1] = rangeStart[1];
-                iheader.start[2] = rangeStart[2];
-
-                iheader.end[0] = rangeEnd[0];
-                iheader.end[1] = rangeEnd[1];
-                iheader.end[2] = rangeEnd[2];
-
+            case OptionType::Version:
+                params.printVersion = true;
                 break;
-            }
 
-            default: {
-                printf("ray4:  Unknown option (-%c).\n", oc);
-                print(usage);
-                print(version);
-                exit (1);
-            }
+            case OptionType::SceneFileName:
+                params.sceneFileName = optionValue;
+                break;
+
+            case OptionType::ImageFileName:
+                params.imageFileName = optionValue;
+                break;
+
+            case OptionType::Resolution:
+                parseOptionResolution(params, optionValue);
+                if (params.resolution[0] == -1) return false;
+                if (params.resolution[1] == -1) params.resolution[1] = params.resolution[0];
+                if (params.resolution[2] == -1) params.resolution[2] = params.resolution[0];
+                break;
+
+            case OptionType::BitsPerPixel:
+                wchar_t *dummy;
+                params.bitsPerPixel = stoi(optionValue);
+                break;
+
+            case OptionType::Slice:
+                params.slice = stoi(optionValue);
+                break;
         }
     }
 
-    DELETE (opta);
+    // Validate parameters.
 
-    if ((iheader.aspect[0] < 1) || (iheader.aspect[1] < 1) || ((iheader.aspect[2] < 1)))
-        Halt("Aspect ratio values must be greater than zero.");
+    if (params.printHelp || params.printVersion) return true;  // Ignore any other bogus values.
 
-    if (res[0] < 1)
-        Halt("X resolution must be greater than zero.");
-
-    if (  (iheader.start[0] >  iheader.end[0])
-       || (iheader.start[1] >  iheader.end[1])
-       || (iheader.start[2] >  iheader.end[2])
-       || (iheader.start[0] >= res[0])
-       || (iheader.start[1] >= res[1])
-       || (iheader.start[2] >= res[2])
-       )
-    {
-        Halt ("Invalid scan range given.");
+    if (params.sceneFileName.empty()) {
+        wcerr << "ray4: Missing input scene file name.\n";
+        return false;
     }
 
-    if (iheader.end[0] >= res[0])  iheader.end[0] = res[0]-1;
-    if (iheader.end[1] >= res[1])  iheader.end[1] = res[1]-1;
-    if (iheader.end[2] >= res[2])  iheader.end[2] = res[2]-1;
+    if (params.imageFileName.empty()) {
+        wcerr << "ray4: Missing output image file name.\n";
+        return false;
+    }
+
+    if (params.bitsPerPixel != 12 && params.bitsPerPixel != 24) {
+        wcerr << "ray4: Invalid bits per pixel value: " << params.bitsPerPixel << ".\n";
+        return false;
+    }
+
+    if (params.resolution[0] < 1) {
+        wcerr << "ray4: Missing required resolution value(s).\n";
+        return false;
+    }
+
+    if (params.resolution[2] <= params.slice) {
+        wcerr << "ray4: Slice value " << params.slice
+              << " out of Z resolution range of [0," << (params.resolution[2] - 1) << "].\n";
+        return false;
+    }
+
+    return true;
 }
 
 //==================================================================================================
@@ -528,24 +482,29 @@ void WriteUInteger32(uint32_t value) {
 
 //__________________________________________________________________________________________________
 
-void WriteHeader(const ImageHeader& header) {
-    WriteUInteger32(header.magic);
-    WriteUInteger8(header.version);
-    WriteUInteger8(header.bitsperpixel);
+void WriteHeader(const Parameters& params) {
+    WriteUInteger32(ray4FormatMagic);  // 'Ray4' Magic ID
+    WriteUInteger8(1);                 // Ray4 Image File Format Version
 
-    for (int i=0;  i < 3;  ++i)
-        WriteUInteger16(header.aspect[i]);
+    WriteUInteger8(params.bitsPerPixel);
 
-    for (int i=0;  i < 3;  ++i)
-        WriteUInteger16(header.start[i]);
+    for (int i=0;  i < 3;  ++i)  // Aspect Ratio = 1:1:1
+        WriteUInteger16(1);
 
-    for (int i=0;  i < 3;  ++i)
-        WriteUInteger16(header.end[i]);
+    // Scan Range Start
+    WriteUInteger16(0);
+    WriteUInteger16(0);
+    WriteUInteger16(0);
+
+    // Scan Range End
+    WriteUInteger16(params.resolution[0] - 1);
+    WriteUInteger16(params.resolution[1] - 1);
+    WriteUInteger16((params.slice >= 0) ? 1 : (params.resolution[2] - 1));
 }
 
 //__________________________________________________________________________________________________
 
-void CalcRayGrid (void) {
+void CalcRayGrid (const Parameters& params) {
     // This procedure calculates the ray-grid basis vectors.
 
     // Get the normalized line-of-sight vector.
@@ -571,14 +530,8 @@ void CalcRayGrid (void) {
     // Now compute the proper scale of the grid unit vectors.
 
     double GNx = 2.0 * lineOfSightNorm * tan(degreeToRadian*Vangle/2.0);
-
-    double GNy = GNx
-               * ((double) res[1] / (double) res[0])
-               * ((double)iheader.aspect[1]/ (double)iheader.aspect[0]);
-
-    double GNz = GNx
-               * ((double) res[2] / (double) res[0])
-               * ((double)iheader.aspect[2]/ (double)iheader.aspect[0]);
+    double GNy = GNx * ((double) res[1] / (double) res[0]);
+    double GNz = GNx * ((double) res[2] / (double) res[0]);
 
     // Scale each grid basis vector.
 
@@ -601,27 +554,37 @@ void CalcRayGrid (void) {
 
 //__________________________________________________________________________________________________
 
-void FireRays () {
+void FireRays (const Parameters &params) {
     // This is the main routine that fires the rays through the ray grid and into the 4D scene.
 
     long   scancount = 0;       // Scanline Counter
     char  *scanptr = scanbuff;  // Scanline Buffer Pointer
     bool   eflag   = true;      // Even RGB Boundary Flag
 
-    for (auto Zindex = iheader.start[2];  Zindex <= iheader.end[2];  ++Zindex) {
-        Point4 Zorigin = Gorigin + (Zindex*Gz);
-        for (auto Yindex = iheader.start[1];  Yindex <= iheader.end[1];  ++Yindex) {
-            printf ("%6u %6u\r", iheader.end[2] - Zindex, iheader.end[1] - Yindex);
+    // Handle the Z limits where we're only rendering a single slice.
+    int zStart, zLimit;
+    if (params.slice < 1) {
+        zStart = 0;
+        zLimit = params.resolution[2];
+    } else {
+        zStart = params.slice;
+        zLimit = params.slice + 1;
+    }
+
+    for (auto zIndex = zStart;  zIndex < zLimit;  ++zIndex) {
+        Point4 zOrigin = Gorigin + (zIndex*Gz);
+        for (auto yIndex = 0;  yIndex < params.resolution[1];  ++yIndex) {
+            printf ("%6u %6u\r", params.resolution[2] - zIndex, params.resolution[1] - yIndex);
             fflush (stdout);
 
-            Point4 Yorigin = Zorigin + (Yindex*Gy);
+            Point4 Yorigin = zOrigin + (yIndex*Gy);
 
             if (!eflag) {
                 ++scanptr;
                 eflag = true;
             }
 
-            for (auto Xindex = iheader.start[0];  Xindex <= iheader.end[0];  ++Xindex) {
+            for (auto xIndex = 0;  xIndex < params.resolution[0];  ++xIndex) {
                 Color    color;   // Pixel Color
                 Vector4  dir;     // Ray Direction Vector
                 Point4   Gpoint;  // Current Grid Point
@@ -629,7 +592,7 @@ void FireRays () {
 
                 // Calculate the unit ViewFrom-RayDirection vector.
 
-                Gpoint = Yorigin + (Xindex*Gx);
+                Gpoint = Yorigin + (xIndex*Gx);
                 dir = Gpoint - Vfrom;
                 norm = dir.norm();
                 dir /= norm;
@@ -645,7 +608,7 @@ void FireRays () {
 
                 // Store the 24-bit RGB triple in the scanline buffer.
 
-                if (iheader.bitsperpixel == 24) {
+                if (params.bitsPerPixel == 24) {
 
                     *scanptr++ = static_cast<uint8_t>(color.r);
                     *scanptr++ = static_cast<uint8_t>(color.g);
@@ -684,12 +647,41 @@ void FireRays () {
 
 //__________________________________________________________________________________________________
 
-int main (int argc, char *argv[]) {
+void ConvertUnicodeFileNames (const Parameters& params) {
+    // For now, our code was written to work with C-style strings, but our input parameters for
+    // scene and image filenames are wstrings. As a temporary workaround, convert the wstrings
+    // to C-style strings.
+
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+
+    auto sceneFileName = converter.to_bytes(params.sceneFileName);
+    auto imageFileName = converter.to_bytes(params.imageFileName);
+
+    infile = new char[sceneFileName.size() + 1];
+    outfile = new char[imageFileName.size() + 1];
+
+    strcpy(infile,  sceneFileName.c_str());
+    strcpy(outfile, imageFileName.c_str());
+}
+
+//__________________________________________________________________________________________________
+
+int wmain (int argc, wchar_t *argv[]) {
     // The following is the entry procedure for the ray4 ray tracer.
 
-    ProcessArgs(argc, argv);
+    Parameters params;
+    if (!processParameters(params, argc, argv))
+        return 1;
 
-    OpenInput();
+    if (params.printHelp || params.printVersion) {
+        if (params.printHelp)
+            wcout << usage;
+        wcout << version;
+        return 0;
+    }
+
+    ConvertUnicodeFileNames(params);
+    OpenInput(infile);
     ParseInput();
 
     // If the global ambient factor is zero, then clear all of the ambient factor flags in the
@@ -707,14 +699,14 @@ int main (int argc, char *argv[]) {
     // Open the output stream and write out the image header (to be followed by the generated
     // scanline data.
 
-    OpenOutput();
-    WriteHeader(iheader);
+    OpenOutput(outfile);
+    WriteHeader(params);
 
     // Determine the size of a single scanline.
 
-    scanlsize = (3 * (1 + iheader.end[0] - iheader.start[0]));
+    scanlsize = 3 * params.resolution[0];
 
-    if (iheader.bitsperpixel == 12) {
+    if (params.bitsPerPixel == 12) {
         if (scanlsize & 1)
             ++scanlsize;
         scanlsize >>= 1;
@@ -730,10 +722,10 @@ int main (int argc, char *argv[]) {
 
     scanbuff = NEW (char, scanlsize * slbuff_count);
 
-    CalcRayGrid();   // Calculate the grid cube to fire rays through.
+    CalcRayGrid(params);   // Calculate the grid cube to fire rays through.
 
     StartTime = time(0);
-    FireRays();      // Raytrace the scene.
+    FireRays(params);  // Raytrace the scene.
 
-    Halt(nullptr);       // Clean up and exit.
+    Halt(nullptr);     // Clean up and exit.
 }

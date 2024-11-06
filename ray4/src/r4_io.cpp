@@ -44,7 +44,7 @@ FILE *outstream = nullptr;  // Output Stream
 void CloseInput () {
     // Closes the input stream.
 
-    if (!infile || (*infile == 0) || (!instream))
+    if (!instream)
         return;
     fclose (instream);
     instream = nullptr;
@@ -89,27 +89,23 @@ void UnreadChar (int c) {
 
 //__________________________________________________________________________________________________
 
-void OpenInput () {
+void OpenInput (const char* fileName) {
     // This subroutine opens the input file. If no filename was given in the command-line arguments,
     // we'll use the standard input stream.
 
-    if (!infile || (*infile == 0))
-        instream = stdin;
-    else if (! (instream = fopen (infile, "r")))
-        Halt ("Open failed on input file (%s).", infile);
+    instream = fopen (fileName, "r");
+    if (!instream)
+        Halt ("Open failed on input file (%s).", fileName);
 }
 
 //__________________________________________________________________________________________________
 
-void OpenOutput () {
+void OpenOutput (const char* fileName) {
     // This subroutine opens the output file.
 
-    if (!outfile || (*outfile == 0))
-        Halt ("No output file specified.");
-
-    outstream = fopen (outfile, "wb");
+    outstream = fopen (fileName, "wb");
     if (!outstream)
-        Halt ("Open failed on output file (%s).", outfile);
+        Halt ("Open failed on output file (%s).", fileName);
 }
 
 //__________________________________________________________________________________________________
