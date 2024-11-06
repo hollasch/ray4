@@ -51,11 +51,11 @@ This tool reads a 3D image cube produced by the ray4 4D ray tracer, and either
 reports information about the file, or generates one or more images from that
 image cube, depending on the command line options.
 
--v, --version
-    Print version information and exit.
-
 -h, --help
     Print usage + version information and exit.
+
+-v, --version
+    Print version information and exit.
 
 -i, --input <imageFile>, --image <imageFile>
     Required argument unless the help option is given. The input image file is
@@ -102,6 +102,7 @@ image cube, depending on the command line options.
 )";
 
 //__________________________________________________________________________________________________
+// Program Parameters
 
 struct Parameters {
     bool    printHelp{false};         // Print help + version information and exit.
@@ -120,8 +121,6 @@ struct Parameters {
     int     cropYMin{0};              // Minimum Y coordinate for cropped output images 
     int     cropYMax{-1};             // Maximum Y coordinate for cropped output images
 };
-
-//__________________________________________________________________________________________________
 
 enum class OptionType {
     Help,
