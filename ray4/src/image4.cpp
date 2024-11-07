@@ -107,7 +107,7 @@ image cube, depending on the command line options.
 struct Parameters {
     bool    printHelp{false};         // Print help + version information and exit.
     bool    printVersion{false};      // Print version information and exit.
-    wstring imageCubeFilename;        // Input image cube file name
+    wstring imageFileName;            // Input image cube file name
     bool    printFileInfo{false};     // Print information about the image cube file.
     wstring outputFilePattern;        // Output image file name pattern
     int     sliceStart{0};            // First slice to output
@@ -125,9 +125,9 @@ struct Parameters {
 enum class OptionType {
     Help,
     Version,
-    ImageFilename,
+    ImageFileName,
     Query,
-    OutputFilename,
+    OutputFileName,
     Slice,
     Tiled,
     Crop,
@@ -147,10 +147,10 @@ static vector<OptionInfo> optionInfo = {
     {OptionType::Unrecognized,   0,    L"",        false},
     {OptionType::Help,           L'h', L"help",    false},
     {OptionType::Version,        L'v', L"version", false},
-    {OptionType::ImageFilename,  L'i', L"input",   true},
-    {OptionType::ImageFilename,  L'i', L"image",   true},
+    {OptionType::ImageFileName,  L'i', L"input",   true},
+    {OptionType::ImageFileName,  L'i', L"image",   true},
     {OptionType::Query,          L'q', L"query",   false},
-    {OptionType::OutputFilename, L'o', L"output",  true},
+    {OptionType::OutputFileName, L'o', L"output",  true},
     {OptionType::Slice,          L's', L"slice",   true},
     {OptionType::Tiled,          L't', L"tiled",   true},
     {OptionType::Crop,           L'c', L"crop",    true},
@@ -350,15 +350,15 @@ bool processParameters (Parameters &params, int argc, wchar_t *argv[]) {
                 params.printVersion = true;
                 break;
 
-            case OptionType::ImageFilename:
-                params.imageCubeFilename = optionValue;
+            case OptionType::ImageFileName:
+                params.imageFileName = optionValue;
                 break;
 
             case OptionType::Query:
                 params.printFileInfo = true;
                 break;
 
-            case OptionType::OutputFilename:
+            case OptionType::OutputFileName:
                 params.outputFilePattern = optionValue;
                 break;
 
@@ -398,14 +398,14 @@ int wmain(int argc, wchar_t *argv[]) {
         return 0;
     }
 
-    if (params.imageCubeFilename.empty()) {
+    if (params.imageFileName.empty()) {
         wcerr << "image4: Missing input image file name.\n";
         return 1;
     }
 
     wcout << "\nCommand-line parameters:\n";
     wcout << "    printHelp: " << (params.printHelp ? "true\n" : "false\n");
-    wcout << "    imageCubeFilename: '" << params.imageCubeFilename << "'\n";
+    wcout << "    imageFileName: '" << params.imageFileName << "'\n";
     wcout << "    printFileInfo: " << (params.printFileInfo ? "true\n" : "false\n");
     wcout << "    outputFilePattern: '" << params.outputFilePattern << "'\n";
     wcout << "    slice: " << params.sliceStart << " - " << params.sliceEnd << " x " << params.sliceStep << '\n';
