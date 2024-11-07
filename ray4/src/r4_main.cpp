@@ -25,9 +25,10 @@
 // This file contains the main procedures in the Ray4 4D ray tracer.
 //==================================================================================================
 
+#include "r4_image.h"
+
 #define  DEFINE_GLOBALS
 #include "ray4.h"
-#include "r4_image.h"
 
 #include <time.h>
 #include <stdarg.h>

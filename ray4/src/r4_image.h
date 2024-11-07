@@ -60,6 +60,8 @@
 #ifndef R4_IMAGE_H
 #define R4_IMAGE_H
 
+#include <cstdint>
+
 
 // Macro Definitions
 
@@ -69,12 +71,12 @@ const uint32_t ray4FormatMagic = 0x52617934L;  // 'Ray4'
 // Structure Definitions
 
 struct ImageHeader_1 {
-    unsigned long  magic;         // Magic Number = R4_IMAGE_ID
-    unsigned char  version;       // Image File Version Number = 1
-    unsigned char  bitsPerPixel;  // Number of Bits per Pixel
-    unsigned short aspect[3];     // Aspect Ratios [X,Y,Z]
-    unsigned short start[3];      // Starting Image Pixels for [X,Y,Z]
-    unsigned short end[3];        // Ending Image Pixels for [X,Y,Z]
+    uint32_t magic;         // Magic Number = R4_IMAGE_ID
+    uint8_t  version;       // Image File Version Number = 1
+    uint8_t  bitsPerPixel;  // Number of Bits per Pixel
+    uint16_t aspect[3];     // Aspect Ratios [X,Y,Z]
+    uint16_t start[3];      // Starting Image Pixels for [X,Y,Z]
+    uint16_t end[3];        // Ending Image Pixels for [X,Y,Z]
 };
 
 #endif
