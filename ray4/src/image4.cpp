@@ -49,7 +49,6 @@ usage:  image4 [-h|--help] [-v|--version]
                [-o|--output <outputImageFile>]
                [-s|--slice <start>[-<end>][x<stepSize>]]
                [-t|--tiled <pixelWidth>[x<horizontalCount>]]
-               [-c|--crop <minX>,<minY>-<maxX>,<maxY>]
 
 This tool reads a 3D image cube produced by the ray4 4D ray tracer, and either
 reports information about the file, or generates one or more images from that
@@ -99,10 +98,6 @@ image cube, depending on the command line options.
     number of thumbnails, sized to fit, with as tall a result as needed to
     display all slices.
 
--c, --crop <xMin>,<yMin>-<xMax>,<yMax>
-    Output images may be optionally cropped to the specified region. If
-    specified, all images will be similarly cropped.
-
 )";
 
 //__________________________________________________________________________________________________
@@ -120,10 +115,6 @@ struct Parameters {
     bool    showTiled{false};         // Generate a tiled contact sheet of thumbnails.
     int     tiledPixelWidth{0};       // Width in pixels of tiled contact sheet
     int     tiledHorizontalCount{0};  // Number of thumbnails per row in tiled contact sheet
-    int     cropXMin{0};              // Minimum X coordinate for cropped output images
-    int     cropXMax{-1};             // Maximum X coordinate for cropped output images
-    int     cropYMin{0};              // Minimum Y coordinate for cropped output images 
-    int     cropYMax{-1};             // Maximum Y coordinate for cropped output images
 };
 
 enum class OptionType {
@@ -134,7 +125,6 @@ enum class OptionType {
     OutputFileName,
     Slice,
     Tiled,
-    Crop,
     Unrecognized
 };
 
@@ -157,7 +147,6 @@ static vector<OptionInfo> optionInfo = {
     {OptionType::OutputFileName, L'o', L"output",  true},
     {OptionType::Slice,          L's', L"slice",   true},
     {OptionType::Tiled,          L't', L"tiled",   true},
-    {OptionType::Crop,           L'c', L"crop",    true},
 };
 
 //__________________________________________________________________________________________________
@@ -274,45 +263,6 @@ bool parseOptionValueTiled (Parameters &params, wchar_t* value) {
 
 //__________________________________________________________________________________________________
 
-bool parseOptionValueCrop (Parameters &params, wchar_t* value) {
-    // Parse the --crop option string. Format is '<xMin>,<yMin>-<xMax>,<yMax>'.
-
-    const auto optionValue = value;
-
-    if (!isdigit(*value)) {
-        wcerr << "image4: Invalid crop X minimum (" << optionValue << ").\n";
-        return false;
-    }
-    std::tie(value, params.cropXMin) = readInteger(value);
-
-    if (*value != ',' || !isdigit(*++value)) {
-        wcerr << "image4: Invalid crop option value (" << optionValue << ").\n";
-        return false;
-    }
-    std::tie(value, params.cropYMin) = readInteger(value);
-
-    if (*value != '-' || !isdigit(*++value)) {
-        wcerr << "image4: Invalid crop option value (" << optionValue << ").\n";
-        return false;
-    }
-    std::tie(value, params.cropXMax) = readInteger(value);
-
-    if (*value != ',' || !isdigit(*++value)) {
-        wcerr << "image4: Invalid crop option value (" << optionValue << ").\n";
-        return false;
-    }
-    std::tie(value, params.cropYMax) = readInteger(value);
-
-    if (*value) {
-        wcerr << "image4: Invalid tiled option value (" << optionValue << ").\n";
-        return false;
-    }
-
-    return true;
-}
-
-//__________________________________________________________________________________________________
-
 bool processParameters (Parameters &params, int argc, wchar_t *argv[]) {
     // Process the command-line options and load results into the given Parameters object. Returns
     // true on success, false on error.
@@ -375,11 +325,6 @@ bool processParameters (Parameters &params, int argc, wchar_t *argv[]) {
                 if (!parseOptionValueTiled(params, optionValue))
                     return false;
                 break;
-
-            case OptionType::Crop:
-                if (!parseOptionValueCrop(params, optionValue))
-                    return false;
-                break;
         }
     }
 
@@ -389,8 +334,6 @@ bool processParameters (Parameters &params, int argc, wchar_t *argv[]) {
     wcout << "    printFileInfo: " << (params.printFileInfo ? "true\n" : "false\n");
     wcout << "    outputFilePattern: '" << params.outputFilePattern << "'\n";
     wcout << "    slice: " << params.sliceStart << " - " << params.sliceEnd << " x " << params.sliceStep << '\n';
-    wcout << "    crop: " << params.cropXMin << ',' << params.cropYMin
-                          << " - " << params.cropXMax << ',' << params.cropYMax << '\n';
     wcout << "    showTiled: " << (params.showTiled ? "true\n" : "false\n");
     wcout << "    tiledPixelWidth: " << params.tiledPixelWidth << '\n';
     wcout << "    tiledHorizontalCount: " << params.tiledHorizontalCount << '\n';
