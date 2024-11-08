@@ -377,23 +377,52 @@ uint8_t readUInt8(ifstream &is) {
 
 //__________________________________________________________________________________________________
 
-ImageHeader readImageHeader(ifstream &imageFile) {
+ImageHeader readImageHeader(ifstream &imageFile, wstring imageFileName) {
     // Reads in and returns the 3D image cube header structure. On failure, the magic field is set
     // to zero.
 
     ImageHeader header;
-    header.magic        = readUInt32(imageFile);
-    header.version      = readUInt8(imageFile);
+
+    header.magic = readUInt32(imageFile);
+    if (header.magic != ray4FormatMagic) {
+        wcerr << "image4: Image file \"" << imageFileName << "\" is not a value ray4 image file.\n";
+        return { 0 };
+    }
+
+    header.version = readUInt8(imageFile);
+    if (header.version != 1) {
+        wcerr << "image4: ray4 image file \"" << imageFileName << "\" is an unsupported version ("
+              << header.version << ").\n";
+        return { 0 };
+    }
+
     header.bitsPerPixel = readUInt8(imageFile);
+    if (header.bitsPerPixel != 24) {
+        wcerr << "image4: ray4 image file \"" << imageFileName << "\" has an unsupported bits per pixel ("
+            << header.bitsPerPixel << ").\n";
+        return { 0 };
+    }
 
     for (auto i = 0;  i < 3;  ++i)
         header.aspect[i] = readUInt16(imageFile);
+
+    if (header.aspect[0] != 1 || header.aspect[1] != 1 || header.aspect[2] != 1) {
+        wcerr << "image4: ray4 image file \"" << imageFileName << "\" has aspect ratio "
+              << header.aspect[0] << ':' << header.aspect[1] << ':' << header.aspect[2]
+              << ". Only 1:1:1 is supported.\n";
+        return { 0 };
+    }
 
     for (auto i = 0;  i < 3;  ++i)
         header.start[i] = readUInt16(imageFile);
 
     for (auto i = 0;  i < 3;  ++i)
         header.end[i] = readUInt16(imageFile);
+
+    if (header.end[0] < header.start[0] || header.end[1] < header.start[1] || header.end[2] < header.start[2]) {
+        wcerr << "image4: ray4 image file \"" << imageFileName << "\" has invalid start/end values.\n";
+        return { 0 };
+    }
 
     wcout << "\nImage Header:\n";
     wcout << "    Magic: 0x" << std::hex << header.magic << '\n' << std::dec;
@@ -446,7 +475,7 @@ int wmain(int argc, wchar_t *argv[]) {
         return 1;
     }
 
-    ImageHeader imageHeader = readImageHeader(imageStream);
+    ImageHeader imageHeader = readImageHeader(imageStream, params.imageFileName);
 
     if (!imageHeader.magic)
         return 1;
