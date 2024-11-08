@@ -151,13 +151,12 @@ static vector<OptionInfo> optionInfo = {
 
 // File-Global Variables
 
-    Vector4  Gx,  Gy,  Gz;      // Ray-Grid Basis Vectors
-    Point4   Gorigin;           // Ray-Grid Origin Point
-    int      res[3] = {0,0,0};  // Full Output Image Resolution
-    long     scanlsize;         // Scanline Size
-    long     slbuff_count;      // Number of Lines in Scanline Buffer
-    char    *scanbuff;          // Scanline Buffer
-    time_t   StartTime;         // Timestamp
+Vector4  Gx,  Gy,  Gz;      // Ray-Grid Basis Vectors
+Point4   Gorigin;           // Ray-Grid Origin Point
+long     scanlsize;         // Scanline Size
+long     slbuff_count;      // Number of Lines in Scanline Buffer
+char    *scanbuff;          // Scanline Buffer
+time_t   StartTime;         // Timestamp
 
 
 //__________________________________________________________________________________________________
@@ -531,8 +530,8 @@ void CalcRayGrid (const Parameters& params) {
     // Now compute the proper scale of the grid unit vectors.
 
     double GNx = 2.0 * lineOfSightNorm * tan(degreeToRadian*Vangle/2.0);
-    double GNy = GNx * ((double) res[1] / (double) res[0]);
-    double GNz = GNx * ((double) res[2] / (double) res[0]);
+    double GNy = GNx * ((double) params.resolution[1] / (double) params.resolution[0]);
+    double GNz = GNx * ((double) params.resolution[2] / (double) params.resolution[0]);
 
     // Scale each grid basis vector.
 
@@ -546,9 +545,9 @@ void CalcRayGrid (const Parameters& params) {
 
     // Finally, scale the grid basis vectors down by the corresponding resolutions.
 
-    Gx /= res[0];
-    Gy /= res[1];
-    Gz /= res[2];
+    Gx /= params.resolution[0];
+    Gy /= params.resolution[1];
+    Gz /= params.resolution[2];
 
     Gorigin += (Gx/2) + (Gy/2) + (Gz/2);
 }
