@@ -108,7 +108,7 @@ struct Parameters {
     bool    printVersion{false};      // Print version information and exit.
     wstring imageFileName;            // Input image cube file name
     bool    printFileInfo{false};     // Print information about the image cube file.
-    wstring outputFilePattern;        // Output image file name pattern
+    wstring outputFileName;           // Output image file name
     int     sliceStart{0};            // First slice to output
     int     sliceEnd{-1};             // Last output slice. -1 indicates last slice
     int     sliceStep{1};             // Step size between slices
@@ -313,7 +313,7 @@ bool processParameters (Parameters &params, int argc, wchar_t *argv[]) {
                 break;
 
             case OptionType::OutputFileName:
-                params.outputFilePattern = optionValue;
+                params.outputFileName = optionValue;
                 break;
 
             case OptionType::Slice:
@@ -332,7 +332,7 @@ bool processParameters (Parameters &params, int argc, wchar_t *argv[]) {
     wcout << "    printHelp: " << (params.printHelp ? "true\n" : "false\n");
     wcout << "    imageFileName: '" << params.imageFileName << "'\n";
     wcout << "    printFileInfo: " << (params.printFileInfo ? "true\n" : "false\n");
-    wcout << "    outputFilePattern: '" << params.outputFilePattern << "'\n";
+    wcout << "    outputFileName: '" << params.outputFileName << "'\n";
     wcout << "    slice: " << params.sliceStart << " - " << params.sliceEnd << " x " << params.sliceStep << '\n';
     wcout << "    showTiled: " << (params.showTiled ? "true\n" : "false\n");
     wcout << "    tiledPixelWidth: " << params.tiledPixelWidth << '\n';
