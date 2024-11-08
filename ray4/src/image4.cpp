@@ -65,16 +65,17 @@ image cube, depending on the command line options.
     or the newer (2024 and after) format.
 
 -q, --query
-    If provided, print information about the image cube file instead of
-    generating output images.
+    Required if --output is not provided. If provided, print information about
+    the image cube file instead of generating output images.
 
 -o, --output <outputImageFile>
-    Required to produce one or more output image files. This file will be
-    overwritten if it already exists. The output image file may contain the
-    substring `##` (exactly two consecutive hash characters), which will be
-    replaced with the slice index. If the output file name does not contain this
-    substring, the slice index will be appended to the end if more than one
-    slice is requested.
+    Required if --query is not provided. If provided, generate one or more
+    output image files with the specified name. This file will be overwritten
+    if it already exists. The output image file may contain the substring `##`
+    (exactly two consecutive hash characters), which will be replaced with the
+    slice index, with leading zeros so that all output file names have the same
+    length. If the output file name does not contain this substring, the slice
+    index will be appended to the end if more than one slice is requested.
 
 -s, --slice <start>[-<end>][x<stepSize>]
     Optional. If unspecified, all slices will be generated. If one number is
@@ -156,7 +157,7 @@ const OptionInfo& getOptionInfo(wchar_t *arg) {
 
 //__________________________________________________________________________________________________
 
-std::pair<wchar_t*, int> readInteger (wchar_t* str) {
+std::pair<wchar_t*, int> scanInteger (wchar_t* str) {
     // Reads the integer from the string. Returns a pair containing the pointer to the remainder of
     // the string, and the integer value.
 
@@ -183,7 +184,7 @@ bool parseOptionValueSlice (Parameters &params, wchar_t* value) {
         return false;
     }
 
-    std::tie(value, params.sliceStart) = readInteger(value);
+    std::tie(value, params.sliceStart) = scanInteger(value);
 
     if (*value == '-') {
         ++value;
@@ -191,7 +192,7 @@ bool parseOptionValueSlice (Parameters &params, wchar_t* value) {
             wcerr << "image4: Invalid slice end (" << optionValue << ").\n";
             return false;
         }
-        std::tie(value, params.sliceEnd) = readInteger(value);
+        std::tie(value, params.sliceEnd) = scanInteger(value);
     }
 
     if (*value == 'x') {
@@ -200,7 +201,7 @@ bool parseOptionValueSlice (Parameters &params, wchar_t* value) {
             wcerr << "image4: Invalid slice step (" << optionValue << ").\n";
             return false;
         }
-        std::tie(value, params.sliceStep) = readInteger(value);
+        std::tie(value, params.sliceStep) = scanInteger(value);
     }
 
     if (*value) {
@@ -273,12 +274,27 @@ bool processParameters (Parameters &params, int argc, wchar_t *argv[]) {
         }
     }
 
-    wcout << "\nCommand-line parameters:\n";
-    wcout << "    printHelp: " << (params.printHelp ? "true\n" : "false\n");
-    wcout << "    imageFileName: '" << params.imageFileName << "'\n";
-    wcout << "    printFileInfo: " << (params.printFileInfo ? "true\n" : "false\n");
-    wcout << "    outputFileName: '" << params.outputFileName << "'\n";
-    wcout << "    slice: " << params.sliceStart << " - " << params.sliceEnd << " x " << params.sliceStep << '\n';
+    // Validate parameters
+
+    if (params.imageFileName.empty())
+        params.printHelp = true;
+
+    if (!params.printFileInfo) {
+        if (params.outputFileName.empty()) {
+            wcerr << "image4: Expected --query or --output.\n";
+            return false;
+        }
+
+        if (params.sliceStart < 0) {
+            wcerr << "image4: Invalid slice start (" << params.sliceStart << ").\n";
+            return false;
+        }
+
+        if (params.sliceStep < 1) {
+            wcerr << "image4: Invalid slice step (" << params.sliceStep << ").\n";
+            return false;
+        }
+    }
 
     return true;
 }
@@ -366,27 +382,33 @@ ImageHeader readImageHeader(ifstream &imageFile, wstring imageFileName) {
         return { 0 };
     }
 
-    wcout << "\nImage Header:\n";
-    wcout << "    Magic: 0x" << std::hex << header.magic << '\n' << std::dec;
-    wcout << "    Version: " << header.version << '\n';
-    wcout << "    Bits Per Pixel: " << header.bitsPerPixel << '\n';
-
-    wcout << "    aspect: "
-          << header.aspect[0] << ','
-          << header.aspect[1] << ','
-          << header.aspect[2] << '\n';
-
-    wcout << "    start: "
-          << header.start[0] << ','
-          << header.start[1] << ','
-          << header.start[2] << '\n';
-
-    wcout << "    end: "
-          << header.end[0] << ','
-          << header.end[1] << ','
-          << header.end[2] << '\n';
-
     return header;
+}
+
+//__________________________________________________________________________________________________
+
+bool generateImageSlices(ifstream& imageFile, const ImageHeader& header, const Parameters& params) {
+    // Generate the image slices requested by the user.
+
+    return true;
+}
+
+//__________________________________________________________________________________________________
+
+void printFileInfo(const ImageHeader& header, const wstring& imageFileName) {
+    // Print information about the image file.
+
+    wcout << "\nray4 image file \"" << imageFileName << "\":\n";
+    wcout << "    Format Version: " << header.version << '\n';
+    wcout << "    Bits Per Pixel: " << header.bitsPerPixel << '\n';
+    wcout << "    Aspect Ratio: " << header.aspect[0] << ':' << header.aspect[1] << ':' << header.aspect[2] << '\n';
+    wcout << "    Start Pixel: " << header.start[0] << ',' << header.start[1] << ',' << header.start[2] << '\n';
+    wcout << "    End Pixel: " << header.end[0] << ',' << header.end[1] << ',' << header.end[2] << '\n';
+    wcout << "    Effective Resolution: "
+          << (1 + header.end[0] - header.start[0]) << 'x'
+          << (1 + header.end[1] - header.start[1]) << 'x'
+          << (1 + header.end[2] - header.start[2]) << '\n';
+    wcout << '\n';
 }
 
 //__________________________________________________________________________________________________
@@ -420,6 +442,14 @@ int wmain(int argc, wchar_t *argv[]) {
     ImageHeader imageHeader = readImageHeader(imageStream, params.imageFileName);
 
     if (!imageHeader.magic)
+        return 1;
+
+    if (params.printFileInfo) {
+        printFileInfo(imageHeader, params.imageFileName);
+        return 0;
+    }
+
+    if (!params.outputFileName.empty() && !generateImageSlices(imageStream, imageHeader, params))
         return 1;
 
     return 0;
