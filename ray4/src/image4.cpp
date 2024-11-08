@@ -48,7 +48,6 @@ usage:  image4 [-h|--help] [-v|--version]
                [-q|--query]
                [-o|--output <outputImageFile>]
                [-s|--slice <start>[-<end>][x<stepSize>]]
-               [-t|--tiled <pixelWidth>[x<horizontalCount>]]
 
 This tool reads a 3D image cube produced by the ray4 4D ray tracer, and either
 reports information about the file, or generates one or more images from that
@@ -85,19 +84,6 @@ image cube, depending on the command line options.
     range ('--slice x5'), offset to end of cube ('--slice 20x5'), and stepped
     range ('--slice 20-80x10').
 
--t, --tiled <pixelWidth>[x<horizontalCount>]
-    Generates a contact sheet of thumbnail images. If only a pixel width is
-    specified, then the output image will be that many pixels wide, and slices
-    will be sized to match the X:Y aspect ratio of the image cube. For example,
-    with an image cube that is 200x100x50, and given a tiled target of 2000
-    pixels horizontally, the generated contact sheet will have 64 tiles, 8
-    thumbnails wide by 7 thumbnails, with the bottom row only having two
-    thumbnails. In other words, given N slices, the target is a sqrt(N) x
-    sqrt(N) grid.
-        If a horizontalCount is specified, then each row will have the specified
-    number of thumbnails, sized to fit, with as tall a result as needed to
-    display all slices.
-
 )";
 
 //__________________________________________________________________________________________________
@@ -112,9 +98,6 @@ struct Parameters {
     int     sliceStart{0};            // First slice to output
     int     sliceEnd{-1};             // Last output slice. -1 indicates last slice
     int     sliceStep{1};             // Step size between slices
-    bool    showTiled{false};         // Generate a tiled contact sheet of thumbnails.
-    int     tiledPixelWidth{0};       // Width in pixels of tiled contact sheet
-    int     tiledHorizontalCount{0};  // Number of thumbnails per row in tiled contact sheet
 };
 
 enum class OptionType {
@@ -124,7 +107,6 @@ enum class OptionType {
     Query,
     OutputFileName,
     Slice,
-    Tiled,
     Unrecognized
 };
 
@@ -146,7 +128,6 @@ static vector<OptionInfo> optionInfo = {
     {OptionType::Query,          L'q', L"query",   false},
     {OptionType::OutputFileName, L'o', L"output",  true},
     {OptionType::Slice,          L's', L"slice",   true},
-    {OptionType::Tiled,          L't', L"tiled",   true},
 };
 
 //__________________________________________________________________________________________________
@@ -232,37 +213,6 @@ bool parseOptionValueSlice (Parameters &params, wchar_t* value) {
 
 //__________________________________________________________________________________________________
 
-bool parseOptionValueTiled (Parameters &params, wchar_t* value) {
-    // Parse the --tiled option string. Format is '<pixelWidth>[x<horizontalCount]'.
-
-    const auto optionValue = value;
-
-    if (!isdigit(*value)) {
-        wcerr << "image4: Invalid tiled pixel width (" << optionValue << ").\n";
-        return false;
-    }
-
-    std::tie(value, params.tiledPixelWidth) = readInteger(value);
-
-    if (*value == 'x') {
-        ++value;
-        if (!isdigit(*value)) {
-            wcerr << "image4: Invalid tiled horizontal count (" << optionValue << ").\n";
-            return false;
-        }
-        std::tie(value, params.tiledHorizontalCount) = readInteger(value);
-    }
-
-    if (*value) {
-        wcerr << "image4: Invalid tiled option value (" << optionValue << ").\n";
-        return false;
-    }
-
-    return true;
-}
-
-//__________________________________________________________________________________________________
-
 bool processParameters (Parameters &params, int argc, wchar_t *argv[]) {
     // Process the command-line options and load results into the given Parameters object. Returns
     // true on success, false on error.
@@ -320,11 +270,6 @@ bool processParameters (Parameters &params, int argc, wchar_t *argv[]) {
                 if (!parseOptionValueSlice(params, optionValue))
                     return false;
                 break;
-
-            case OptionType::Tiled:
-                if (!parseOptionValueTiled(params, optionValue))
-                    return false;
-                break;
         }
     }
 
@@ -334,9 +279,6 @@ bool processParameters (Parameters &params, int argc, wchar_t *argv[]) {
     wcout << "    printFileInfo: " << (params.printFileInfo ? "true\n" : "false\n");
     wcout << "    outputFileName: '" << params.outputFileName << "'\n";
     wcout << "    slice: " << params.sliceStart << " - " << params.sliceEnd << " x " << params.sliceStep << '\n';
-    wcout << "    showTiled: " << (params.showTiled ? "true\n" : "false\n");
-    wcout << "    tiledPixelWidth: " << params.tiledPixelWidth << '\n';
-    wcout << "    tiledHorizontalCount: " << params.tiledHorizontalCount << '\n';
 
     return true;
 }
