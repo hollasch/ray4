@@ -383,6 +383,18 @@ bool processParameters (Parameters &params, int argc, wchar_t *argv[]) {
         }
     }
 
+    wcout << "\nCommand-line parameters:\n";
+    wcout << "    printHelp: " << (params.printHelp ? "true\n" : "false\n");
+    wcout << "    imageFileName: '" << params.imageFileName << "'\n";
+    wcout << "    printFileInfo: " << (params.printFileInfo ? "true\n" : "false\n");
+    wcout << "    outputFilePattern: '" << params.outputFilePattern << "'\n";
+    wcout << "    slice: " << params.sliceStart << " - " << params.sliceEnd << " x " << params.sliceStep << '\n';
+    wcout << "    crop: " << params.cropXMin << ',' << params.cropYMin
+                          << " - " << params.cropXMax << ',' << params.cropYMax << '\n';
+    wcout << "    showTiled: " << (params.showTiled ? "true\n" : "false\n");
+    wcout << "    tiledPixelWidth: " << params.tiledPixelWidth << '\n';
+    wcout << "    tiledHorizontalCount: " << params.tiledHorizontalCount << '\n';
+
     return true;
 }
 
@@ -440,6 +452,26 @@ ImageHeader readImageHeader(ifstream &imageFile) {
     for (auto i = 0;  i < 3;  ++i)
         header.end[i] = readUInt16(imageFile);
 
+    wcout << "\nImage Header:\n";
+    wcout << "    Magic: 0x" << std::hex << header.magic << '\n' << std::dec;
+    wcout << "    Version: " << header.version << '\n';
+    wcout << "    Bits Per Pixel: " << header.bitsPerPixel << '\n';
+
+    wcout << "    aspect: "
+          << header.aspect[0] << ','
+          << header.aspect[1] << ','
+          << header.aspect[2] << '\n';
+
+    wcout << "    start: "
+          << header.start[0] << ','
+          << header.start[1] << ','
+          << header.start[2] << '\n';
+
+    wcout << "    end: "
+          << header.end[0] << ','
+          << header.end[1] << ','
+          << header.end[2] << '\n';
+
     return header;
 }
 
@@ -464,18 +496,6 @@ int wmain(int argc, wchar_t *argv[]) {
         return 1;
     }
 
-    wcout << "\nCommand-line parameters:\n";
-    wcout << "    printHelp: " << (params.printHelp ? "true\n" : "false\n");
-    wcout << "    imageFileName: '" << params.imageFileName << "'\n";
-    wcout << "    printFileInfo: " << (params.printFileInfo ? "true\n" : "false\n");
-    wcout << "    outputFilePattern: '" << params.outputFilePattern << "'\n";
-    wcout << "    slice: " << params.sliceStart << " - " << params.sliceEnd << " x " << params.sliceStep << '\n';
-    wcout << "    crop: " << params.cropXMin << ',' << params.cropYMin
-                          << " - " << params.cropXMax << ',' << params.cropYMax << '\n';
-    wcout << "    showTiled: " << (params.showTiled ? "true\n" : "false\n");
-    wcout << "    tiledPixelWidth: " << params.tiledPixelWidth << '\n';
-    wcout << "    tiledHorizontalCount: " << params.tiledHorizontalCount << '\n';
-
     ifstream imageStream = openImageFile(params.imageFileName);
 
     if (!imageStream.good()) {
@@ -487,26 +507,6 @@ int wmain(int argc, wchar_t *argv[]) {
 
     if (!imageHeader.magic)
         return 1;
-
-    wcout << "\nImage Header:\n";
-    wcout << "    Magic: 0x" << std::hex << imageHeader.magic << '\n' << std::dec;
-    wcout << "    Version: " << imageHeader.version << '\n';
-    wcout << "    Bits Per Pixel: " << imageHeader.bitsPerPixel << '\n';
-
-    wcout << "    aspect: "
-          << imageHeader.aspect[0] << ','
-          << imageHeader.aspect[1] << ','
-          << imageHeader.aspect[2] << '\n';
-
-    wcout << "    start: "
-          << imageHeader.start[0] << ','
-          << imageHeader.start[1] << ','
-          << imageHeader.start[2] << '\n';
-
-    wcout << "    end: "
-          << imageHeader.end[0] << ','
-          << imageHeader.end[1] << ','
-          << imageHeader.end[2] << '\n';
 
     return 0;
 }
