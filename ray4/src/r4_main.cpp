@@ -499,7 +499,7 @@ void WriteHeader(const Parameters& params) {
     // Scan Range End
     WriteUInteger16(params.resolution[0] - 1);
     WriteUInteger16(params.resolution[1] - 1);
-    WriteUInteger16((params.slice >= 0) ? 1 : (params.resolution[2] - 1));
+    WriteUInteger16((params.slice >= 0) ? 0 : (params.resolution[2] - 1));
 }
 
 //__________________________________________________________________________________________________
@@ -563,7 +563,7 @@ void FireRays (const Parameters &params) {
 
     // Handle the Z limits where we're only rendering a single slice.
     int zStart, zLimit;
-    if (params.slice < 1) {
+    if (params.slice < 0) {
         zStart = 0;
         zLimit = params.resolution[2];
     } else {

@@ -28,6 +28,7 @@
 #include "r4_image.h"
 
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -218,6 +219,11 @@ bool processParameters (Parameters &params, int argc, wchar_t *argv[]) {
     // Process the command-line options and load results into the given Parameters object. Returns
     // true on success, false on error.
 
+    if (argc == 1) {
+        params.printHelp = true;
+        return true;
+    }
+
     for (auto argi = 1;  argi < argc;  ++argi) {
         auto *arg = argv[argi];
         auto optionInfo = getOptionInfo(arg);
@@ -276,15 +282,20 @@ bool processParameters (Parameters &params, int argc, wchar_t *argv[]) {
 
     // Validate parameters
 
-    if (params.imageFileName.empty())
-        params.printHelp = true;
+    if (params.printHelp || params.printVersion)
+        return true;
 
-    if (!params.printFileInfo) {
-        if (params.outputFileName.empty()) {
-            wcerr << "image4: Expected --query or --output.\n";
-            return false;
-        }
+    if (params.imageFileName.empty()) {
+        wcerr << "image4: Missing input image file name.\n";
+        return false;
+    }
 
+    if (!params.printFileInfo && params.outputFileName.empty()) {
+        wcerr << "image4: Expected --query or --output.\n";
+        return false;
+    }
+
+    if (!params.outputFileName.empty()) {
         if (params.sliceStart < 0) {
             wcerr << "image4: Invalid slice start (" << params.sliceStart << ").\n";
             return false;
@@ -312,17 +323,17 @@ ifstream openImageFile(const wstring& fileName) {
 //__________________________________________________________________________________________________
 
 uint32_t readUInt32(ifstream &is) {
-    char b[4];
-    is.read(b, sizeof(b));
-    return (b[0] << 24) | (b[1] << 16) | (b[2] << 8) | b[3];
+    uint8_t b[4];
+    is.read(reinterpret_cast<char*>(b), sizeof(b));
+    return (static_cast<uint32_t>(b[0]) << 24) | (b[1] << 16) | (b[2] << 8) | b[3];
 }
 
 //__________________________________________________________________________________________________
 
 uint16_t readUInt16(ifstream &is) {
-    char b[2];
-    is.read(b, sizeof(b));
-    return (b[0] << 8) | b[1];
+    uint8_t b[2];
+    is.read(reinterpret_cast<char*>(b), sizeof(b));
+    return (static_cast<uint16_t>(b[0]) << 8) | b[1];
 }
 
 //__________________________________________________________________________________________________
@@ -389,6 +400,55 @@ ImageHeader readImageHeader(ifstream &imageFile, wstring imageFileName) {
 
 bool generateImageSlices(ifstream& imageFile, const ImageHeader& header, const Parameters& params) {
     // Generate the image slices requested by the user.
+    // For now, just generate a single image slice and save it out.
+
+    // Calculate image dimensions and allocate the plane pixel buffer.
+
+    int resolution[3] = {
+        1 + header.end[0] - header.start[0],
+        1 + header.end[1] - header.start[1],
+        1 + header.end[2] - header.start[2]
+    };
+
+    const int bytesPerPixel  = header.bitsPerPixel / 8;
+    const int pixelsPerPlane = resolution[0] * resolution[1];
+    const int bytesPerPlane  = pixelsPerPlane * bytesPerPixel;
+
+    auto planeBuff = new char[bytesPerPlane];
+
+    // Open the output file.
+
+    ofstream outputImage;
+    outputImage.open(params.outputFileName, ios::binary | ios::out);
+    if (!outputImage.good()) {
+        wcerr << "image4: Open failed for output image file \"" << params.outputFileName << "\".\n";
+        return false;
+    }
+
+    // Seek to the start plane.
+
+    int firstPlaneOffset = sizeof(ImageHeader) + (params.sliceStart * bytesPerPlane);
+    imageFile.seekg(firstPlaneOffset);
+
+    // Read the image plane.
+
+    imageFile.read(planeBuff, bytesPerPlane);
+
+    // Write the image plane to the ASCII PPM output file.
+
+    // ASCII PPM header
+    outputImage << "P3\n" << resolution[0] << ' ' << resolution[1] << '\n' << "255\n";
+    
+    outputImage << setfill(' ') << setw(3);
+
+    uint8_t *color = reinterpret_cast<uint8_t*>(planeBuff);
+
+    for (auto i = 0; i < pixelsPerPlane; ++i) {
+        outputImage << setfill(' ') << setw(3)
+                    << to_string(*color++) << ' ' << to_string(*color++) << ' ' << to_string(*color++) << '\n';
+    }
+
+    outputImage.close();
 
     return true;
 }
@@ -425,11 +485,6 @@ int wmain(int argc, wchar_t *argv[]) {
     if (params.printHelp || params.printVersion) {
         wcout << version;
         return 0;
-    }
-
-    if (params.imageFileName.empty()) {
-        wcerr << "image4: Missing input image file name.\n";
-        return 1;
     }
 
     ifstream imageStream = openImageFile(params.imageFileName);
