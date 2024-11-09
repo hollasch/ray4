@@ -78,6 +78,17 @@ image cube, depending on the command line options.
     length. If the output file name does not contain this substring, the slice
     index will be appended to the end if more than one slice is requested.
 
+-f, --format <Output Image File Format>
+    The default output image file format is binary PPM. Supported explicit
+    formats are:
+
+        ppm        -- Binary PPM
+        ppm/ascii  -- ASCII PPM
+        ppm/binary -- Binary PPM
+
+    If the output filename has a file extension, then ".ppm" yields a binary
+    PPM formatted file. All other extensions will yield an error.
+
 -s, --slice <start>[-<end>][x<stepSize>]
     Optional. If unspecified, all slices will be generated. If one number is
     given, then that slice will be output. If a range is specified (such as
@@ -89,17 +100,42 @@ image cube, depending on the command line options.
 )";
 
 //__________________________________________________________________________________________________
+// Output File Formats
+
+enum class FileFormat {
+    PPM_ASCII,
+    PPM_Binary,
+    None
+};
+
+struct FormatInfo {
+    FileFormat format;
+    wstring    name;
+    wstring    fileExtension;
+};
+
+namespace {
+    FormatInfo formatInfo[] = {
+        { FileFormat::PPM_Binary, L"ppm",        L".ppm" },
+        { FileFormat::PPM_Binary, L"ppm:binary", L".ppm" },
+        { FileFormat::PPM_ASCII,  L"ppm:ascii",  L".ppm" },
+        { FileFormat::None,       L"",           L""     },
+    };
+};
+
+//__________________________________________________________________________________________________
 // Program Parameters
 
 struct Parameters {
-    bool    printHelp{false};         // Print help + version information and exit.
-    bool    printVersion{false};      // Print version information and exit.
-    wstring imageFileName;            // Input image cube file name
-    bool    printFileInfo{false};     // Print information about the image cube file.
-    wstring outputFileName;           // Output image file name
-    int     sliceStart{0};            // First slice to output
-    int     sliceEnd{-1};             // Last output slice. -1 indicates last slice
-    int     sliceStep{1};             // Step size between slices
+    bool       printHelp{false};              // Print help + version information and exit.
+    bool       printVersion{false};           // Print version information and exit.
+    wstring    imageFileName;                 // Input image cube file name
+    bool       printFileInfo{false};          // Print information about the image cube file.
+    wstring    outputFileName;                // Output image file name
+    FileFormat fileFormat{FileFormat::None};  // Output file format
+    int        sliceStart{0};                 // First slice to output
+    int        sliceEnd{-1};                  // Last output slice. -1 indicates last slice
+    int        sliceStep{1};                  // Step size between slices
 };
 
 enum class OptionType {
@@ -108,7 +144,9 @@ enum class OptionType {
     ImageFileName,
     Query,
     OutputFileName,
+    Format,
     Slice,
+
     Unrecognized
 };
 
@@ -121,16 +159,19 @@ struct OptionInfo {
     bool       takesValue;    // If true, takes option value
 };
 
-static vector<OptionInfo> optionInfo = {
-    {OptionType::Unrecognized,   0,    L"",        false},
-    {OptionType::Help,           L'h', L"help",    false},
-    {OptionType::Version,        L'v', L"version", false},
-    {OptionType::ImageFileName,  L'i', L"input",   true},
-    {OptionType::ImageFileName,  L'i', L"image",   true},
-    {OptionType::Query,          L'q', L"query",   false},
-    {OptionType::OutputFileName, L'o', L"output",  true},
-    {OptionType::Slice,          L's', L"slice",   true},
-};
+namespace {
+    vector<OptionInfo> optionInfo = {
+        {OptionType::Unrecognized,   0,    L"",        false},
+        {OptionType::Help,           L'h', L"help",    false},
+        {OptionType::Version,        L'v', L"version", false},
+        {OptionType::ImageFileName,  L'i', L"input",   true},
+        {OptionType::ImageFileName,  L'i', L"image",   true},
+        {OptionType::Query,          L'q', L"query",   false},
+        {OptionType::OutputFileName, L'o', L"output",  true},
+        {OptionType::Format,         L'f', L"format",  true},
+        {OptionType::Slice,          L's', L"slice",   true},
+    };
+}
 
 //__________________________________________________________________________________________________
 
@@ -175,7 +216,23 @@ std::pair<wchar_t*, int> scanInteger (wchar_t* str) {
 
 //__________________________________________________________________________________________________
 
-bool parseOptionValueSlice (Parameters &params, wchar_t* value) {
+bool parseOptionFormat(Parameters& params, wchar_t* value) {
+    // Parse the --format option string. Format is 'ppm', 'ppm:ascii', or 'ppm:binary'.
+
+    for (const auto& format : formatInfo) {
+        if (_wcsicmp(format.name.c_str(), value) == 0) {
+            params.fileFormat = format.format;
+            return true;
+        }
+    }
+
+    wcerr << "image4: Invalid output file format (" << value << ").\n";
+    return false;
+}
+
+//__________________________________________________________________________________________________
+
+bool parseOptionSlice (Parameters &params, wchar_t* value) {
     // Parse the --slice option string. Format is '<start>[-<end>][x<stepSize>]'.
 
     const auto optionValue = value;
@@ -273,8 +330,13 @@ bool processParameters (Parameters &params, int argc, wchar_t *argv[]) {
                 params.outputFileName = optionValue;
                 break;
 
+            case OptionType::Format:
+                if (!parseOptionFormat(params, optionValue))
+                    return false;
+                break;
+
             case OptionType::Slice:
-                if (!parseOptionValueSlice(params, optionValue))
+                if (!parseOptionSlice(params, optionValue))
                     return false;
                 break;
         }
@@ -304,6 +366,27 @@ bool processParameters (Parameters &params, int argc, wchar_t *argv[]) {
         if (params.sliceStep < 1) {
             wcerr << "image4: Invalid slice step (" << params.sliceStep << ").\n";
             return false;
+        }
+
+        // If the output file format is not specified, infer it from the file extension.
+        if (params.fileFormat == FileFormat::None) {
+            for (const auto& format : formatInfo) {
+                if (format.format == FileFormat::None)
+                    continue;
+
+                auto extension = format.fileExtension.c_str();
+                auto* eptr = params.outputFileName.c_str() + params.outputFileName.length() - wcslen(extension);
+                if (_wcsicmp(eptr, extension) == 0) {
+                    params.fileFormat = format.format;
+                    break;
+                }
+            }
+
+            if (params.fileFormat == FileFormat::None) {
+                wcerr << "image4: Unable to determine output file format from file extension ("
+                      << params.outputFileName << ").\n";
+                return false;
+            }
         }
     }
 
@@ -401,6 +484,11 @@ ImageHeader readImageHeader(ifstream &imageFile, wstring imageFileName) {
 bool generateImageSlices(ifstream& imageFile, const ImageHeader& header, const Parameters& params) {
     // Generate the image slices requested by the user.
     // For now, just generate a single image slice and save it out.
+
+    if (params.fileFormat != FileFormat::PPM_ASCII) {
+        wcerr << "image4: Only ASCII PPM output format is supported at this time.\n";
+        return false;
+    }
 
     // Calculate image dimensions and allocate the plane pixel buffer.
 
