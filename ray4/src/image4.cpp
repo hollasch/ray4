@@ -83,11 +83,11 @@ image cube, depending on the command line options.
     formats are:
 
         ppm        -- Binary PPM
-        ppm/ascii  -- ASCII PPM
-        ppm/binary -- Binary PPM
+        ppm:ascii  -- ASCII PPM
+        ppm:binary -- Binary PPM
 
-    If the output filename has a file extension, then ".ppm" yields a binary
-    PPM formatted file. All other extensions will yield an error.
+    If the output filename has a file extension, then ".ppm" implicitly sets the
+    file format to ppm:binary.
 
 -s, --slice <start>[-<end>][x<stepSize>]
     Optional. If unspecified, all slices will be generated. If one number is
@@ -481,14 +481,74 @@ ImageHeader readImageHeader(ifstream &imageFile, wstring imageFileName) {
 
 //__________________________________________________________________________________________________
 
-bool generateImageSlices(ifstream& imageFile, const ImageHeader& header, const Parameters& params) {
-    // Generate the image slices requested by the user.
-    // For now, just generate a single image slice and save it out.
+bool outputImageSliceBinaryPPM (
+    const char       *planeBuff,
+    const Parameters &params,
+    int               resolution[3])
+{
+    // Write the image plane to the output file in the binary PPM format.
+    // See https://en.wikipedia.org/wiki/Netpbm.
 
-    if (params.fileFormat != FileFormat::PPM_ASCII) {
-        wcerr << "image4: Only ASCII PPM output format is supported at this time.\n";
+    ofstream outputImage;
+    outputImage.open(params.outputFileName, ios::binary | ios::out);
+    if (!outputImage.good()) {
+        wcerr << "image4: Open failed for output image file \"" << params.outputFileName << "\".\n";
         return false;
     }
+
+    // ASCII PPM File Header
+
+    outputImage << "P6\n" << resolution[0] << ' ' << resolution[1] << '\n' << "255\n";
+
+    // ASCII PPM Image Data
+
+    const int pixelsPerPlane = resolution[0] * resolution[1];
+    const uint8_t *color = reinterpret_cast<const uint8_t*>(planeBuff);
+    for (auto i = 0; i < pixelsPerPlane; ++i)
+        outputImage << *color++ << *color++ << *color++;
+
+    outputImage.close();
+    return true;
+}
+
+//__________________________________________________________________________________________________
+
+bool outputImageSliceAsciiPPM (
+    const char       *planeBuff,
+    const Parameters &params,
+    int               resolution[3])
+{
+    // Write the image plane to the output file in the ASCII PPM format.
+    // See https://en.wikipedia.org/wiki/Netpbm.
+
+    ofstream outputImage;
+    outputImage.open(params.outputFileName, ios::binary | ios::out);
+    if (!outputImage.good()) {
+        wcerr << "image4: Open failed for output image file \"" << params.outputFileName << "\".\n";
+        return false;
+    }
+
+    // ASCII PPM File Header
+
+    outputImage << "P3\n" << resolution[0] << ' ' << resolution[1] << '\n' << "255\n";
+
+    // ASCII PPM Image Data
+    
+    const int pixelsPerPlane = resolution[0] * resolution[1];
+    const uint8_t *color = reinterpret_cast<const uint8_t*>(planeBuff);
+    for (auto i = 0; i < pixelsPerPlane; ++i)
+        outputImage << to_string(*color++) << ' ' << to_string(*color++) << ' ' << to_string(*color++) << '\n';
+
+    outputImage.close();
+    return true;
+}
+
+//__________________________________________________________________________________________________
+
+bool generateImageSlices(ifstream & imageCubeFile, const ImageHeader & header, const Parameters & params)
+{
+    // Generate the image slices requested by the user.
+    // For now, just generate a single image slice and save it out.
 
     // Calculate image dimensions and allocate the plane pixel buffer.
 
@@ -504,39 +564,29 @@ bool generateImageSlices(ifstream& imageFile, const ImageHeader& header, const P
 
     auto planeBuff = new char[bytesPerPlane];
 
-    // Open the output file.
-
-    ofstream outputImage;
-    outputImage.open(params.outputFileName, ios::binary | ios::out);
-    if (!outputImage.good()) {
-        wcerr << "image4: Open failed for output image file \"" << params.outputFileName << "\".\n";
-        return false;
-    }
-
     // Seek to the start plane.
 
-    int firstPlaneOffset = sizeof(ImageHeader) + (params.sliceStart * bytesPerPlane);
-    imageFile.seekg(firstPlaneOffset);
+    int planeOffset = sizeof(ImageHeader) + (params.sliceStart * bytesPerPlane);
+    imageCubeFile.seekg(planeOffset);
 
     // Read the image plane.
 
-    imageFile.read(planeBuff, bytesPerPlane);
+    imageCubeFile.read(planeBuff, bytesPerPlane);
 
-    // Write the image plane to the ASCII PPM output file.
+    switch (params.fileFormat) {
+        case FileFormat::PPM_Binary:
+            if (!outputImageSliceBinaryPPM(planeBuff, params, resolution))
+                return false;
+            break;
 
-    // ASCII PPM header
-    outputImage << "P3\n" << resolution[0] << ' ' << resolution[1] << '\n' << "255\n";
-    
-    outputImage << setfill(' ') << setw(3);
+        case FileFormat::PPM_ASCII:
+            if (!outputImageSliceAsciiPPM(planeBuff, params, resolution))
+                return false;
+            break;
 
-    uint8_t *color = reinterpret_cast<uint8_t*>(planeBuff);
-
-    for (auto i = 0; i < pixelsPerPlane; ++i) {
-        outputImage << setfill(' ') << setw(3)
-                    << to_string(*color++) << ' ' << to_string(*color++) << ' ' << to_string(*color++) << '\n';
+        default:
+            wcerr << "image4: Unsupported output file format.\n";
     }
-
-    outputImage.close();
 
     return true;
 }
