@@ -728,4 +728,6 @@ int wmain (int argc, wchar_t *argv[]) {
     FireRays(params);  // Raytrace the scene.
 
     Halt(nullptr);     // Clean up and exit.
+
+    return 0;
 }
