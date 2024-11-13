@@ -183,7 +183,7 @@ void Error (const char *format, ...) {
 
     va_start(args, format);
 
-    printf("Input Error [Line %l]:  ", lcount);
+    printf("Input Error [Line %ld]:  ", lcount);
     vprintf(format, args);
     print("\n");
 
@@ -623,7 +623,7 @@ void DoAttributes () {
 
     AttrName *newattrname;  // New Attributes Alias Node
     if (anptr) {
-        printf ("Warning:  Attributes \"%s\" redefined at line %l.\n", token, lcount);
+        printf ("Warning:  Attributes \"%s\" redefined at line %ld.\n", token, lcount);
         newattrname = anptr;
     } else {
         newattrname = NEW (AttrName, 1);
