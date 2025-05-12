@@ -2,7 +2,7 @@
 # CMake Build Configuration for the ray4 4D raytracer
 #---------------------------------------------------------------------------------------------------
 
-cmake_minimum_required(VERSION 3.10.0...3.30.5)
+cmake_minimum_required(VERSION 3.10.0...4.0.2)
 
 set (CMAKE_CXX_STANDARD          20)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
