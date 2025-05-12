@@ -27,6 +27,12 @@ This project now builds with CMake, which should allow the code to work on all C
 platforms. Build from the `/ray4/ray4/` directory.
 
 
+Testing
+--------
+This project includes unit tests created with the Catch2 unit-testing library. These tests can be
+executed by running `build/Debug/tests.exe` or `build/Release/tests.exe`.
+
+
 Example Run
 -----------
 
