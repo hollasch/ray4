@@ -1,24 +1,23 @@
-ray4
+ray4-c
 ====================================================================================================
 
-This is `ray4`, a 4D raytracer I wrote for my master’s thesis in May 1991
+This is `ray4-c`, a 4D raytracer I wrote for my master’s thesis in May 1991
 ([_Four-Space Visualization of 4D Objects_][thesis]).
 
 Ray4 User Manual
 -----------------
-See the [Ray4 User Manual][] for usage information.
+See the [Ray4-c User Manual][] for usage information.
 
 
 Project Structure
 ------------------
 This project includes the following directories:
 
-  | Directory   |                                             |
-  |-------------|---------------------------------------------|
-  | [craig/][]  | Mark Craig contributions                    |
-  | distribute/ | Old (now unused) files for FTP distribution |
-  | inputs.r4/  | Sample input ray4 files                     |
-  | src/        | ray4 source code                            |
+  | Directory      |                                             |
+  |----------------|---------------------------------------------|
+  | [../craig/][]  | Mark Craig contributions                    |
+  | ../inputs.r4/  | Sample input ray4 files                     |
+  | src/           | ray4 source code                            |
 
 
 Building
@@ -49,6 +48,6 @@ Steve Hollasch / steve@hollasch.net
 
 
 
-[craig/]:           craig/README.md
-[Ray4 User Manual]: ray4.md
-[thesis]:           https://hollasch.github.io/ray4/Four-Space_Visualization_of_4D_Objects.html
+[../craig/]:             ../craig/README.md
+[Ray4-c User Manual]: ray4-c.md
+[thesis]:             https://hollasch.github.io/ray4/Four-Space_Visualization_of_4D_Objects.html

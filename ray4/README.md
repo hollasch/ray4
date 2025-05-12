@@ -13,12 +13,12 @@ Project Structure
 ------------------
 This project includes the following directories:
 
-  | Directory   |                                             |
-  |-------------|---------------------------------------------|
-  | [craig/][]  | Mark Craig contributions                    |
-  | distribute/ | Old (now unused) files for FTP distribution |
-  | inputs.r4/  | Sample input ray4 files                     |
-  | src/        | Source code for ray4, image4 and unit tests |
+  | Directory   |                                                  |
+  |-------------|--------------------------------------------------|
+  | [craig/][]  | Mark Craig contributions                         |
+  | inputs.r4/  | Sample input ray4 files                          |
+  | [ray4-c/][] | Original C raytracer distributed with the thesis |
+  | src/        | Source code for ray4, image4 and unit tests      |
 
 
 Building
@@ -61,6 +61,7 @@ Steve Hollasch / steve@hollasch.net
 
 
 [craig/]:           craig/README.md
-[Ray4 User Manual]: ray4.md
-[thesis]:           https://hollasch.github.io/ray4/Four-Space_Visualization_of_4D_Objects.html
 [`image4`]:         image4.md
+[Ray4 User Manual]: ray4.md
+[ray4-c/]:          ray4-c/README.md
+[thesis]:           https://hollasch.github.io/ray4/Four-Space_Visualization_of_4D_Objects.html
